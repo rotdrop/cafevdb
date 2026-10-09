@@ -166,6 +166,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService\EventDataDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]

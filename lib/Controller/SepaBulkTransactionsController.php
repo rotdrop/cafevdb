@@ -61,16 +61,6 @@ class SepaBulkTransactionsController extends Controller
 
   public const END_POINT = 'finance/sepa/bulk-transactions';
 
-  protected const TRANSACTION_TYPE_DEBIT_NOTE = SepaBulkTransactionService::TRANSACTION_TYPE_DEBIT_NOTE;
-  protected const TRANSACTION_TYPE_BANK_TRANSFER = SepaBulkTransactionService::TRANSACTION_TYPE_BANK_TRANSFER;
-  protected const TRANSACTION_TYPES = [
-    self::TRANSACTION_TYPE_DEBIT_NOTE,
-    self::TRANSACTION_TYPE_BANK_TRANSFER,
-  ];
-
-  protected const ALARM_FROM_START = FinanceService::VALARM_FROM_START;
-  protected const ALARM_FROM_END = FinanceService::VALARM_FROM_END;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
@@ -457,8 +447,7 @@ class SepaBulkTransactionsController extends Controller
         $nonRecurring = $debitMandate->getNonRecurring();
 
         $compositePayment->setSepaDebitMandate($debitMandate);
-        $compositePayment->setSepaTransaction($debitNote);
-        $debitNote->getPayments()->set($musicianId, $compositePayment);
+        $debitNote->addPayment($compositePayment);
 
         if (empty($dueDeadline)) {
           // count forward from now, just take the maximum
@@ -476,8 +465,7 @@ class SepaBulkTransactionsController extends Controller
           $latestNotification = min($latestNotification, $notificationDeadline);
         }
       } else {
-        $compositePayment->setSepaTransaction($bankTransfer);
-        $bankTransfer->getPayments()->set($musicianId, $compositePayment);
+        $bankTransfer->addPayment($compositePayment);
       }
     }
 
@@ -508,20 +496,11 @@ class SepaBulkTransactionsController extends Controller
     // The "hard submission deadline" is somewhat artificial: it adds one
     // workday grace time in order to relax the pressure on the treasurer.
 
-    $hardSubmissionDeadline = [
-      self::TRANSACTION_TYPE_BANK_TRANSFER => null,
-      self::TRANSACTION_TYPE_DEBIT_NOTE => null,
-    ];
-
     if ($debitNote->getPayments()->count() > 0) {
       $submissionDeadline = $this->financeService->targetDeadline(
         fromDate: $earliestDueDate,
-        businessOffset: -(SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_DEADLINE
-                          + SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS)
-      );
-      $hardSubmissionDeadline[self::TRANSACTION_TYPE_DEBIT_NOTE] = $this->financeService->targetDeadline(
-        fromDate: $earliestDueDate,
         businessOffset: -SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_DEADLINE
+          - SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS, // extra days
       );
       $debitNote->setDueDate($earliestDueDate)
         ->setSubmissionDeadline($submissionDeadline)
@@ -542,7 +521,6 @@ class SepaBulkTransactionsController extends Controller
         null,
         $dueDeadline
       );
-      $hardSubmissionDeadline[self::TRANSACTION_TYPE_BANK_TRANSFER] = $submissionDeadline;
 
       $bankTransfer->setDueDate($dueDeadline)
         ->setSubmissionDeadline($submissionDeadline);
@@ -553,140 +531,92 @@ class SepaBulkTransactionsController extends Controller
     // Up to here everything was just in memory. The actual data-base
     // stuff should possibly be moved into the FinanceService.
 
-    $bulkSubmissionNames = [
-      self::TRANSACTION_TYPE_DEBIT_NOTE => [
-        'submission' => $this->l->t('Debit notes submission deadline for %s', $project->getName()),
-        'submissionHard' => $this->l->t('Debit notes submission hard-deadline for %s', $project->getName()),
-        'due' => $this->l->t('Debit notes due for %s', $project->getName()),
-        'notification' => $this->l->t('Debit notes pre-notification deadline for %s', $project->getName()),
-      ],
-      self::TRANSACTION_TYPE_BANK_TRANSFER => [
-        'submission' => $this->l->t('Bank transfers submission deadline for %s', $project->getName()),
-        'submissionHard' => $this->l->t('Bank transfers submission deadline for %s', $project->getName()),
-        'due' => $this->l->t('Bank transfers due for %s', $project->getName()),
-      ],
-    ];
-
     $this->entityManager->beginTransaction();
 
-    $calendarData = [
-      self::TRANSACTION_TYPE_DEBIT_NOTE => [],
-      self::TRANSACTION_TYPE_BANK_TRANSFER => [],
-    ];
-
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
-    foreach ([ self::TRANSACTION_TYPE_DEBIT_NOTE => $debitNote, self::TRANSACTION_TYPE_BANK_TRANSFER => $bankTransfer, ] as $bulkTag => $bulkTransaction) {
+    foreach ([$debitNote, $bankTransfer] as $bulkTransaction) {
+
       if (empty($bulkTransaction)) {
         continue;
       }
+
+      $calendarObjects = [];
+
+      $eventData = $this->bulkTransactionService->createSubmissionEventData($bulkTransaction);
+
       $this->entityManager
         ->registerPreCommitAction(
           function() use (
-            $bulkTag,
             $bulkTransaction,
+            $eventData,
             $project,
-            $bulkSubmissionNames,
-            $hardSubmissionDeadline,
-            &$calendarData,
+            &$calendarObjects,
           ) {
-            if ($bulkTag == self::TRANSACTION_TYPE_DEBIT_NOTE) {
-              $alarmTimes = [
-                [ self::ALARM_FROM_START => SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS ],
-                [ self::ALARM_FROM_START => 9 * 60 * 60 ],
-                [ self::ALARM_FROM_START => SepaBulkTransactionService::BULK_TRANSACTION_EARLY_REMINDER_SECONDS ],
-              ];
-            } else {
-              $alarmTimes = [
-                [ self::ALARM_FROM_START => SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS ],
-                [ self::ALARM_FROM_START => 9 * 60 * 60 ],
-              ];
-            }
-            $description = $this->l->t(
-              'Due date: %s.',
-              $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long'))
-              . $this->l->t('Bulk-transaction-id: %d', $bulkTransaction->getId());
-
             list(
-              'uri' => $eventUri, 'uid' => $eventUid, 'event' => $object,
+              'uri' => $eventUri, 'uid' => $eventUid, 'event' => $calendarObject,
             ) = $this->financeService->financeEvent(
-              title: $bulkSubmissionNames[$bulkTag]['submissionHard'],
-              description: $description,
+              title: $eventData->summary,
+              description: $eventData->description,
               project: $project,
-              start: $hardSubmissionDeadline[$bulkTag],
-              alarm: $alarmTimes,
+              start: $eventData->start,
+              alarm: $eventData->alarm,
             );
-            if ($object === null) {
+            if ($calendarObject === null) {
               throw new UnexpectedValueException('NULL CALENDAR OBJECT');
             }
             $bulkTransaction->setSubmissionEventUri($eventUri);
             $bulkTransaction->setSubmissionEventUid($eventUid);
-            $calendarData[$bulkTag][] = $object;
+            $calendarObjects[] = $calendarObject;
+
             return $eventUri;
           },
-          function($uri) {
-            $this->financeService->deleteFinanceCalendarEntry($uri);
+          function($eventUri) {
+            $this->financeService->deleteFinanceCalendarEntry($eventUri);
           },
         )
         ->register(
           function() use (
-            $bulkTag,
             $bulkTransaction,
+            $eventData,
             $project,
-            $bulkSubmissionNames,
-            $hardSubmissionDeadline,
-            &$calendarData,
+            &$calendarObjects,
           ) {
-            if ($bulkTag == self::TRANSACTION_TYPE_DEBIT_NOTE) {
-              $alarmTimes = [
-                [ self::ALARM_FROM_END => SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS ],
-                [ self::ALARM_FROM_START => 9 * 60 * 60 ],
-                [ self::ALARM_FROM_START => SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS ],
-              ];
-            } else {
-              $alarmTimes = [
-                [ self::ALARM_FROM_END => SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS ],
-                [ self::ALARM_FROM_START => 9 * 60 * 60 ],
-              ];
-            }
-            $description = $this->l->t(
-              'Due date: %s.',
-              $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long'))
-              . $this->l->t('Bulk-transaction-id: %d', $bulkTransaction->getId());
-
+            $summary = $bulkTransaction instanceof Entities\SepaDebitNote
+              ? $this->l->t('Debit notes submission for %s', $project->getName())
+              : $this->l->t('Bank transfers submission for %s', $project->getName());
             list(
-              'uri' => $taskUri, 'uid' => $taskUid, 'task' => $object
+              'uri' => $taskUri, 'uid' => $taskUid, 'task' => $calendarObject
             ) = $this->financeService->financeTask(
-              title: $bulkSubmissionNames[$bulkTag]['submission'],
-              description: $description,
+              title: $summary,
+              description: $eventData->description,
               project: $project,
-              start: $bulkTransaction->getSubmissionDeadline(),
-              due: $hardSubmissionDeadline[$bulkTag],
-              alarm: $alarmTimes,
+              start: $bulkTransaction->getSubmissionDeadline(), // hard - extra days
+              due: $eventData->start, // hard
+              alarm: $eventData->alarm,
             );
-            if ($object === null) {
+            if ($calendarObject === null) {
               throw new UnexpectedValueException('NULL CALENDAR OBJECT');
             }
             $bulkTransaction->setSubmissionTaskUri($taskUri);
             $bulkTransaction->setSubmissionTaskUid($taskUid);
-            $calendarData[$bulkTag][] = $object;
+            $calendarObjects[] = $calendarObject;
+
             return $taskUri;
           },
-          function($uri) {
-            $this->financeService->deleteFinanceCalendarEntry($uri);
+          function($taskUri) {
+            $this->financeService->deleteFinanceCalendarEntry($taskUri);
             $bulkTransaction->setSubmissionTaskUri(null);
             $bulkTransaction->setSubmissionTaskUid(null);
           },
         )
         ->register(
           function() use (
-            $bulkTag,
             $bulkTransaction,
             $project,
-            $bulkSubmissionNames,
-            &$calendarData,
+            &$calendarObjects,
           ) {
-
-            if ($bulkTag == self::TRANSACTION_TYPE_DEBIT_NOTE) {
+            if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+              $summary = $this->l->t('Debit notes due for %s', $project->getName());
               $description = $this->l->t(
                 'Total amount to receive: %s.',
                 $this->moneyValue($bulkTransaction->totals()));
@@ -699,6 +629,7 @@ class SepaBulkTransactionsController extends Controller
                   ]);
               }
             } else {
+              $summary = $this->l->t('Bank transfers due for %s', $project->getName());
               $description = $this->l->t(
                 'Total amount to pay: %s.',
                 $this->moneyValue($bulkTransaction->totals()->neg()));
@@ -713,104 +644,101 @@ class SepaBulkTransactionsController extends Controller
             }
 
             list(
-              'uri' => $eventUri, 'uid' => $eventUid, 'event' => $object
+              'uri' => $eventUri, 'uid' => $eventUid, 'event' => $calendarObject
             ) = $this->financeService->financeEvent(
-              title: $bulkSubmissionNames[$bulkTag]['due'],
+              title: $summary,
               description: $description,
               project: $project,
               start: $bulkTransaction->getDueDate(),
               payments: $bulkTransaction->getPayments(),
             );
-            if ($object === null) {
+            if ($calendarObject === null) {
               throw new UnexpectedValueException('NULL CALENDAR OBJECT');
             }
             $bulkTransaction->setDueEventUri($eventUri);
             $bulkTransaction->setDueEventUid($eventUid);
-            $calendarData[$bulkTag][] = $object;
+            $calendarObjects[] = $calendarObject;
+
             return $eventUri;
           },
-          function($uri) {
-            $this->financeService->deleteFinanceCalendarEntry($uri);
+          function($eventUri) {
+            $this->financeService->deleteFinanceCalendarEntry($eventUri);
             $bulkTransaction->setDueEventUri(null);
             $bulkTransaction->setDueEventUid(null);
           },
         );
 
-      if ($bulkTag == self::TRANSACTION_TYPE_DEBIT_NOTE) {
+      if ($bulkTransaction instanceof Entities\SepaDebitNote) {
         // add also the notification deadline
-        $title = $bulkSubmissionNames[self::TRANSACTION_TYPE_DEBIT_NOTE]['notification'];
+        $summary = $this->l->t('Debit notes pre-notification deadline for %s', $project->getName());
         $description = $this->l->t(
           'Submission-deadline: %1$s, hard submission-deadline: %2$s, due date: %3$s.', [
-            $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
-            $this->dateTimeFormatter->formatDate($hardSubmissionDeadline[$bulkTag], 'long'),
-            $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
+            $this->dateTimeFormatter->formatDate($bulkTransaction->getSubmissionDeadline(), 'long'),
+            $this->dateTimeFormatter->formatDate($eventData->start, 'long'),
+            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long'),
           ]);
         $this->entityManager
           ->registerPreCommitAction(
             function() use (
-              $bulkTag,
-              $debitNote,
-              $project,
-              $bulkSubmissionNames,
-              $title,
+              $bulkTransaction,
               $description,
-              &$calendarData,
+              $project,
+              $title,
+              &$calendarObjects,
             ) {
               list(
-                'uri' => $eventUri, 'uid' => $eventUid, 'event' => $object
+                'uri' => $eventUri, 'uid' => $eventUid, 'event' => $calendarObject
               ) = $this->financeService->financeEvent(
-                $title,
-                $description,
-                $project,
-                start: $debitNote->getPreNotificationDeadline(),
+                title: $summary,
+                description: $description,
+                procted: $project,
+                start: $bulkTransaction->getPreNotificationDeadline(),
                 alarm: SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS,
-                payments: $debitNote->getPayments(),
+                payments: $bulkTransaction->getPayments(),
               );
-              if ($object === null) {
+              if ($calendarObject === null) {
                 throw new UnexpectedValueException('NULL CALENDAR OBJECT');
               }
-              $debitNote->setPreNotificationEventUri($eventUri);
-              $debitNote->setPreNotificationEventUid($eventUid);
-              $calendarData[$bulkTag][] = $object;
+              $bulkTransaction->setPreNotificationEventUri($eventUri);
+              $bulkTransaction->setPreNotificationEventUid($eventUid);
+              $calendarObjects[] = $calendarObject;
               return $eventUri;
             },
-            function($uri) use ($debitNote) {
+            function($uri) use ($bulkTransaction) {
               $this->financeService->deleteFinanceCalendarEntry($uri);
-              $debitNote->setPreNotificationEventUri(null);
-              $debitNote->setPreNotificationEventUid(null);
+              $bulkTransaction->setPreNotificationEventUri(null);
+              $bulkTransaction->setPreNotificationEventUid(null);
             },
           )
           ->register(
             function() use (
-              $bulkTag,
-              $debitNote,
-              $project,
-              $bulkSubmissionNames,
-              $title,
+              $bulkTransaction,
               $description,
-              &$calendarData,
+              $project,
+              $summary,
+              &$calendarObjects,
             ) {
               list(
-                'uri' => $taskUri, 'uid' => $taskUid, 'task' => $object
+                'uri' => $taskUri, 'uid' => $taskUid, 'task' => $calendarObject
               ) = $this->financeService->financeTask(
-                $title,
-                $description,
-                $project,
-                due: $debitNote->getPreNotificationDeadline(),
+                title: $summary,
+                description: $description,
+                project: $project,
+                due: $bulkTransaction->getPreNotificationDeadline(),
                 alarm: SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS,
               );
-              if ($object === null) {
+              if ($calendarObject === null) {
                 throw new UnexpectedValueException('NULL CALENDAR OBJECT');
               }
-              $debitNote->setPreNotificationTaskUri($taskUri);
-              $debitNote->setPreNotificationTaskUid($taskUid);
-              $calendarData[$bulkTag][] = $object;
+              $bulkTransaction->setPreNotificationTaskUri($taskUri);
+              $bulkTransaction->setPreNotificationTaskUid($taskUid);
+              $calendarObjects[] = $calendarObject;
               return $taskUri;
             },
-            function($uri) use ($debitNote) {
-              $this->financeService->deleteFinanceCalendarEntry($uri);
-              $debitNote->setPreNotificationTaskUri(null);
-              $debitNote->setPreNotificationTaskUid(null);
+            function($taskUri) use ($bulkTransaction) {
+              $this->financeService->deleteFinanceCalendarEntry($taskUri);
+              $bulkTransaction->setPreNotificationTaskUri(null);
+              $bulkTransaction->setPreNotificationTaskUid(null);
             },
           );
       } // debit-note
@@ -818,25 +746,23 @@ class SepaBulkTransactionsController extends Controller
       // update relations between all calendar objects
       $this->entityManager->registerPreCommitAction(
         function() use (
-          $bulkTag,
           $bulkTransaction,
-          $debitNote,
-          &$calendarData,
+          &$calendarObjects,
         ) {
           $related = [
             $bulkTransaction->getDueEventUid(),
             $bulkTransaction->getSubmissionEventUid(),
             $bulkTransaction->getSubmissionTaskUid(),
           ];
-          if ($bulkTag == self::TRANSACTION_TYPE_DEBIT_NOTE) {
-            $related[] = $debitNote->getPreNotificationEventUid();
-            $related[] = $debitNote->getPreNotificationTaskUid();
+          if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+            $related[] = $bulkTransaction->getPreNotificationEventUid();
+            $related[] = $bulkTransaction->getPreNotificationTaskUid();
           }
           $related = array_filter($related);
           $changeSet = [ 'related' => [ 'SIBLING' => $related ] ];
           $this->logInfo('RELATIONS ' . print_r($related, true));
-          foreach ($calendarData[$bulkTag] as $object) {
-            $this->financeService->patchFinanceCalendarEntry($object, $changeSet);
+          foreach ($calendarObjects as $calendarObject) {
+            $this->financeService->patchFinanceCalendarEntry($calendarObject, $changeSet);
           }
         });
     }
@@ -908,7 +834,7 @@ class SepaBulkTransactionsController extends Controller
    *
    * @param null|string|EnumSepaBulkTransactionsExportPuropose $purpose
    *
-   * @param null|string $format Export format, e.g. 'gnucash' or 'aqbanking'
+   * @param null|string $format Export format, e.g. 'gnucash' or 'aqbanking'.
    *
    * @return Response
    */

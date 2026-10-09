@@ -30,6 +30,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -122,12 +123,14 @@ class SepaBulkTransactionServiceTest extends TestCase
     $this->mockTimeFactory();
 
     $this->sepaBulkTransactionsService = new SepaBulkTransactionService(
-      entityManager: $this->entityManager,
-      financeService: $this->financeService,
-      eventsService: $eventsService,
       appContainer: $appContainer,
-      logger: $logger,
+      configService: $configService,
+      dateTimeFormatter: $appContainer->get(IDateTimeFormatter::class),
+      entityManager: $this->entityManager,
+      eventsService: $eventsService,
+      financeService: $this->financeService,
       l: $l10n,
+      logger: $logger,
       timeFactory: $this->timeFactory,
     );
   }
