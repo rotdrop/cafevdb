@@ -1,0 +1,16 @@
+<map id="getCloudUserConfig" name="getCloudUserConfig">
+<area shape="rect" id="Node000001" title="Mock the cloud user config provider." alt="" coords="5,107,145,133"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="217,5,302,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,104,137,74,191,42,206,37,202,40,194,46,140,78,97,108"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4ec4e3a55ac1b405ed75bdd1e97d686c" title=" " alt="" coords="193,56,326,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,104,195,86,191,89,128,108"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ab535adb809a7921f88122e4b9f2d7d8f" title="Return the available user preferences keys for the given user." alt="" coords="202,107,316,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,117,189,119,184,121,146,123"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0c3ebddc73a4b940a6ff5d70aac4af66" title="Get faked user preferences." alt="" coords="201,157,318,184"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="126,131,196,151,191,154,126,137"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2e2840dd5076d13ba1514f1e95ebf656" title="Set faked user preferences." alt="" coords="202,208,317,235"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="95,131,140,162,194,194,207,202,201,201,191,198,137,166,94,137"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ac939b88db4bcc874760a03947ce54a9a" title="Callback hook for the mocked cloud&#45;config class." alt="" coords="374,132,485,159"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="317,126,361,134,356,135,317,131"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="317,159,361,155,356,156,318,165"/>
+</map>

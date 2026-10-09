@@ -1,0 +1,9 @@
+<map id="ArchiveTooLargeException" name="ArchiveTooLargeException">
+<area shape="rect" id="Node000001" title="Transparent archive extraction exception." alt="" coords="5,229,182,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html" title="Transparent archive extraction exception." alt="" coords="32,155,155,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,195,96,230,91,228,92,199"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="54,80,133,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,120,96,155,91,154,92,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="54,5,133,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,45,96,80,91,79,93,50"/>
+</map>

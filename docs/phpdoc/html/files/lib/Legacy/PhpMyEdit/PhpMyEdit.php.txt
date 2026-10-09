@@ -135,6 +135,8 @@ class PhpMyEdit
 	const CGI_DATA_KEY = 'data';
 	const CGI_OPERATION_KEY = 'operation';
 
+	const MRECS_KEY = 'mrecs';
+
 	// Class variables {{{
 
 	// Database handling
@@ -487,14 +489,13 @@ class PhpMyEdit
 		echo $this->htmlHiddenSys('mtable', $this->tb);
 		if (count($this->key) == 0) {
 			echo $this->htmlHiddenSys('mkey', '');
-			echo $this->htmlHiddenSys('mkeytype', '');
 		} else {
 			foreach ($this->key as $key => $key_type) {
 				echo $this->htmlHiddenSys('mkey['.$key.']', $key_type);
 			}
 		}
 		foreach ($this->mrecs as $mrec) {
-			echo $this->htmlHiddenSys('mrecs[]', $mrec);
+			echo $this->htmlHiddenSys(self::MRECS_KEY . '[]', $mrec);
 		}
 	}
 
@@ -570,8 +571,8 @@ class PhpMyEdit
 	 */
 	function label_cmp($a, $b) {
 		return ($a == $b ||
-				(isset($this->labels[$b]) && $a == $this->labels[$b]) ||
-				(isset($this->labels[$a]) && $this->labels[$a] == $b));
+				($b !== null && isset($this->labels[$b]) && $a == $this->labels[$b]) ||
+				($a !== null && isset($this->labels[$a]) && $this->labels[$a] == $b));
 	}
 
 	function default_sort() { return !isset($this->sfn) || count($this->sfn) == 0; }
@@ -995,7 +996,7 @@ class PhpMyEdit
 			$values += $value_group_data['values'];
 		}
 
-		$values = array_diff_key($values, [ null => true ]);
+		$values = array_filter($values, fn(mixed $key) => $key !== null, ARRAY_FILTER_USE_KEY);
 
 		$fdd['setvalues'] = [
 			'values' => $values,
@@ -3239,9 +3240,12 @@ EOT;
 			$readonly = $this->disabledTag($k); // || count($vals) == 0;
 			$mandatory = $this->mandatory($k);
 			$selected = $row[self::QUERY_FIELD . $k] ?? null;
-			if ($selected === null) {
-				$selected = $this->fdd[$k]['default'] ?? null;
-			}
+			// Default value should not be applied but just when
+			// displaying the add dialog.
+			//
+			// if ($selected === null) {
+			// 	$selected = $this->fdd[$k]['default'] ?? null;
+			// }
 			$strip_tags = true;
 
 			$attributes = $this->htmlAttributes($operation, $k, $row);
@@ -3729,8 +3733,8 @@ EOT;
 				}
 				$value = implode($glue, $value_ar2); // display, so no escape of delimiter
 			} else {
-				if (isset($this->fdd[$k][self::FDD_VALUES2][$value])) {
-					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value], $k, $css, $key_rec);
+				if (isset($this->fdd[$k][self::FDD_VALUES2][$value ?? ''])) {
+					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value ?? ''], $k, $css, $key_rec);
 					$escape = false;
 				}
 			}
@@ -3831,7 +3835,8 @@ EOT;
 			// Don't emit tooltips
 			return '';
 		} else {
-			return ' title="'.$this->enc($title).'" ';
+			// return ' title="'.$this->enc($title).'" ';
+			return ' title="' . $title . '" ';
 		}
 	}
 
@@ -5408,7 +5413,7 @@ EOT;
 			count($this->sfn)			  > 0 && $qstrparts[] = $this->get_sfn_cgi_vars();
 			strlen($this->cgi['persist']) > 0 && $qstrparts[] = $this->cgi['persist'];
 			foreach ($this->mrecs as $key => $value) {
-				$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs['.$key.']='.$value;
+				$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY . '[' . $key . ']=' . $value;
 			}
 			$qpview		 = $qstrparts;
 			$qpcopy		 = $qstrparts;
@@ -5622,7 +5627,7 @@ EOT;
 					if ($this->nav_custom_multi()) {
 						$css	  = $this->getCSSclass([ $this->misccss, 'check' ], null, null, $this->misccss2);
 						$misccss  = $this->getCSSclass('misc');
-						$namebase = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs';
+						$namebase = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY;
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
 
@@ -5899,12 +5904,18 @@ EOT;
 						// echo "<!-- ".$fn." -->\n";
 					}
 				}
-				if  ($this->col_has_checkboxes($k) ||
-					 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
-					if  (empty($fn)) {
-						$fn = @$this->fdd[$k]['default'];
-					}
-				}
+				// The default value has been installed by
+				// display_add_record(), if $fn now is empty then this
+				// is the user's choice or an empty default value. In
+				// either case the default value MUST NOT be set
+				// again.
+				//
+				// if  ($this->col_has_checkboxes($k) ||
+				// 	 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
+				// 	if  (empty($fn)) {
+				// 		$fn = @$this->fdd[$k]['default'];
+				// 	}
+				// }
 				foreach (array_keys($this->key) as $key) {
 					if ($fd == $key) {
 						$key_col_val[$key] = $fn;
@@ -6066,8 +6077,10 @@ EOT;
 			if ($this->col_has_checkboxes($k) ||
 				($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
 				$checks[$fd] = true;
-				$defaults[$fd] = @$this->fdd[$k]['default'];
-				//error_log('checkbox: '.$fd.' value '.$fn);
+				// Defaults have been installed initially and MUST NOT
+				// be enforced after user interaction.
+				//
+				// $defaults[$fd] = @$this->fdd[$k]['default'];
 			}
 			// Don't include disabled fields into newvals, but
 			// keep for reference in oldvals. Keep readonly-fields in newvals
@@ -6116,11 +6129,13 @@ EOT;
 					}
 				}
 			} else if (!empty($checks[$fd]) && empty($value)) {
-				if (intval($value) !== intval($oldvals[$fd])) {
-					// checkboxes, empty means unchecked, but the DB
-					// may as well store nothing or 0.
+				// So $value is empty. $oldvals[$fd] is a database value which may
+				// - contain a non-empty string, i.e. a non trivial checkbox value
+				// - something equivalent to a boolean value
+				$oldAsBoolean = filter_var($oldvals[$fd], FILTER_VALIDATE_BOOL, ['flags' => FILTER_NULL_ON_FAILURE]);
+				if ($oldAsBoolean === null || $oldAsBoolean === true) {
 					$changed[] = $fd;
-					$newvals[$fd] = $defaults[$fd];
+					$newvals[$fd] = null;
 				}
 			} else if ($value != $oldvals[$fd]) {
 				$fdn = $this->fdn[$fd]; // $fdn == field number
@@ -7327,6 +7342,13 @@ EOT;
 		$this->sfn	 = $this->get_sys_cgi_var('sfn');
 		isset($this->sfn)			  || $this->sfn			 = array();
 		is_array($this->sfn)		  || $this->sfn			 = array($this->sfn);
+		foreach ($this->sfn as $sortFieldNumberOrClear) {
+			if ($this->label_cmp($sortFieldNumberOrClear, 'Clear')) {
+				$this->sfn = [];
+				break;
+			}
+		}
+
 
 		// Make sure also the key are sorted numerically. Bloody PHP.
 		ksort($this->sfn, SORT_NUMERIC);
@@ -7373,7 +7395,7 @@ EOT;
 		if (!@is_array($opts['cgi']['persist'])) {
 			$opts['cgi']['persist'] = array();
 		}
-		$this->mrecs = $this->get_sys_cgi_var('mrecs', array());
+		$this->mrecs = $this->get_sys_cgi_var(self::MRECS_KEY, array());
 		$this->mrecs = array_values(array_unique($this->mrecs));
 
 		foreach ($opts['cgi']['persist'] as $key => $val) {
@@ -7381,7 +7403,7 @@ EOT;
 				// We need to handle sys_mrecs in a special way: never
 				// use absolute indices, because this kills the
 				// information submitted by the user (checkboxes)
-				if ($key == $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs') {
+				if ($key == $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY) {
 					foreach ($val as $key2 => $val2) {
 						$this->cgi['persist'] .= '&'.rawurlencode($key)
 							.'[]='.rawurlencode($val2);

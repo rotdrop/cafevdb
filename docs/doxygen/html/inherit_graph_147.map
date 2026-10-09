@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html" title="Post to local routes on the same server." alt="" coords="5,5,120,32"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service_interface.html" title="Interface for database migration services." alt="" coords="5,5,182,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_doctrine_migrations_service.html" title="Manage doctrine database migrations." alt="" coords="230,5,404,32"/>
+<area shape="poly" id="edge564_Node000000_Node000001" title=" " alt="" coords="197,16,232,19,227,19,197,21"/>
 </map>

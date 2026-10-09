@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Tests\Unit\Service\CloudUserConnectorServiceTest
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -147,18 +151,17 @@
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Testing the DB access requires excessive mocking or a real DB. The
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Testing the DB access requires excessive mocking or a real DB. The
 latter has not yet been fully set up but that will be the way to go in the
 future.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
     
             <section class="phpdocumentor-attributes">
@@ -180,6 +183,14 @@ future.</p>
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\AppInfo\Application::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\TimeFactory::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -219,6 +230,22 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Crypto\SealCryptor::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Crypto\SealService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Connection::class
     </dd>
     </dl>
@@ -228,30 +255,6 @@ future.</p>
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -347,6 +350,14 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class
     </dd>
     </dl>
@@ -404,6 +415,14 @@ future.</p>
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Events\EntityManagerBoundEvent::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -483,6 +502,46 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Maintenance\Migrations\Version20260819094146::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Maintenance\Migrations\Version20260819094422::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Maintenance\Migrations\Version20260819105948::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Maintenance\Migrations\Version20261009150233::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\CalDavService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Service\ConfigService::class
     </dd>
     </dl>
@@ -507,7 +566,7 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class
+        \OCA\CAFEVDB\Service\EventsService::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -515,7 +574,7 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class
+        \OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -531,7 +590,95 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\MailingListsService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\MusicianService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\ProjectService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Service\Registration::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\VCalendarService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -587,6 +734,14 @@ future.</p>
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Traits\EntityManagerTrait::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Traits\UserPreferencesTrait::class
     </dd>
     </dl>
@@ -613,13 +768,13 @@ future.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#constant_FIRST_VERSION">FIRST_VERSION</a>
     <span>
-        &nbsp;= &#039;first&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;first&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#constant_LATEST_VERSION">LATEST_VERSION</a>
     <span>
-        &nbsp;= &#039;latest&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;latest&#039;                            </span>
 </dt>
 
     </dl>
@@ -634,7 +789,7 @@ future.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#property_appliedVersions">$appliedVersions</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -778,9 +933,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
@@ -809,9 +964,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
@@ -856,16 +1011,16 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$appliedVersions</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -894,9 +1049,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">115</span>
+    <span class="phpdocumentor-element-found-in__line">134</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -932,9 +1087,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -970,9 +1125,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">128</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1008,9 +1163,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1046,9 +1201,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1084,9 +1239,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">132</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1122,9 +1277,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
@@ -1160,9 +1315,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
@@ -1198,9 +1353,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1241,9 +1396,9 @@ migration.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Setup the migrations service and apply all migrations up to the given
@@ -1289,9 +1444,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
     
@@ -1328,9 +1483,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1363,9 +1518,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">167</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1398,9 +1553,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">160</span>
+    <span class="phpdocumentor-element-found-in__line">179</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1433,9 +1588,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">249</span>
+    <span class="phpdocumentor-element-found-in__line">269</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.269" class="phpdocumentor-element-found-in__source" data-line="269" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1468,9 +1623,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">241</span>
+    <span class="phpdocumentor-element-found-in__line">261</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1503,9 +1658,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php"><a href="files/tests-phpunit-unit-service-clouduserconnectorservicetest.html"><abbr title="tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php">CloudUserConnectorServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">211</span>
+    <span class="phpdocumentor-element-found-in__line">231</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.211" class="phpdocumentor-element-found-in__source" data-line="211" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.231" class="phpdocumentor-element-found-in__source" data-line="231" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/CloudUserConnectorServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1538,9 +1693,9 @@ migration.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php"><a href="files/tests-phpunit-unit-maintenance-migrations-setupmigrationtrait.html"><abbr title="tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php">SetupMigrationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">151</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-CloudUserConnectorServiceTest.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/tests/phpunit/Unit/Maintenance/Migrations/SetupMigrationTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Undo applying migrations, i.e. go down to an empty database.</p>

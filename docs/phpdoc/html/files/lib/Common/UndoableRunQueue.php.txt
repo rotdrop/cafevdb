@@ -29,7 +29,7 @@ use InvalidArgumentException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -62,7 +62,7 @@ class UndoableRunQueue
 
   /** {@inheritdoc} */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {

@@ -27,11 +27,11 @@ namespace OCA\CAFEVDB\Service\Finance;
 use NumberFormatter;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -69,7 +69,7 @@ class GnuCashConnectorService
     private EntityManager $entityManager,
     private FinanceService $financeService,
     private UserStorage $userStorage,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
   ) {
@@ -301,6 +301,9 @@ class GnuCashConnectorService
     /** @var Entities\ProjectPayment $projectPayment */
     foreach ($compositePayment->getProjectPayments() as $projectPayment) {
       $receivableAccount = $this->generateParticipantReceivablesAccount($projectPayment->getReceivable());
+      if ($receivableAccount === null) {
+        continue;
+      }
       if (!isset($receivableAccounts[$receivableAccount])) {
         $receivableAccounts[$receivableAccount] = [
           'payments' => [ $projectPayment ],
@@ -317,11 +320,11 @@ class GnuCashConnectorService
           $accountData['payments'],
         ),
       );
-      /** @var RationalNumber $subTotals */
+      /** @var MonetaryNumberType $subTotals */
       $subTotals = array_reduce(
         $accountData['payments'],
-        fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
-        RationalNumber::zero(),
+        fn(MonetaryNumberType $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
+        MonetaryNumberType::zero(),
       );
       $transactionId = md5($receivableAccount);
       $data[] = [
@@ -344,20 +347,19 @@ class GnuCashConnectorService
           if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
             $generatorOption = $field->getManagementOption();
             $class = $generatorOption->getData();
-            echo $class . PHP_EOL;
             try {
               $generator = $this->appContainer->get($class);
               if (method_exists($generator, 'generateLegacyBalancingAccount')) {
                 $balancingAccount = $generator->generateLegacyBalancingAccount($receivable);
               }
             } catch (Throwable $t) {
-              echo $t->getMessage() . PHP_EOL;
+              // echo $t->getMessage() . PHP_EOL;
               // ignore
               $balancingAccount = '';
             }
           }
         }
-        /** @var RationalNumber $amount */
+        /** @var MonetaryNumberType $amount */
         $data[] = [
           'transactionId' => $transactionId,
           'date' => '',

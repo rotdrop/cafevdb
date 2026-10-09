@@ -1,0 +1,9 @@
+<map id="getAppInfoXML" name="getAppInfoXML">
+<area shape="rect" id="Node000001" title=" " alt="" coords="476,55,587,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_app_info_service.html#a79f18c1f7885bedee4a08108510deace" title=" " alt="" coords="263,21,406,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="458,56,406,49,406,44,464,56"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#abb1951bb9876ed3fd04f8fb965344651" title="{}" alt="" coords="241,72,428,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="463,80,429,88,428,83,458,80"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#adcdcb6c6ecc3b321ba8dfbb15524f675" title="Reads off the app&#45;name from the info.xml file." alt="" coords="5,5,193,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,35,194,37,193,32,250,34"/>
+</map>

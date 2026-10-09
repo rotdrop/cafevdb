@@ -30,7 +30,8 @@ use NumberFormatter;
 use RuntimeException;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
+use OCP\Config\IUserConfig;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
 use OCP\IDateTimeFormatter;
@@ -46,7 +47,8 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -65,11 +67,11 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
  */
 class ConfigService
 {
-  use \OCA\CAFEVDB\Traits\AppConfigTrait;
-  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
-  use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+  use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   /**
    * @var array
@@ -129,6 +131,9 @@ class ConfigService
   /** @var IConfig */
   private IConfig $cloudConfig;
 
+  /** @var IUserConfig */
+  protected IUserConfig $cloudUserConfig;
+
   /** @var IUserSession */
   private IUserSession $userSession;
 
@@ -139,14 +144,14 @@ class ConfigService
    */
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {
   }
 
-  /** @return IAppContainer */
-  public function getAppContainer():IAppContainer
+  /** @return ContainerInterface */
+  public function getAppContainer():ContainerInterface
   {
     return $this->appContainer;
   }
@@ -183,6 +188,12 @@ class ConfigService
   public function getCloudConfig():IConfig
   {
     return $this->cloudConfig ?? ($this->cloudConfig = $this->appContainer->get(IConfig::class));
+  }
+
+  /** @return IUserConfig */
+  public function getCloudUserConfig(): IUserConfig
+  {
+    return $this->cloudUserConfig ?? ($this->cloudUserConfig = $this->appContainer->get(IUserConfig::class));
   }
 
   /** @return string */
@@ -978,7 +989,7 @@ class ConfigService
       $locale = $this->getLocale();
     }
     if ($value instanceof RationalNumber) {
-      $value = $value->toDecimal(2);
+      $value = $value->toDecimal(MonetaryNumberType::SCALE);
     }
     $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $result = $fmt->formatCurrency((float)$value, $this->currencyIsoCode());

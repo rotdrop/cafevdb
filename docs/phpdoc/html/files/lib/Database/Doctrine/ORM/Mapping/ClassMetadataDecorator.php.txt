@@ -343,13 +343,13 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     foreach ($this->metaData->getIdentifierValues($entity) as $field => $value) {
       if (isset($this->metaData->associationMappings[$field])) {
         $association = $this->metaData->associationMappings[$field];
-        $targetEntity = $association['targetEntity'];
+        $targetEntity = $association->targetEntity;
         /** @var ClassMetadata $targetMeta */
         $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
-        if (count($association['joinColumns']) != 1) {
+        if (count($association->joinColumns) != 1) {
           throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $joinInfo = $association['joinColumns'][0];
+        $joinInfo = $association->joinColumns[0];
         $columnName = $joinInfo->name;
         $targetColumn = $joinInfo->referencedColumnName;
         $targetField = $targetMeta->fieldNames[$targetColumn];
@@ -413,14 +413,20 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
       $dbalType = null;
       if (isset($this->metaData->associationMappings[$field])) {
         $association = $this->metaData->associationMappings[$field];
+        $targetEntity = $association->targetEntity;
+        /** @var ClassMetadata $targetMeta */
+        $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
         if (count($association->joinColumns) != 1) {
           throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $association->joinColumns[0]->name;
-        $value = $this->entityManager->getReference(
-          $association->targetEntity,
-          [ $association->joinColumns[0]->referencedColumnName => $columnValues[$columnName] ],
-        );
+        $joinInfo = $association->joinColumns[0];
+        $columnName = $joinInfo->name;
+        $value = $columnValues[$columnName];
+        if (!($value instanceof $targetEntity)) {
+          $targetColumn = $joinInfo->referencedColumnName;
+          $targetField = $targetMeta->fieldNames[$targetColumn];
+          $value = $this->entityManager->getReference($association->targetEntity, [ $targetField => $value ]);
+        }
       } else {
         $columnName = $this->metaData->fieldMappings[$field]->columnName;
         if (!isset($columnValues[$columnName])) {

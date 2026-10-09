@@ -29,9 +29,12 @@ use InvalidArgumentException;
 use RuntimeException;
 
 use OCP\Files as CloudFiles;
+use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -57,6 +60,10 @@ class ProjectParticipantFieldsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait
+  {
+    sanitizeFilename as private systemSanitizeFilename;
+  }
 
   /** Matrix of unsupported data-types. */
   private const UNSUPPORTED = [
@@ -131,6 +138,7 @@ class ProjectParticipantFieldsService
     protected EntityManager $entityManager,
   ) {
     $this->l = $configService->getL10n();
+    $this->appContainer = $configService->getAppContainer();
   }
   // phpcs:enable
 
@@ -314,11 +322,13 @@ class ProjectParticipantFieldsService
    * ]
    * ```
    */
-  public static function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null):array
-  {
+  public static function participantMonetaryObligations(
+    Entities\Musician $musician,
+    ?Entities\Project $project = null,
+  ): array {
     $obligations = [
-      'sum' => RationalNumber::zero(), // total sum
-      'received' => RationalNumber::zero(), // sum of payments
+      'sum' => MonetaryNumberType::zero(), // total sum
+      'received' => MonetaryNumberType::zero(), // sum of payments
     ];
 
     if (empty($project)) {
@@ -349,7 +359,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Internal function: given a surcharge choice compute the associated amount
-   * of money and return that as RationalNumber. This is used in the legacy
+   * of money and return that as MonetaryNumberType. This is used in the legacy
    * display code in ParticipantTotalFeesTrait.
    *
    * @param string|null $key Key from the participant-fields data table. $key may
@@ -360,18 +370,21 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $participantField Field definition.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):RationalNumber
-  {
+  public function participantFieldSurcharge(
+    ?string $key,
+    ?string $value,
+    Entities\ProjectParticipantField $participantField,
+  ): MonetaryNumberType {
     switch ($participantField->getMultiplicity()) {
       case FieldMultiplicity::SIMPLE:
-        return RationalNumber::create($value);
+        return MonetaryNumberType::create($value);
       case FieldMultiplicity::GROUPOFPEOPLE:
         if (empty($key)) {
           break;
         }
-        return RationalNumber::create($participantField->getManagementOption()->getData());
+        return MonetaryNumberType::create($participantField->getManagementOption()->getData());
       case FieldMultiplicity::SINGLE:
         if (empty($key)) {
           break;
@@ -382,7 +395,7 @@ class ProjectParticipantFieldsService
         if ((string)$dataOption['key'] != $key) {
           $this->logWarn('Stored value "' . $key . '" unequal to stored key "' . $dataOption['key'] . '"');
         }
-        return RationalNumber::create($dataOption['data']);
+        return MonetaryNumberType::create($dataOption['data']);
       case FieldMultiplicity::GROUPSOFPEOPLE:
       case FieldMultiplicity::MULTIPLE:
         if (empty($key)) {
@@ -390,19 +403,19 @@ class ProjectParticipantFieldsService
         }
         foreach ($participantField->getDataOptions() as $dataOption) {
           if ((string)$dataOption['key'] == $key) {
-            return RationalNumber::create($dataOption['data']);
+            return MonetaryNumberType::create($dataOption['data']);
           }
         }
         $this->logError('No data item for multiple choice key "'.$key.'"');
-        return RationalNumber::zero();
+        return MonetaryNumberType::zero();
       case FieldMultiplicity::PARALLEL:
         if (empty($key)) {
           break;
         }
         $keys = Util::explode(',', $key);
         $found = false;
-        /** @var RationalNumber $amount */
-        $amount = RationalNumber::zero();
+        /** @var MonetaryNumberType $amount */
+        $amount = MonetaryNumberType::zero();
         foreach ($participantField->getDataOptions() as $dataOption) {
           if (array_search((string)$dataOption['key'], $keys) !== false) {
             $amount->addEq($dataOption['data']);
@@ -420,7 +433,7 @@ class ProjectParticipantFieldsService
         // $keys = Util::explode(',', $key);
         $values = Util::explodeIndexed($value);
 
-        $amount = RationalNumber::zero();
+        $amount = MonetaryNumberType::zero();
         foreach ($values as $key => $value) {
           if (!empty($value)) {
             $amount->addEq($value);
@@ -428,7 +441,7 @@ class ProjectParticipantFieldsService
         }
         return $amount;
     }
-    return RationalNumber::zero();
+    return MonetaryNumberType::zero();
   }
 
   /**
@@ -485,13 +498,15 @@ class ProjectParticipantFieldsService
    * @return null|string Sanitized file-name, no dots, no slashes, no
    * spaces. null if the argument was null.
    */
-  private static function sanitizeFileName(?string $name):?string
+  private function sanitizeFileName(?string $name):?string
   {
     if (empty($name)) {
       return null;
     }
     $name = Util::normalizeSpaces($name);
     $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
+
+    $name = $this->systemSanitizeFilename($name);
 
     return $name;
   }
@@ -507,7 +522,7 @@ class ProjectParticipantFieldsService
   {
     assert($field->isFileSystemContext());
 
-    return self::sanitizeFileName($field->getName());
+    return $this->sanitizeFileName($field->getName());
   }
 
   /**
@@ -584,7 +599,7 @@ class ProjectParticipantFieldsService
    * Return the effective value of the given datum. In particular
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
-   * values to RationalNumber, int to int, boolean to boolean.
+   * values to MonetaryNumberType, int to int, boolean to boolean.
    *
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
@@ -605,9 +620,9 @@ class ProjectParticipantFieldsService
         return Util::convertToDateTime($value);
       case FieldDataType::FLOAT:
       case FieldDataType::RECEIVABLES:
-        return RationalNumber::create($value);
+        return MonetaryNumberType::create($value);
       case FieldDataType::LIABILITIES:
-        return RationalNumber::create($value)->neg();
+        return MonetaryNumberType::create($value)->neg();
       case FieldDataType::INTEGER:
         return intval($value);
       case FieldDataType::CLOUD_FILE:
@@ -1192,6 +1207,7 @@ class ProjectParticipantFieldsService
             if ($datum === null) {
               continue;
             }
+            $participant->addParticipantFieldDatum($datum);
             $this->entityManager->persist($datum);
             $needFlush = true;
           }
@@ -1452,8 +1468,8 @@ class ProjectParticipantFieldsService
    */
   private function isSupportedFieldMultiplicityTransition(FieldMultiplicity $oldFieldMultiplicity, FieldMultiplicity $newFieldMultiplicity):bool
   {
-    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity];
-    return in_array((string)$newFieldMultiplicity, $allowed);
+    $allowed = self::ALLOWED_TRANSITIONS[$oldFieldMultiplicity->value];
+    return in_array($newFieldMultiplicity->value, $allowed);
   }
 
   /**
@@ -1467,7 +1483,7 @@ class ProjectParticipantFieldsService
    *
    * @return void
    */
-  public function handleChangeFieldFieldMultiplicity(
+  public function handleChangeFieldMultiplicity(
     Entities\ProjectParticipantField $field,
     ?FieldMultiplicity $oldFieldMultiplicity,
     ?FieldMultiplicity $newFieldMultiplicity,
@@ -1497,7 +1513,7 @@ class ProjectParticipantFieldsService
     }
 
     if (!$this->isSupportedFieldMultiplicityTransition($oldFieldMultiplicity, $newFieldMultiplicity)) {
-      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity] ?? [];
+      $allowedTransitions = self::ALLOWED_TRANSITIONS[$oldFieldMultiplicity->value] ?? [];
       if (empty($allowedTransitions)) {
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         throw new Exceptions\EnduserNotificationException(
@@ -1511,9 +1527,9 @@ class ProjectParticipantFieldsService
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'The field is already in use, therefore the multiplicity may only be changed from "%1$s" to "%2$s", but not to "%3$s".', [
-              $this->l->t($oldFieldMultiplicity),
-              implode(', ', array_map(fn($value) => $this->l->t($value), $allowedTransitions)),
-              $this->l->t($newFieldMultiplicity),
+              $oldFieldMultiplicity->t($this->l),
+              implode(', ', array_map(fn($value) => $value->t($this->l), $allowedTransitions)),
+              $newFieldMultiplicity->t($this->l),
             ]));
       }
     }

@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\AddressBook\ICardBackend
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -159,7 +163,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#method_getCards">getCards()</a>
     <span>
-                                &nbsp;: array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -185,13 +189,15 @@ or an individual entry.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#method_searchCards">searchCards()</a>
     <span>
-                                &nbsp;: array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]    </span>
 </dt>
 
     </dl>
 
 
 
+
+        
 
         
 
@@ -241,21 +247,20 @@ or an individual entry.</dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_getCard_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#method_getCard#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#method_getCard_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\Sabre\DAV\Exception\NotFound">NotFound</abbr></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -287,7 +292,7 @@ or an individual entry.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getCards</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getCards</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -300,7 +305,7 @@ or an individual entry.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]</span>
             </section>
 
 </article>
@@ -459,7 +464,7 @@ or an individual entry.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">searchCards</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pattern</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$properties</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">searchCards</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pattern</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$properties</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -476,7 +481,7 @@ or an individual entry.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$properties</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -489,7 +494,7 @@ or an individual entry.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, <a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>&gt;</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-AddressBook-MusicianCard.html"><abbr title="\OCA\CAFEVDB\AddressBook\MusicianCard">MusicianCard</abbr></a>[]</span>
             </section>
 
 </article>
@@ -592,7 +597,7 @@ or an individual entry.</p>
     </article>
                                 </section>
                 <section class="phpdocumentor-on-this-page__sidebar">
-                            
+                                
     <section class="phpdocumentor-on-this-page__content">
         <strong class="phpdocumentor-on-this-page__title">On this page</strong>
 
@@ -600,10 +605,10 @@ or an individual entry.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                    <li><a href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#toc-constants">Constants</a></li>
-                    <li><a href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#toc-methods">Methods</a></li>
-                </ul>
+                                                                                <li><a href="classes/OCA-CAFEVDB-AddressBook-ICardBackend.html#toc-methods">Methods</a></li>
+                                    </ul>
             </li>
+            
                             <li class="phpdocumentor-on-this-page-section__title">Methods</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">

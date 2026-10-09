@@ -1,0 +1,13 @@
+<map id="getFileContent" name="getFileContent">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,112,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_archive_service.html#a88a03ca7fe71d4b50c2699c879a238bb" title="Resolve a member name as requested by the virtual storage (normalized to NFC by Nextcloud) back to th..." alt="" coords="178,5,324,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,79,159,42,181,36,177,39,161,46,85,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="160,56,342,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,85,146,82,142,85,113,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="171,107,331,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="112,99,158,106,153,109,113,104"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a94aa2c3daa007c75e01ffa124a2d40dd" title=" " alt="" coords="178,157,324,200"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="86,106,161,143,176,151,171,151,159,148,85,111"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#adf6a2bd71ead887865ba3c5a1e6be731" title=" " alt="" coords="390,157,535,200"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="324,176,377,179,372,179,324,181"/>
+</map>

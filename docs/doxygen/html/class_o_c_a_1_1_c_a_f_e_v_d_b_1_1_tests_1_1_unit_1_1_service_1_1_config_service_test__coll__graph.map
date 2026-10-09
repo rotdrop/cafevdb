@@ -1,0 +1,17 @@
+<map id="ConfigServiceTest" name="ConfigServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the config&#45;service ." alt="" coords="5,279,134,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="10,180,87,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,220,69,278,64,278,52,224"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html" title="Configuration do&#45;it&#45;all class." alt="" coords="111,180,214,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,218,83,280,80,276,138,218"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_app_l10_n.html" title="AppL10N for the sake of dependency injection is defined as registerd service which simply return an i..." alt="" coords="16,81,91,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="67,119,95,154,133,179,128,180,92,158,67,124"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="25,5,82,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="54,44,56,81,51,81,53,50"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html" title="A decorator which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal ..." alt="" coords="115,81,211,108"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="164,122,165,181,160,179,161,126"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="113,5,213,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="164,45,165,82,160,80,162,50"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html" title="Handle some encryption tasks:" alt="" coords="235,81,362,108"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="287,119,274,141,256,158,234,172,211,182,208,177,232,167,253,154,270,138,283,123"/>
+</map>

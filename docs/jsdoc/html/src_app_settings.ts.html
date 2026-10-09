@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>src/app/settings.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="src_files-hooks.module_ts-ProjectManagementFolderEntry.html">ProjectManagementFolderEntry</a></li><li><a href="src_files-hooks.module_ts-ProjectParticipantFolderEntry.html">ProjectParticipantFolderEntry</a></li><li><a href="src_files-hooks.module_ts-SupportingDocumentEntry.html">SupportingDocumentEntry</a></li></ul><h3>Modules</h3><ul><li><a href="build_ts-types_app-config.module_ts.html">build/ts-types/app-config.ts</a></li><li><a href="src_admin-settings.module_ts.html">src/admin-settings.ts</a></li><li><a href="src_app.module_ts.html">src/app.ts</a></li><li><a href="src_app_action-menu.module_ts.html">src/app/action-menu.ts</a><ul class='methods'><li data-type='method'><a href="src_app_action-menu.module_ts.html#~closeActionMenu">closeActionMenu</a></li><li data-type='method'><a href="src_app_action-menu.module_ts.html#~markDialog">markDialog</a></li></ul></li><li><a href="src_app_ajax.module_ts.html">src/app/ajax.ts</a><ul class='methods'><li data-type='method'><a href="src_app_ajax.module_ts.html#~ajaxFailMessage">ajaxFailMessage</a></li><li data-type='method'><a href="src_app_ajax.module_ts.html#~ajaxHandleError">ajaxHandleError</a></li></ul></li><li><a href="src_app_app-settings.module_ts.html">src/app/app-settings.ts</a><ul class='methods'><li data-type='method'><a href="src_app_app-settings.module_ts.html#~appSettingsPopup">appSettingsPopup</a></li></ul></li><li><a href="src_app_backgroundjobs.module_ts.html">src/app/backgroundjobs.ts</a></li><li><a href="src_app_blog.module_ts.html">src/app/blog.ts</a><ul class='methods'><li data-type='method'><a href="src_app_blog.module_ts.html#~cancel">cancel</a></li><li data-type='method'><a href="src_app_blog.module_ts.html#~editWindow">editWindow</a></li><li data-type='method'><a href="src_app_blog.module_ts.html#~submit">submit</a></li><li data-type='method'><a href="src_app_blog.module_ts.html#~updateThreads">updateThreads</a></li></ul></li><li><a href="src_app_busy-icon.module_ts.html">src/app/busy-icon.ts</a></li><li><a href="src_app_busy-indicators.module_ts.html">src/app/busy-indicators.ts</a><ul class='methods'><li data-type='method'><a href="src_app_busy-indicators.module_ts.html#~setBusyIndicators">setBusyIndicators</a></li></ul></li><li><a href="src_app_cafevdb.module_ts.html">src/app/cafevdb.ts</a><ul class='methods'><li data-type='method'><a href="src_app_cafevdb.module_ts.html#~addReadyCallback">addReadyCallback</a></li><li data-type='method'><a href="src_app_cafevdb.module_ts.html#~toolTipsInit">toolTipsInit</a></li><li data-type='method'><a href="src_app_cafevdb.module_ts.html#~unfocus">unfocus</a></li></ul></li><li><a href="src_app_check-invalid-inputs.module_ts.html">src/app/check-invalid-inputs.ts</a><ul class='methods'><li data-type='method'><a href="src_app_check-invalid-inputs.module_ts.html#~checkInvalidInputs">checkInvalidInputs</a></li></ul></li><li><a href="src_app_ckeditor-provider.module_ts.html">src/app/ckeditor-provider.ts</a></li><li><a href="src_app_cloud-file-picker-dialog.module_ts.html">src/app/cloud-file-picker-dialog.ts</a></li><li><a href="src_app_configcheck.module_ts.html">src/app/configcheck.ts</a><ul class='methods'><li data-type='method'><a href="src_app_configcheck.module_ts.html#~documentReady">documentReady</a></li></ul></li><li><a href="src_app_debounce.module_ts.html">src/app/debounce.ts</a></li><li><a href="src_app_dialog-utils.module_ts.html">src/app/dialog-utils.ts</a><ul class='methods'><li data-type='method'><a href="src_app_dialog-utils.module_ts.html#~dialogCustomCloseButton">dialogCustomCloseButton</a></li><li data-type='method'><a href="src_app_dialog-utils.module_ts.html#~dialogFullScreenButton">dialogFullScreenButton</a></li><li data-type='method'><a href="src_app_dialog-utils.module_ts.html#~dialogToBackButton">dialogToBackButton</a></li><li data-type='method'><a href="src_app_dialog-utils.module_ts.html#~manageDialogToBackButtons">manageDialogToBackButtons</a></li></ul></li><li><a href="src_app_dialogs.module_ts.html">src/app/dialogs.ts</a><ul class='methods'><li data-type='method'><a href="src_app_dialogs.module_ts.html#~confirm">confirm</a></li></ul></li><li><a href="src_app_donation-receipts.module_ts.html">src/app/donation-receipts.ts</a></li><li><a href="src_app_email.module_ts.html">src/app/email.ts</a><ul class='methods'><li data-type='method'><a href="src_app_email.module_ts.html#~attachmentFromJSON">attachmentFromJSON</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~emailFormPopup">emailFormPopup</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~emailTabResize">emailTabResize</a></li><li data-type='method'><a href="src_app_email.module_ts.html#~updateComposerElements">updateComposerElements</a></li></ul></li><li><a href="src_app_file-download.module_ts.html">src/app/file-download.ts</a><ul class='methods'><li data-type='method'><a href="src_app_file-download.module_ts.html#~download">download</a></li></ul></li><li><a href="src_app_file-upload.module_ts.html">src/app/file-upload.ts</a><ul class='methods'><li data-type='method'><a href="src_app_file-upload.module_ts.html#~defaultDoneCallback">defaultDoneCallback</a></li><li data-type='method'><a href="src_app_file-upload.module_ts.html#~init">init</a></li></ul></li><li><a href="src_app_generate-id.module_ts.html">src/app/generate-id.ts</a></li><li><a href="src_app_globals.module_ts.html">src/app/globals.ts</a></li><li><a href="src_app_globalstate-factory.module_ts.html">src/app/globalstate-factory.ts</a></li><li><a href="src_app_globalstate.module_ts.html">src/app/globalstate.ts</a></li><li><a href="src_app_gnucash-accounts.module_ts.html">src/app/gnucash-accounts.ts</a><ul class='methods'><li data-type='method'><a href="src_app_gnucash-accounts.module_ts.html#~getGnuCashAccountsAutcompleteData">getGnuCashAccountsAutcompleteData</a></li></ul></li><li><a href="src_app_iframe-resize.module_ts.html">src/app/iframe-resize.ts</a><ul class='methods'><li data-type='method'><a href="src_app_iframe-resize.module_ts.html#~iFrameResize">iFrameResize</a></li></ul></li><li><a href="src_app_insurance.module_ts.html">src/app/insurance.ts</a></li><li><a href="src_app_invoices.module_ts.html">src/app/invoices.ts</a><ul class='methods'><li data-type='method'><a href="src_app_invoices.module_ts.html#~invoiceItemPopup">invoiceItemPopup</a></li></ul></li><li><a href="src_app_jquery-cafevdb-tooltips.module_ts.html">src/app/jquery-cafevdb-tooltips.ts</a><ul class='methods'><li data-type='method'><a href="src_app_jquery-cafevdb-tooltips.module_ts.html#~cafevTooltip">cafevTooltip</a></li><li data-type='method'><a href="src_app_jquery-cafevdb-tooltips.module_ts.html#~logPending">logPending</a></li><li data-type='method'><a href="src_app_jquery-cafevdb-tooltips.module_ts.html#~singleToolTipWorker">singleToolTipWorker</a></li></ul></li><li><a href="src_app_jquery-datetimepicker.module_ts.html">src/app/jquery-datetimepicker.ts</a></li><li><a href="src_app_jquery-extensions.module_ts.html">src/app/jquery-extensions.ts</a></li><li><a href="src_app_jquery-readonly.module_ts.html">src/app/jquery-readonly.ts</a><ul class='methods'><li data-type='method'><a href="src_app_jquery-readonly.module_ts.html#~generatePlaceHolder">generatePlaceHolder</a></li></ul></li><li><a href="src_app_jquery-ui-progressbar.module_ts.html">src/app/jquery-ui-progressbar.ts</a></li><li><a href="src_app_jquery.module_ts.html">src/app/jquery.ts</a><ul class='methods'><li data-type='method'><a href="src_app_jquery.module_ts.html#~isJQuery">isJQuery</a></li><li data-type='method'><a href="src_app_jquery.module_ts.html#~isJQuerySelect">isJQuerySelect</a></li><li data-type='method'><a href="src_app_jquery.module_ts.html#~jq">jq</a></li></ul></li><li><a href="src_app_lazy-decryption.module_ts.html">src/app/lazy-decryption.ts</a><ul class='methods'><li data-type='method'><a href="src_app_lazy-decryption.module_ts.html#~lazyBatchDecryptValues">lazyBatchDecryptValues</a></li></ul></li><li><a href="src_app_lock-input.module_ts.html">src/app/lock-input.ts</a></li><li><a href="src_app_modalizer.module_ts.html">src/app/modalizer.ts</a><ul class='methods'><li data-type='method'><a href="src_app_modalizer.module_ts.html#~modalizer">modalizer</a></li></ul></li><li><a href="src_app_musicians.module_ts.html">src/app/musicians.ts</a><ul class='methods'><li data-type='method'><a href="src_app_musicians.module_ts.html#~addMusicians">addMusicians</a></li><li data-type='method'><a href="src_app_musicians.module_ts.html#~contactValidation">contactValidation</a></li></ul></li><li><a href="src_app_notification.module_ts.html">src/app/notification.ts</a></li><li><a href="src_app_page.module_ts.html">src/app/page.ts</a><ul class='methods'><li data-type='method'><a href="src_app_page.module_ts.html#~loadPage">loadPage</a></li></ul></li><li><a href="src_app_path.module_ts.html">src/app/path.ts</a></li><li><a href="src_app_personal-settings.module_ts.html">src/app/personal-settings.ts</a></li><li><a href="src_app_pme-autocomplete.module_ts.html">src/app/pme-autocomplete.ts</a></li><li><a href="src_app_pme-export.module_ts.html">src/app/pme-export.ts</a><ul class='methods'><li data-type='method'><a href="src_app_pme-export.module_ts.html#~handleTableExportMenu">handleTableExportMenu</a></li></ul></li><li><a href="src_app_pme-file-upload-row.module_ts.html">src/app/pme-file-upload-row.ts</a></li><li><a href="src_app_pme-querylog.module_ts.html">src/app/pme-querylog.ts</a></li><li><a href="src_app_pme-record-id.module_ts.html">src/app/pme-record-id.ts</a><ul class='methods'><li data-type='method'><a href="src_app_pme-record-id.module_ts.html#~pmeRecordValue">pmeRecordValue</a></li></ul></li><li><a href="src_app_pme-selectors.module_ts.html">src/app/pme-selectors.ts</a><ul class='methods'><li data-type='method'><a href="src_app_pme-selectors.module_ts.html#~pmeIdSelector">pmeIdSelector</a></li><li data-type='method'><a href="src_app_pme-selectors.module_ts.html#~pmeSelector">pmeSelector</a></li><li data-type='method'><a href="src_app_pme-selectors.module_ts.html#~pmeSys">pmeSys</a></li><li data-type='method'><a href="src_app_pme-selectors.module_ts.html#~pmeToken">pmeToken</a></li></ul></li><li><a href="src_app_pme-state.module_ts.html">src/app/pme-state.ts</a></li><li><a href="src_app_pme-tweaks.module_ts.html">src/app/pme-tweaks.ts</a><ul class='methods'><li data-type='method'><a href="src_app_pme-tweaks.module_ts.html#~pmeUnTweak">pmeUnTweak</a></li></ul></li><li><a href="src_app_pme.module_ts.html">src/app/pme.ts</a><ul class='methods'><li data-type='method'><a href="src_app_pme.module_ts.html#~ensureDropdownVisibility">ensureDropdownVisibility</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~installInputChosen">installInputChosen</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~installInputSelectize">installInputSelectize</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~installTabHandler">installTabHandler</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~maybeTranspose">maybeTranspose</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeContextMenu">pmeContextMenu</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeDeferReload">pmeDeferReload</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeDestroyVueComponents">pmeDestroyVueComponents</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeInit">pmeInit</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeOpenRowDialog">pmeOpenRowDialog</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeTableDialogOpen">pmeTableDialogOpen</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pmeTriggerSubmit">pmeTriggerSubmit</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pseudoSubmit">pseudoSubmit</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~pseudoSubmitPost">pseudoSubmitPost</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~resetDropdownVisibility">resetDropdownVisibility</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~tableDialog">tableDialog</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~tableDialogHandlers">tableDialogHandlers</a></li><li data-type='method'><a href="src_app_pme.module_ts.html#~transposeReady">transposeReady</a></li></ul></li><li><a href="src_app_progress-status.module_ts.html">src/app/progress-status.ts</a><ul class='methods'><li data-type='method'><a href="src_app_progress-status.module_ts.html#~createProgressStatus">createProgressStatus</a></li><li data-type='method'><a href="src_app_progress-status.module_ts.html#~pollProgressStatus">pollProgressStatus</a></li></ul></li><li><a href="src_app_project-instrumentation-numbers.module_ts.html">src/app/project-instrumentation-numbers.ts</a></li><li><a href="src_app_project-participant-fields-display.module_ts.html">src/app/project-participant-fields-display.ts</a></li><li><a href="src_app_project-participant-fields.module_ts.html">src/app/project-participant-fields.ts</a><ul class='methods'><li data-type='method'><a href="src_app_project-participant-fields.module_ts.html#~confirmedReceivablesUpdate">confirmedReceivablesUpdate</a></li></ul></li><li><a href="src_app_project-participants.module_ts.html">src/app/project-participants.ts</a><ul class='methods'><li data-type='method'><a href="src_app_project-participants.module_ts.html#~loadMusicians">loadMusicians</a></li><li data-type='method'><a href="src_app_project-participants.module_ts.html#~loadPMETableFiltered">loadPMETableFiltered</a></li><li data-type='method'><a href="src_app_project-participants.module_ts.html#~loadProjectParticipants">loadProjectParticipants</a></li><li data-type='method'><a href="src_app_project-participants.module_ts.html#~personalRecordDialog">personalRecordDialog</a></li><li data-type='method'><a href="src_app_project-participants.module_ts.html#~validateInstrumentChoices">validateInstrumentChoices</a></li></ul></li><li><a href="src_app_project-payments.module_ts.html">src/app/project-payments.ts</a><ul class='methods'><li data-type='method'><a href="src_app_project-payments.module_ts.html#~projectPaymentPopup">projectPaymentPopup</a></li></ul></li><li><a href="src_app_projects.module_ts.html">src/app/projects.ts</a><ul class='methods'><li data-type='method'><a href="src_app_projects.module_ts.html#~emailPopup">emailPopup</a></li><li data-type='method'><a href="src_app_projects.module_ts.html#~forceHeight">forceHeight</a></li><li data-type='method'><a href="src_app_projects.module_ts.html#~instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li data-type='method'><a href="src_app_projects.module_ts.html#~projectViewPopup">projectViewPopup</a></li><li data-type='method'><a href="src_app_projects.module_ts.html#~projectWebPageRequest">projectWebPageRequest</a></li><li data-type='method'><a href="src_app_projects.module_ts.html#~projectWebPageTabHandler">projectWebPageTabHandler</a></li></ul></li><li><a href="src_app_select-popup.module_ts.html">src/app/select-popup.ts</a></li><li><a href="src_app_select-utils.module_ts.html">src/app/select-utils.ts</a><ul class='methods'><li data-type='method'><a href="src_app_select-utils.module_ts.html#~getSelectize">getSelectize</a></li><li data-type='method'><a href="src_app_select-utils.module_ts.html#~selectizeActive">selectizeActive</a></li></ul></li><li><a href="src_app_sepa-bulk-transactions.module_ts.html">src/app/sepa-bulk-transactions.ts</a></li><li><a href="src_app_sepa-debit-mandate.module_ts.html">src/app/sepa-debit-mandate.ts</a><ul class='methods'><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateDelete">mandateDelete</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateLoad">mandateLoad</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateStore">mandateStore</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateValidate">mandateValidate</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateValidatePME">mandateValidatePME</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li data-type='method'><a href="src_app_sepa-debit-mandate.module_ts.html#~mandatesInit">mandatesInit</a></li></ul></li><li><a href="src_app_settings-urls.module_ts.html">src/app/settings-urls.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings-urls.module_ts.html#~generateSettingsUrl">generateSettingsUrl</a></li></ul></li><li><a href="src_app_settings.module_ts.html">src/app/settings.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings.module_ts.html#~afterLoad">afterLoad</a></li></ul></li><li><a href="src_app_settings_debug-modes.module_ts.html">src/app/settings/debug-modes.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_debug-modes.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_debug-query-sql-filter.module_ts.html">src/app/settings/debug-query-sql-filter.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_debug-query-sql-filter.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_deselect-invisible.module_ts.html">src/app/settings/deselect-invisible.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_deselect-invisible.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_direct-change.module_ts.html">src/app/settings/direct-change.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_direct-change.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_expert-mode.module_ts.html">src/app/settings/expert-mode.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_expert-mode.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_finance-mode.module_ts.html">src/app/settings/finance-mode.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_finance-mode.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_initial-filter-visibility.module_ts.html">src/app/settings/initial-filter-visibility.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_initial-filter-visibility.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_pagerows.module_ts.html">src/app/settings/pagerows.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_pagerows.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_restore-history.module_ts.html">src/app/settings/restore-history.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_restore-history.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_show-disabled.module_ts.html">src/app/settings/show-disabled.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_show-disabled.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_settings_tooltips.module_ts.html">src/app/settings/tooltips.ts</a><ul class='methods'><li data-type='method'><a href="src_app_settings_tooltips.module_ts.html#~setter">setter</a></li></ul></li><li><a href="src_app_simple-set-value.module_ts.html">src/app/simple-set-value.ts</a><ul class='methods'><li data-type='method'><a href="src_app_simple-set-value.module_ts.html#~simpleSetHandler">simpleSetHandler</a></li></ul></li><li><a href="src_app_stop-enter-submit.module_ts.html">src/app/stop-enter-submit.ts</a><ul class='methods'><li data-type='method'><a href="src_app_stop-enter-submit.module_ts.html#~stopEnterSubmit">stopEnterSubmit</a></li></ul></li><li><a href="src_app_tax-exemption-notices.module_ts.html">src/app/tax-exemption-notices.ts</a></li><li><a href="src_app_template-renderer.module_ts.html">src/app/template-renderer.ts</a></li><li><a href="src_app_textarea-resize.module_ts.html">src/app/textarea-resize.ts</a><ul class='methods'><li data-type='method'><a href="src_app_textarea-resize.module_ts.html#~textareaResize">textareaResize</a></li></ul></li><li><a href="src_app_tinymceinit.module_ts.html">src/app/tinymceinit.ts</a></li><li><a href="src_app_url-decode.module_ts.html">src/app/url-decode.ts</a><ul class='methods'><li data-type='method'><a href="src_app_url-decode.module_ts.html#~urlDecode">urlDecode</a></li></ul></li><li><a href="src_app_user-manual.module_ts.html">src/app/user-manual.ts</a></li><li><a href="src_app_vue-action-menu.module_ts.html">src/app/vue-action-menu.ts</a></li><li><a href="src_app_wiki-popup.module_ts.html">src/app/wiki-popup.ts</a><ul class='methods'><li data-type='method'><a href="src_app_wiki-popup.module_ts.html#~wikiPopup">wikiPopup</a></li></ul></li><li><a href="src_app_window-resize.module_ts.html">src/app/window-resize.ts</a></li><li><a href="src_app_wysiwyg-editor.module_ts.html">src/app/wysiwyg-editor.ts</a><ul class='methods'><li data-type='method'><a href="src_app_wysiwyg-editor.module_ts.html#~addEditor">addEditor</a></li></ul></li><li><a href="src_authorization.module_ts.html">src/authorization.ts</a></li><li><a href="src_background-jobs.module_ts.html">src/background-jobs.ts</a></li><li><a href="src_config.module_ts.html">src/config.ts</a><ul class='methods'><li data-type='method'><a href="src_config.module_ts.html#~appPrefix">appPrefix</a></li></ul></li><li><a href="src_debug-modes.module_ts.html">src/debug-modes.ts</a></li><li><a href="src_event-bus-events.module_ts.html">src/event-bus-events.ts</a></li><li><a href="src_files-common.module_ts.html">src/files-common.ts</a></li><li><a href="src_files-hooks.module_ts.html">src/files-hooks.ts</a></li><li><a href="src_files-sidebar-hooks.module_ts.html">src/files-sidebar-hooks.ts</a></li><li><a href="src_legacy_nextcloud_jquery_placeholder.module_ts.html">src/legacy/nextcloud/jquery/placeholder.ts</a></li><li><a href="src_logger.module_ts.html">src/logger.ts</a></li><li><a href="src_mixins_global-mixin.module_ts.html">src/mixins/global-mixin.ts</a></li><li><a href="src_mountable-component-names.module_ts.html">src/mountable-component-names.ts</a></li><li><a href="src_router_add-contacts-to-project.module_ts.html">src/router/add-contacts-to-project.ts</a></li><li><a href="src_router_app-router.module_ts.html">src/router/app-router.ts</a></li><li><a href="src_router_calendar-routes.module_ts.html">src/router/calendar-routes.ts</a></li><li><a href="src_router_routes.module_ts.html">src/router/routes.ts</a></li><li><a href="src_services_app-l10n.module_ts.html">src/services/app-l10n.ts</a></li><li><a href="src_services_calendar-store-setup.module_ts.html">src/services/calendar-store-setup.ts</a></li><li><a href="src_services_legacy-global-state.module_ts.html">src/services/legacy-global-state.ts</a></li><li><a href="src_services_mountable-components.module_ts.html">src/services/mountable-components.ts</a></li><li><a href="src_services_navigation.module_ts.html">src/services/navigation.ts</a></li><li><a href="src_services_search-entities.module_ts.html">src/services/search-entities.ts</a><ul class='methods'><li data-type='method'><a href="src_services_search-entities.module_ts.html#~search">search</a></li></ul></li><li><a href="src_settings.module_ts.html">src/settings.ts</a></li><li><a href="src_stores_app-data.module_ts.html">src/stores/app-data.ts</a></li><li><a href="src_stores_cloud-users-groups.module_ts.html">src/stores/cloud-users-groups.ts</a></li><li><a href="src_stores_database-entities.module_ts.html">src/stores/database-entities.ts</a></li><li><a href="src_stores_error-handler.module_ts.html">src/stores/error-handler.ts</a></li><li><a href="src_stores_history.module_ts.html">src/stores/history.ts</a></li><li><a href="src_stores_persistent-data.module_ts.html">src/stores/persistent-data.ts</a></li><li><a href="src_stores_tooltips.module_ts.html">src/stores/tooltips.ts</a></li><li><a href="src_toolkit_services_entity-factory.module_ts.html">src/toolkit/services/entity-factory.ts</a></li><li><a href="src_toolkit_services_entity-repository.module_ts.html">src/toolkit/services/entity-repository.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_services_entity-repository.module_ts.html#~search">search</a></li></ul></li><li><a href="src_toolkit_types_axios-type-guards.module_ts.html">src/toolkit/types/axios-type-guards.ts</a></li><li><a href="src_toolkit_types_errors.module_ts.html">src/toolkit/types/errors.ts</a></li><li><a href="src_toolkit_types_type-traits.module_ts.html">src/toolkit/types/type-traits.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_types_type-traits.module_ts.html#~isOne">isOne</a></li></ul></li><li><a href="src_toolkit_util_axios-file-download.module_ts.html">src/toolkit/util/axios-file-download.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_util_axios-file-download.module_ts.html#~axiosFileDownload">axiosFileDownload</a></li></ul></li><li><a href="src_toolkit_util_cloud-version-classes.module_ts.html">src/toolkit/util/cloud-version-classes.ts</a></li><li><a href="src_toolkit_util_console.module_ts.html">src/toolkit/util/console.ts</a></li><li><a href="src_toolkit_util_dialog-alert.module_ts.html">src/toolkit/util/dialog-alert.ts</a></li><li><a href="src_toolkit_util_dialog-confirm.module_ts.html">src/toolkit/util/dialog-confirm.ts</a></li><li><a href="src_toolkit_util_file-node-busy-indicator.module_ts.html">src/toolkit/util/file-node-busy-indicator.ts</a></li><li><a href="src_toolkit_util_file-node-helper.module_ts.html">src/toolkit/util/file-node-helper.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_util_file-node-helper.module_ts.html#~fileInfoToNode">fileInfoToNode</a></li></ul></li><li><a href="src_toolkit_util_generate-url.module_ts.html">src/toolkit/util/generate-url.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_util_generate-url.module_ts.html#~generateUrl">generateUrl</a></li></ul></li><li><a href="src_toolkit_util_initial-state.module_ts.html">src/toolkit/util/initial-state.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_util_initial-state.module_ts.html#~getInitialState">getInitialState</a></li></ul></li><li><a href="src_toolkit_util_on-document-loaded.module_ts.html">src/toolkit/util/on-document-loaded.ts</a></li><li><a href="src_toolkit_util_pangram.module_ts.html">src/toolkit/util/pangram.ts</a></li><li><a href="src_toolkit_util_settings-sync.module_ts.html">src/toolkit/util/settings-sync.ts</a><ul class='methods'><li data-type='method'><a href="src_toolkit_util_settings-sync.module_ts.html#~fetchSetting">fetchSetting</a></li><li data-type='method'><a href="src_toolkit_util_settings-sync.module_ts.html#~fetchSettings">fetchSettings</a></li><li data-type='method'><a href="src_toolkit_util_settings-sync.module_ts.html#~saveConfirmedSetting">saveConfirmedSetting</a></li><li data-type='method'><a href="src_toolkit_util_settings-sync.module_ts.html#~saveSimpleSetting">saveSimpleSetting</a></li></ul></li><li><a href="src_toolkit_util_toasts.module_ts.html">src/toolkit/util/toasts.ts</a></li><li><a href="src_toolkit_util_webpack-setup.module_ts.html">src/toolkit/util/webpack-setup.ts</a></li><li><a href="src_types_ajax_jqxhr-error.module_ts.html">src/types/ajax/jqxhr-error.ts</a></li><li><a href="src_types_ajax_mail-merge.module_ts.html">src/types/ajax/mail-merge.ts</a></li><li><a href="src_types_ajax_nextcloud-log.module_ts.html">src/types/ajax/nextcloud-log.ts</a></li><li><a href="src_types_ajax_php-exception-response.module_ts.html">src/types/ajax/php-exception-response.ts</a></li><li><a href="src_util_address-popup.module_ts.html">src/util/address-popup.ts</a></li><li><a href="src_util_clear-object.module_ts.html">src/util/clear-object.ts</a><ul class='methods'><li data-type='method'><a href="src_util_clear-object.module_ts.html#~clearObject">clearObject</a></li></ul></li><li><a href="src_util_console.module_ts.html">src/util/console.ts</a></li><li><a href="src_util_crypto.module_ts.html">src/util/crypto.ts</a><ul class='methods'><li data-type='method'><a href="src_util_crypto.module_ts.html#~generateMasterKey">generateMasterKey</a></li></ul></li><li><a href="src_util_css-selectors.module_ts.html">src/util/css-selectors.ts</a></li><li><a href="src_util_doku-wiki.module_ts.html">src/util/doku-wiki.ts</a><ul class='methods'><li data-type='method'><a href="src_util_doku-wiki.module_ts.html#~dokuWikiSection">dokuWikiSection</a></li><li data-type='method'><a href="src_util_doku-wiki.module_ts.html#~dokuWikiUrl">dokuWikiUrl</a></li><li data-type='method'><a href="src_util_doku-wiki.module_ts.html#~dokuWikiUrlTarget">dokuWikiUrlTarget</a></li></ul></li><li><a href="src_util_formatDate.module_ts.html">src/util/formatDate.ts</a></li><li><a href="src_util_legacy-post-data.module_ts.html">src/util/legacy-post-data.ts</a><ul class='methods'><li data-type='method'><a href="src_util_legacy-post-data.module_ts.html#~generatePostHash">generatePostHash</a></li></ul></li><li><a href="src_util_session-storage.module_ts.html">src/util/session-storage.ts</a></li><li><a href="src_util_string-valued.module_ts.html">src/util/string-valued.ts</a><ul class='methods'><li data-type='method'><a href="src_util_string-valued.module_ts.html#~stringValue">stringValue</a></li></ul></li><li><a href="src_util_toasts.module_ts.html">src/util/toasts.ts</a></li><li><a href="src_util_tooltips.module_ts.html">src/util/tooltips.ts</a></li><li><a href="src_util_user-info-popup.module_ts.html">src/util/user-info-popup.ts</a></li><li><a href="src_vue-app.module_ts.html">src/vue-app.ts</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Template">Template</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/app/settings.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ *
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ *
+ * @module
+ */
+
+import type * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { GetValueResult } from './simple-set-value.ts';
+
+import { translate as t } from '@nextcloud/l10n';
+import camelcase from 'camelcase';
+import {
+  EnumPersonalSettingsKey,
+  EnumSettingsGetApp,
+  EnumSpecialProjectsAction,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  BASE_PATH,
+  END_POINT_APP_GET,
+  END_POINT_PERSONAL_FORM,
+} from '../../build/ts-types/php-modules/Controller/PersonalSettingsController.ts';
+import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
+import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import { appName, appPrefix } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { showInfo, TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts';
+import * as Ajax from './ajax.ts';
+import { toolTipsInit } from './cafevdb.ts';
+import * as Dialogs from './dialogs.ts';
+import fileDownload from './file-download.ts';
+import * as FileUpload from './file-upload.ts';
+import $ from './jquery.js';
+import * as Notification from './notification.ts';
+import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
+import * as SelectUtils from './select-utils.ts';
+import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
+import { generateUrl as generateSettingsUrl, getUrl, setAppUrl, setPersonalUrl } from './settings-urls.ts';
+import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
+
+import '../legacy/nextcloud/jquery/showpassword.js';
+import 'jquery-ui/ui/keycode';
+import 'jquery-ui/ui/widgets/autocomplete';
+import 'jquery-ui/ui/widgets/accordion';
+import 'jquery-ui/ui/widgets/tabs';
+import 'jquery-ui/dist/themes/base/jquery-ui.css';
+import 'jquery-ui-fixes.scss';
+import { hiddenCssClass } from 'variables.module.scss';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('jquery-ui/themes/base/autocomplete.css');
+
+require('personal-settings.scss');
+require('about.scss');
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/**
+ * Permanent DOM element holding the dynamically injected settings
+ * forms.
+ */
+const containerSelector = 'div.app-admin-settings';
+const tabsSelector = '#personal-settings-container';
+
+let timeStampTimer: NodeJS.Timeout;
+
+const localeUpdateOne = function(element: HTMLElement|JQuery) {
+  const $element = $(element);
+  if (!$element.is(':visible')) {
+    // avoid update if the element currently is hidden
+    return;
+  }
+  return $.post(getUrl('locale-info'), { scope: $element.data('scope') })
+  // .fail(function(xhr, status, errorThrown) { ignore }
+    .done(function(data) {
+      $element.find('.locale.time').replaceWith($(data.contents).find('.locale.time'));
+    });
+};
+
+const localeUpdater = async function($localeInfo: JQuery) {
+  if (!$localeInfo.filter(':visible').length) {
+    clearTimeout(timeStampTimer);
+    return;
+  }
+  const promises: JQuery.jqXHR&lt;any>[] = [];
+  for (const element of $localeInfo) {
+    promises.push(localeUpdateOne(element)!);
+  }
+  for (const promise of promises) {
+    await promise;
+  }
+  clearTimeout(timeStampTimer); // just in case, should not be necessary
+  timeStampTimer = setTimeout(() => localeUpdater($localeInfo), 1000 + Math.floor(Math.random() * 29000.0));
+};
+
+const updateLocaleTimeStamps = function($container: JQuery) {
+  const $localeInfo = $container.find('.locale.information');
+  localeUpdater($localeInfo);
+};
+
+/**
+ * Initialize handlers etc. Contents of container may be replaced by
+ * AJAX calls. This function initializes all dynamic
+ * elements. Everything attached to the container is initialized in
+ * the $(document).ready() callback.
+ *
+ * @param container Should be a permanent DOM element.
+ */
+const afterLoad = function(container?: JQuery) {
+
+  container = container || $(containerSelector);
+  const tabsHolder = $(tabsSelector);
+
+  if (!container.is(':parent')) {
+    // nothing to do, empty container
+    return;
+  }
+
+  tabsHolder.tabs({ active: 0 });
+
+  // Work around showPassword erasing the value and returns the
+  // text input clone.
+  const showPassword = function(element: JQuery) {
+    const tmp = element.val();
+    let showElement: JQuery;
+    // @ts-expect-error 2339 CUSTOM LEGACY OVERRIDE
+    element.showPassword(function(args: { input: JQuery; checkbox: JQuery; clone: JQuery }) {
+      showElement = args.clone;
+    });
+    element.val(tmp || '');
+    return showElement!;
+  };
+
+  // 'show password' checkbox
+  const encryptionKey = $(`#userkey #${EnumPersonalSettingsKey.ENCRYPTION_KEY}`);
+  const loginPassword = $('#userkey #password');
+  showPassword(encryptionKey);
+  showPassword(loginPassword);
+
+  $('#userkey input.button').on('click', function() {
+    // We allow empty keys, meaning no encryption
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    if (loginPassword.val() === '') {
+      $('#userkey .info').html(t(appName, 'You must type in your login password.'));
+      $('#userkey .info').show();
+      $('#userkey .error').show();
+      return false;
+    }
+    $.post(
+      setPersonalUrl(EnumPersonalSettingsKey.ENCRYPTION_KEY),
+      {
+        value: {
+          [EnumPersonalSettingsKey.ENCRYPTION_KEY]: encryptionKey.val(),
+          loginpassword: loginPassword.val(),
+        },
+      },
+    )
+      .done(function(data) {
+        console.log(data);
+        $('#userkey input[name="dbkey1"]').val('');
+        $('#userkey input[name="userkey"]').val('');
+        $('#userkey input[name="userkey-clone"]').val('');
+        $('#userkey .info').html(data.message);
+        $('#userkey .info').show();
+        $('#userkey .changed').show();
+        showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
+        const url = generateSettingsUrl(END_POINT_PERSONAL_FORM);
+        $.get(url)
+          .done((data) => {
+            $('#personal-settings-container').replaceWith(data);
+            console.info('CALL AFTER LOAD');
+            afterLoad($('#personal-settings-container'));
+            personalSettingsAfterLoad();
+          })
+          .fail((xhr, textStatus, errorThrown) => {
+            Ajax.handleError(xhr, textStatus, errorThrown);
+          });
+      })
+      .fail(async (xhr, status, errorThrown) => {
+        const failData = await Ajax.handleError(xhr, status, errorThrown);
+        $('#userkey .info').html(failData.messages.join(' '));
+        $('#userkey .info').show();
+        $('#userkey .error').show();
+      });
+    return false;
+  });
+
+  /****************************************************************************
+   *
+   * Application settings stuff
+   *
+   ***************************************************************************/
+
+  // name of orchestra
+
+  {
+    const adminGeneral = $('#admingeneral');
+    const msg = adminGeneral.find('.msg');
+
+    simpleSetValueHandler(
+      adminGeneral.find('input[name="orchestra"]') as JQuery&lt;HTMLInputElement>,
+      'blur',
+      msg,
+      {
+        success(_element, _data, value, _msg) {
+          if (value === '') {
+            $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function() {
+              $(this).prop('disabled', true);
+            });
+          } else {
+            $('div.personalblock.admin').find('fieldset').each(function() {
+              $(this).removeAttr('disabled');
+            });
+            if ($(`#${ConfigConstants.SHARE_OWNER_KEY} #user-saved`).val() !== '') {
+              $('div.personalblock.sharing').find('fieldset').each(function() {
+                $(this).removeAttr('disabled');
+              });
+            } else {
+              $(`#${ConfigConstants.SHARE_OWNER_KEY}form`).find('fieldset').each(function() {
+                $(this).removeAttr('disabled');
+              });
+            }
+          }
+        },
+      },
+    );
+
+    simpleSetValueHandler(
+      adminGeneral.find&lt;HTMLSelectElement>(`select[name="${ConfigConstants.ORCHESTRA_LOCALE_KEY}"]`),
+      'change',
+      msg,
+      {
+        success(_element, data: DTO.OrchestraLocaleResponse, _value, _msg) {
+          if (data.localeInfo) {
+            const $localeInfo = adminGeneral.find('.locale.information');
+            $localeInfo.children().remove();
+            $localeInfo.append($(data.localeInfo as string).children());
+          }
+        },
+      },
+    );
+  }
+
+  {
+    const form = $('#systemkey');
+    const container = form.find('fieldset.systemkey');
+    const msg = container.find('.statusmessage.general');
+
+    // Encryption-key
+    const keyInput = container.find('#key');
+    const oldKeyInput = container.find('#oldkey');
+
+    const keyInputClone = showPassword(keyInput);
+    const oldKeyInputClone = showPassword(oldKeyInput);
+
+    $('#keychangebutton').on('click', function() {
+      // We allow empty keys, meaning no encryption
+      form.find('.statusmessage').hide();
+      if (oldKeyInput.val() !== keyInput.val()) {
+
+        // disable form elements until we got an answer
+        $(tabsSelector + ' fieldset').prop('disabled', true);
+        $(tabsSelector).tabs('disable');
+        container.find('.statusmessage.standby').show();
+
+        Notification.show(t(appName, 'Please standby, the operation will take some time!'));
+
+        $.post(
+          setAppUrl('systemkey'),
+          {
+            value: {
+              systemkey: keyInput.val(),
+              oldkey: oldKeyInput.val(),
+            },
+          },
+        )
+          .done(function(data) {
+            // re-enable all forms
+            $(tabsSelector + ' fieldset').prop('disabled', false);
+            $(tabsSelector).tabs('enable');
+            container.find('.statusmessage.standby').hide();
+
+            Notification.hide();
+
+            if (keyInput.val() === '') {
+              container.find('.statusmessage.insecure').show();
+            }
+            keyInput.val('');
+            keyInputClone.val('');
+            oldKeyInput.val('');
+            oldKeyInputClone.val('');
+            if (keyInputClone.is(':visible')) {
+              $('#systemkey-show').trigger('change');
+            }
+            $('.statusmessage.changed').show();
+            if (data.message) {
+              Notification.messages(data.message);
+              container.find('.statusmessage.general').html(data.message).show();
+            }
+          })
+          .fail(async (xhr, status, errorThrown) => {
+            const failData = await Ajax.handleError(xhr, status, errorThrown);
+            $(tabsSelector + ' fieldset').prop('disabled', false);
+            $(tabsSelector).tabs('enable');
+            container.find('.statusmessage.standby').hide();
+
+            Notification.hide();
+
+            $('.statusmessage.error').show();
+            if (failData.message) {
+              container.find('.statusmessage.general').html(failData.message).show();
+            }
+          });
+      } else {
+        container.find('.statusmessage.equal').show();
+        if (oldKeyInput.val() === '') {
+          container.find('.statusmessage.insecure').show();
+        }
+      }
+      return false;
+    });
+
+    $('form#systemkey #keygenerate').on('click', function(_event) {
+      $('.statusmessage').hide();
+
+      // show the visible password text input
+      if ($('form#systemkey #key').is(':visible')) {
+        $('#systemkey-show').trigger('click');
+      }
+
+      $.post(
+        getUrl('passwordgenerate'),
+      )
+        .fail(function(xhr, status, errorThrown) {
+          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          // Make sure both inputs have the same value
+          keyInput.val(data.value);
+          keyInputClone.val(data.value);
+          Notification.messages(data.message);
+        });
+      return false;
+    });
+
+    $('#keydistributebutton').on('click', function(_event) {
+      const msg = form.find('fieldset.keydistribute .statusmessage');
+      form.find('.statusmessage').hide();
+      const name = $(this).attr('name') as string;
+      $.post(setAppUrl(name))
+        .fail(async (xhr, status, errorThrown) => {
+          const failData = await Ajax.handleError(xhr, status, errorThrown);
+          msg.html(failData.messages.join(' ')).show();
+        })
+        .done(function(data) {
+          Notification.messages(data.message);
+        });
+      return false;
+    });
+  }
+
+  /****************************************************************************
+   *
+   * data-base
+   *
+   ***************************************************************************/
+
+  {
+    simpleSetValueHandler($('#dbgeneral :input'), 'blur', $('#dbsettings #msg'));
+
+    // DB-Password
+    // 'show password' checkbox
+    const $dbPassword = $(`fieldset.${appName}_dbpassword #${appPrefix(ConfigConstants.APP_DB_PASSWORD)}`);
+    showPassword($dbPassword);
+
+    // test password
+    simpleSetValueHandler(
+      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} input.button`),
+      'click',
+      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} .statusmessage`),
+      {
+        success(_element, _data, _value) {
+          // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
+          // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
+        },
+        getValue(_element, msg) {
+          const val = { name: $dbPassword.attr('name')!, value: $dbPassword.val() };
+          if (val.value === '') {
+            msg.html(t(appName, 'Empty password, trying to use configured credentials.')).show();
+          }
+          return val;
+        },
+      },
+    );
+  }
+
+  /****************************************************************************
+   *
+   * Sharing, share-owner
+   *
+   ***************************************************************************/
+
+  const enableFieldSets = function() {
+    const $shareOwnerSet = $(`#${ConfigConstants.SHARE_OWNER_KEY}`).find&lt;HTMLInputElement>('input#user').val() !== '';
+
+    $('#calendars, #contacts').find('fieldset').each(function() {
+      $(this).prop('disabled', !$shareOwnerSet);
+    });
+    const $sharedFolder = $(`input#${ConfigConstants.SHARED_FOLDER}`).val() !== '';
+    const $projectsFolder = $(`input#${ConfigConstants.PROJECTS_FOLDER}`).val() !== '';
+    const $financeFolder = $(`input#${ConfigConstants.FINANCE_FOLDER}`).val() !== '';
+    $(`#${ConfigConstants.SHARED_FOLDER}-form`).find('fieldset').each(function(_i, element) {
+      const $element = $(element);
+      const disabled = (!$shareOwnerSet
+                      || ($element.hasClass(`needs-${ConfigConstants.SHARED_FOLDER}`) &amp;&amp; !$sharedFolder)
+                      || ($element.hasClass(`needs-${ConfigConstants.PROJECTS_FOLDER}`) &amp;&amp; !$projectsFolder)
+                      || ($element.hasClass(`needs-${ConfigConstants.FINANCE_FOLDER}`) &amp;&amp; !$financeFolder));
+      $element.prop('disabled', disabled);
+    });
+  };
+
+  {
+    const container = $(`#${ConfigConstants.SHARE_OWNER_KEY}`);
+    const msg = $('#shareownerform .statusmessage');
+    const $shareOwner = container.find&lt;HTMLInputElement>('#user');
+    const $shareOwnerSaved = container.find&lt;HTMLInputElement>('#user-saved');
+    const $shareOwnerForce = container.find&lt;HTMLInputElement>(`#${ConfigConstants.SHARE_OWNER_KEY}-force`);
+    const $shareOwnerCheck = container.find('#check');
+
+    $shareOwnerForce.on('change', function(this: HTMLInputElement, _event) {
+      msg.hide();
+      if (!$(this).is(':checked') &amp;&amp; $shareOwnerSaved.val() !== '') {
+        $shareOwner.val($shareOwnerSaved.val()!);
+        $shareOwner.prop('disabled', true);
+      } else {
+        $shareOwner.prop('disabled', false);
+      }
+      return false;
+    });
+
+    $shareOwner.on('blur', function(_event) {
+      $shareOwnerCheck.prop('disabled', $shareOwner.val() === '');
+      return false;
+    });
+
+    simpleSetValueHandler(
+      $shareOwnerCheck,
+      'click',
+      msg,
+      {
+        success(_element, _data, _value, _msg) { // done
+          $shareOwnerSaved.val($shareOwner.val()!);
+          $shareOwner.prop('disabled', true);
+          enableFieldSets();
+        },
+        getValue(_element, _msg) { // getValue
+          return {
+            name: ConfigConstants.SHARE_OWNER_KEY,
+            value: {
+              [ConfigConstants.SHARE_OWNER_KEY]: $shareOwner.val(),
+              [`${ConfigConstants.SHARE_OWNER_KEY}-saved`]: $shareOwnerSaved.val(),
+              [`${ConfigConstants.SHARE_OWNER_KEY}-force`]: $shareOwnerForce.is(':checked'),
+            },
+          };
+        },
+      },
+    );
+  } // fieldset block
+
+  // Share-owner´s password
+  {
+    const container = $('fieldset.shareownerpassword');
+    const password = container.find('#shareownerpassword');
+    const change = container.find('#change');
+    const msg = $('#shareownerform .statusmessage');
+
+    const passwordClone = showPassword(password);
+
+    simpleSetValueHandler(
+      change,
+      'click',
+      msg,
+      {
+        success(_element, _data, _value, _msg) { // done
+          // Why should we want to empty this except for security reasons?
+          // password.val('');
+          // passwordClone.val('');
+        },
+        getValue(_element, msg) {
+          const val = { name: password.attr('name')!, value: password.val() };
+          if (val.value === '') {
+            msg.html(t(appName, 'Password field must not be empty')).show();
+            return;
+          }
+          return val;
+        },
+      },
+    );
+
+    container.find('#generate').on('click', function(_event) {
+      $('.statusmessage').hide();
+      msg.hide();
+
+      // show the visible password input
+      if (password.is(':visible')) {
+        $('#shareownerpassword-show').trigger('click');
+      }
+
+      $.post(
+        getUrl('passwordgenerate'),
+      )
+        .fail(function(xhr, status, errorThrown) {
+          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          // TODO check integrity of return etc.
+          password.val(data.value);
+          passwordClone.val(data.value);
+          if (data.message !== '') {
+            msg.html(data.message).show();
+          }
+        });
+      return false;
+    });
+  }
+
+  { // shared objects
+    const container = $('#sharing-settings');
+    const msg = container.find('.statusmessage.sharing-settings');
+
+    /**************************************************************************
+     *
+     * Events, calendars, contacts
+     *
+     *************************************************************************/
+
+    $('div#sharing-settings').accordion({
+      heightStyle: 'content',
+    });
+
+    simpleSetValueHandler(
+      container.find('#calendars :input, #contacts :input'),
+      'blur',
+      msg,
+      {
+        success($self, data: DTO.NameIdValueResponse, value: string, _msgElement) {
+          if (data.value.name &amp;&amp; data.value.name !== value) {
+            $self.val(data.value.name);
+          }
+        },
+      },
+    );
+
+    container.find(`#${ConfigConstants.SHARED_FOLDER}-form`).on('submit', function() {
+      return false;
+    });
+
+    type CSSBase = typeof ConfigConstants.DEDICATED_FOLDERS[number];
+    type CSSSaved&lt;T extends CSSBase> = `${T}${'-saved'}`;
+    type CSSForce&lt;T extends CSSBase> = `${T}${'-force'}`;
+    type CSSCheck&lt;T extends CSSBase> = `${T}${'-check'}`;
+
+    type Value&lt;T extends CSSBase> = {
+      [key in T|CSSSaved&lt;T>|CSSForce&lt;T>]: key extends T|CSSSaved&lt;T> ? string : boolean;
+    };
+
+    const sharedFolder = &lt;CSS extends CSSBase>(
+      cssBase: CSS,
+      callback?: (
+        $element: JQuery,
+        css: CSS,
+        data: DTO.FolderValueResponse,
+        value: Value&lt;CSS>,
+        $msg: JQuery,
+      ) => undefined,
+    ) => {
+      const css = cssBase;
+      const cssSaved: CSSSaved&lt;CSS> = `${css}-saved` as const;
+      const cssForce: CSSForce&lt;CSS> = `${css}-force` as const;
+      const cssCheck: CSSCheck&lt;CSS> = `${css}-check` as const;
+      const sharedObject = container.find('#' + css);
+      const sharedObjectSaved = container.find('#' + cssSaved);
+      const sharedObjectForce = container.find('#' + cssForce);
+      const sharedObjectCheck = container.find('#' + cssCheck);
+
+      sharedObjectForce.on('blur', function(_event) { // @@TODO ???
+        return false;
+      });
+
+      sharedObjectForce.on('click', function(_event) {
+        msg.hide();
+        if (!sharedObjectForce.is(':checked') &amp;&amp; sharedObjectSaved.val() !== '') {
+          sharedObject.val(sharedObjectSaved.val()!);
+          sharedObject.prop('disabled', true);
+        } else {
+          sharedObject.prop('disabled', false);
+        }
+      });
+
+      simpleSetValueHandler(
+        sharedObjectCheck,
+        'click',
+        msg,
+        {
+          success(element, data: DTO.FolderValueResponse, value: Value&lt;CSS>, msg) { // done
+            // value is just the thing submitted to the AJAX call
+            sharedObject.val(data.value);
+            sharedObjectSaved.val(data.value);
+            if (value[css] !== '') {
+              sharedObject.prop('disabled', true);
+              sharedObjectForce.prop('checked', false);
+            }
+            if (callback !== undefined) {
+              callback(element, css, data, value, msg);
+            }
+          },
+          getValue(_element, _msg) { // getValue
+            return {
+              name: css,
+              value: {
+                [css]: sharedObject.val() as string,
+                [cssSaved]: sharedObjectSaved.val() as string,
+                [cssForce]: sharedObjectForce.is(':checked'),
+              } as Value&lt;CSS>,
+            };
+          },
+        },
+      );
+    };
+
+    sharedFolder(ConfigConstants.SHARED_FOLDER, function(_element, css, data, value, _msg) {
+      $(`div#sharing-settings span.${ConfigConstants.SHARED_FOLDER}`).html(value[css]); // update display
+      const $folderView = $(`#${ConfigConstants.SHARED_FOLDER}-fieldset`).find(`a.${ConfigConstants.SHARED_FOLDER}-view`);
+      $folderView.attr('href', data.folderLink || '');
+      if (data.folderLink) {
+        $folderView.removeClass(hiddenCssClass);
+      } else {
+        $folderView.addClass(hiddenCssClass);
+      }
+      enableFieldSets();
+    });
+    sharedFolder(ConfigConstants.FINANCE_FOLDER, function(_element, css, _data, value, _msg) {
+      // const emptyProjectsFolder = $(`div#sharing-settings input[name="${ConfigConstants.PROJECTS_FOLDER}"]`).val() === '';
+      $(`div#sharing-settings span.${ConfigConstants.FINANCE_FOLDER}`).html(value[css] as string); // update
+      enableFieldSets();
+    });
+    sharedFolder(ConfigConstants.PROJECTS_FOLDER, function(_element, css, _data, value, _msg) {
+      // const emptyFinanceFolder = $(`div#sharing-settings input[name="${ConfigConstants.FINANCE_FOLDER}"]`).val() === '';
+      $(`div#sharing-settings span.${ConfigConstants.PROJECTS_FOLDER}`).html(value[css]); // update
+      enableFieldSets();
+    });
+    sharedFolder(ConfigConstants.PROJECT_PARTICIPANTS_FOLDER);
+    sharedFolder(ConfigConstants.PROJECT_POSTERS_FOLDER);
+    sharedFolder(ConfigConstants.PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    sharedFolder(ConfigConstants.TRANSACTIONS_FOLDER);
+    sharedFolder(ConfigConstants.BALANCES_FOLDER);
+    sharedFolder(ConfigConstants.DOCUMENT_TEMPLATES_FOLDER, function(_element, css, _data, value, _msg) {
+      $('fieldset.document-template input').prop('disabled', value[css] === '');
+    });
+    sharedFolder(ConfigConstants.POSTBOX_FOLDER, function(_element, _css, data, _value, _msg) {
+      if (data.url) {
+        $(`div.${ConfigConstants.POSTBOX_FOLDER}-sharelink`).html(data.url);
+      }
+    });
+    sharedFolder(ConfigConstants.OUTBOX_FOLDER);
+
+    simpleSetValueHandler(container.find('#taxExcemptionNoticeTemplate'), 'blur', msg);
+
+    const $cloudUserForm = container.find('form.cloud-user');
+
+    const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
+    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find&lt;HTMLInputElement>('input[name="importClubMembersAsCloudUsers"]');
+    const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
+    const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
+    const $enabledIfImport = $cloudUserForm.find('.enable-if-user-sql-backend');
+
+    const $personalizedViewsFieldSet = $cloudUserForm.find('fieldset.personalized-views');
+    const $musicianPersonalizedViews = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViews"]') as JQuery&lt;HTMLInputElement>;
+    const $recreatePersonalizedViewsButton = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViewsRecreateViews"]') as JQuery&lt;HTMLInputElement>;
+    const $enabledIfPersonalizedViews = $cloudUserForm.find('.enable-if-personalized-views');
+
+    const $cloudUserHints = $cloudUserForm.find('div.cloud-user.hints');
+
+    const updateHints = function(hints?: Array&lt;string>) {
+      $cloudUserHints.empty();
+      if (!Array.isArray(hints) || hints.length === 0) {
+        $cloudUserHints.closest('fieldset').hide();
+        return;
+      }
+      $cloudUserHints.closest('fieldset').toggleClass(hiddenCssClass, !$importClubMembersAsCloudUsers.is(':checked'));
+      for (const hint of hints) {
+        $cloudUserHints.append('&lt;div class="cloud-user hint">' + hint + '&lt;/div>');
+      }
+    };
+
+    const updateOtherOnImportChange = &lt;T extends HTMLElement>($element: JQuery&lt;T>) => {
+      const isChecked = $element.prop('checked');
+      console.info('UPDATE OTHER', {
+        isChecked,
+        $cloudUserHints,
+        $enabledIfImport,
+        $shownIfImport,
+        $importClubMembersFieldSet,
+      });
+      $cloudUserHints.closest('fieldset').toggleClass(hiddenCssClass, !isChecked);
+      $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
+      $shownIfImport.toggleClass(hiddenCssClass, !isChecked);
+      $importClubMembersFieldSet.toggleClass('club-member-users-enabled', isChecked);
+      $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
+    };
+
+    const updateOtherOnPersonalizedViewsChange = function($element: JQuery) {
+      const isChecked = $element.prop('checked');
+      $enabledIfPersonalizedViews.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
+    };
+
+    simpleSetValueHandler(
+      $importClubMembersAsCloudUsers,
+      'change',
+      undefined,
+      {
+        setup() {
+          console.info('SETUP');
+          const $this = $(this) as JQuery;
+          $this.addClass('busy');
+          updateOtherOnImportChange($this);
+        },
+        cleanup() {
+          console.info('CLEANUP');
+          const $this = $(this) as JQuery;
+          updateOtherOnImportChange($this);
+          $this.removeClass('busy');
+        },
+        success(_$element, data: DTO.SimpleSetValueResponse) {
+          console.info('SUCCESS');
+          console.info('DATA', data);
+          updateHints(data.hints);
+        },
+        fail(xhr, textStatus, errorThrown) {
+          console.info('FAIL');
+          const $this = $(this) as JQuery;
+          Ajax.handleError(xhr, textStatus, errorThrown);
+          // revert on failure
+          $this.prop('checked', !$this.is(':checked'));
+          updateOtherOnImportChange($this);
+        },
+      },
+    );
+
+    const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]') as JQuery&lt;HTMLInputElement>;
+    const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database') as JQuery&lt;HTMLInputElement>;
+
+    $cloudUserViewsDatabaseCheckbox
+      .on('change', function(_event) {
+        const $this = $cloudUserViewsDatabaseCheckbox;
+        const $databaseValue = $cloudUserViewsDatabase.val()!;
+        if ($this.prop('checked')) {
+          if ($databaseValue !== ($this.data('savedDatabaseValue') || '')) {
+            $cloudUserViewsDatabase.val($this.data('savedDatabaseValue'));
+            $cloudUserViewsDatabase.trigger('blur');
+          }
+        } else {
+          $this.data('savedDatabaseValue', $databaseValue);
+          if ($databaseValue !== '') {
+            $cloudUserViewsDatabase.val('');
+            $cloudUserViewsDatabase.trigger('blur');
+          }
+        }
+        return false;
+      });
+
+    simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
+      success(_$element, data: DTO.SimpleSetValueResponse) {
+        updateHints(data.hints);
+      },
+    });
+
+    simpleSetValueHandler($recreateViewsButton, 'click', undefined, {
+      setup() { $recreateViewsButton.addClass('busy'); },
+      success(_$element, data: DTO.SimpleSetValueResponse) {
+        updateHints(data.hints);
+      },
+      cleanup() { $recreateViewsButton.removeClass('busy'); },
+    });
+
+    simpleSetValueHandler(
+      $musicianPersonalizedViews,
+      'change',
+      undefined,
+      {
+        setup() {
+          const $this = $(this) as JQuery;
+          $this.addClass('busy');
+          // updateOtherOnPersonalizedViewsChange($this);
+        },
+        cleanup() {
+          const $this = $(this) as JQuery;
+          updateOtherOnPersonalizedViewsChange($this);
+          $this.removeClass('busy');
+        },
+        success(_$element, data: DTO.SimpleSetValueResponse) {
+          console.info('DATA', data);
+          updateHints(data.hints);
+        },
+        fail(xhr, textStatus, errorThrown) {
+          const $this = $(this) as JQuery;
+          Ajax.handleError(xhr, textStatus, errorThrown);
+          // revert on failure
+          $this.prop('checked', !$this.is(':checked'));
+          updateOtherOnPersonalizedViewsChange($this);
+        },
+      },
+    );
+
+    simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
+      setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
+      success(_$element, data: DTO.SimpleSetValueResponse) {
+        updateHints(data.hints);
+      },
+      cleanup() { $recreatePersonalizedViewsButton.removeClass('busy'); },
+    });
+
+  } // shared objects
+
+  /****************************************************************************
+   *
+   * email
+   *
+   ***************************************************************************/
+
+  {
+    const $emailContainer = $('div#email-settings');
+
+    $('div#email-settings').accordion({
+      heightStyle: 'content',
+    });
+
+    {
+      const configKey = ConfigConstants.EMAIL_USER;
+      // Email-User
+      const $container = $emailContainer.find('fieldset.' + configKey);
+      const $input = $container.find&lt;HTMLInputElement>('input#' + configKey);
+
+      simpleSetValueHandler($input, 'blur', undefined, {
+        success($element, data: DTO.SimpleSetValueResponse) {
+          if (data.value) {
+            $element.val(data.value);
+          }
+        },
+      });
+    }
+
+    {
+      const configKey = ConfigConstants.EMAIL_PASSWORD;
+      const $container = $emailContainer.find('fieldset.' + configKey);
+
+      // 'show password' checkbox
+      const $input = $container.find&lt;HTMLInputElement>('#' + configKey);
+      showPassword($input);
+      const $passwordChange = $container.find&lt;HTMLInputElement>('input.button');
+
+      $passwordChange.on('click', function() {
+        const value = $input.val()!;
+        const name = $input.attr('name')!;
+        if (value !== '') {
+          $.post(
+            setAppUrl(name),
+            { value },
+          )
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+            })
+            .done(function(data: DTO.SimpleSetValueResponse) {
+              Notification.messages(data.messages);
+            });
+        } else {
+          Notification.messages([t(appName, 'Password field must not be empty.')], { timeout: TOAST_PERMANENT_TIMEOUT });
+        }
+        return false;
+      });
+    } // fieldset emailpassword
+
+    {
+      const $container = $emailContainer.find('form.serversettings');
+      const $serverSelects = $container.find&lt;HTMLSelectElement>(
+        [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map((x) => 'select#' + x).join(','),
+      );
+      const $serverInputs = $container.find&lt;HTMLInputElement>(
+        [
+          ConfigConstants.SMTP_PORT,
+          ConfigConstants.SMTP_SERVER,
+          ConfigConstants.IMAP_PORT,
+          ConfigConstants.IMAP_SERVER,
+        ].map((x) => 'input#' + x).join(','),
+      );
+
+      $serverSelects.on('change', function(this: HTMLSelectElement, _event) {
+        const name = $(this).attr('name')!;
+        const value = $(this).val();
+        $.post(
+          setAppUrl(name),
+          { value },
+        )
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown);
+          })
+          .done(function(data) {
+            console.info('SECURITY RESPONSE', { data });
+            if (data.port) {
+              $('#' + data.proto + 'port').val(data.port);
+            }
+            Notification.messages(data.messages);
+          });
+        return false;
+      });
+
+      simpleSetValueHandler(
+        $serverInputs,
+        'blur',
+        undefined,
+        {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('EMAIL SERVER VALUE', { data });
+            if (data.value) {
+              $element.val(data.value);
+            }
+          },
+        },
+      );
+    }
+
+    {
+      const $container = $emailContainer.find('form.bulk-email-settings');
+      console.log('************', $container);
+
+      const blurInputsSelector = [
+        'input#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_NAME_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_ADDRESS_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_DOMAIN_KEY,
+        'input#' + ConfigConstants.BULK_EMAIL_SUBJECT_TAG,
+        'input.' + ConfigConstants.ATTACHMENT_LINK_SIZE_LIMIT,
+        'input.' + ConfigConstants.ATTACHMENT_LINK_EXPIRATION_LIMIT,
+      ].join(',');
+      const $blurInputs = $container.find&lt;HTMLInputElement>(blurInputsSelector);
+
+      simpleSetValueHandler(
+        $blurInputs,
+        'blur',
+        undefined,
+        {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('BULK EMAIL VALUE', { data });
+            if (data.value &amp;&amp; $element.val() !== data.value) {
+              $element.val(data.value);
+            }
+          },
+        },
+      );
+
+      const $checkboxInputs = $container.find&lt;HTMLInputElement>(
+        [
+          'input#' + ConfigConstants.CLOUD_ATTACHMENT_ALWAYS_LINK,
+          'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
+          'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS,
+        ].join(','),
+      );
+
+      simpleSetValueHandler($checkboxInputs, 'change');
+
+      simpleSetHandler($container.find('#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY + 'Autoconf'), 'click');
+    }
+
+    {
+      const configKey = ConfigConstants.BULK_EMAIL_PRIVACY_NOTICE;
+      const $container = $emailContainer.find('form.' + configKey);
+      console.log('************', $container);
+
+      const $bulkEmailPrivacyNotice = $container.find&lt;HTMLTextAreaElement>('textarea[name="' + configKey + '"]');
+      console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
+      WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
+
+      simpleSetValueHandler(
+        $bulkEmailPrivacyNotice,
+        'blur',
+        undefined,
+        {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('BULK EMAIL PRIVACY NOTICE', { data });
+            if (data.value &amp;&amp; $element.val() !== data.value) {
+              $element.val(data.value);
+            }
+          },
+        },
+      );
+    }
+
+    {
+      const $container = $emailContainer.find('form.emailtest');
+      const $emailTestAddress = $container.find('#' + ConfigConstants.EMAIL_TEST_ADDRESS_KEY);
+
+      simpleSetHandler($container.find('#emailtestbutton'), 'click');
+      simpleSetValueHandler($emailTestAddress, 'blur');
+      simpleSetValueHandler(
+        $container.find('#' + ConfigConstants.EMAIL_TEST_MODE),
+        'change',
+        undefined,
+        {
+          success(_element, _data) {
+            // if (element.is(':checked')) {
+            //   emailTestAddress.prop('disabled', false);
+            // } else {
+            //   emailTestAddress.prop('disabled', true);
+            // }
+          },
+        },
+      );
+    }
+
+    {
+      // mailing list REST stuff
+      const $container = $emailContainer.find('form.mailing-list');
+
+      const inputValues = [
+        ...Object.values(ConfigConstants.MAILING_LIST_CONFIG),
+        ...Object.values(ConfigConstants.MAILING_LIST_REST_CONFIG),
+      ];
+      const $inputs = $container.find&lt;HTMLInputElement>(inputValues.map((x) => '#' + x).join(','));
+
+      const $password = $container.find('#' + ConfigConstants.MAILING_LIST_REST_CONFIG.password);
+      showPassword($password);
+
+      simpleSetValueHandler($inputs, 'blur');
+    }
+
+    $('form#orchestra').accordion({
+      heightStyle: 'content',
+    });
+
+  }
+
+  {
+    /**************************************************************************
+     *
+     * street address and other address settings
+     *
+     *************************************************************************/
+
+    const msg = $('#orchestra #msg');
+
+    simpleSetValueHandler($('input[class^="' + ConfigConstants.STREET_ADDRESS_PREFIX + '"], input[class^="register"]'), 'blur', msg);
+
+    simpleSetValueHandler(
+      $('input.phoneNumber') as JQuery&lt;HTMLInputElement>,
+      'blur',
+      msg,
+      {
+        success(element, data: DTO.PhoneNumberResponse, _value, _msgElement) {
+          element.val(data.number);
+        },
+      },
+    );
+
+    const $streetAddressCountry = $('select.' + ConfigConstants.STREET_ADDRESS_COUNTRY);
+    $streetAddressCountry.chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      width: '30%',
+    });
+    simpleSetValueHandler($streetAddressCountry, 'change', msg);
+
+    /**************************************************************************
+     *
+     * special members
+     *
+     *************************************************************************/
+
+    // Set special members projects with create/rename/delete feedback
+    const $specialMemberProjects = $('input[type="text"].specialMemberProjects') as JQuery&lt;HTMLInputElement>;
+
+    const projectsData = $specialMemberProjects.data('projects');
+    let autocompleteProjects = projectsData
+      ? $specialMemberProjects.data('projects').map((v: { name: string }) => v.name)
+      : [];
+
+    $specialMemberProjects.autocomplete({
+      source: autocompleteProjects,
+      position: { my: 'left bottom', at: 'left top' },
+      minLength: 0,
+    });
+
+    $specialMemberProjects.on('focus', function(_event) {
+      const $self = $(this);
+      if ($self.val() === '') {
+        $self.autocomplete('search', '');
+      }
+    });
+
+    simpleSetValueHandler(
+      $specialMemberProjects,
+      'blur',
+      msg,
+      {
+        success($self, data: DTO.SpecialProjectsResponse, _value, _msgElement) {
+          const name = $self.attr('name');
+          $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+          if (data.newName) {
+            $self.val(data.newName);
+          }
+          if (data.suggestions) {
+            autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
+            $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+          }
+          if (data.feedback) {
+            for (const action of Object.values(EnumSpecialProjectsAction)) {
+              if (data.feedback.action === action) {
+                Dialogs.confirm(
+                  data.feedback.message,
+                  data.feedback.title,
+                  function(decision: boolean) {
+                    if (decision === true) {
+                      $.post(
+                        setAppUrl(name + camelcase(action)),
+                        {
+                          value: {
+                            project: data.project,
+                            projectId: data.projectId,
+                            newName: data.newName,
+                          },
+                        },
+                      )
+                        .fail(function(xhr, status, errorThrown) {
+                          Ajax.handleError(xhr, status, errorThrown);
+                        })
+                        .done(function(data: DTO.SpecialProjectsResponse) {
+                          if (data.messages) {
+                            data.messages = Notification.messages(data.messages, { timeout: 15 });
+                            msg.html(data.messages.join('; ')).show();
+                          }
+                          if (data.suggestions) {
+                            autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
+                            $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+                          }
+                          if (data.projectId) {
+                            $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+                          }
+                        });
+                    }
+                  },
+                  true,
+                );
+              }
+            }
+          }
+        },
+      },
+    );
+
+    type SpecialProjectCreatePayload = {
+      newProjectName: string;
+      projectId: number;
+      projectName: string;
+    };
+
+    const $specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects') as JQuery&lt;HTMLInputElement>;
+    simpleSetValueHandler(
+      $specialMemberProjectsCreate,
+      'click',
+      msg,
+      {
+        success(_$self, _data: DTO.SpecialProjectsResponse, _value: SpecialProjectCreatePayload, _msgElement) {},
+        getValue($self, _msgElement) {
+          const name = $self.attr('name')!;
+          return {
+            name,
+            value: {
+              newProjectName: $self.next().val() as string,
+              projectId: $self.data('projectId')!,
+              projectName: $self.data('projectName')!,
+            },
+          };
+        },
+      },
+    );
+
+    const executiveBoardIds = $('select.executive-board-ids') as JQuery&lt;HTMLSelectElement>;
+    // ts-expect-error 2339
+    executiveBoardIds.chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
+      width: '100%',
+    });
+    selectPlaceholder(executiveBoardIds);
+    simpleSetValueHandler(executiveBoardIds, 'change', msg);
+    simpleSetValueHandler($('input.executive-board-ids'), 'blur', msg);
+
+    /**************************************************************************
+     *
+     * bank account settings
+     *
+     *************************************************************************/
+
+    const $bankAccountInputs = $('input[class^="bankAccount"]') as JQuery&lt;HTMLInputElement>;
+
+    $bankAccountInputs.autocomplete({
+      source: [],
+      minLength: 0,
+    });
+
+    const bankAccountProperties = [
+      ConfigConstants.BANK_ACCOUNT_IBAN,
+      ConfigConstants.BANK_ACCOUNT_BLZ,
+      ConfigConstants.BANK_ACCOUNT_BIC,
+      ConfigConstants.BANK_ACCOUNT_BANK_NAME,
+    ] as const;
+
+    simpleSetValueHandler(
+      $bankAccountInputs,
+      'blur',
+      msg,
+      {
+        success(element, data, value, _msg) { // done
+          if (data.suggestions &amp;&amp; data.suggestions.length > 0) {
+            // TODO: make the autocomplete option(s) more visible
+            element.autocomplete('option', 'source', data.suggestions);
+            element.autocomplete('option', 'minLength', 0);
+            element.autocomplete('search', value);
+          } else {
+            console.debug('NO SUGGESTIONS', data.suggestion);
+            element.autocomplete('option', 'source', []);
+          }
+          if (data.value) {
+            element.val(data.value);
+          }
+          for (const property of bankAccountProperties) {
+            if (data[property]) {
+              $('input.' + property).val(data[property]);
+            }
+          }
+        },
+        fail: Ajax.handleError,
+      },
+    );
+
+    simpleSetValueHandler($('select[name="' + ConfigConstants.BANK_ACCOUNT_BANK_HOLIDAYS + '"]'), 'change', msg);
+  }
+
+  {
+    /**************************************************************************
+     *
+     * document template uploads
+     *
+     *************************************************************************/
+
+    const $fieldset = $('fieldset.document-template');
+    const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace') as JQuery&lt;HTMLInputElement>;
+    const $cloudSelectors = $fieldset.find('input.select-cloud') as JQuery&lt;HTMLInputElement>;
+    const $deleters = $fieldset.find('input.delete') as JQuery&lt;HTMLInputElement>;
+    const $autofillers = $fieldset.find('input.auto-fill-test') as JQuery&lt;HTMLInputElement>;
+    const $autofillersdata = $fieldset.find('input.auto-fill-test-data') as JQuery&lt;HTMLInputElement>;
+
+    if ($('#documenttemplatesfolder').val() === '' || $(`#${ConfigConstants.SHARED_FOLDER}`).val() === '') {
+      $fieldset.find('input').prop('disabled', true);
+    }
+
+    /**
+     * @param file TBD.
+     *
+     * @param $container TBD.
+     *
+     * @param $trigger TBD.
+     *
+     * @todo This is the only place which actually uses upload/move,
+     * it should be replace by the things the other parts of the code
+     * use.
+     */
+    const moveIntoPlace = function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
+      const subFolderId = $container.data('documentTemplateSubFolder') || '';
+      const destinationPath =
+        '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
+            + '/' + $('#documenttemplatesfolder').val()
+            + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
+            + '/' + file.original_name;
+
+      $.post(
+        generateAppUrl(UploadsController.END_POINT_MOVE),
+        {
+          stashedFile: file.tmp_name,
+          destinationPath,
+          originalFileName: file.original_name,
+          uploadMode: 'copy',
+        },
+      )
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+          $trigger.removeClass('busy');
+        })
+        .done(function(data: ResponseData&lt;DTO.FileUploadMoveResponse>) {
+          if (!Ajax.validateResponse(data, ['messages', 'fileName', 'downloadLink'])) {
+            $trigger.removeClass('busy');
+            return;
+          }
+          Notification.messages(data.messages);
+          const fileName = data.fileName;
+          const downloadLink = data.downloadLink;
+          $.post(
+            setAppUrl($container.data('documentTemplate')),
+            { value: fileName },
+          )
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+              $trigger.removeClass('busy');
+            })
+            .done(function(data: ResponseData&lt;DTO.MessagesResponse>) {
+              if (!Ajax.validateResponse(data, ['messages'])) {
+                $trigger.removeClass('busy');
+                return;
+              }
+              Notification.messages(data.messages);
+              $container.find('.upload-placeholder').val(fileName).hide();
+              $container.find('.downloadlink')
+                .attr('href', downloadLink)
+                .attr('download', fileName)
+                .html(fileName)
+                .show();
+              $container.find('.auto-fill-test').prop('disabled', false).show();
+              $container.find('.delete').prop('disabled', false);
+              $trigger.removeClass('busy');
+            });
+        });
+    };
+
+    simpleSetHandler($deleters, 'click', undefined, {
+      success($self, _data, _$msgElement) {
+        $self.prop('disabled', true);
+        $self.nextAll('input.upload-placeholder').val('').show();
+        $self.nextAll('a.downloadlink')
+          .attr('href', '')
+          .html('')
+          .hide();
+        $self.nextAll('.auto-fill-test').hide().prop('disabled', true);
+      },
+    });
+
+    $autofillers.on('click', function(_event) {
+      const $self = $(this);
+
+      $self.addClass('busy');
+
+      fileDownload(
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST}`,
+        {
+          documentTemplate: $self.data('template'),
+          format: $self.data('format'),
+        },
+        {
+          always() {
+            $self.removeClass('busy');
+          },
+          errorMessage() {
+            return t(appName, 'Unable to download auto-fill result.');
+          },
+        },
+      );
+
+      return false;
+    });
+
+    // get the test-data set as JSON for offline testing
+    $autofillersdata.on('click', function(_event) {
+      const $self = $(this);
+
+      $self.addClass('busy');
+
+      fileDownload(
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST_DATA}`,
+        {
+          documentTemplate: $self.data('template'),
+        },
+        {
+          always() {
+            $self.removeClass('busy');
+          },
+          errorMessage() {
+            return t(appName, 'Unable to download auto-fill result.');
+          },
+        },
+      );
+
+      return false;
+    });
+
+    $uploaders.on('click', function(_event) {
+      const $this = $(this);
+      const $container = $this.parent();
+
+      $this.addClass('busy');
+
+      FileUpload.init({
+        url: generateAppUrl(UploadsController.END_POINT_STASH),
+        doneCallback(file) {
+          moveIntoPlace(file, $container, $this);
+        },
+        stopCallback: undefined,
+        failCallback(_event: any, _data: any) { $this.removeClass('busy'); },
+        dropZone: $container,
+        containerSelector: '.document-template-upload-wrapper',
+        inputSelector: 'input[type="file"]',
+        multiple: false,
+      });
+
+      $('.document-template-upload-wrapper input[type="file"]').trigger('click');
+      return false;
+    });
+
+    $cloudSelectors.on('click', function(_event) {
+      const $this = $(this);
+      const $container = $this.closest('.template-upload');
+
+      Dialogs.filePicker({
+        title: $this.data('placeholder'),
+        callback(path: string|string[]) {
+
+          $this.addClass('busy');
+
+          if (!path) {
+            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+            $this.removeClass('busy');
+            return;
+          }
+          $.post(generateAppUrl(UploadsController.END_POINT_STASH), { cloudPaths: [path] })
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+              $this.removeClass('busy');
+            })
+            .done(function(files) {
+              if (!Array.isArray(files) || files.length !== 1) {
+                Dialogs.alert(
+                  t(appName, 'Unable to copy selected file {file}.', { file: files }),
+                  t(appName, 'Error'),
+                  function() {
+                    $this.removeClass('busy');
+                  },
+                );
+                return;
+              }
+              moveIntoPlace(files[0], $container, $this);
+            });
+        },
+      });
+    });
+  }
+
+  {
+    /**************************************************************************
+     *
+     * translations via extra tables in DB
+     *
+     *************************************************************************/
+
+    const $translationKeys = $('select.translation-phrases') as JQuery&lt;HTMLSelectElement>;
+    const $locales = $('select.translation-locales');
+    const $translationKey = $('.translation-key');
+    const $translationText = $('textarea.translation-translation');
+    const $hideTranslated = $('#' + appPrefix('hide-translated'));
+    const $downloadPoTemplates = $('#' + appName + '-translations-download-pot');
+    const $deleteRecorded = $('#' + appName + '-translations-erase-all');
+    const $msg = $('.translation.msg');
+
+    let $key: JQuery;
+    let language: string;
+    let translations: { [key: string]: string };
+    let translation: string;
+
+    const updateControls = function() {
+      $key = SelectUtils.selectedOptions($translationKeys);
+      language = $locales.val() as string;
+      translation = '';
+      translations = {};
+
+      $translationKey.html($key.text());
+
+      if (language &amp;&amp; $key.length === 1) {
+        translations = $key.data('translations');
+        translation = translations[language] || '';
+      }
+      $translationText.val(translation);
+    };
+
+    const showHideTranslated = function() {
+      const hide = $hideTranslated.prop('checked');
+      $translationKeys.find('option').each(function() {
+        const $option = $(this);
+        if (!hide || !language) {
+          $option.show();
+        } else {
+          const translations = $option.data('translations');
+          if (translations[language]) {
+            $option.hide();
+            if ($option.prop('selected')) {
+              $option.prop('selected', false);
+            }
+          } else {
+            $option.show();
+          }
+        }
+      });
+      SelectUtils.refreshWidget($translationKeys);
+      $translationKeys.trigger('change');
+    };
+
+    $translationKeys.chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      width: '30%',
+    });
+
+    $locales.chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      width: '10%',
+    });
+
+    $translationKeys.on('change', function(_event) {
+      updateControls();
+      return false;
+    });
+
+    $locales.on('change', function(_event) {
+      updateControls();
+      showHideTranslated();
+      return false;
+    });
+
+    $hideTranslated.on('change', function(_event) {
+      showHideTranslated();
+      return false;
+    });
+
+    simpleSetValueHandler(
+      $translationText,
+      'blur',
+      $msg,
+      {
+        success(_element, _data, _value, _$msg) { // done
+          // no need to do any extra stuff?
+        },
+        getValue(_element, _msg) {
+          if (language &amp;&amp; $key.length === 1) {
+            // save it in order to restore, maybe we want to have an
+            // "OK" button in order not to accidentally damage
+            // existing translations.
+            translation = $translationText.val() as string;
+            translations[language] = translation;
+            $key.data('translations', translations);
+            const val: GetValueResult = {
+              name: 'translation',
+              value: {
+                key: $key.text(),
+                language,
+                translation: $translationText.val(),
+              },
+            };
+            return val;
+          }
+        },
+      },
+    );
+
+    simpleSetHandler($deleteRecorded, 'click', $msg, {
+      success(_$self, _data, _msgElement) {
+        SelectUtils.replaceOptions($translationKeys, '');
+        $translationKeys.trigger('change');
+      },
+    });
+
+    $downloadPoTemplates.on('click', function(_event) {
+
+      fileDownload(
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.TRANSLATION_TEMPLATES}`,
+        [],
+        {
+          errorMessage(_url: string, _data: any) {
+            return t(appName, 'Unable to download translation templates.');
+          },
+        },
+      );
+      return false;
+    });
+
+    updateControls();
+
+  }
+
+  /****************************************************************************
+   *
+   * development settings, mostly link stuff
+   *
+   ***************************************************************************/
+
+  {
+    const msg = $('#develsettings #msg');
+    const devLinkTests = $('input.devlinktest');
+
+    simpleSetValueHandler($('input.devlink'), 'blur', msg, {
+      setup() {
+        devLinkTests.prop('disabled', true);
+      },
+      success($self, _data, value: string, _msgElement) {
+        const $testLink = $self.parent().find('a.devlinktest');
+        $testLink.attr('href', value);
+      },
+      cleanup() {
+        devLinkTests.prop('disabled', false);
+      },
+    });
+  }
+
+  /****************************************************************************
+   *
+   * CMS stuff
+   *
+   ***************************************************************************/
+
+  simpleSetValueHandler($('input.redaxo'), 'blur', $('form#cmssettings .statusmessage'));
+
+  simpleSetValueHandler($('select.redaxo'), 'change', $('form#cmssettings .statusmessage'));
+
+  /****************************************************************************
+   *
+   * Tooltips
+   *
+   ***************************************************************************/
+
+  toolTipsInit(container);
+
+  container.removeClass(hiddenCssClass); // show(); // fadeIn()...
+
+  updateLocaleTimeStamps(tabsHolder);
+};
+
+const documentReady = function(container?: JQuery|undefined) {
+
+  if (container === undefined) {
+    console.debug('default container');
+    container = $(containerSelector);
+  }
+
+  container.on('tabsbeforeactivate', container.is(tabsSelector) ? null : tabsSelector, function(_event, _ui) {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+  });
+
+  container.on('tabsactivate', container.is(tabsSelector) ? null : tabsSelector, function(_event, ui) {
+    updateCreditsTimer();
+
+    updateLocaleTimeStamps($(this));
+
+    if (ui.newPanel[0].id === 'tabs-5') {
+      $('#smtpsecure').chosen({ disable_search_threshold: 10 });
+      $('#imapsecure').chosen({ disable_search_threshold: 10 });
+    } else if (ui.newPanel[0].id === 'tabs-4') {
+      $('div#sharing-settings').accordion('refresh');
+    } else if (ui.newPanel[0].id === 'tabs-3') {
+      $('form#orchestra').accordion('refresh');
+    } else {
+      // $('#smtpsecure').chosen().remove();
+      // $('#imapsecure').chosen().remove();
+    }
+
+    $.fn.cafevTooltip.remove(); // remove pending tooltips ...
+  });
+
+  container.on(appName + ':content-update', function(event) {
+    console.debug('Settings content-update');
+    if (event.target === this) {
+      console.debug('Settings trigger PS content-update');
+      if (!container.hasClass('personal-settings')) {
+        $('.personal-settings').trigger(appName + ':content-update');
+      }
+      afterLoad($(this));
+    } else {
+      console.debug('Settings ignore update on ', $(this));
+    }
+  });
+
+  afterLoad(container);
+};
+
+export default documentReady;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Fri Oct 09 2026 22:15:15 GMT+0200 (Mitteleuropäische Sommerzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

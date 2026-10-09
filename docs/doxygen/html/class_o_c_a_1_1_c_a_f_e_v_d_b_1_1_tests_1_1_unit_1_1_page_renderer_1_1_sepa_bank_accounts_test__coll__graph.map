@@ -1,0 +1,22 @@
+<map id="SepaBankAccountsTest" name="SepaBankAccountsTest">
+<area shape="rect" id="Node000001" title="Test aspects of the SepaBankAccounts page renderer." alt="" coords="94,408,255,435"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,309,83,336"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,343,160,406,155,409,72,348"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html" title="Renderer not least for generating bank bulk transactions." alt="" coords="106,309,243,336"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,350,177,409,172,407,173,353"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="104,233,245,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="176,273,177,310,172,308,173,277"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="98,157,251,184"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="176,197,177,234,172,232,174,202"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="80,81,154,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="136,117,168,156,162,157,136,123"/>
+<area shape="rect" id="Node000007" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="136,5,214,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="155,46,129,82,125,80,157,42"/>
+<area shape="rect" id="Node000008" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="179,81,288,108"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="194,41,226,81,221,81,194,47"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="213,122,187,159,182,155,216,118"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="267,309,357,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="291,345,243,386,202,410,200,405,240,382,286,347"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="269,233,355,260"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="314,273,314,310,310,308,310,277"/>
+</map>

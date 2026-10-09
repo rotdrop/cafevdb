@@ -1,0 +1,39 @@
+<map id="createStub" name="createStub">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1197,339,1281,365"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6" title=" " alt="" coords="1020,180,1138,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1211,327,1093,210,1095,205,1216,328"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a65f835eff19c744118054eb15caddcfc" title="Mock the cloud user config provider." alt="" coords="1010,288,1149,315"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1180,334,1124,318,1124,313,1185,334"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#adf1a35ad20e475c59cc0967d5764aa22" title=" " alt="" coords="1035,339,1124,365"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1179,352,1124,355,1124,349,1184,352"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ae81b7186fb97a7c6457edcc68c9aa2ef" title=" " alt="" coords="1046,389,1113,416"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="1185,369,1114,395,1113,390,1180,370"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a8e80f766c9aa0f817b358aa67422985a" title=" " alt="" coords="544,440,658,467"/>
+<area shape="poly" id="edge19_Node000001_Node000018" title=" " alt="" coords="1219,376,1188,407,1150,430,1086,454,1018,470,949,479,880,483,755,478,659,466,659,461,756,473,880,477,948,474,1017,465,1084,449,1148,426,1185,402,1214,378"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a479c2e1632db2a22ee6445debc0f9f42" title=" " alt="" coords="723,5,962,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1059,166,1019,114,991,86,960,62,940,51,940,46,963,58,995,82,1023,111,1064,168"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#acb214216460ff833d9c5588e83d14265" title=" " alt="" coords="723,72,962,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="1042,171,1005,151,961,129,930,118,930,112,963,124,1007,146,1048,172"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a1c516360d363e8f033a7985bc838c88a" title=" " alt="" coords="723,139,962,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="1002,183,962,179,962,174,1007,183"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a7e88861dab7a74dde60fb2a6fa958326" title=" " alt="" coords="723,205,962,248"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="1002,204,962,212,961,207,1007,203"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c" title="Register a service globally." alt="" coords="788,272,897,299"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="1049,214,1008,241,963,263,898,280,896,275,961,257,1005,236,1044,216"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#af1591c93ce4aabee288af5462640e139" title="Register a class instance to be returned by the app&#45;container." alt="" coords="527,243,675,269"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="771,277,676,268,676,262,776,277"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a68257d7bf27c2c66a2475ec9cd5f5a0a" title=" " alt="" coords="544,301,659,328"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="771,294,660,310,659,305,776,293"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_date_time_trait_test.html#a8d895863f440c76fe09ccc33396be59f" title="{}" alt="" coords="292,223,479,281"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="509,255,480,256,479,251,514,254"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aa3e1104912f42060e2134e04e71d1b57" title="{}" alt="" coords="341,305,430,332"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="526,317,431,320,430,315,531,315"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a759ad1cadd7c899979313412c248830e" title="Fake the bank account validator as obtaining real result is really involved and would result in a rou..." alt="" coords="5,297,244,340"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="323,320,244,321,243,316,328,318"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a52eaee119eda90568cef4ba6f33cf7ef" title=" " alt="" coords="723,323,962,365"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="1028,391,931,369,932,363,1033,391"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aefa4c5bd150e2a7d525576d7959c6911" title=" " alt="" coords="799,389,886,416"/>
+<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="1028,403,886,405,886,400,1033,403"/>
+<area shape="poly" id="edge18_Node000015_Node000018" title=" " alt="" coords="1033,414,962,431,797,447,659,455,659,449,797,442,961,425,1028,415"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="787,414,659,444,659,439,781,415"/>
+</map>

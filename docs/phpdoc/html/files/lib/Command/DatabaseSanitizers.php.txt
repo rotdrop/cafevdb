@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use RuntimeException;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\IUserSession;
@@ -56,7 +56,7 @@ class DatabaseSanitizers extends Command
     protected ILogger $logger,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }

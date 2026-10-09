@@ -1,7 +1,9 @@
 <map id="getParticipantFolder" name="getParticipantFolder">
-<area shape="rect" id="Node000001" title="More leight&#45;weight construction of the participant folder, assuming everything else is just is ok." alt="" coords="5,5,143,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="191,5,332,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,16,175,16,175,21,143,21"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ae08f5afbcda6c928058fd4e9fc946cf8" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="380,5,561,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="333,16,364,16,364,21,333,21"/>
+<area shape="rect" id="Node000001" title="More leight&#45;weight construction of the participant folder, assuming everything else is just is ok." alt="" coords="5,39,143,65"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="209,5,350,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,38,196,31,192,34,144,43"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#aacf441eceead4b81407f3a2f48195ff4" title="Get userIdSlug." alt="" coords="191,56,369,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,60,178,68,173,69,143,66"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ae08f5afbcda6c928058fd4e9fc946cf8" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="417,5,598,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="350,16,404,18,399,19,351,21"/>
 </map>

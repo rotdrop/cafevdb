@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 use Exception;
+use RuntimeException;
 
 use GenderDetector;
 
@@ -616,7 +617,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setBirthday(string|int|\DateTimeInterface $birthday):Musician
+  public function setBirthday(null|string|int|\DateTimeInterface $birthday):Musician
   {
     $this->birthday = self::convertToDateTime($birthday);
 
@@ -810,7 +811,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumParticipationStatus
    */
-  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
+  public function getDefaultParticipationStatus(): Types\EnumParticipationStatus
   {
     return $this->defaultParticipationStatus;
   }
@@ -846,7 +847,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Guess the gender from the name.
    *
-   * @param ?|\OCP\IL10N $l
+   * @param ?\OCP\IL10N $l
    *
    * @return array An array of guesses.
    */
@@ -1173,6 +1174,20 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Add the give datum to the fields-data collection.
+   *
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addProjectParticipantFieldDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    $this->projectParticipantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
+
+    return $this;
+  }
+
+  /**
    * Get one specific participant-field datum indexed by its key
    *
    * @param mixed $key Everything which can be converted to an UUID by
@@ -1330,6 +1345,26 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * @param EncryptedFile $file
+   *
+   * @return Musician
+   */
+  public function addEncryptedFile(EncryptedFile $file): Musician
+  {
+    $fileId = $file->getId();
+    if (empty($fileId)) {
+      throw new RuntimeException('The file does not seem to have an id.');
+    }
+    if (!$this->encryptedFiles->containsKey($fileId)) {
+      $this->encryptedFiles->set($fileId, $file);
+      if ($this->getId() !== null) {
+        $file->addOwner($this);
+      }
+    }
+    return $this;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
@@ -1377,7 +1412,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return $this->nickName;
   }
 
-
   /**
    * Get the cooked display-name, taking nick-name into account and
    * just using $displayName if that set.
@@ -1414,6 +1448,28 @@ class Musician implements \ArrayAccess, \JsonSerializable
       return $this->surName;
     }
     return $this->surName . ', ' . $firstName;
+  }
+
+  /**
+   * Compose a description including organization and job-title. If the person
+   * does not represent an organization then fall back to getPublicName().
+   *
+   * @param bool $firstNameFirst If true return "FIRSTNAME LASTNAME" rather
+   * than "LASTNAME, FIRSTNAME".
+   *
+   * @return string
+   */
+  public function getFunctionalName(bool $firstNameFirst = false):string
+  {
+    $publicName = $this->getPublicName($firstNameFirst);
+    if (empty($this->organization)) {
+      return $publicName;
+    }
+    $result = $this->organization;
+    if (!empty($this->jobTitle)) {
+      $publicName = $this->jobTitle . ', ';
+    }
+    return $this->organization . ' (' . $publicName . ')';
   }
 
   /**
@@ -1682,6 +1738,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     $this->email = strtolower($this->email);
     $this->prePersistUuid();
+  }
+
+  /**
+   * The id of this entity is note available before it has been persisted. So
+   * update any needed file-ownership updates after being persisted.
+   *
+   * @return void
+   */
+  #[ORM\PostPersist]
+  public function postPersist(): void
+  {
+    /** @var EncryptedFile $file */
+    foreach ($this->encryptedFiles as $file) {
+      $file->addOwner($this);
+    }
   }
 
   /** {@inheritdoc} */

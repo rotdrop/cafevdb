@@ -1,0 +1,6 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits =
+[
+    [ "AutoIncrementTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test" ],
+    [ "TestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_test_class.html", null ],
+    [ "DateTimeTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test" ]
+];

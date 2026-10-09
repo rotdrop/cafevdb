@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\RotDrop\Toolkit\Service\ExecutableFinder
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -161,7 +165,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#constant_CACHE_TTL">CACHE_TTL</a>
     <span>
-        &nbsp;= 1800                            </span>
+        &nbsp;: int&nbsp;= 1800                            </span>
 </dt>
 
     </dl>
@@ -176,7 +180,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -194,7 +198,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#property_executables">$executables</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -246,34 +250,34 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log the given message at the specified level.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a debug message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an error.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logException">logException()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logFatal">logFatal()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a fatal error message.</dd>
 
@@ -287,21 +291,21 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an informational message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a warning message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>    </span>
+                                &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>    </span>
 </dt>
 <dd>Return the stored appConmtainer instance.</dd>
 
@@ -416,7 +420,7 @@ understands those.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -483,9 +487,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -530,7 +534,7 @@ understands those.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$executables</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -561,9 +565,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -599,9 +603,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -680,9 +684,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -746,9 +750,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">167</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Clear the memory cache of found executables.</p>
@@ -782,9 +786,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">126</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Try to find the given executable.</p>
@@ -822,21 +826,20 @@ basename of a Un*x program.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_find_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#method_find#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#method_find_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\RotDrop\Toolkit\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -873,7 +876,7 @@ basename of a Un*x program.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -897,7 +900,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -931,7 +934,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -949,16 +952,16 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -975,7 +978,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1009,7 +1012,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1027,16 +1030,16 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1053,7 +1056,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1087,7 +1090,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1105,15 +1108,15 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1151,7 +1154,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1171,7 +1174,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1189,16 +1192,16 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1215,7 +1218,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1249,7 +1252,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1307,16 +1310,16 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1333,7 +1336,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1367,7 +1370,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1385,16 +1388,16 @@ basename of a Un*x program.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/LoggerTrait.php"><a href="files/php-toolkit-traits-loggertrait.html"><abbr title="php-toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/php-toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1411,7 +1414,7 @@ basename of a Un*x program.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1445,7 +1448,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1472,7 +1475,7 @@ basename of a Un*x program.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1485,7 +1488,7 @@ basename of a Un*x program.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
             </section>
 
 </article>
@@ -1550,15 +1553,15 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/FakeTranslationTrait.php"><a href="files/php-toolkit-traits-faketranslationtrait.html"><abbr title="php-toolkit/Traits/FakeTranslationTrait.php">FakeTranslationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/php-toolkit/Traits/FakeTranslationTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/php-toolkit/Traits/FakeTranslationTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1575,7 +1578,7 @@ understands those.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$parameters</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1613,9 +1616,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">177</span>
+    <span class="phpdocumentor-element-found-in__line">175</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -1666,9 +1669,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -1711,9 +1714,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Service/ExecutableFinder.php"><a href="files/php-toolkit-service-executablefinder.html"><abbr title="php-toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Service-ExecutableFinder.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/php-toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     

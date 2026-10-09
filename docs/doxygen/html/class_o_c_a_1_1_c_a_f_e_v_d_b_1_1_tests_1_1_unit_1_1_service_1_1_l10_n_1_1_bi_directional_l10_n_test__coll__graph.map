@@ -1,0 +1,7 @@
+<map id="BiDirectionalL10NTest" name="BiDirectionalL10NTest">
+<area shape="rect" id="Node000001" title="Test aspects of the BiDirectionalL10N service." alt="" coords="31,104,182,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,43,101,103,96,104,59,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_bi_directional_l10_n.html" title="Simple bidectional translations fetch from a CSV file." alt="" coords="106,5,232,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,44,117,106,113,102,150,46"/>
+</map>

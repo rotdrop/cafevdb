@@ -1,11 +1,11 @@
 <map id="userIdSlugToFileName" name="userIdSlugToFileName">
 <area shape="rect" id="Node000001" title="Convert a user&#45;id to a file&#45;name&#45;part avoiding &quot;duplicate&quot; extensions, i.e." alt="" coords="561,47,715,73"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#a719369c18e17be9a1865044076917bcf" title=" " alt="" coords="407,47,513,73"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="546,63,514,63,514,57,546,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="543,60,514,63,514,57,549,60"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#aa0225a6afe69f35c314ad6b3954b254a" title=" " alt="" coords="236,21,351,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="391,52,351,46,352,41,392,47"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="389,50,351,46,351,41,394,50"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#a4971ad9d5b387e930636d1b27281e242" title=" " alt="" coords="228,72,359,99"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="392,73,360,78,359,73,391,68"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="394,70,360,78,359,73,389,71"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a4d2f0d701bacfd21d282006c86785ba3" title="Avoid duplicated &quot;extensions&quot; in file&#45;names, i.e." alt="" coords="5,5,180,64"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,37,180,37,180,32,220,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="217,35,181,37,180,32,222,34"/>
 </map>

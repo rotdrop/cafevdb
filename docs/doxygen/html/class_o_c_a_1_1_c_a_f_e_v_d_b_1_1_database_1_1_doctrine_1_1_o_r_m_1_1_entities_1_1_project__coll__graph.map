@@ -1,16 +1,25 @@
 <map id="Project" name="Project">
-<area shape="rect" id="Node000001" title="Projects." alt="" coords="78,353,141,380"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,157,102,184"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,199,52,228,56,259,65,286,78,312,103,352,98,355,73,315,60,288,51,261,47,229,47,199"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="66,233,188,260"/>
-<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="78,193,116,231,113,235,74,197"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html" title=" " alt="" coords="229,233,406,260"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="317,276,308,305,290,331,263,344,224,354,142,365,141,360,223,349,262,339,286,327,304,303,312,275"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="251,157,384,184"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="320,199,320,233,315,233,315,199"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="276,81,359,108"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="320,123,320,157,315,157,315,123"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="264,5,371,32"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="320,47,320,81,315,81,315,47"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="117,275,114,285,110,322,111,353,106,353,105,321,109,283,111,274"/>
+<area shape="rect" id="Node000001" title="Projects." alt="" coords="5,201,68,228"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="514,5,610,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="496,24,377,35,232,54,163,68,102,86,54,108,37,120,24,133,18,150,19,167,32,201,26,202,14,168,13,149,20,131,33,116,51,103,100,81,162,63,231,49,376,30,501,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html" title="ProjectEvents." alt="" coords="731,81,827,108"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="614,35,745,80,739,81,614,40"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="651,201,713,228"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="533,40,498,72,468,106,457,124,452,142,453,159,463,176,475,185,493,192,544,203,653,212,647,214,543,208,492,197,472,189,458,179,448,161,447,141,452,122,463,103,495,68,528,43"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="183,81,306,108"/>
+<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="497,36,300,83,298,78,501,33"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html" title="ProjectParticipantFields." alt="" coords="960,300,1113,327"/>
+<area shape="poly" id="edge10_Node000006_Node000002" title=" " alt="" coords="625,27,754,51,906,88,979,112,1043,138,1093,167,1111,183,1124,200,1129,216,1128,231,1113,259,1087,283,1060,302,1058,297,1083,279,1108,256,1123,229,1124,216,1119,203,1108,187,1090,172,1041,143,978,117,905,93,752,56,625,32"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html" title="ProjectParticipantFieldsDataOptions." alt="" coords="1016,399,1196,441"/>
+<area shape="poly" id="edge13_Node000007_Node000002" title=" " alt="" coords="625,18,787,22,983,33,1073,42,1148,55,1199,71,1214,81,1219,93,1219,315,1213,342,1197,366,1176,385,1152,401,1150,396,1172,381,1193,362,1208,340,1214,314,1214,94,1210,85,1197,76,1147,60,1073,48,983,38,787,27,626,23"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="713,97,613,108,556,118,500,134,480,145,466,157,451,169,429,180,356,195,254,205,69,215,67,210,253,200,355,189,428,175,448,165,462,153,477,141,499,130,554,113,612,103,718,95"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="719,104,697,118,680,134,674,150,673,168,679,202,675,200,667,168,668,148,676,130,694,114,714,107"/>
+<area shape="poly" id="edge15_Node000006_Node000003" title=" " alt="" coords="843,103,888,114,907,121,918,130,926,143,929,156,925,179,920,202,921,214,926,227,942,250,964,269,1010,300,1005,299,961,274,938,253,921,229,915,215,915,202,920,178,923,156,921,145,915,134,904,126,887,119,843,108"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="728,207,799,196,828,187,847,175,853,165,855,155,846,133,835,120,821,111,821,106,838,116,851,131,860,155,858,167,850,179,831,192,800,201,729,212"/>
+<area shape="poly" id="edge11_Node000006_Node000004" title=" " alt="" coords="721,232,772,254,829,273,895,289,962,303,957,303,894,295,827,279,770,259,721,238"/>
+<area shape="poly" id="edge16_Node000001_Node000005" title=" " alt="" coords="166,101,91,112,59,122,40,134,32,149,30,167,35,201,30,201,25,167,27,148,36,130,57,117,90,107,170,97"/>
+<area shape="poly" id="edge7_Node000004_Node000005" title=" " alt="" coords="238,120,238,151,241,164,248,175,268,185,308,193,423,203,653,212,648,214,422,208,307,198,267,190,244,179,236,166,233,152,236,125"/>
+<area shape="poly" id="edge9_Node000003_Node000006" title=" " alt="" coords="1033,283,1027,250,1016,209,998,168,970,134,946,123,910,113,828,102,828,97,911,108,948,118,973,130,1002,165,1021,207,1032,249,1037,286"/>
+<area shape="poly" id="edge14_Node000007_Node000006" title=" " alt="" coords="1030,340,1030,358,1035,373,1044,386,1058,399,1053,397,1040,390,1030,376,1025,359,1026,344"/>
+<area shape="poly" id="edge12_Node000006_Node000007" title=" " alt="" coords="1092,383,1074,352,1053,330,1055,325,1079,349,1097,386"/>
 </map>

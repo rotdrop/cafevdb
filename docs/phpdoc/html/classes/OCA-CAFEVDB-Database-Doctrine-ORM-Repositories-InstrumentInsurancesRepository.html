@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -166,37 +170,37 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_QUERY_OPTION_WILDCARDS">QUERY_OPTION_WILDCARDS</a>
     <span>
-        &nbsp;= &#039;LIKE&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;LIKE&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_QUERY_OPTIONS_KEY">QUERY_OPTIONS_KEY</a>
     <span>
-        &nbsp;= &#039;__OPTIONS__&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;__OPTIONS__&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_WILDCARD_QUERY_OPTIONS">WILDCARD_QUERY_OPTIONS</a>
     <span>
-        &nbsp;= [self::QUERY_OPTIONS_KEY =&gt; [self::QUERY_OPTION_WILDCARDS =&gt; true]]                            </span>
+        &nbsp;: mixed&nbsp;= [self::QUERY_OPTIONS_KEY =&gt; [self::QUERY_OPTION...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_COMPARISONS">COMPARISONS</a>
     <span>
-        &nbsp;= [&#039;&lt;=&#039; =&gt; &#039;lte&#039;, &#039;&gt;=&#039; =&gt; &#039;gte&#039;, &#039;=&#039; =&gt; &#039;eq&#039;, &#039;&lt;&#039; =&gt; &#039;lt&#039;, &#039;&gt;&#039; =&gt; &#039;gt&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;&lt;=&#039; =&gt; &#039;lte&#039;, &#039;&gt;=&#039; =&gt; &#039;gte&#039;, &#039;=&#039; =&gt; &#039;eq&#039;, &#039;&lt;&#039;...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_JUNCTORS">JUNCTORS</a>
     <span>
-        &nbsp;= [&#039;(|&#039; =&gt; [&#039;orX&#039;], &#039;(&amp;&#039; =&gt; [&#039;andX&#039;], &#039;!(|&#039; =&gt; [&#039;not&#039;, &#039;orX&#039;], &#039;!(&amp;&#039; =&gt; [&#039;not&#039;, &#039;andX&#039;], &#039;)&#039; =&gt; [&#039;)&#039;]]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;(|&#039; =&gt; [&#039;orX&#039;], &#039;(&amp;&#039; =&gt; [&#039;andX&#039;], &#039;!(|&#039; =&gt; [&#039;...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#constant_MODIFIERS">MODIFIERS</a>
     <span>
-        &nbsp;= [&#039;!&#039; =&gt; &#039;not&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;!&#039; =&gt; &#039;not&#039;]                            </span>
 </dt>
 
     </dl>
@@ -211,7 +215,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-EntityRepository.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -251,14 +255,14 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_findBy">findBy()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Add some &quot;missing&quot; convenience stuff to findBy()</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_findLike">findLike()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Find entities by given wild-card criteria. This is like findBy()
 but the criterias may contain &#039;%&#039; or &#039;*&#039;, in which case a LIKE
@@ -348,9 +352,18 @@ been initialized with the main table alias &#039;mainTable&#039; and
 already contain the select part.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate">getCurrentDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Return the current date according to the given or the current user&#039;s
+timezone and return it as DateTime object at midnight according to the
+timeozone.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_prepareFindBy">prepareFindBy()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Parse the criteria.</dd>
 
@@ -382,9 +395,9 @@ already contain the select part.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -413,9 +426,9 @@ already contain the select part.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -448,9 +461,9 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -479,9 +492,9 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -510,9 +523,9 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -541,9 +554,9 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
     
@@ -597,7 +610,7 @@ options if its key is strictly equal to this value.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
@@ -716,7 +729,7 @@ options if its key is strictly equal to this value.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManagerDecorator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$classMetaData</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManagerDecorator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$classMetaData</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -740,7 +753,7 @@ options if its key is strictly equal to this value.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -767,16 +780,16 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">281</span>
+    <span class="phpdocumentor-element-found-in__line">284</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.281" class="phpdocumentor-element-found-in__source" data-line="281" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Count the number of rows which would be returned.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">count</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">count</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -786,7 +799,7 @@ options if its key is strictly equal to this value.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -823,16 +836,16 @@ options if its key is strictly equal to this value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add some &quot;missing&quot; convenience stuff to findBy()</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">findBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">findBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -927,7 +940,7 @@ main-table is performed.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -936,7 +949,7 @@ main-table is performed.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Order-by criteria. In addition to ASC and DESC
@@ -972,7 +985,7 @@ result array indexed by the specified column.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The found entities.</p>
 </section>
@@ -994,9 +1007,9 @@ result array indexed by the specified column.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find entities by given wild-card criteria. This is like findBy()
@@ -1005,7 +1018,7 @@ comparison is used.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">findLike</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">findLike</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1015,7 +1028,7 @@ comparison is used.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -1024,7 +1037,7 @@ comparison is used.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Order-by criteria.</p>
@@ -1057,7 +1070,7 @@ comparison is used.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -1075,16 +1088,16 @@ comparison is used.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">315</span>
+    <span class="phpdocumentor-element-found-in__line">318</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.315" class="phpdocumentor-element-found-in__source" data-line="315" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find just one or no entity matching the criteria.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">findOneBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|object</span></code>
+                    <span class="phpdocumentor-signature__name">findOneBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|object</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1094,7 +1107,7 @@ comparison is used.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -1103,7 +1116,7 @@ comparison is used.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Order-by criteria.</p>
@@ -1113,21 +1126,20 @@ comparison is used.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_findOneBy_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_findOneBy#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_findOneBy_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Toolkit\Doctrine\ORM\findBy()">findBy()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -1155,9 +1167,9 @@ comparison is used.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find one or no entity by given wild-card criteria. This is like findOne()
@@ -1166,7 +1178,7 @@ comparison is used.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">findOneLike</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|object</span></code>
+                    <span class="phpdocumentor-signature__name">findOneLike</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|object</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1176,7 +1188,7 @@ comparison is used.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -1289,16 +1301,16 @@ comparison is used.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Adds an order-by phrase and limits to the given query-builder.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">addOrderBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$qb</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$alias</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">addOrderBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$qb</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$alias</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1317,7 +1329,7 @@ comparison is used.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Order-by criteria.</p>
@@ -1379,9 +1391,9 @@ names already contain a field-separator.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">570</span>
+    <span class="phpdocumentor-element-found-in__line">573</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.570" class="phpdocumentor-element-found-in__source" data-line="570" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.573" class="phpdocumentor-element-found-in__source" data-line="573" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the given string contains an unescaped LIKE wildcard.</p>
@@ -1429,9 +1441,9 @@ names already contain a field-separator.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert the given argument to a DateTimeImmutable object. allowed are
@@ -1481,9 +1493,9 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
@@ -1515,22 +1527,21 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_convertToTimezoneDate_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -1554,9 +1565,9 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Ensure a valid date.</p>
@@ -1604,16 +1615,16 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">548</span>
+    <span class="phpdocumentor-element-found-in__line">551</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.548" class="phpdocumentor-element-found-in__source" data-line="548" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.551" class="phpdocumentor-element-found-in__source" data-line="551" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compute the select-part of the findBy() query.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">generateFindBySelect</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$queryParts</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$select</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">generateFindBySelect</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$queryParts</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$select</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1623,7 +1634,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$queryParts</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>As returned by prepareFindBy().</p>
@@ -1632,7 +1643,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$select</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;|null</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Non-default select. If not given the
@@ -1670,9 +1681,9 @@ only the mainTable entity is selected.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">620</span>
+    <span class="phpdocumentor-element-found-in__line">623</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.620" class="phpdocumentor-element-found-in__source" data-line="620" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.623" class="phpdocumentor-element-found-in__source" data-line="623" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compute the where-part of a query. The query builder must have
@@ -1681,7 +1692,7 @@ already contain the select part.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">generateFindByWhere</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$qb</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$queryParts</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">generateFindByWhere</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$qb</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$queryParts</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1700,7 +1711,7 @@ already contain the select part.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$queryParts</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>As returned by prepareFindByWhere().</p>
@@ -1728,49 +1739,95 @@ already contain the select part.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_generateFindByWhere_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_generateFindByWhere#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_generateFindByWhere_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Field-type deduction for set-parameter only works for the
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Field-type deduction for set-parameter only works for the
 main-table ATM. This could probably be cured by reading the
 meta-data for all join tables.</p>
 <p>PHPMD cannot handle dynamic variable names</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getCurrentDate">
+        getCurrentDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">115</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return the current date according to the given or the current user&#039;s
+timezone and return it as DateTime object at midnight according to the
+timeozone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getCurrentDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
             </section>
 
 </article>
@@ -1788,16 +1845,16 @@ meta-data for all join tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">332</span>
+    <span class="phpdocumentor-element-found-in__line">335</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.332" class="phpdocumentor-element-found-in__source" data-line="332" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Parse the criteria.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">prepareFindBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">prepareFindBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1807,7 +1864,7 @@ meta-data for all join tables.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$criteria</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Search criteria.</p>
@@ -1816,7 +1873,7 @@ meta-data for all join tables.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Order-by criteria.</p>
@@ -1826,27 +1883,26 @@ meta-data for all join tables.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_prepareFindBy_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_prepareFindBy#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_prepareFindBy_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Toolkit\Doctrine\ORM\findBy()">findBy()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Query-parts descriptor.</p>
 </section>
@@ -1868,9 +1924,9 @@ meta-data for all join tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php"><a href="files/lib-toolkit-doctrine-orm-findliketrait.html"><abbr title="lib/Toolkit/Doctrine/ORM/FindLikeTrait.php">FindLikeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">587</span>
+    <span class="phpdocumentor-element-found-in__line">590</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.587" class="phpdocumentor-element-found-in__source" data-line="587" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentInsurancesRepository.html#source-view.590" class="phpdocumentor-element-found-in__source" data-line="590" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/FindLikeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Replace the unescaped LIKE wildcards &#039;%&#039; and &#039;_&#039; by &#039;.*&#039; and &#039;.?&#039;.</p>
@@ -2055,6 +2111,7 @@ meta-data for all join tables.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_generateFindBySelect">generateFindBySelect()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_generateFindByWhere">generateFindByWhere()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate">getCurrentDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_prepareFindBy">prepareFindBy()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-FindLikeTrait.html#method_wildcardsToRegexp">wildcardsToRegexp()</a></li>
                                     </ul>

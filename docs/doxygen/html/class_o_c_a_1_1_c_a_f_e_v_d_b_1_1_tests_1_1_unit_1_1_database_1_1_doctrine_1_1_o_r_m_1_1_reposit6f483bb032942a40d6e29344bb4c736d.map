@@ -1,0 +1,11 @@
+<map id="InstrumentsRepositoryTest" name="InstrumentsRepositoryTest">
+<area shape="rect" id="Node000001" title="Test aspects of the ORM InstrumentsRepository." alt="" coords="5,256,184,283"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="34,157,112,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,197,94,256,89,255,77,201"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instruments_repository.html" title="Repository for instruments." alt="" coords="136,157,290,184"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,194,112,258,109,253,183,194"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="154,81,272,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="215,121,216,158,211,156,212,125"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_repository.html" title="A class to extends from pulling in the FindLikeTrait." alt="" coords="154,5,272,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="214,45,216,82,211,80,212,49"/>
+</map>

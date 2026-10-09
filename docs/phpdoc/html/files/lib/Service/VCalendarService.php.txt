@@ -848,7 +848,7 @@ class VCalendarService
     ?string $description = null,
     string $action = self::ALARM_ACTION_DISPLAY,
   ):?VAlarm {
-    if (empty($seconds)) {
+    if ($seconds === 0) {
       return null;
     }
     /*

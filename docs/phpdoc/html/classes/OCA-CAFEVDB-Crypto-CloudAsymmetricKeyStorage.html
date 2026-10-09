@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Crypto\CloudAsymmetricKeyStorage
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -118,7 +122,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html"><abbr title="\OCA\CAFEVDB\Traits\UserPreferencesTrait">UserPreferencesTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -131,9 +135,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Key-storage base-class.</p>
@@ -165,7 +169,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#constant_NAME_SEPARATOR">NAME_SEPARATOR</a>
     <span>
-        &nbsp;= &#039;;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;;&#039;                            </span>
 </dt>
 
     </dl>
@@ -186,7 +190,19 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName">$appName</a>
+    <span>
+                        &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudUserConfig">$cloudUserConfig</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -199,18 +215,6 @@
     <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName">$appName</a>
-    <span>
-                        &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudConfig">$cloudConfig</a>
-    <span>
-                        &nbsp;: <abbr title="\OCP\IConfig">IConfig</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -240,6 +244,12 @@
 </dt>
 <dd>Make a backup copy. Meant as safe-guard while changing the key and
 recrypting encrypted data.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_deleteUserValue">deleteUserValue()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_generateKeyPair">generateKeyPair()</a>
@@ -274,34 +284,34 @@ unlocked.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log the given message at the specified level.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a debug message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an error.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logException">logException()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logFatal">logFatal()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a fatal error message.</dd>
 
@@ -315,14 +325,14 @@ unlocked.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an informational message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a warning message.</dd>
 
@@ -351,14 +361,14 @@ currently active key-pair with the backup copy.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>    </span>
+                                &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>    </span>
 </dt>
 <dd>Return the stored appConmtainer instance.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_createKeyPair">createKeyPair()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Create a key-pair, but don&#039;t store it</dd>
 
@@ -383,6 +393,18 @@ understands those.</dd>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Decode the raw data fetch from whatever storage backend.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue">__doGetUserValue()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId">__userPreferencesTraitGetUserId()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_getUserValue">getUserValue()</a>
@@ -417,9 +439,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -464,9 +486,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -511,8 +533,84 @@ understands those.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_appName">
+        $appName
+        <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">54</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">$appName</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_cloudUserConfig">
+        $cloudUserConfig
+        <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudUserConfig" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">57</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr></span>
+    <span class="phpdocumentor-signature__name">$cloudUserConfig</span>
     </code>
 
     
@@ -540,9 +638,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -578,9 +676,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -589,82 +687,6 @@ understands those.</dd>
         <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$logger</span>
-    </code>
-
-    
-    
-    
-
-        
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_appName">
-        $appName
-        <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">48</span>
-
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">string</span>
-    <span class="phpdocumentor-signature__name">$appName</span>
-    </code>
-
-    
-    
-    
-
-        
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_cloudConfig">
-        $cloudConfig
-        <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudConfig" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">51</span>
-
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
-    <span class="phpdocumentor-signature__name">$cloudConfig</span>
     </code>
 
     
@@ -692,9 +714,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -735,15 +757,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-SymmetricCryptorInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\SymmetricCryptorInterface">SymmetricCryptorInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptor</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudUserConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-SymmetricCryptorInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\SymmetricCryptorInterface">SymmetricCryptorInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptor</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -773,8 +795,8 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$cloudConfig</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
+                <span class="phpdocumentor-argument-list__argument__name">$cloudUserConfig</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -808,9 +830,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make a backup copy. Meant as safe-guard while changing the key and
@@ -859,6 +881,62 @@ be prefixed by '@'.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_deleteUserValue">
+        deleteUserValue()
+        <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_deleteUserValue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">162</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">deleteUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Config key.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Use the current user if null.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_generateKeyPair">
         generateKeyPair()
         <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_generateKeyPair" class="headerlink"><i class="fas fa-link"></i></a>
@@ -867,9 +945,9 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize a private/public key-pair by either retreiving it from the
@@ -937,9 +1015,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Retrieve an existing private/public key pair from the key-storage.</p>
@@ -1072,9 +1150,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Retrieve an existing pulic key from the key-storage.</p>
@@ -1138,7 +1216,7 @@ be prefixed by '@'.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1162,7 +1240,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1196,7 +1274,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1214,16 +1292,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1240,7 +1318,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1274,7 +1352,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1292,16 +1370,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1318,7 +1396,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1352,7 +1430,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1370,15 +1448,15 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1416,7 +1494,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1436,7 +1514,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1454,16 +1532,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1480,7 +1558,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1514,7 +1592,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1572,16 +1650,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1598,7 +1676,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1632,7 +1710,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1650,16 +1728,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1676,7 +1754,7 @@ be prefixed by '@'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1710,7 +1788,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -1728,9 +1806,9 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">144</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restores a backup previously generated by backupKeyPair(). Overwrites the
@@ -1787,9 +1865,9 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">122</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Change the the passphrase of the given unlocked private-key.</p>
@@ -1856,9 +1934,9 @@ encrypted key in the storage backend.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the stored key-pair for the given owner.</p>
@@ -1914,7 +1992,7 @@ be prefixed by '@'.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1927,7 +2005,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
             </section>
 
 </article>
@@ -1945,16 +2023,16 @@ be prefixed by '@'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a key-pair, but don&#039;t store it</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-    <span class="phpdocumentor-signature__abstract">abstract</span>                <span class="phpdocumentor-signature__name">createKeyPair</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+    <span class="phpdocumentor-signature__abstract">abstract</span>                <span class="phpdocumentor-signature__name">createKeyPair</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1967,7 +2045,7 @@ be prefixed by '@'.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2032,9 +2110,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Serialize key to string for storage in whatever storage backend</p>
@@ -2089,9 +2167,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">167</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Decode the raw data fetch from whatever storage backend.</p>
@@ -2134,6 +2212,120 @@ understands those.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method___doGetUserValue">
+        __doGetUserValue()
+        <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">65</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">__doGetUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Use the current user if null.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Config key.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$default</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Default value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___userPreferencesTraitGetUserId">
+        __userPreferencesTraitGetUserId()
+        <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">51</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">__userPreferencesTraitGetUserId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getUserValue">
         getUserValue()
         <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_getUserValue" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2142,9 +2334,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">195</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -2201,9 +2393,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Crypto/CloudAsymmetricKeyStorage.php"><a href="files/lib-crypto-cloudasymmetrickeystorage.html"><abbr title="lib/Crypto/CloudAsymmetricKeyStorage.php">CloudAsymmetricKeyStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/lib/Crypto/CloudAsymmetricKeyStorage.php.txt"></a>
     </aside>
 
     
@@ -2370,10 +2562,10 @@ understands those.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_name">$name</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName">$appName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudUserConfig">$cloudUserConfig</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_l">$l</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_logger">$logger</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_appName">$appName</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudConfig">$cloudConfig</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cryptor">$cryptor</a></li>
                                             </ul>
                 </li>
@@ -2383,6 +2575,7 @@ understands those.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_backupKeyPair">backupKeyPair()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_deleteUserValue">deleteUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_generateKeyPair">generateKeyPair()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_getKeyPair">getKeyPair()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-AbstractAsymmetricKeyStorage.html#method_getPrivateKey">getPrivateKey()</a></li>
@@ -2403,6 +2596,8 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_serializeKey">serializeKey()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_unserializeKey">unserializeKey()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue">__doGetUserValue()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId">__userPreferencesTraitGetUserId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_getUserValue">getUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#method_setUserValue">setUserValue()</a></li>
                                     </ul>

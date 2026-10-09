@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use OCP\Console\ExitCode;
+use OCP\Console\IInput;
+use OCP\Console\IOutput;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Toolkit\Traits\AuthenticatedCommandTrait as ToolkitTrait;
@@ -43,12 +44,12 @@ trait AuthenticatedCommandTrait
    *
    * @see execute()
    */
-  protected function authenticate(InputInterface $input, OutputInterface $output):int
+  protected function authenticate(IInput $input, IOutput $output): int
   {
     if ($this->toolkitAuthenticate($input, $output) === 0) {
       $this->entityManager = $this->appContainer->get(EntityManager::class);
-      return 0;
+      return ExitCode::Success;
     }
-    return 1;
+    return ExitCode::Failure;
   }
 }

@@ -1,0 +1,5 @@
+<map id="isIpv6" name="isIpv6">
+<area shape="rect" id="Node000001" title="A wrapper around filter_var()." alt="" coords="177,5,233,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_domain_name_service.html#a0d176cbaa4365f592860ec5074820e56" title="Try to resolve the given hostname and return an array with its IPv4 and IPv6 addresses,..." alt="" coords="5,5,129,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,19,129,21,129,16,164,18"/>
+</map>

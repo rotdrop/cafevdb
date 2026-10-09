@@ -1,20 +1,19 @@
 <map id="setProcessEnvironment" name="setProcessEnvironment">
-<area shape="rect" id="Node000001" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="638,132,798,159"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2af13dd8e56c5d7af6c1e805d5156219" title="Check whether the given file can be opened." alt="" coords="309,5,382,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="691,124,646,86,618,68,589,53,534,36,478,26,383,20,383,15,479,21,536,31,591,48,621,63,649,82,694,120"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,56,55,83"/>
-<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="642,131,589,121,430,101,274,87,55,73,55,68,274,82,430,96,590,116,643,126"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="103,107,208,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="622,144,208,125,209,120,622,138"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a8e072029c19d353dc983217e60927514" title=" " alt="" coords="483,157,590,184"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="623,161,591,166,590,161,622,156"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="503,208,570,235"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="671,168,571,210,569,205,669,163"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a1f29d353d4da2916ea353d956f7f54af" title=" " alt="" coords="485,259,588,285"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="692,171,646,210,591,249,570,260,568,256,588,244,643,205,688,167"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,26,205,37,103,53,56,65,54,60,102,48,204,32,293,21"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="106,103,54,82,56,77,108,98"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="256,183,435,209"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="487,218,436,211,436,205,488,212"/>
-<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="295,179,190,136,192,131,297,174"/>
+<area shape="rect" id="Node000001" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="387,132,547,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2af13dd8e56c5d7af6c1e805d5156219" title="Check whether the given file can be opened." alt="" coords="249,5,322,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="433,122,337,53,311,35,311,30,341,48,439,122"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ae608a9ede7df03c9d87ac6afc1830376" title=" " alt="" coords="70,56,120,83"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="421,125,383,111,338,97,277,85,216,78,121,72,119,67,217,73,278,80,340,92,384,106,427,125"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="233,107,338,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="369,132,339,130,339,125,374,131"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a8e072029c19d353dc983217e60927514" title=" " alt="" coords="233,157,339,184"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="369,159,340,166,339,161,374,158"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="252,208,320,235"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="422,165,321,210,319,205,416,166"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a1f29d353d4da2916ea353d956f7f54af" title=" " alt="" coords="235,259,337,285"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="442,168,395,210,340,249,319,261,318,256,338,244,392,205,437,170"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="233,34,121,65,119,61,236,30"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="216,104,120,78,120,73,220,101"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="5,208,185,235"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="234,222,186,224,185,219,239,221"/>
 </map>

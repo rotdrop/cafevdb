@@ -1,0 +1,11 @@
+<map id="HistoryServiceTest" name="HistoryServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the HistoryService class." alt="" coords="94,180,226,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,116,147,178,142,181,70,121"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html" title="Page history via PHP session." alt="" coords="106,81,214,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,122,162,181,158,179,158,125"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="237,81,339,108"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,118,224,158,186,182,184,177,221,154,263,120"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="213,5,363,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="290,45,290,82,286,80,286,49"/>
+</map>

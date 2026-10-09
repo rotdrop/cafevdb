@@ -88,7 +88,7 @@ class TOSExceptionMapper extends Mapper
       $this->deleteByShareToken($shareToken);
       $exceptions = [];
     } else {
-      $exceptions = $this->getToSExeptions($shareToken);
+      $exceptions = $this->getToSExceptions($shareToken);
     }
     if (empty($exceptions)) {
       $exception = new TOSException();

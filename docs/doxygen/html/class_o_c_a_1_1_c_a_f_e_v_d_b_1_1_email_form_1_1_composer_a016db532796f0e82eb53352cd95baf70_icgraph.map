@@ -1,9 +1,9 @@
 <map id="messageText" name="messageText">
 <area shape="rect" id="Node000001" title=" " alt="" coords="355,31,454,57"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="196,5,299,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,36,299,30,300,24,340,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="337,34,299,30,299,24,342,33"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a467acba2036c37acd425db67c68abcfa" title="Validates the given template, i.e." alt="" coords="188,56,307,83"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="340,57,308,62,307,57,339,52"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="342,54,308,62,307,57,337,55"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,5,140,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="180,21,140,21,140,16,180,16"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="178,19,141,21,140,16,183,18"/>
 </map>

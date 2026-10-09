@@ -1,0 +1,7 @@
+<map id="getLoginCredentialsFromToken" name="getLoginCredentialsFromToken">
+<area shape="rect" id="Node000001" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="5,31,207,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="255,5,351,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,28,242,26,237,27,208,34"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="275,56,331,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,54,262,64,257,64,207,60"/>
+</map>

@@ -26,11 +26,11 @@ namespace OCA\CAFEVDB;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-use OCA\CAFEVDB\Toolkit\Traits\Constants as TraitsConstants;
+use OCA\CAFEVDB\Toolkit\Constants as ToolkitConstants;
 
 /** General constants for the app. */
 #[TSAttributes\TypeScript]
-class Constants extends TraitsConstants
+class Constants extends ToolkitConstants
 {
   const README_NAME = 'README.md';
   const OLD_CONTENT_SEPARATOR = "\n\n----------------------\n\n";

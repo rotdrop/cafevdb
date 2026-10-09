@@ -1,0 +1,26 @@
+<map id="gather_query_opts" name="gather_query_opts">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,131,134,157"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aed1b50c8c16937db335f1d22ecaf41d1" title="Generate the query code for one field." alt="" coords="251,80,290,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,127,238,100,234,104,126,133"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aa6a2b6fc80c90ab19ad9adcf601d28b9" title="Create a Unix time&#45;stamp from user&#45;input." alt="" coords="182,131,360,157"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="134,141,169,143,163,145,135,147"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a259c31064dde5d37019d42ce46764264" title="Generate a data&#45;base value from a timestamp." alt="" coords="195,181,347,208"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="126,155,203,176,198,178,125,161"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a42ed7f2383e253357b1355d60150fff5" title="Generate the field&#45;description SQL part." alt="" coords="527,80,667,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,91,514,92,509,95,291,96"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#adc3f1c2ed5d89f6fbc7c1430834f92df" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="754,29,858,56"/>
+<area shape="poly" id="edge12_Node000002_Node000005" title=" " alt="" coords="290,82,342,60,407,40,496,28,586,25,669,27,741,35,735,35,669,32,586,30,497,33,409,45,344,65,292,87"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a988a51bf88f195f4c5dc158fb1f9e2b9" title="Compute $join_table name (maybe main&#45;table if no info)." alt="" coords="751,156,861,183"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="291,96,361,116,443,145,478,157,526,167,580,172,635,175,737,175,732,175,635,180,580,178,525,172,477,162,441,150,359,121,291,101"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ad7818a8e551fddf2b45ccabf9536f070" title="Substitute placeholders in sql field:" alt="" coords="408,55,477,81"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="290,88,396,74,391,76,292,93"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#afee348ff426567672d33af240df2b66a" title="Normalize field description to have the form." alt="" coords="717,80,895,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="667,91,704,93,698,94,667,96"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="655,77,736,60,741,58,656,82"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="770,28,764,21,768,11,783,5,806,3,831,5,845,14,840,14,829,10,806,8,784,10,772,15,769,20,775,30"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="478,71,515,79,509,80,478,76"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="478,63,741,47,735,48,478,68"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ab1c89b9812f120dc7ad1889bc4f1886e" title="Add some defaults for missing &#39;values&#39; fields." alt="" coords="525,131,669,157"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="464,79,527,116,541,125,536,124,524,121,463,84"/>
+<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="669,150,738,161,733,161,669,155"/>
+</map>

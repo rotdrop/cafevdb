@@ -1,0 +1,5 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test =
+[
+    [ "setup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test.html#a1d04139db3a5ad5713ecbd14d97da879", null ],
+    [ "testAllValuesAreTranslated", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test.html#a1c9cbd536b6acbc9579e9b928ff6cbc1", null ]
+];

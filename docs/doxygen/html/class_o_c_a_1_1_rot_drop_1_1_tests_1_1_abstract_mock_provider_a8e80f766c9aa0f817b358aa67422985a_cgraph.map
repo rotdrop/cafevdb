@@ -1,0 +1,11 @@
+<map id="getUserSession" name="getUserSession">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,120,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="417,5,502,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,28,167,16,293,9,405,14,399,15,293,14,168,21,111,33"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aefa4c5bd150e2a7d525576d7959c6911" title=" " alt="" coords="168,31,254,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,41,155,44,150,44,120,47"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ae81b7186fb97a7c6457edcc68c9aa2ef" title=" " alt="" coords="302,31,369,57"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="111,55,168,67,211,71,254,67,284,62,290,61,254,72,211,76,167,72,110,61"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="254,41,289,44,284,44,255,47"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="369,35,399,31,405,30,370,40"/>
+</map>

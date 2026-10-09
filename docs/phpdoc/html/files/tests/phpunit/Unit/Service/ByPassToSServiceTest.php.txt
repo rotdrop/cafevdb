@@ -100,7 +100,9 @@ class ByPassToSServiceTest extends TestCase
     $this->mapper = $this->getMockBuilder(TOSExceptionMapper::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $this->mapper->method('getToSExceptions')->with(self::SHARE_TOKEN)->willReturn([$exception]);
+    $this->mapper->method('getToSExceptions')->willReturnCallback(
+      fn(string $token) => $token == self::SHARE_TOKEN ? [$exception] : [],
+    );
     $this->mapper->method('addToSException')->willReturnCallback(
       function(string $token, array $ips, bool $exclusive) {
         $this->exceptions[] = compact('token', 'ips', 'exclusive');
@@ -127,6 +129,7 @@ class ByPassToSServiceTest extends TestCase
   /** @return void */
   public function testSetup(): void
   {
+    $this->mapper->expects($this->never())->method('getToSExceptions');
     $this->appManager->expects($this->never())->method('isEnabledForAnyOne');
     $this->request->expects($this->never())->method('getRemoteAddress');
     // $this->expectNotToPerformAssertions();

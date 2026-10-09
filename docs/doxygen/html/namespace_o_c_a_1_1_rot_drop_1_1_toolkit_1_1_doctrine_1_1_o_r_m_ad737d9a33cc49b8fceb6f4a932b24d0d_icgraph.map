@@ -1,0 +1,8 @@
+<map id="count" name="count">
+<area shape="rect" id="Node000001" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,56,212,83"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="13,5,103,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,54,93,35,94,30,147,52"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="5,56,111,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,78,111,81,111,76,146,78"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="126,58,161,62,156,62,126,63"/>
+</map>

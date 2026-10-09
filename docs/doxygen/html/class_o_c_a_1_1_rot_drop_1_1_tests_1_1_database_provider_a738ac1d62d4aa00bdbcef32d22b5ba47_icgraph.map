@@ -1,0 +1,5 @@
+<map id="stopServer" name="stopServer">
+<area shape="rect" id="Node000001" title="Stop a running server and remove all associated data." alt="" coords="139,5,223,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_database_provider.html#a1721a545f9a1651e62e970e275a28a5c" title="Setup a clean database and start a server on it." alt="" coords="5,5,91,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,19,91,21,91,16,126,18"/>
+</map>

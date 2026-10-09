@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -150,16 +154,15 @@ nevertheless for selected small files.</p>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedPrivateField)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UnusedPrivateField)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
     
             <section class="phpdocumentor-attributes">
@@ -186,7 +189,7 @@ nevertheless for selected small files.</p>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\DiscriminatorMap">DiscriminatorMap</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        [&#039;generic&#039; =&gt; &#039;File&#039;, &#039;encrypted&#039; =&gt; &#039;EncryptedFile&#039;, &#039;image&#039; =&gt; &#039;Image&#039;]
+        [\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::GENERIC-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File::class, \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::ENCRYPTED-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile::class, \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::IMAGE-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Image::class]
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -256,7 +259,7 @@ nevertheless for selected small files.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#constant_PATH_SEPARATOR">PATH_SEPARATOR</a>
     <span>
-        &nbsp;= &#039;/&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;/&#039;                            </span>
 </dt>
 
     </dl>
@@ -531,7 +534,7 @@ we really do not want this as TS only received initialized entities.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -575,9 +578,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -641,8 +644,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_created_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -688,9 +691,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -707,8 +710,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_dataHash#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_dataHash_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_dataHash_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -749,9 +752,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -772,8 +775,8 @@ association in between.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_fileData#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_fileData_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_fileData_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -817,9 +820,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -836,8 +839,8 @@ association in between.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_fileName#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_fileName_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_fileName_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -901,8 +904,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_id_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -958,9 +961,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -977,8 +980,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_mimeType#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_mimeType_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_mimeType_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1016,9 +1019,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -1035,8 +1038,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_size#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_size_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_size_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1074,9 +1077,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
     
@@ -1093,8 +1096,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_updated#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_updated_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#property_updated_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1159,8 +1162,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_keys_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1194,9 +1197,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1329,9 +1332,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the dir-part of the file-name.</p>
@@ -1379,9 +1382,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">318</span>
+    <span class="phpdocumentor-element-found-in__line">322</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get data.</p>
@@ -1425,9 +1428,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">258</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dataHash.</p>
@@ -1465,9 +1468,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">172</span>
+    <span class="phpdocumentor-element-found-in__line">176</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the dir-part of the file-name</p>
@@ -1505,9 +1508,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">234</span>
+    <span class="phpdocumentor-element-found-in__line">238</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the extension-part of the file-name.</p>
@@ -1555,9 +1558,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">306</span>
+    <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.306" class="phpdocumentor-element-found-in__source" data-line="306" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get FileData.</p>
@@ -1595,9 +1598,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">149</span>
+    <span class="phpdocumentor-element-found-in__line">153</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get fileName.</p>
@@ -1675,9 +1678,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">125</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mimeType.</p>
@@ -1715,9 +1718,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">286</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get $size.</p>
@@ -1990,9 +1993,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">188</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set only the base-name.</p>
@@ -2040,9 +2043,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">246</span>
+    <span class="phpdocumentor-element-found-in__line">250</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dataHash.</p>
@@ -2090,9 +2093,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">161</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set only the dir-name</p>
@@ -2140,9 +2143,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">216</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.216" class="phpdocumentor-element-found-in__source" data-line="216" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set only the extension.</p>
@@ -2190,9 +2193,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">294</span>
+    <span class="phpdocumentor-element-found-in__line">298</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set FileData.</p>
@@ -2240,9 +2243,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set fileName.</p>
@@ -2340,9 +2343,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mimeType.</p>
@@ -2390,9 +2393,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/File.php"><a href="files/lib-database-doctrine-orm-entities-file.html"><abbr title="lib/Database/Doctrine/ORM/Entities/File.php">File.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/File.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set $size.</p>
@@ -2498,7 +2501,7 @@ may not change the visibility of a property.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2511,7 +2514,7 @@ may not change the visibility of a property.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -2550,8 +2553,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_arrayCTOR_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">

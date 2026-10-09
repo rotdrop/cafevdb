@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
@@ -80,7 +80,7 @@ class ProjectParticipantEntityListener
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
   ) {
   }
@@ -190,6 +190,7 @@ class ProjectParticipantEntityListener
             if ($datum === null) {
               continue;
             }
+            $entity->addParticipantFieldDatum($datum);
             $this->entityManager->persist($datum);
             $needFlush = true;
           }
@@ -296,11 +297,12 @@ class ProjectParticipantEntityListener
     $user = $userManager->get($userId);
 
     $closureArguments = compact([
-      'userId',
-      'user',
+      'groupManager',
       'managementGroup',
       'orchestraGroup',
-      'groupManager',
+      'remove',
+      'user',
+      'userId',
       'userManager',
     ]);
 

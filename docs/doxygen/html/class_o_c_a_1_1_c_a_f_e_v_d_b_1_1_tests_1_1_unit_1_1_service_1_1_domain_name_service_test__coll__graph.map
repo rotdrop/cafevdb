@@ -1,0 +1,7 @@
+<map id="DomainNameServiceTest" name="DomainNameServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the DomainNameService class." alt="" coords="27,104,197,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,43,106,103,101,104,60,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_domain_name_service.html" title="Simple wrapper class around a domain name resolver." alt="" coords="107,5,253,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,44,123,106,119,102,160,46"/>
+</map>

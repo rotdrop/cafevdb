@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use ReflectionMethod;
 use Throwable;
 
 use OCA\Settings\Mailer\NewUserMailHelper;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\GroupInterface;
 use OCP\Group\Backend\ICreateGroupBackend;
 use OCP\Group\Backend\IGetDisplayNameBackend;
+use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\INamedBackend;
 use OCP\Group\Backend\ISetDisplayNameBackend;
 use OCP\Group\ISubAdmin as ISubAdminManager;
@@ -125,7 +128,7 @@ class CloudAccountsService
    *
    * @throws Throwable
    */
-  public function addUserToBackend(IUser $user, string|UserInterface $newBackend)
+  public function addUserToBackend(IUser $user, string|UserInterface $newBackend): bool
   {
     if (is_string($newBackend)) {
       $newBackend = array_filter(
@@ -152,9 +155,9 @@ class CloudAccountsService
       return true;
     }
 
-    $email = $user->getEMailAddress() ?? '';
+    $email = $user->getSystemEMailAddress() ?? null;
 
-    if ($email === '') {
+    if (empty($email)) {
       // This also means that the setup is somehow totally broken ...
       $this->logError('User "' . $userId . '" does not have an email.');
       return false;
@@ -173,7 +176,7 @@ class CloudAccountsService
 
     $newUser = $this->doAddUserToBackend(
       userId: $userId,
-      UserInterface: $newBackend,
+      backend: $newBackend,
       displayName: $displayName,
       email: $email,
       quota: $quota,
@@ -263,7 +266,7 @@ class CloudAccountsService
         }
       }
 
-      $newUser->setEMailAddress($email);
+      $newUser->setSystemEMailAddress($email);
       if ($this->cloudConfig->getAppValue('core', 'newUser.sendEmail', 'yes') === 'yes') {
         try {
           $emailTemplate = $this->newUserMailHelper->generateTemplate($newUser, $generatePasswordResetToken);
@@ -412,6 +415,7 @@ class CloudAccountsService
    */
   public function ensureGroupBackends(IGroup $group, array $requiredBackends = []):array
   {
+    $this->logInfo('TRY ENSURE GROUP BACKENDS');
     if (empty($requiredBackends)) {
       $requiredBackends = [ 'Database' ];
       $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
@@ -429,20 +433,26 @@ class CloudAccountsService
     $displayName = $group->getDisplayName();
     $groupBackendNames = $group->getBackendNames();
     $missingBackends = array_diff($requiredBackends, $groupBackendNames);
+    /** @var ABackend $backend */
     foreach ($this->groupManager->getBackends() as $backend) {
-      if (!($backend instanceof INamedBackend)) {
+      if (!($backend instanceof INamedBackend) || !($backend instanceof GroupInterface)) {
+        $this->logInfo('SKIPPING BACKEND ' . get_class($backend));
         continue;
       }
       $backendName = $backend->getBackendName();
       if (!in_array($backendName, $missingBackends)) {
         continue;
       }
-      if (!($backend instanceof ICreateGroupBackend)) {
+      if (!$backend->implementsActions(GroupInterface::CREATE_GROUP)) {
         $this->logError('Group ' . $gid . ' is missing in backend "' . $backendName . '", but the backend is not able to create groups.');
         $status[$backendName] = false;
         continue;
       }
-      if (!$backend->createGroup($gid)) {
+      if ($backend->groupExists($gid)) {
+        $this->logError('Backend "' . $backendName . '" already provides the group "' . $gid . '", but the cloud group does not reflect this.');
+        $status[$backendName] = false;
+        continue;
+      } elseif (!$backend->createGroup($gid)) {
         $this->logError('Group ' . $gid . ' is missing in backend "' . $backendName . '", but the backend failed to create it.');
         $status[$backendName] = false;
         continue;
@@ -462,7 +472,7 @@ class CloudAccountsService
       // ignore the result, not so important
     }
     if (($this->groupManager instanceof \OC\Group\Manager) && method_exists($this->groupManager, 'clearCaches')) {
-      $this->groupManager->clearCaches();
+      new ReflectionMethod($this->groupManager, 'clearCaches')->invoke($this->groupManager);
     }
     return $status;
   }

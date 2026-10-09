@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class WebBrowserHistoryData implements \ArrayAccess
   protected string $hash;
 
   /** @var Collection<string, WebBrowserHistoryEntry> */
-  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'state_id', fetch: 'EXTRA_LAZY')]
   protected Collection $entries;
 
   /**
@@ -129,7 +129,7 @@ class WebBrowserHistoryData implements \ArrayAccess
    */
   public function addToEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
   {
-    $this->entries->set($entry->getKey(), $entry);
+    $this->entries->set($entry->getState()->getId(), $entry);
     $this->addEncryptionIdentity($entry->getState()->getUserId());
 
     return $this;
@@ -142,8 +142,8 @@ class WebBrowserHistoryData implements \ArrayAccess
    */
   public function removeFromEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
   {
-    if ($this->entries->containsKey($entry->getKey())) {
-      $this->entries->remove($entry->getKey());
+    if ($this->entries->containsKey($entry->getState()->getId())) {
+      $this->entries->remove($entry->getState()->getId());
     }
     return $this;
   }

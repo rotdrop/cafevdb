@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Common\TimeFactory
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -104,9 +108,6 @@
         <h2 class="phpdocumentor-content__title">
     TimeFactory
 
-        <span class="phpdocumentor-element__extends">
-        extends <abbr title="\OC\AppFramework\Utility\TimeFactory">TimeFactory</abbr>
-    </span>
     
             <div class="phpdocumentor-element__package">
             in package
@@ -115,6 +116,9 @@
                             </ul>
         </div>
     
+            <span class="phpdocumentor-element__implements">
+            implements
+                            <abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr>                    </span>
     
     </h2>
 
@@ -126,9 +130,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Like ITimeFactory but stop using DateTime in favour of DateTimeImmutable.</p>
@@ -147,12 +151,32 @@
 
 
 
+    <h4 id="toc-interfaces">
+        Interfaces
+        <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#toc-interfaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -interface"><abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr></dt>    </dl>
 
 
 
 
 
 
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#property_timeFactory">$timeFactory</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr>            </span>
+</dt>
+
+    </dl>
 
 <h4 id="toc-methods">
     Methods
@@ -161,10 +185,17 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method___construct">__construct()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getDateTime">getDateTime()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTime">DateTime</abbr>    </span>
 </dt>
+<dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getDateTimeImmutable">getDateTimeImmutable()</a>
@@ -178,18 +209,21 @@
     <span>
                                 &nbsp;: int    </span>
 </dt>
+<dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getTimeZone">getTimeZone()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTimeZone">DateTimeZone</abbr>    </span>
 </dt>
+<dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_now">now()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
 </dt>
+<dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_sleepUntil">sleepUntil()</a>
@@ -201,8 +235,9 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_withTimeZone">withTimeZone()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html"><abbr title="\OCA\CAFEVDB\Common\TimeFactory">TimeFactory</abbr></a>    </span>
+                                &nbsp;: static    </span>
 </dt>
+<dd>{@inheritdoc}</dd>
 
     </dl>
 
@@ -211,6 +246,51 @@
         
 
         
+    <section class="phpdocumentor-properties">
+        <h3 class="phpdocumentor-elements__header" id="properties">
+            Properties
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_timeFactory">
+        $timeFactory
+        <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#property_timeFactory" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">56</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr></span>
+    <span class="phpdocumentor-signature__name">$timeFactory</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+            </section>
 
             <section class="phpdocumentor-methods">
         <h3 class="phpdocumentor-elements__header" id="methods">
@@ -218,6 +298,41 @@
             <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___construct">
+        __construct()
+        <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
                     <article
         class="phpdocumentor-element
             -method
@@ -232,37 +347,34 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">0</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$time</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"> = '\'now\''</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"> = 'null'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTime">DateTime</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">getDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$time</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'now'</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTime">DateTime</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>Return a DateTime object with the given DateTimeZone which defaults
-to UTC or the timezone configured by generating an instance via
-static::withTimeZone().</p>
-</section>
-
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$time</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"> = '\'now\''</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'now'</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$timezone</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"> = 'null'</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -292,9 +404,9 @@ static::withTimeZone().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Like the parent class but returning an instance of DateTimeImmutable.</p>
@@ -355,12 +467,13 @@ omitted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">0</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getTime</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
@@ -368,9 +481,7 @@ omitted.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>Result of calling \time().</p>
-</section>
-
+    
     
     
 
@@ -396,30 +507,27 @@ omitted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">0</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getTimeZone</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"> = 'null'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeZone">DateTimeZone</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">getTimeZone</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeZone">DateTimeZone</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>Return a
-DateTimeZone object. If $timezone is omitted the attached timezone of this
-instance ist returned.</p>
-</section>
-
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$timezone</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"> = 'null'</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -449,12 +557,13 @@ instance ist returned.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">0</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">now</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
@@ -462,9 +571,7 @@ instance ist returned.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>The current date-time in timezone UTC.</p>
-</section>
-
+    
     
     
 
@@ -490,9 +597,9 @@ instance ist returned.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A wrapper around time_sleep_until().</p>
@@ -542,22 +649,21 @@ instance ist returned.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/TimeFactory.php"><a href="files/lib-common-timefactory.html"><abbr title="lib/Common/TimeFactory.php">TimeFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">0</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/lib/Common/TimeFactory.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">withTimeZone</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html"><abbr title="\OCA\CAFEVDB\Common\TimeFactory">TimeFactory</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">withTimeZone</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timezone</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>A clone attached to the given timezone.</p>
-</section>
-
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -575,7 +681,7 @@ instance ist returned.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html"><abbr title="\OCA\CAFEVDB\Common\TimeFactory">TimeFactory</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">static</span>
             </section>
 
 </article>
@@ -686,14 +792,22 @@ instance ist returned.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                <li><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#toc-methods">Methods</a></li>
+                                                            <li><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
             
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#property_timeFactory">$timeFactory</a></li>
+                                            </ul>
+                </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getDateTime">getDateTime()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getDateTimeImmutable">getDateTimeImmutable()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getTime">getTime()</a></li>

@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Service\EncryptionService
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -126,9 +130,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Handle some encryption tasks:</p>
@@ -151,17 +155,16 @@ the credential store of the emedding cloud instance.</p>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>One could cache the decrypted configuration values given that
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>One could cache the decrypted configuration values given that
 encryption may be costly.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
     
     
@@ -186,52 +189,25 @@ encryption may be costly.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#constant_NEVER_ENCRYPT">NEVER_ENCRYPT</a>
     <span>
-        &nbsp;= [
-    // cloud app configuration keys
-    &#039;enabled&#039;,
-    &#039;installed_version&#039;,
-    &#039;types&#039;,
-    // own configuration keys
-    \OCA\CAFEVDB\Settings\ConfigConstants::USER_GROUP_KEY,
-    // cloud-admin setting
-    \OCA\CAFEVDB\Settings\ConfigConstants::USER_AND_GROUP_BACKEND_KEY,
-    // backend to use for the orchestra group
-    \OCA\CAFEVDB\Settings\ConfigConstants::SHARE_OWNER_KEY,
-    // needed as calendar principal in the member&#039;s app
-    \OCA\CAFEVDB\Settings\ConfigConstants::SHARED_FOLDER,
-    // needed by some listeners in order to bail out early
-    \OCA\CAFEVDB\Settings\ConfigConstants::PROJECT_PARTICIPANTS_FOLDER,
-    // needed by some listeners in order to bail out early
-    \OCA\CAFEVDB\Settings\ConfigConstants::WIKI_NAME_SPACE_KEY,
-    // cloud-admin setting
-    \OCA\CAFEVDB\Settings\ConfigConstants::CSP_FAILURE_TOKEN_KEY,
-    // for public post route
-    \OCA\CAFEVDB\Settings\ConfigConstants::CONFIG_LOCK_KEY,
-    // better kept open
-    \OCA\CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY,
-    // used in the member&#039;s app for the front-page announcement
-    \OCA\CAFEVDB\Settings\ConfigConstants::ORCHESTRA_LOCALE_KEY,
-    // used in the member&#039;s app for consistent currencies etc.
-    \OCA\CAFEVDB\Settings\ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY,
-]                            </span>
+        &nbsp;: mixed&nbsp;= [ // cloud app configuration keys &#039;enabled&#039;, &#039;i...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#constant_PRIVATE_ENCRYPTION_KEY">PRIVATE_ENCRYPTION_KEY</a>
     <span>
-        &nbsp;= \OCA\CAFEVDB\Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG                            </span>
+        &nbsp;: mixed&nbsp;= \OCA\CAFEVDB\Crypto\AsymmetricKeyService::PRIVA...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#constant_PUBLIC_ENCRYPTION_KEY">PUBLIC_ENCRYPTION_KEY</a>
     <span>
-        &nbsp;= \OCA\CAFEVDB\Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG                            </span>
+        &nbsp;: mixed&nbsp;= \OCA\CAFEVDB\Crypto\AsymmetricKeyService::PUBLI...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#constant_USER_ENCRYPTION_KEY_KEY">USER_ENCRYPTION_KEY_KEY</a>
     <span>
-        &nbsp;= \OCA\CAFEVDB\Controller\EnumPersonalSettingsKey::ENCRYPTION_KEY-&gt;value                            </span>
+        &nbsp;: mixed&nbsp;= \OCA\CAFEVDB\Controller\EnumPersonalSettingsKey...                            </span>
 </dt>
 
     </dl>
@@ -246,13 +222,19 @@ encryption may be costly.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appName">$appName</a>
     <span>
                         &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudUserConfig">$cloudUserConfig</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -475,34 +457,34 @@ relevant users.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log the given message at the specified level.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a debug message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an error.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logException">logException()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logFatal">logFatal()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a fatal error message.</dd>
 
@@ -516,14 +498,14 @@ relevant users.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an informational message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a warning message.</dd>
 
@@ -584,7 +566,7 @@ table of the Cloud.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>    </span>
+                                &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>    </span>
 </dt>
 <dd>Return the stored appConmtainer instance.</dd>
 
@@ -607,6 +589,12 @@ understands those.</dd>
     <a class="" href="classes/OCA-CAFEVDB-Traits-AppConfigTrait.html#method___appConfigTraitGetCloudConfig">__appConfigTraitGetCloudConfig()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\IConfig">IConfig</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue">__doGetUserValue()</a>
+    <span>
+                                &nbsp;: mixed    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
@@ -636,9 +624,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -694,9 +682,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -725,9 +713,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -756,9 +744,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -812,7 +800,7 @@ understands those.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -841,9 +829,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -852,6 +840,44 @@ understands those.</dd>
         <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$appName</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_cloudUserConfig">
+        $cloudUserConfig
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudUserConfig" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">114</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr></span>
+    <span class="phpdocumentor-signature__name">$cloudUserConfig</span>
     </code>
 
     
@@ -879,9 +905,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">112</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -917,9 +943,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -955,9 +981,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1031,9 +1057,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1107,9 +1133,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">110</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1145,9 +1171,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1183,9 +1209,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1221,9 +1247,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1259,9 +1285,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">99</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1302,16 +1328,16 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html"><abbr title="\OCA\CAFEVDB\Crypto\AsymmetricKeyService">AsymmetricKeyService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$asymKeyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Security\IHasher">IHasher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hasher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventDispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptoFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentialsStore</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html"><abbr title="\OCA\CAFEVDB\Crypto\AsymmetricKeyService">AsymmetricKeyService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$asymKeyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventDispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Security\IHasher">IHasher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hasher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudUserConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptoFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentialsStore</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1327,13 +1353,6 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$cloudConfig</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$asymKeyService</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html"><abbr title="\OCA\CAFEVDB\Crypto\AsymmetricKeyService">AsymmetricKeyService</abbr></a></span>
                             </dt>
@@ -1341,8 +1360,8 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$hasher</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Security\IHasher">IHasher</abbr></span>
+                <span class="phpdocumentor-argument-list__argument__name">$cloudConfig</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1355,8 +1374,22 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$hasher</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Security\IHasher">IHasher</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$logger</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$cloudUserConfig</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Config\IUserConfig">IUserConfig</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1411,9 +1444,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">172</span>
+    <span class="phpdocumentor-element-found-in__line">176</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Bind $this to the given userId and password, for instance during
@@ -1469,9 +1502,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">192</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Test if we a bound to a user</p>
@@ -1509,9 +1542,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">619</span>
+    <span class="phpdocumentor-element-found-in__line">623</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.619" class="phpdocumentor-element-found-in__source" data-line="619" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.623" class="phpdocumentor-element-found-in__source" data-line="623" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1612,9 +1645,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">336</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the SSL key-pair for the given login. This is needed if an
@@ -1661,9 +1694,9 @@ data is removed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -1717,9 +1750,9 @@ data is removed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">474</span>
+    <span class="phpdocumentor-element-found-in__line">478</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.478" class="phpdocumentor-element-found-in__source" data-line="478" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -1749,21 +1782,20 @@ key matches our key, then we accept the key.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_encryptionKeyValid_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_encryptionKeyValid#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_encryptionKeyValid_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionKeyException">EncryptionKeyException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -1787,9 +1819,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">229</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1826,9 +1858,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">221</span>
+    <span class="phpdocumentor-element-found-in__line">225</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.225" class="phpdocumentor-element-found-in__source" data-line="225" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1865,9 +1897,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -1965,9 +1997,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">522</span>
+    <span class="phpdocumentor-element-found-in__line">526</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.522" class="phpdocumentor-element-found-in__source" data-line="522" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.526" class="phpdocumentor-element-found-in__source" data-line="526" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the value for the given key and possibly decrypt it.</p>
@@ -2006,21 +2038,20 @@ key matches our key, then we accept the key.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_getConfigValue_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_getConfigValue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_getConfigValue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-ConfigLockedException.html"><abbr title="\OCA\CAFEVDB\Exceptions\ConfigLockedException">ConfigLockedException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -2040,9 +2071,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">430</span>
+    <span class="phpdocumentor-element-found-in__line">434</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.434" class="phpdocumentor-element-found-in__source" data-line="434" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get and decrypt an personal &#039;user&#039; value encrypted with the
@@ -2080,21 +2111,20 @@ to a user and password, see self::bind().</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_getSharedPrivateValue_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_getSharedPrivateValue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_getSharedPrivateValue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionKeyException">EncryptionKeyException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -2122,9 +2152,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">343</span>
+    <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.343" class="phpdocumentor-element-found-in__source" data-line="343" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -2161,9 +2191,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">198</span>
+    <span class="phpdocumentor-element-found-in__line">202</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -2204,15 +2234,15 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2240,7 +2270,7 @@ to a user and password, see self::bind().</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$userId</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Use the current user if null.</p>
@@ -2269,9 +2299,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">374</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.374" class="phpdocumentor-element-found-in__source" data-line="374" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize the global symmetric app encryption key used to
@@ -2287,21 +2317,20 @@ encrypt shared data.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_initAppEncryptionKey_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_initAppEncryptionKey#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_initAppEncryptionKey_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionKeyException">EncryptionKeyException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -2329,9 +2358,9 @@ encrypt shared data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -2376,9 +2405,9 @@ encrypt shared data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">246</span>
+    <span class="phpdocumentor-element-found-in__line">250</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize the per-user public/private key pair, which
@@ -2408,21 +2437,20 @@ old one is found.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_initUserKeyPair_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_initUserKeyPair#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_initUserKeyPair_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionKeyException">EncryptionKeyException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -2451,7 +2479,7 @@ old one is found.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2475,7 +2503,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2509,7 +2537,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2527,16 +2555,16 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2553,7 +2581,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2587,7 +2615,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2605,16 +2633,16 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2631,7 +2659,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2665,7 +2693,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2683,15 +2711,15 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2729,7 +2757,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2749,7 +2777,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2767,16 +2795,16 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2793,7 +2821,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2827,7 +2855,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2885,16 +2913,16 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2911,7 +2939,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2945,7 +2973,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2963,16 +2991,16 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2989,7 +3017,7 @@ old one is found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -3023,7 +3051,7 @@ old one is found.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -3041,9 +3069,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">312</span>
+    <span class="phpdocumentor-element-found-in__line">316</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.312" class="phpdocumentor-element-found-in__source" data-line="312" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore a potential backup e.g. after recryption failure.</p>
@@ -3077,9 +3105,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -3181,9 +3209,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">574</span>
+    <span class="phpdocumentor-element-found-in__line">578</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.574" class="phpdocumentor-element-found-in__source" data-line="574" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.578" class="phpdocumentor-element-found-in__source" data-line="578" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Encrypt the given value and store it in the application settings
@@ -3227,21 +3255,20 @@ table of the Cloud.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_setConfigValue_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_setConfigValue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_setConfigValue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-ConfigLockedException.html"><abbr title="\OCA\CAFEVDB\Exceptions\ConfigLockedException">ConfigLockedException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3265,9 +3292,9 @@ table of the Cloud.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">451</span>
+    <span class="phpdocumentor-element-found-in__line">455</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.451" class="phpdocumentor-element-found-in__source" data-line="451" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Encrypt the given value with the user&#039;s public key.</p>
@@ -3314,29 +3341,24 @@ user id.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_setSharedPrivateValue_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_setSharedPrivateValue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#method_setSharedPrivateValue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionKeyException">EncryptionKeyException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EncryptionFailedException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EncryptionFailedException">EncryptionFailedException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3356,9 +3378,9 @@ user id.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">361</span>
+    <span class="phpdocumentor-element-found-in__line">365</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.361" class="phpdocumentor-element-found-in__source" data-line="361" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.365" class="phpdocumentor-element-found-in__source" data-line="365" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the encryption key for the current or the given user.</p>
@@ -3414,9 +3436,9 @@ currently logged in user.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -3479,9 +3501,9 @@ currently logged in user.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/EncryptionService.php"><a href="files/lib-service-encryptionservice.html"><abbr title="lib/Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">609</span>
+    <span class="phpdocumentor-element-found-in__line">613</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.609" class="phpdocumentor-element-found-in__source" data-line="609" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.613" class="phpdocumentor-element-found-in__source" data-line="613" data-modal="source-view" data-src="files/lib/Service/EncryptionService.php.txt"></a>
     </aside>
 
     
@@ -3553,7 +3575,7 @@ be verified.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3566,7 +3588,7 @@ be verified.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
             </section>
 
 </article>
@@ -3712,6 +3734,71 @@ understands those.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method___doGetUserValue">
+        __doGetUserValue()
+        <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">65</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">__doGetUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Use the current user if null.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Config key.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$default</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Default value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method___userPreferencesTraitGetUserId">
         __userPreferencesTraitGetUserId()
         <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3720,9 +3807,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/UserPreferencesTrait.php"><a href="files/lib-traits-userpreferencestrait.html"><abbr title="lib/Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -3882,6 +3969,7 @@ understands those.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appName">$appName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudUserConfig">$cloudUserConfig</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_logger">$logger</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appAsymmetricCryptor">$appAsymmetricCryptor</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appCryptor">$appCryptor</a></li>
@@ -3939,6 +4027,7 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-AppConfigTrait.html#method_oldConfigKey">oldConfigKey()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-AppConfigTrait.html#method___appConfigTraitGetCloudConfig">__appConfigTraitGetCloudConfig()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue">__doGetUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId">__userPreferencesTraitGetUserId()</a></li>
                                     </ul>
             </li>

@@ -1,5 +1,5 @@
 <map id="PHPMyEdit" name="PHPMyEdit">
-<area shape="rect" id="Node000001" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL." alt="" coords="26,80,117,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,138,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,48,74,80,69,80,69,48"/>
+<area shape="rect" id="Node000001" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="5,80,96,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="8,5,93,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,46,53,80,48,79,49,50"/>
 </map>

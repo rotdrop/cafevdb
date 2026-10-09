@@ -1,0 +1,25 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,208,55,235"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html" title="Abstract base class for decimal types." alt="" coords="103,107,297,133"/>
+<area shape="poly" id="edge770_Node000000_Node000001" title=" " alt="" coords="59,197,101,168,171,132,168,136,104,173,63,201"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type.html" title="Type that maps a PHP array to a clob SQL type." alt="" coords="160,183,240,209"/>
+<area shape="poly" id="edge775_Node000000_Node000006" title=" " alt="" coords="69,213,161,200,158,204,71,218"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html" title="Abstract base class for decimal types." alt="" coords="103,233,297,260"/>
+<area shape="poly" id="edge776_Node000000_Node000007" title=" " alt="" coords="70,225,109,231,104,234,71,230"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type.html" title="Type that maps a PHP array to a clob SQL type." alt="" coords="160,284,240,311"/>
+<area shape="poly" id="edge780_Node000000_Node000011" title=" " alt="" coords="60,242,104,270,162,289,157,291,102,274,59,247"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html" title="Unit&#45;test class." alt="" coords="345,5,549,32"/>
+<area shape="poly" id="edge771_Node000001_Node000002" title=" " alt="" coords="235,96,286,68,344,42,383,31,378,34,346,46,288,73,238,101"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html" title="Abstract base class for decimal types." alt="" coords="348,56,547,83"/>
+<area shape="poly" id="edge772_Node000001_Node000003" title=" " alt="" coords="283,100,381,82,376,85,284,105"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html" title="Database type for whole number percentages." alt="" coords="358,107,536,133"/>
+<area shape="poly" id="edge773_Node000001_Node000004" title=" " alt="" coords="312,117,360,119,355,121,313,123"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html" title="Database type fractions of percentages." alt="" coords="358,157,536,184"/>
+<area shape="poly" id="edge774_Node000001_Node000005" title=" " alt="" coords="283,134,381,156,376,158,284,140"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html" title="Abstract base class for decimal types." alt="" coords="348,208,547,235"/>
+<area shape="poly" id="edge777_Node000007_Node000008" title=" " alt="" coords="312,233,350,231,345,232,313,238"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html" title="Database type for whole number percentages." alt="" coords="358,259,536,285"/>
+<area shape="poly" id="edge778_Node000007_Node000009" title=" " alt="" coords="313,256,361,263,355,263,313,261"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html" title="Database type fractions of percentages." alt="" coords="358,309,536,336"/>
+<area shape="poly" id="edge779_Node000007_Node000010" title=" " alt="" coords="277,262,298,270,322,282,346,295,383,309,378,309,344,300,320,287,296,274,276,267"/>
+</map>

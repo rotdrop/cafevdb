@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,21 +31,26 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use OCP\IDateTimeFormatter;
 use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService\EnumExportFormat;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService\EventDataDTO;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -54,6 +59,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  */
 class SepaBulkTransactionService
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
@@ -66,34 +72,29 @@ class SepaBulkTransactionService
    * Update: our preferred client banking tool seemingly has this hard-coded
    * to 2 days. Mmmh.
    */
-  const DEBIT_NOTE_SUBMISSION_DEADLINE = 2;
+  public const DEBIT_NOTE_SUBMISSION_DEADLINE = 2;
+
+  // fancy, just to have some reminders and a deadline on the task-list
+  public const BANK_TRANSFER_SUBMISSION_DEADLINE = 1;
 
   /**
    * @var int
    *
    * Allow for that many extra working days.
    */
-  const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
+  public const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
 
-  const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
-  const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
+  public const TRANSACTION_TYPE_DEBIT_NOTE = EnumSepaTransaction::DEBIT_NOTE->value;
+  public const TRANSACTION_TYPE_BANK_TRANSFER = EnumSepaTransaction::BANK_TRANSFER->value;
 
-  // fancy, just to have some reminders and a deadline on the task-list
-  const BANK_TRANSFER_SUBMISSION_DEADLINE = 1;
-
-  const TRANSACTION_TYPES = [
-    self::TRANSACTION_TYPE_BANK_TRANSFER,
-    self::TRANSACTION_TYPE_DEBIT_NOTE,
-  ];
-
-  const SUBMISSION_EVENT = 'submissionEvent';
-  const SUBMISSION_TASK = 'submisisonTask';
-  const DUE_EVENT = 'dueEvent';
-  const PRE_NOTIFICATION_EVENT = 'preNotificationEvent';
-  const PRE_NOTIFICATION_TASK = 'preNotificationTask';
+  private const SUBMISSION_EVENT = 'submissionEvent';
+  private const SUBMISSION_TASK = 'submisisonTask';
+  private const DUE_EVENT = 'dueEvent';
+  private const PRE_NOTIFICATION_EVENT = 'preNotificationEvent';
+  private const PRE_NOTIFICATION_TASK = 'preNotificationTask';
 
   /** @var array Calendar event types. */
-  const CALENDAR_EVENTS = [
+  private const CALENDAR_EVENTS = [
     self::SUBMISSION_EVENT,
     self::SUBMISSION_TASK,
     self::DUE_EVENT,
@@ -106,32 +107,32 @@ class SepaBulkTransactionService
    *
    * Alert one day before at 9:00.
    */
-  const BULK_TRANSACTION_REMINDER_SECONDS = - 15 * 60 * 60; /* alert one day in advance at */
+  public const BULK_TRANSACTION_REMINDER_SECONDS = - 15 * 60 * 60; /* alert one day in advance at */
 
   /**
    * @var int
    *
    * Alert early two days before at 9:00,.
    */
-  const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
+  public const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
 
   /** @var string Export format AqBanking. */
-  const EXPORT_AQBANKING = 'aqbanking';
+  const EXPORT_AQBANKING = EnumExportFormat::AQBANKING->value;
 
   /** @var string Export format GnuCash e.g. for balancing items. */
-  const EXPORT_GNU_CASH = 'gnucash';
+  const EXPORT_GNU_CASH = EnumExportFormat::GNU_CASH->value;
 
   /** @var array All supported exporters. */
-  const EXPORTERS = [
+  public const EXPORTERS = [
     self::EXPORT_AQBANKING,
   ];
 
-  const BALANCING_ITEMS_EXPORTERS = [
+  public const BALANCING_ITEMS_EXPORTERS = [
     self::EXPORT_GNU_CASH,
   ];
 
-  const EXPORT_SERVICE_ALIAS = 'export:bank-bulk-transaction:';
-  const EXPORT_BALANCING_ITEMS_SERVICE_ALIAS = self::EXPORT_SERVICE_ALIAS . 'balancing-items:';
+  public const EXPORT_SERVICE_ALIAS = 'export:bank-bulk-transaction:';
+  public const EXPORT_BALANCING_ITEMS_SERVICE_ALIAS = self::EXPORT_SERVICE_ALIAS . 'balancing-items:';
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -141,13 +142,113 @@ class SepaBulkTransactionService
 
   /** {@inheritdoc} */
   public function __construct(
-    protected EntityManager $entityManager,
-    private FinanceService $financeService,
+    private ConfigService $configService,
     private EventsService $eventsService,
-    protected IAppContainer $appContainer,
-    protected ILogger $logger,
+    private FinanceService $financeService,
+    private IDateTimeFormatter $dateTimeFormatter,
+    private TimeFactory $timeFactory,
+    protected ContainerInterface $appContainer,
+    protected EntityManager $entityManager,
     protected IL10N $l,
+    protected ILogger $logger,
   ) {
+  }
+
+  /**
+
+   * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
+   *
+   * @param ?DateTimeInterface $submitDate If \null generate data for a new
+   * event in order to remind the treasurer that this task has to be done. If
+   * not \null generate data in order to modify the event title and
+   * description to reflect the "task completed" state.
+   *
+   * @return EventDataDTO
+   */
+  public function createSubmissionEventData(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    ?DateTimeInterface $submitDate = null,
+  ): EventDataDTO {
+    if ($submitDate === null) {
+      // new event, or submit date has been reset
+      $projectName = $bulkTransaction->getProject()->getName();
+      if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $alarmTimes = [
+          [ EventsService::VALARM_FROM_START => self::BULK_TRANSACTION_REMINDER_SECONDS ],
+          [ EventsService::VALARM_FROM_START => 9 * 60 * 60 ],
+          [ EventsService::VALARM_FROM_START => self::BULK_TRANSACTION_EARLY_REMINDER_SECONDS ],
+        ];
+        $summary = $this->l->t('Debit notes submission hard-deadline for %s', $projectName);
+        $submissionDeadline = $this->financeService->targetDeadline(
+          fromDate: $bulkTransaction->getDueDate(),
+          businessOffset: -self::DEBIT_NOTE_SUBMISSION_DEADLINE,
+        );
+      } else {
+        $alarmTimes = [
+          [ EventsService::VALARM_FROM_START => self::BULK_TRANSACTION_REMINDER_SECONDS ],
+          [ EventsService::VALARM_FROM_START => 9 * 60 * 60 ],
+        ];
+        $summary = $this->l->t('Bank transfers submission deadline for %s', $projectName);
+        $submissionDeadline = $this->financeService->targetDeadline(
+          fromDate: $bulkTransaction->getDueDate(),
+          businessOffset: -self::BANK_TRANSFER_SUBMISSION_DEADLINE,
+        );
+      }
+      $description = $this->l->t(
+        'Due date: %s.',
+        $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')
+      )
+        . $this->l->t('Bulk-transaction-id: %d', $bulkTransaction->getId());
+
+      return new EventDataDTO(
+        summary: $summary,
+        description: $description,
+        start: $submissionDeadline,
+        alarm: $alarmTimes,
+      );
+    } else {
+      // existing event, submit date as been set
+      $project = $bulkTransaction->getPayments()->first()->getProject();
+      if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $summary = $this->l->t('Debit-notes submitted for %s', $project->getName());
+        $description = $this->l->t(
+          'Debit-notes have been submitted on %s, due-date is %s.', [
+            $this->dateTimeFormatter->formatDateo($bulkTransaction->getSubmitDate(), 'long'),
+            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long'),
+          ])
+          . "\n"
+          . $this->l->t('Total amount to receive: %s.', $this->configService->moneyValue($bulkTransaction->totals()));
+        /** @var Entities\CompositePayment $payment */
+        foreach ($bulkTransaction->getPayments() as $payment) {
+          $description .= "\n"
+            . $this->l->t('%s pays %s.', [
+              $payment->getMusician()->getPublicName(firstNameFirst: false),
+              $this->configService->moneyValue($payment->getAmount())
+            ]);
+        }
+      } else {
+        $summary = $this->l->t('Bank-transfers submitted for %s', $project->getName());
+        $description = $this->l->t(
+          'Bank-transfers have been submitted, due-date is %s.', $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long'))
+          . "\n"
+          . $this->l->t('Total amount to pay: %s.', $this->configService->moneyValue($bulkTransaction->totals()->neg()));
+        /** @var Entities\CompositePayment $payment */
+        foreach ($bulkTransaction->getPayments() as $payment) {
+          $description .= "\n"
+            . $this->l->t('%s receives %s.', [
+              $payment->getMusician()->getPublicName(firstNameFirst: false),
+              $this->configService->moneyValue($payment->getAmount()->neg())
+            ]);
+        }
+      }
+
+      return new EventDataDTO(
+        summary: $summary,
+        description: $description,
+        start: $submitDate,
+        alarm: 0,
+      );
+    }
   }
 
   /**
@@ -158,94 +259,61 @@ class SepaBulkTransactionService
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
    *
-   * @param DateTimeInterface $submitDate The date of submittance.
+   * @param ?DateTimeInterface $submitDate The date of submittance. This is a
+   * UTC-date-time at mignight UTC if non null. If null the associated tasks
+   * and calendar events are reset to their "unsubmitted" state.
    *
    * @return void
    */
   public function markBulkTransactionSubmitted(
     Entities\SepaBulkTransaction $bulkTransaction,
     ?DateTimeInterface $submitDate,
-  ):void {
+  ): void {
 
-    $now = (new DateTimeImmutable)->setTime(0, 0, 0);
+    if ($submitDate !== null) {
+      // $submitDate is in UTC but means the current date in local time.
+      $today = self::getCurrentDate();
+      $submitDate = self::convertToTimezoneDate($submitDate, $today->getTimezone());
+
+      if ($submitDate > $today) {
+        throw new UnexpectedValueException($this->l->t(
+          'Given submit date "%s" points to the future.',
+          $this->l->l('date', $submitDate),
+        ));
+      }
+    }
 
     $bulkTransaction->setSubmitDate($submitDate);
 
     $this->entityManager->registerPreCommitAction(
-      function() use ($bulkTransaction, $submitDate, $now) {
+      function() use ($bulkTransaction, $submitDate, $today) {
         $submissionTaskUri = $bulkTransaction->getSubmissionTaskUri();
         $submissionTask = $this->financeService->findFinanceCalendarEntry($submissionTaskUri);
-        if (!empty($submissionTask)) {
-          $stash = [ self::SUBMISSION_TASK => Util::cloneArray($submissionTask) ];
-          if (empty($submitDate) || $submitDate > $now) {
-            $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
-          } else {
-            $this->eventsService->setCalendarTaskStatus($submissionTask, dateCompleted: $submitDate);
-          }
+        if ($submissionTask === null) {
+          return [];
         }
-        return $stash ?? [];
+        $stash = [ self::SUBMISSION_TASK => Util::cloneArray($submissionTask) ];
+        if ($submitDate === null) {
+          $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
+        } else {
+          $this->eventsService->setCalendarTaskStatus($submissionTask, dateCompleted: $submitDate);
+        }
+        return $stash;
       },
       function($stash) {
         $this->restoreCalendarObjects($stash);
       },
     )->register(
-      function() use ($bulkTransaction, $submitDate, $now) {
+      function() use ($bulkTransaction, $submitDate, $today) {
         $submissionEventUri = $bulkTransaction->getSubmissionEventUri();
         $submissionEvent = $this->financeService->findFinanceCalendarEntry($submissionEventUri);
-        if (!empty($submissionEvent)) {
-          $stash = [ self::SUBMISSION_EVENT => Util::cloneArray($submissionEvent) ];
-          if (empty($submitDate) || $submitDate > $now) {
-            $this->logInfo('SUBMIT > NOW ' . print_r($submitDate, true) . ' ' . print_r($now, true));
-            // leave as is for the moment
-          } else {
-            $project = $bulkTransaction->getPayments()->first()->getProject();
-            /** @var Service\ConfigService $configService */
-            $configService = $this->appContainer->get(Service\ConfigService::class);
-            if ($bulkTransaction instanceof Entities\SepaDebitNote) {
-              $summary = $this->l->t('Debit-notes submitted for %s', $project->getName());
-              $description = $this->l->t(
-                'Debit-notes have been submitted on %s, due-date is %s.', [
-                  $configService->dateTimeFormatter()->formatDate($bulkTransaction->getSubmitDate(), 'long'),
-                  $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'),
-                ])
-                . "\n"
-                . $this->l->t('Total amount to receive: %s.', $configService->moneyValue($bulkTransaction->totals()));
-              /** @var Entities\CompositePayment $payment */
-              foreach ($bulkTransaction->getPayments() as $payment) {
-                $description .= "\n"
-                  . $this->l->t('%s pays %s.', [
-                    $payment->getMusician()->getPublicName(firstNameFirst: false),
-                    $configService->moneyValue($payment->getAmount())
-                  ]);
-              }
-            } else {
-              $summary = $this->l->t('Bank-transfers submitted for %s', $project->getName());
-              $description = $this->l->t(
-                'Bank-transfers have been submitted, due-date is %s.', $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'))
-                . "\n"
-                . $this->l->t('Total amount to pay: %s.', $configService->moneyValue($bulkTransaction->totals()->neg()));
-              /** @var Entities\CompositePayment $payment */
-              foreach ($bulkTransaction->getPayments() as $payment) {
-                $description .= "\n"
-                  . $this->l->t('%s receives %s.', [
-                    $payment->getMusician()->getPublicName(firstNameFirst: false),
-                    $configService->moneyValue($payment->getAmount()->neg())
-                  ]);
-              }
-            }
-
-            $this->eventsService->updateCalendarEvent(
-              $submissionEvent, [
-                'start' => $submitDate,
-                'end' => $submitDate,
-                'allDay' => true,
-                'alarm' => 0,
-                'summary' => $summary,
-                'description' => $description,
-              ]);
-          }
+        if ($submissionEvent === null) {
+          return [];
         }
-        return $stash ?? [];
+        $stash = [ self::SUBMISSION_EVENT => Util::cloneArray($submissionEvent) ];
+        $eventData = $this->createSubmissionEventData($bulkTransaction, $submitDate);
+        $this->eventsService->updateCalendarEvent($submissionEvent, $eventData->toArray());
+        return $stash;
       },
       function($stash) {
         $this->restoreCalendarObjects($stash);
@@ -266,7 +334,7 @@ class SepaBulkTransactionService
   public function handlePreNotification(
     Entities\SepaDebitNote $debitNote,
     Entities\CompositePayment $payment,
-  ):void {
+  ): void {
 
     $notifiedCount = $debitNote->getPayments()->filter(
       fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
@@ -295,8 +363,6 @@ class SepaBulkTransactionService
       $preNotificationEventUri = $debitNote->getPreNotificationEventUri();
       $preNotificationEvent = $this->financeService->findFinanceCalendarEntry($preNotificationEventUri);
       if (!empty($preNotificationEvent)) {
-        /** @var Service\ConfigService $configService */
-        $configService = $this->appContainer->get(Service\ConfigService::class);
         $vCalendar = VCalendarService::getVCalendar($preNotificationEvent);
         $description = VCalendarService::getDescription($vCalendar);
         $musician = $payment->getMusician();
@@ -305,7 +371,7 @@ class SepaBulkTransactionService
           . "\n"
           . $this->l->t('Person: %s', $musician->getPublicName(true) . ' <' . $musician->getEmail() . '>')
           . "\n"
-          . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime(new DateTimeImmutable))
+          . $this->l->t('Date: %s', $this->dateTimeFormatter->formatDateTime($this->timeFactory->now()))
           . "\n"
           . $this->l->t('MessageId: %s', $payment->getNotificationMessageId());
         $updateData = [
@@ -322,60 +388,57 @@ class SepaBulkTransactionService
   }
 
   /**
-   * Given the raw due-data calculate the deadlines for submission and
-   * pre-notification. We allow for extra "space" between the resulting
-   * due-date and the submission date. So the idea is to allow two more
-   * business days by adding another work-day between due-date and hard
-   * bank-submission dead-line.
+   * Given the due-date calculate the pre-notification deadline for the debit
+   * mandate.  We allow for extra "space" between the resulting due-date and
+   * the submission date. So the idea is to allow two more business days by
+   * adding another work-day between due-date and hard bank-submission
+   * dead-line.
    *
    * @param Entities\SepaDebitMandate $debitMandate Database entity.
    *
-   * @param null|DateTimeImmutable $baseDate Either pre-notificatio date or
-   * due-date, es determined by $fromDueDate. If omitted now() is assumed.
+   * @param DateTimeImmutable $dueDate The due-date of the debit mandate.
    *
-   * @param bool $fromDueDate \true means that $baseDate is the due-date of
-   * the debit-node. \false is the default and means that $baseDate is the
-   * pre-notification date.
-   *
-   * @return array
-   * ```
-   * [
-   *   dueDate => DATE,
-   *   preNotificationDeadline => DATE,
-   *   submissionDeadline => DATE,
-   *   hardSubmissionDeadline => DATE,
-   * ]
-   * ```
+   * @return DateTimeImmutable
    */
-  public function calculateDebitNoteDeadlines(
+  public function calculateDebitNotePreNotificationDeadline(
     Entities\SepaDebitMandate $debitMandate,
-    ?DateTimeImmutable $baseDate = null,
-    bool $fromDueDate = false,
-  ) {
-    if ($baseDate === null) {
-      $baseDate = new DateTimeImmutable;
-    }
+    DateTimeImmutable $dueDate,
+  ): DateTimeImmutable {
     $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
       + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
       + self::DEBIT_NOTE_SUBMISSION_DEADLINE;
-    if ($fromDueDate) {
-      $due = $baseDate;
-      $preNotification = $this->financeService->targetDeadline(
-        -$preNotificationBusinessDays,
-        -$debitMandate->getPreNotificationCalendarDays() ?: 0,
-        $due);
-    } else {
-      $preNotification = $baseDate;
-      $due = $this->financeService->targetDeadline(
-        $preNotificationBusinessDays,
-        $debitMandate->getPreNotificationCalendarDays() ?: 0,
-        $preNotification);
-    }
+    // compute pre-notification dead-line
+    $deadline = $this->financeService->targetDeadline(
+      -$preNotificationBusinessDays,
+      -$debitMandate->getPreNotificationCalendarDays() ?: 0,
+      $dueDate);
 
-    return [
-      'dueDate' => $due,
-      'preNotificationDeadline' => $preNotification,
-    ];
+    return $deadline;
+  }
+
+  /**
+   * Calculate the debit-note due-date based on the current date.  We allow
+   * for extra "space" between the resulting due-date and the submission
+   * date. So the idea is to allow two more business days by adding another
+   * work-day between due-date and hard bank-submission dead-line.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate Database entity.
+   *
+   * @return DateTimeImmutable
+   */
+  public function calculateDebitNoteDueDate(
+    Entities\SepaDebitMandate $debitMandate,
+  ): DateTimeImmutable {
+    $preNotification = $this->timeFactory->now();
+    $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
+      + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
+      + self::DEBIT_NOTE_SUBMISSION_DEADLINE;
+    $dueDate = $this->financeService->targetDeadline(
+      $preNotificationBusinessDays,
+      $debitMandate->getPreNotificationCalendarDays() ?: 0,
+      $preNotification);
+
+    return $dueDate;
   }
 
   /**
@@ -465,10 +528,13 @@ class SepaBulkTransactionService
    * Entities\ProjectParticipantFieldDataOption::getMusicianFieldData(), it
    * should only return more than one item if there are also deleted items.
    */
-  public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueDate = null):Entities\CompositePayment
-  {
+  public function generateProjectPayments(
+    Entities\ProjectParticipant $participant,
+    array $receivableOptions,
+    ?\DateTimeInterface $transactionDueDate = null,
+  ): Entities\CompositePayment {
     $payments = new ArrayCollection();
-    $totalAmount = RationalNumber::zero();
+    $totalAmount = MonetaryNumberType::zero();
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -498,7 +564,7 @@ class SepaBulkTransactionService
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
         $paidAmount = $receivable->amountPaid();
         $payableAmount = $receivable->amountPayable();
-        $depositAmount = $receivable->depositAmount() ?? RationalNumber::zero();
+        $depositAmount = $receivable->depositAmount() ?? MonetaryNumberType::zero();
         if ($payableAmount->sign() * $depositAmount->sign() < 0) {
           throw new RuntimeException(
             $this->l->t(
@@ -535,6 +601,10 @@ class SepaBulkTransactionService
           // @todo Perhaps empty amounts should also be recorded.
           continue;
         }
+        $this->logInfo('RECEIVABLE FIELD ID ' . $receivable->getField()->getId());
+        $this->logInfo('RECEIVABLE FIELD MULTIPLICITY ' . $receivable->getField()->getMultiplicity()->value);
+        $this->refreshEntity($receivable->getField());
+        $this->logInfo('RECEIVABLE FIELD NAME ' . $receivable->getField()->getName());
         /** @var Entities\ProjectPayment $payment */
         $payment = (new Entities\ProjectPayment)
                  ->setProject($project)
@@ -778,17 +848,15 @@ class SepaBulkTransactionService
    *
    * @param null|Entities\Project $project Project the transaction belongs to.
    *
-   * @param null|string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
+   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
    *
    * @return null|Entities\DatabaseStorageFile The generated export set.
    */
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project = null,
-    null|string $format = null,
-  ):?Entities\DatabaseStorageFile {
-    $format = $format ?? self::EXPORT_AQBANKING;
-
+    string $format = self::EXPORT_AQBANKING,
+  ): ?Entities\DatabaseStorageFile {
     // as a safe-guard regenerate the subject in order to catch changes in
     // linked supporting documents.
     $this->updateBulkTransaction($bulkTransaction, flush: true);
@@ -889,7 +957,7 @@ class SepaBulkTransactionService
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction
    *
-   * @param null|string $format Format of the export file, defaults to self::EXPORT_GNU_CASH.
+   * @param string $format Format of the export file, defaults to self::EXPORT_GNU_CASH.
    *
    * @return null|Entities\DatabaseStorageFile The generated export set.
    *
@@ -897,10 +965,8 @@ class SepaBulkTransactionService
    */
   public function generateBalancingItems(
     Entities\SepaBulkTransaction $bulkTransaction,
-    ?string $format = null,
-  ):?Entities\DatabaseStorageFile {
-    $format = $format ?? self::EXPORT_GNU_CASH;
-
+    string $format = self::EXPORT_GNU_CASH,
+  ): ?Entities\DatabaseStorageFile {
     $exportDocument = null;
     $balancingItemsData = $bulkTransaction->getBalancingItemsData();
     /** @var Entities\DatabaseStorageFile $exportDocument */

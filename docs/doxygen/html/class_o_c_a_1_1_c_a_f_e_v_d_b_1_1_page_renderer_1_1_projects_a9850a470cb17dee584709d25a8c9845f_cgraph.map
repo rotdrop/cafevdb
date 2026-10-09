@@ -1,7 +1,11 @@
 <map id="navigationItems" name="navigationItems">
-<area shape="rect" id="Node000001" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array}" alt="" coords="5,43,119,69"/>
+<area shape="rect" id="Node000001" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array&lt;SidebarNavigationItem&gt;}" alt="" coords="5,43,119,69"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#ad3020415b8d3447a61266472185fbe46" title="Return the navigation item for this renderer." alt="" coords="167,5,413,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,46,151,42,151,47,119,51"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.[ &#39;template&#39; =&gt; TEMPLATE, &#39;tooltip&#39; =&gt; TOOLTIP,..." alt="" coords="237,72,343,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,61,222,74,221,79,119,66"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,46,154,44,149,45,120,51"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.SidebarNavigationItem}" alt="" coords="237,72,343,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,61,223,75,219,78,119,66"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="461,64,641,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="343,83,448,85,442,85,344,88"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#ad402d8679325bc514874370f02b5c2ac" title="{}" alt="" coords="689,64,902,107"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="642,83,676,85,671,85,642,88"/>
 </map>

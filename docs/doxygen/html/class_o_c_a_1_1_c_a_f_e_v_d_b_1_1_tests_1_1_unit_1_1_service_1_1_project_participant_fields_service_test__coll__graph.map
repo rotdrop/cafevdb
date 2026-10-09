@@ -1,0 +1,7 @@
+<map id="ProjectParticipantFieldsServiceTest" name="ProjectParticipantFieldsServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the ProjectParticipantFieldsService class." alt="" coords="35,120,194,163"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,83,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,51,104,119,99,120,58,55"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html" title="General support service, kind of inconsequent glue between Doctrine\ORM and CAFEVDB\PageRenderer." alt="" coords="107,5,266,48"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,60,130,121,126,118,163,62"/>
+</map>

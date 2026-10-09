@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Tests\Unit\Controller\CryptoControllerTest
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -174,13 +178,10 @@
     </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\CoversMethod">CoversMethod</abbr>]
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Service\Finance\FinanceService::class
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        &#039;getIbanInfo&#039;
+        \OCA\CAFEVDB\AppInfo\Application::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -188,7 +189,7 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\AppInfo\Application::class
+        \OCA\CAFEVDB\Common\TimeFactory::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -228,6 +229,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Crypto\SealService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Connection::class
     </dd>
     </dl>
@@ -237,30 +246,6 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -388,6 +373,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Service\L10N\L10NFactory::class
     </dd>
     </dl>
@@ -405,6 +398,38 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -462,13 +487,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#constant_CONTROLLER_CLASS">CONTROLLER_CLASS</a>
     <span>
-        &nbsp;= \OCA\CAFEVDB\Controller\CryptoController::class                            </span>
+        &nbsp;: mixed&nbsp;= \OCA\CAFEVDB\Controller\CryptoController::class                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#constant_EXPECTED_ROUTES">EXPECTED_ROUTES</a>
     <span>
-        &nbsp;= [&#039;batchunseal&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;batchunseal&#039;]                            </span>
 </dt>
 
     </dl>
@@ -546,9 +571,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     
@@ -577,9 +602,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     
@@ -624,9 +649,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     
@@ -662,9 +687,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     
@@ -705,9 +730,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -741,9 +766,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     
@@ -811,9 +836,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/CryptoControllerTest.php"><a href="files/tests-phpunit-unit-controller-cryptocontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/CryptoControllerTest.php">CryptoControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-CryptoControllerTest.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/CryptoControllerTest.php.txt"></a>
     </aside>
 
     

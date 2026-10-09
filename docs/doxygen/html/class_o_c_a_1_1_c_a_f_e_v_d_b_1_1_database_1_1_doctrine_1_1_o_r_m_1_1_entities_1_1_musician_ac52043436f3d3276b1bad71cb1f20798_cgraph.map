@@ -1,0 +1,5 @@
+<map id="getFunctionalName" name="getFunctionalName">
+<area shape="rect" id="Node000001" title="Compose a description including organization and job&#45;title." alt="" coords="5,5,140,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="188,5,298,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,16,175,18,169,19,140,21"/>
+</map>

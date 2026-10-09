@@ -1,0 +1,7 @@
+<map id="sql_field" name="sql_field">
+<area shape="rect" id="Node000001" title="Substitute placeholders in sql field:" alt="" coords="269,5,338,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aed1b50c8c16937db335f1d22ecaf41d1" title="Generate the query code for one field." alt="" coords="182,5,221,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,19,221,21,221,16,256,19"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a2175ab9fcaf0327806ba3eeee525b695" title=" " alt="" coords="5,5,134,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="164,19,134,21,134,16,169,18"/>
+</map>

@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Service\CloudUserConnectorService
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -163,215 +167,169 @@ neccessary information to the ambient cloud system.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CLOUD_USER_BACKEND">CLOUD_USER_BACKEND</a>
     <span>
-        &nbsp;= &#039;user_sql&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;user_sql&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CLOUD_USER_GROUP_ID">CLOUD_USER_GROUP_ID</a>
     <span>
-        &nbsp;= self::CLOUD_USER_BACKEND                            </span>
+        &nbsp;: mixed&nbsp;= self::CLOUD_USER_BACKEND                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GRANT_EXECUTE">GRANT_EXECUTE</a>
     <span>
-        &nbsp;= &#039;GRANT EXECUTE ON FUNCTION %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;GRANT EXECUTE ON FUNCTION %1$s TO %2$s@\&#039;local...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GRANT_FIELD_UPDATE">GRANT_FIELD_UPDATE</a>
     <span>
-        &nbsp;= &#039;GRANT UPDATE (%3$s) ON %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;GRANT UPDATE (%3$s) ON %1$s TO %2$s@\&#039;localhos...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GRANT_INSERT">GRANT_INSERT</a>
     <span>
-        &nbsp;= &#039;GRANT INSERT ON %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;GRANT INSERT ON %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GRANT_SELECT">GRANT_SELECT</a>
     <span>
-        &nbsp;= &#039;GRANT SELECT ON %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;GRANT SELECT ON %1$s TO %2$s@\&#039;localhost\&#039;&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GROUP_ID_PREFIX">GROUP_ID_PREFIX</a>
     <span>
-        &nbsp;= &#039;%2$s&#039; . self::GROUP_ID_SEPARATOR                            </span>
+        &nbsp;: mixed&nbsp;= &#039;%2$s&#039; . self::GROUP_ID_SEPARATOR                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GROUP_ID_SEPARATOR">GROUP_ID_SEPARATOR</a>
     <span>
-        &nbsp;= &#039;_&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;_&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_MUSICIAN_ID_TABLES">MUSICIAN_ID_TABLES</a>
     <span>
-        &nbsp;= [
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::SEPA_DEBIT_MANDATES_TABLE =&gt; &#039;musician_id&#039;,
-    // &#039;MusicianRowAccessTokens&#039; =&gt; &#039;musician_id&#039;,
-    // &#039;ProjectApplications&#039; =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::PROJECT_PARTICIPANTS_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::PROJECT_INSTRUMENTS_TABLE =&gt; &#039;musician_id&#039;,
-    // &#039;ProjectParticipantFieldsData&#039; =&gt; &#039;musician_id&#039;, needs extra access controls
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::PROJECT_PAYMENTS_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::COMPOSITE_PAYMENTS_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::ENCRYPTED_FILE_OWNERS_JOIN_TABLE =&gt; &#039;musician_id&#039;,
-    \OCA\CAFEVDB\PageRenderer\DatabaseTables::MUSICIAN_EMAILS_TABLE =&gt; &#039;musician_id&#039;,
-]                            </span>
+        &nbsp;: mixed&nbsp;= [ \OCA\CAFEVDB\PageRenderer\DatabaseTables::SEP...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PERSONALIZED_PREFIX">PERSONALIZED_PREFIX</a>
     <span>
-        &nbsp;= &#039;Personalized&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;Personalized&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PRIVILEGES">PRIVILEGES</a>
     <span>
-        &nbsp;= [&#039;ProjectApplications&#039; =&gt; [self::GRANT_INSERT =&gt; true, self::GRANT_FIELD_UPDATE =&gt; [&#039;password_hash&#039;, &#039;musician_id&#039;, &#039;data&#039;, &#039;created&#039;, &#039;updated&#039;, &#039;deleted&#039;]]]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;ProjectApplications&#039; =&gt; [self::GRANT_INSERT =...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REQUIREMENTS_MISSING">REQUIREMENTS_MISSING</a>
     <span>
-        &nbsp;= false                            </span>
+        &nbsp;: mixed&nbsp;= false                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REQUIREMENTS_OK">REQUIREMENTS_OK</a>
     <span>
-        &nbsp;= true                            </span>
+        &nbsp;: mixed&nbsp;= true                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REVOKE_EXECUTE">REVOKE_EXECUTE</a>
     <span>
-        &nbsp;= &#039;REVOKE EXECUTE ON FUNCTION %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;REVOKE EXECUTE ON FUNCTION %1$s FROM %2$s@\&#039;lo...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REVOKE_FIELD_UPDATE">REVOKE_FIELD_UPDATE</a>
     <span>
-        &nbsp;= &#039;REVOKE IF EXISTS UPDATE (%3$s) ON %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;REVOKE IF EXISTS UPDATE (%3$s) ON %1$s FROM %2...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REVOKE_INSERT">REVOKE_INSERT</a>
     <span>
-        &nbsp;= &#039;REVOKE INSERT ON %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;REVOKE INSERT ON %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REVOKE_SELECT">REVOKE_SELECT</a>
     <span>
-        &nbsp;= &#039;REVOKE SELECT ON %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;REVOKE SELECT ON %1$s FROM %2$s@\&#039;localhost\&#039;&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_UNRESTRICTED_TABLES">UNRESTRICTED_TABLES</a>
     <span>
-        &nbsp;= [\OCA\CAFEVDB\PageRenderer\DatabaseTables::INSTRUMENTS_TABLE, \OCA\CAFEVDB\PageRenderer\DatabaseTables::INSTRUMENT_FAMILIES_TABLE, \OCA\CAFEVDB\PageRenderer\DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE, &#039;GeoContinents&#039;, &#039;GeoCountries&#039;, &#039;GeoPostalCodes&#039;, &#039;GeoPostalCodeTranslations&#039;, \OCA\CAFEVDB\PageRenderer\DatabaseTables::INSURANCE_BROKERS_TABLE, \OCA\CAFEVDB\PageRenderer\DatabaseTables::INSURANCE_RATES_TABLE, \OCA\CAFEVDB\PageRenderer\DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, \OCA\CAFEVDB\PageRenderer\DatabaseTables::FIELD_TRANSLATIONS_TABLE]                            </span>
+        &nbsp;: mixed&nbsp;= [\OCA\CAFEVDB\PageRenderer\DatabaseTables::INST...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_USER_SQL_GROUP_VIEW">USER_SQL_GROUP_VIEW</a>
     <span>
-        &nbsp;= &#039;CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW %1$s AS
-SELECT CONVERT((CONCAT(_ascii &quot;&#039; . self::GROUP_ID_PREFIX . &#039;&quot; , p.id) COLLATE ascii_bin) USING &#039; . \OCA\CAFEVDB\Database\Constants::CHARACTER_SET . &#039;) AS gid,
-       p.name AS display_name,
-       0 AS is_admin
-FROM Projects p
-WHERE p.type IN (&quot;temporary&quot;, &quot;permanent&quot;) AND p.deleted IS NULL
-&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;CREATE OR REPLACE SQL SECURITY DEFINER VIEW %1...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_USER_SQL_PREFIX">USER_SQL_PREFIX</a>
     <span>
-        &nbsp;= &#039;Nextcloud&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;Nextcloud&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_USER_SQL_USER_GROUP_VIEW">USER_SQL_USER_GROUP_VIEW</a>
     <span>
-        &nbsp;= &#039;CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW %1$s AS
-SELECT CONVERT(m.user_id_slug USING &#039; . \OCA\CAFEVDB\Database\Constants::CHARACTER_SET . &#039;) AS uid,
-       CONVERT((CONCAT(_ascii &quot;%2$s&#039; . self::GROUP_ID_SEPARATOR . &#039;&quot;, p.id) COLLATE ascii_bin) USING &#039; . \OCA\CAFEVDB\Database\Constants::CHARACTER_SET . &#039;) AS gid
-FROM ProjectParticipants pp
-LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.deleted IS NULL
-&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;CREATE OR REPLACE SQL SECURITY DEFINER VIEW %1...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_USER_SQL_USER_VIEW">USER_SQL_USER_VIEW</a>
     <span>
-        &nbsp;= &#039;CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW %1$s AS
-SELECT CONVERT(m.user_id_slug USING &#039; . \OCA\CAFEVDB\Database\Constants::CHARACTER_SET . &#039;) AS uid,
-       m.user_passphrase AS password,
-       CONCAT_WS(&quot; &quot;, IF(m.nick_name IS NULL
-                         OR m.nick_name = &quot;&quot;, m.first_name, m.nick_name), m.sur_name) AS name,
-       CONVERT(m.email USING &#039; . \OCA\CAFEVDB\Database\Constants::CHARACTER_SET . &#039;) AS email,
-       NULL AS quota,
-       NULL AS home,
-       COALESCE(m.cloud_account_deactivated, 0) AS inactive,
-       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
-       1 AS avatar,
-       NULL AS salt
-FROM Musicians m
-WHERE m.email IS NOT NULL AND m.email &lt;&gt; &quot;&quot;
-&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;CREATE OR REPLACE SQL SECURITY DEFINER VIEW %1...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_USER_SQL_VIEWS">USER_SQL_VIEWS</a>
     <span>
-        &nbsp;= [&#039;User&#039; =&gt; self::USER_SQL_USER_VIEW, &#039;Group&#039; =&gt; self::USER_SQL_GROUP_VIEW, &#039;UserGroup&#039; =&gt; self::USER_SQL_USER_GROUP_VIEW]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;User&#039; =&gt; self::USER_SQL_USER_VIEW, &#039;Group&#039; =&gt;...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_VIEW_POSTFIX">VIEW_POSTFIX</a>
     <span>
-        &nbsp;= &#039;View&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;View&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR">CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR</a>
     <span>
-        &nbsp;= 1368                            </span>
+        &nbsp;: mixed&nbsp;= 1368                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CREATE_FUNCTION_PREFIX">CREATE_FUNCTION_PREFIX</a>
     <span>
-        &nbsp;= &#039;CREATE OR REPLACE FUNCTION&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;CREATE OR REPLACE FUNCTION&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CREATE_FUNCTION_REGEXP">CREATE_FUNCTION_REGEXP</a>
     <span>
-        &nbsp;= &#039;/^&#039; . self::CREATE_FUNCTION_PREFIX . &#039;/&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;/^&#039; . self::CREATE_FUNCTION_PREFIX . &#039;/&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_CREATE_VIEW_REGEXP">CREATE_VIEW_REGEXP</a>
     <span>
-        &nbsp;= &#039;/^CREATE OR REPLACE.*VIEW/s&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;/^CREATE OR REPLACE.*VIEW/s&#039;                            </span>
 </dt>
 
     </dl>
@@ -386,7 +344,7 @@ WHERE m.email IS NOT NULL AND m.email &lt;&gt; &quot;&quot;
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -466,7 +424,7 @@ WHERE m.email IS NOT NULL AND m.email &lt;&gt; &quot;&quot;
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_checkRequirements">checkRequirements()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Check the requirements for this affair, in particular whether the
 user_sql backend is enabled, and return an error with status and hints.</dd>
@@ -474,7 +432,7 @@ user_sql backend is enabled, and return an error with status and hints.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_configureCloudUserBackend">configureCloudUserBackend()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Hijack the user-sql backend by flushing pre-computed values into its
 config-space. This variant uses the routes of the user_sql app. Hence it
@@ -497,34 +455,34 @@ config space.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log the given message at the specified level.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a debug message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an error.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logException">logException()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logFatal">logFatal()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a fatal error message.</dd>
 
@@ -538,14 +496,14 @@ config space.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an informational message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a warning message.</dd>
 
@@ -606,7 +564,7 @@ directly or by using a call to set settings route of the user_sql app.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>    </span>
+                                &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>    </span>
 </dt>
 <dd>Return the stored appConmtainer instance.</dd>
 
@@ -642,7 +600,7 @@ musician views.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_generateUserSqlConfig">generateUserSqlConfig()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Generate a config array for the user_sql app &quot;as of now&quot;.</dd>
 
@@ -1629,7 +1587,7 @@ at all.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -2051,7 +2009,7 @@ at all.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\App\IAppManager">IAppManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appManager</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\App\IAppManager">IAppManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appManager</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2068,7 +2026,7 @@ at all.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2140,7 +2098,7 @@ user_sql backend is enabled, and return an error with status and hints.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">checkRequirements</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dataBaseName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">checkRequirements</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dataBaseName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2163,7 +2121,7 @@ user_sql backend is enabled, and return an error with status and hints.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
                     &mdash;
                 <section class="phpdocumentor-description"><pre class="prettyprint"><code class="prettyprint">[
   'status' =&gt; true/false,
@@ -2201,7 +2159,7 @@ config space.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">configureCloudUserBackend</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$erase</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">configureCloudUserBackend</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$erase</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2224,7 +2182,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -2344,7 +2302,7 @@ config space.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2368,7 +2326,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2402,7 +2360,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2420,16 +2378,16 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2446,7 +2404,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2480,7 +2438,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2498,16 +2456,16 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2524,7 +2482,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2558,7 +2516,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2576,15 +2534,15 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2622,7 +2580,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2642,7 +2600,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2660,16 +2618,16 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2686,7 +2644,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2720,7 +2678,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2778,16 +2736,16 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2804,7 +2762,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2838,7 +2796,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2856,16 +2814,16 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2882,7 +2840,7 @@ config space.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2916,7 +2874,7 @@ config space.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2966,21 +2924,20 @@ databse. If null the views are created in the standard databse.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_removeMusicianPersonalizedViews_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_removeMusicianPersonalizedViews#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_removeMusicianPersonalizedViews_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseCloudConnectorViewException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseCloudConnectorViewException">DatabaseCloudConnectorViewException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3164,21 +3121,20 @@ database. If null the views are created in the standard databse.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_updateMusicianPersonalizedViews_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_updateMusicianPersonalizedViews#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_updateMusicianPersonalizedViews_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseCloudConnectorViewException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseCloudConnectorViewException">DatabaseCloudConnectorViewException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3230,21 +3186,20 @@ databse. If null the views are created in the standard database.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_updateUserSqlViews_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_updateUserSqlViews#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_updateUserSqlViews_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseCloudConnectorViewException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseCloudConnectorViewException">DatabaseCloudConnectorViewException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3328,7 +3283,7 @@ directly or by using a call to set settings route of the user_sql app.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3341,7 +3296,7 @@ directly or by using a call to set settings route of the user_sql app.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
             </section>
 
 </article>
@@ -3422,21 +3377,20 @@ understands those.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_checkAndGetCloudDbUser_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_checkAndGetCloudDbUser#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_checkAndGetCloudDbUser_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseCloudConnectorViewException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseCloudConnectorViewException">DatabaseCloudConnectorViewException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3563,7 +3517,7 @@ musician views.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">generateUserSqlConfig</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dataBaseName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$withDbAuth</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">generateUserSqlConfig</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dataBaseName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$withDbAuth</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3588,39 +3542,37 @@ musician views.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_generateUserSqlConfig_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_generateUserSqlConfig#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#method_generateUserSqlConfig_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">bug</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Uses the internal structure of an app which is not under our
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">bug</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Uses the internal structure of an app which is not under our
 control.</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\UnexpectedValueException">UnexpectedValueException</abbr></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>if the current database platform is neither MySQL nor PostrgreSQL.</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the current database platform is neither MySQL nor PostrgreSQL.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>

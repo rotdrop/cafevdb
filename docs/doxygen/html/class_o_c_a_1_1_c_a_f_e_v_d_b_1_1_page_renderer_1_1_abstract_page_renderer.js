@@ -1,5 +1,7 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer =
 [
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#a24b0666821e70bcfc2db378a9a9f8558", null ],
+    [ "appName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#a10f42c7875a6151887519547ff045907", null ],
     [ "cssClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#aee57cb8d60602879f6a65e257cdcbf63", null ],
     [ "cssPrefix", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#a43a5cdd6bbe5188ecab5682ac230de5f", null ],
     [ "execute", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#a5f24e7d21eeeca5e6cb0125e65a1d0a7", null ],

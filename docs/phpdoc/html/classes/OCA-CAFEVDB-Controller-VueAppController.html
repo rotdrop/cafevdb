@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Controller\VueAppController
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -174,13 +178,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-VueAppController.html#constant_END_POINT_NAVIGATION">END_POINT_NAVIGATION</a>
     <span>
-        &nbsp;= &#039;n&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;n&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-VueAppController.html#constant_END_POINT_PAGE">END_POINT_PAGE</a>
     <span>
-        &nbsp;= &#039;p&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;p&#039;                            </span>
 </dt>
 
     </dl>
@@ -195,7 +199,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Controller-VueAppController.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -400,7 +404,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -822,7 +826,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AssetService.html"><abbr title="\OCA\CAFEVDB\Service\AssetService">AssetService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assetService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-HistoryService.html"><abbr title="\OCA\CAFEVDB\Service\HistoryService">HistoryService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$historyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorizationService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"><abbr title="\OCA\CAFEVDB\Service\ToolTipsService">ToolTipsService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$toolTipsService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\Services\IInitialState">IInitialState</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$initialState</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IInitialStateService">IInitialStateService</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$initialStateService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AssetService.html"><abbr title="\OCA\CAFEVDB\Service\AssetService">AssetService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assetService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-HistoryService.html"><abbr title="\OCA\CAFEVDB\Service\HistoryService">HistoryService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$historyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorizationService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"><abbr title="\OCA\CAFEVDB\Service\ToolTipsService">ToolTipsService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$toolTipsService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\Services\IInitialState">IInitialState</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$initialState</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IInitialStateService">IInitialStateService</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$initialStateService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -902,7 +906,7 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -949,8 +953,8 @@
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Controller-VueAppController.html#method_index#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_index_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Controller-VueAppController.html#method_index_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1065,8 +1069,8 @@
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Controller-VueAppController.html#method_navigation#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_navigation_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Controller-VueAppController.html#method_navigation_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1136,22 +1140,21 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_publishInitialStateForUser_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Traits-InitialStateTrait.html#method_publishInitialStateForUser#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Traits-InitialStateTrait.html#method_publishInitialStateForUser_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     

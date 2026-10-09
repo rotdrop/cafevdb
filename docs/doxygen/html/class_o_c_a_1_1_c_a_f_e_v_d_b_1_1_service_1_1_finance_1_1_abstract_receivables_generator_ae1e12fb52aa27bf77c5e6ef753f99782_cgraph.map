@@ -1,4 +1,10 @@
 <map id="updateOne" name="updateOne">
-<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="5,29,90,56"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="31,29,31,12,37,5,48,3,58,5,64,12,60,15,56,10,47,8,40,10,36,14,37,29"/>
+<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="5,104,90,131"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="13,104,7,95,11,86,25,79,48,77,71,80,85,88,81,90,70,85,47,83,27,85,15,89,13,95,18,103"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="147,5,350,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,101,137,74,154,68,150,72,139,78,79,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="159,88,338,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,115,146,116,141,119,91,120"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="138,171,359,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="78,129,139,156,155,164,150,165,137,161,77,134"/>
 </map>

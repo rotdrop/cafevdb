@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
@@ -50,7 +51,6 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\CoversClass(GnuCashConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\DoNothingProgressStatus::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
@@ -69,14 +69,25 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\OrganizationalRolesService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProgressStatusService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -113,6 +124,7 @@ class GnuCashConnectorServiceTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
     $this->generateProjectParticipant(persist: false);
@@ -123,6 +135,8 @@ class GnuCashConnectorServiceTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->encryptionService = $this->mockProvider->getEncryptionService();
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $appContainer = $this->mockProvider->getAppContainer();
 
@@ -240,7 +254,7 @@ class GnuCashConnectorServiceTest extends TestCase
     $this->assertEqualsCanonicalizing(self::COMPOSITE_EXPORT_KEYS, array_keys($leadingRecord));
     $projectName = $this->project->getName();
     $this->assertStringEndsWith(':' . $projectName, $leadingRecord['account']);
-    $expectedKeys = array_diff([...self::COMPOSITE_EXPORT_KEYS, 'subject'], ['currency']);
+    $expectedKeys = array_values(array_diff([...self::COMPOSITE_EXPORT_KEYS, 'subject'], ['currency']));
     $this->assertTrue(
       ($leadingRecord['amount'] == '-' . $leadingRecord['negativeAmount'])
       ||

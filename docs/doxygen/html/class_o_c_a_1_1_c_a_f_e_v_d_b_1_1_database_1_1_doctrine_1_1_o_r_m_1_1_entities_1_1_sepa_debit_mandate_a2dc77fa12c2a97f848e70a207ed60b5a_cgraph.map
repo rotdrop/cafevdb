@@ -1,0 +1,7 @@
+<map id="adjustMandateReference" name="adjustMandateReference">
+<area shape="rect" id="Node000001" title="See that the mandate&#45;sequence is reflected by the mandate reference." alt="" coords="5,31,172,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a279c13f523f475a030abb96915c56872" title="Get mandateReference." alt="" coords="220,5,369,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,31,207,29,202,30,172,36"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a8600d8f62839e755389787d12683bf5a" title="Get sequence." alt="" coords="246,56,343,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,52,233,61,228,62,172,57"/>
+</map>

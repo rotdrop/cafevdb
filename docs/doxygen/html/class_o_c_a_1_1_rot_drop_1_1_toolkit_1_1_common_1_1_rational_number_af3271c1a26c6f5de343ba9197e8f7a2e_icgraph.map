@@ -1,0 +1,9 @@
+<map id="abs" name="abs">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="149,56,191,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#aac7e1447574f95c30f77d1922d096f60" title="Make the current number non&#45;negative in&#45;place." alt="" coords="24,5,82,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,55,83,34,83,29,137,53"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#ad402d8679325bc514874370f02b5c2ac" title="Return a less fancy string repesentation (&#45;)W+N/D without Unicode super&#45; and sub&#45;scripts." alt="" coords="5,56,101,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,70,102,72,101,67,135,68"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a210a20534373b3f3b2774f4d63a6b01a" title="Return a correctly rounded floating point string with the given number of fractional digits." alt="" coords="13,107,93,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="137,84,87,109,85,104,132,85"/>
+</map>

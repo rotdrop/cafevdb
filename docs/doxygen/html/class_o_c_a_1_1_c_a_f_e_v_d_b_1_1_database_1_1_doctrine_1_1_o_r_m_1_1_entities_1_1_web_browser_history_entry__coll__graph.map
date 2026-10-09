@@ -1,12 +1,12 @@
 <map id="WebBrowserHistoryEntry" name="WebBrowserHistoryEntry">
 <area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,180,174,207"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="163,5,259,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,42,140,60,117,83,104,107,97,134,92,180,87,179,92,133,99,105,113,80,136,55,164,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,41,140,60,117,83,104,107,97,134,92,180,87,178,92,133,99,105,113,80,136,55,167,38"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="127,81,295,108"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="214,47,214,81,208,81,208,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="212,45,213,82,208,80,209,49"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="199,180,367,207"/>
-<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="261,37,287,55,309,80,318,100,321,118,312,157,297,181,293,178,307,155,316,118,313,101,305,83,284,59,258,41"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,118,151,134,102,181,98,178,148,130,171,114"/>
-<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="203,123,202,140,206,155,219,168,235,177,232,182,215,172,202,157,197,140,198,123"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="270,167,251,134,227,110,231,107,256,130,275,164"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="259,37,287,55,309,80,318,100,321,118,312,157,297,182,293,178,307,155,316,118,313,101,305,83,284,59,259,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,115,151,134,102,182,99,177,148,130,171,118"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="202,121,202,140,206,155,219,168,236,180,231,179,215,172,202,157,197,140,199,125"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="270,165,251,134,228,111,230,106,256,130,275,166"/>
 </map>

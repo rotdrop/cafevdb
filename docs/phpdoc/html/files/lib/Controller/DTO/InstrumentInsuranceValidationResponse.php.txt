@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
 
 /**
@@ -38,14 +39,14 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
     array $messages,
     public readonly int $instrumentHolder,
     public readonly int $billToParty,
-    public readonly int $brokerSelect,
+    public readonly string $brokerSelect,
     public readonly EnumGeographicalScope $scopeSelect,
     public readonly string $insuredItem,
     public readonly bool $accessory,
     public readonly string $manufacturer,
     public readonly string $constructionYear,
-    public readonly RationalNumber $amount,
-    public readonly RationalNumber $rate,
+    public readonly DecimalRationalMonetary $amount,
+    public readonly DecimalRationalP4S4 $rate,
   ) {
     parent::__construct($messages);
   }
@@ -67,16 +68,16 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
 
     return new self(
       messages: $messages,
-      instrumentHoder: $instrumentHolder,
-      bilToParty: $billToParty,
+      instrumentHolder: $instrumentHolder,
+      billToParty: $billToParty,
       brokerSelect: $brokerSelect,
       scopeSelect: EnumGeographicalScope::get($scopeSelect),
       insuredItem: $insuredItem,
       accessory: $accessory,
       manufacturer: $manufacturer,
       constructionYear: $constructionYear,
-      amount: RationalNumber::create($amount),
-      rate: RationalNumber::create($rate),
+      amount: DecimalRationalMonetary::create($amount),
+      rate: DecimalRationalP4S4::create($rate),
     );
   }
 }

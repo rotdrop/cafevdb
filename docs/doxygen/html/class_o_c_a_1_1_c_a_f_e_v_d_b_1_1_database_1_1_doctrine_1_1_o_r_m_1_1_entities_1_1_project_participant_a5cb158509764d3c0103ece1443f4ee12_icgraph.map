@@ -1,9 +1,13 @@
 <map id="getProject" name="getProject">
-<area shape="rect" id="Node000001" title="Get project." alt="" coords="555,67,635,93"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set the principal parent entity." alt="" coords="254,5,507,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="539,71,507,64,508,59,540,66"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="283,88,478,163"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="540,94,479,107,478,102,539,89"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="5,5,206,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="238,37,206,37,206,32,238,32"/>
+<area shape="rect" id="Node000001" title="Get project." alt="" coords="766,104,847,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a032dfc1126aae81c173ce3406e12e018" title="Return the project&#45;participant entity for the given project or null if $this is not a participant." alt="" coords="474,5,690,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="762,96,717,78,687,67,687,62,719,74,768,97"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_factory.html#a3df5723330e609e2d7ddc739ea401154" title=" " alt="" coords="486,88,678,147"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="748,118,679,120,679,115,754,117"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html#a8bca53a2af70bfebfeb37d633141e0c2" title="Subscribe the given participant to the given option, that is, generate an empty data&#45;item for this op..." alt="" coords="446,171,718,229"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="768,137,719,161,687,173,686,167,717,156,762,139"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a729f32af155bcf63c4e80edea2d70fe0" title="Check whether the given project is contained in projectParticipation." alt="" coords="220,5,398,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="456,35,399,37,398,32,461,34"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ae809dbb59cfa8d3f1af03e18b145e1db" title=" " alt="" coords="5,5,172,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="202,36,173,37,171,32,207,33"/>
 </map>

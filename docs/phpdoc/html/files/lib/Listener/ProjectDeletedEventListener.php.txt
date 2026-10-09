@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent as HandledEvent;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\EventsService;
 
@@ -42,7 +42,7 @@ class ProjectDeletedEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

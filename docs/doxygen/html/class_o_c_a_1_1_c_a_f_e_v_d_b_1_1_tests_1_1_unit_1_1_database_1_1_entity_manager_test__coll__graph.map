@@ -1,0 +1,18 @@
+<map id="EntityManagerTest" name="EntityManagerTest">
+<area shape="rect" id="Node000001" title="Test the entity serializer with fake entities." alt="" coords="256,279,386,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="261,180,338,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,220,321,280,316,277,304,224"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="363,180,468,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="395,217,335,281,332,276,390,219"/>
+<area shape="poly" id="edge8_Node000003_Node000003" title=" " alt="" coords="484,184,495,193,487,202,469,205,468,200,485,197,490,193,483,189"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager.html" title="Abstract base class with functionality needed by the classes in this namespace." alt="" coords="220,81,374,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="325,116,403,179,398,180,324,121"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,5,168,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="137,35,263,79,259,82,137,40"/>
+<area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html" title="Simplify acces to a single entity namespace is nothing more is managed." alt="" coords="192,5,403,32"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="298,45,300,82,295,80,296,49"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html" title="Override the default listener to use a modified event subscriber which also queries other sources of ..." alt="" coords="403,81,583,108"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="476,119,427,182,424,178,471,122"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="427,5,565,32"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="496,45,496,82,491,80,493,49"/>
+</map>

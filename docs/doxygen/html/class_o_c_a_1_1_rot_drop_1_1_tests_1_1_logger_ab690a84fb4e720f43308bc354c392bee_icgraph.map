@@ -1,0 +1,5 @@
+<map id="mapLogLevels" name="mapLogLevels">
+<area shape="rect" id="Node000001" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="92,5,197,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_logger.html#a4b454a62c3d54101d4f09e050b4b6a15" title="{}" alt="" coords="5,5,44,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,20,44,21,44,16,78,17"/>
+</map>

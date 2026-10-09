@@ -28,7 +28,7 @@ use DateTime;
 
 use Psr\Log\LoggerInterface;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IConfig;
 use OCP\IL10N;
 
@@ -53,7 +53,7 @@ class ReadMeFactory extends AbstractReadMeFactory
   protected array $documentCache = [];
 
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param IL10N $l
    *
@@ -68,7 +68,7 @@ class ReadMeFactory extends AbstractReadMeFactory
    * @param ToolTipsService $toolTipsService
    */
   public function __construct(
-    IAppContainer $appContainer,
+    ContainerInterface $appContainer,
     IL10N $l,
     AppL10N $appL10n,
     protected string $appName,

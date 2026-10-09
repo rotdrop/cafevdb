@@ -1,0 +1,15 @@
+<map id="ProgressStatusControllerTest" name="ProgressStatusControllerTest">
+<area shape="rect" id="Node000001" title="Test the EntityRepositoryController." alt="" coords="216,180,408,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,111,279,177,275,182,93,116"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html" title="AJAX end&#45;point for progress status." alt="" coords="107,81,274,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,115,264,154,297,180,292,179,261,158,215,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="152,5,229,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="192,45,193,82,188,80,189,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_progress_status_service.html" title="Factory for progress status implementation." alt="" coords="298,81,454,108"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="362,120,322,182,319,178,357,122"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="489,81,591,108"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="532,121,521,142,505,158,466,173,409,184,408,179,464,168,503,154,517,139,528,124"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="465,5,615,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="542,45,542,82,538,79,538,49"/>
+</map>

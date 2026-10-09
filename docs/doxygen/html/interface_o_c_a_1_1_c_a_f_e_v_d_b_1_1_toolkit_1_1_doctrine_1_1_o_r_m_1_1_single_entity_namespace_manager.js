@@ -1,0 +1,4 @@
+var interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager =
+[
+    [ "getEntityNamespace", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html#ab68a397a6be0725fe7cc41dbfe2a9485", null ]
+];

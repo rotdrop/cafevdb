@@ -1,7 +1,8 @@
 <map id="__construct" name="__construct">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="5,5,95,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a24e7fbb14ed9dce86eee44d9f81c2e06" title="Set the catch&#45;all email address." alt="" coords="143,5,232,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,127,16,127,21,95,21"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a0abfd59485d4c62afddeb31fcfbc7ec5" title=" " alt="" coords="280,5,381,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="232,16,265,16,265,21,232,21"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,29,95,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a24e7fbb14ed9dce86eee44d9f81c2e06" title="Set the catch&#45;all email address." alt="" coords="143,29,232,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,40,129,42,124,43,95,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a0abfd59485d4c62afddeb31fcfbc7ec5" title=" " alt="" coords="280,29,381,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="232,40,267,43,262,43,232,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="306,28,301,21,304,11,314,5,331,3,348,5,359,15,353,13,346,10,331,8,316,10,308,14,307,20,310,30"/>
 </map>

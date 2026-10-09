@@ -1,0 +1,5 @@
+<map id="generateLegacyBalancingAccount" name="generateLegacyBalancingAccount">
+<area shape="rect" id="Node000001" title="Try to generate a balancing account for a legacy item without broker information." alt="" coords="5,21,224,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a0528a676fd90bed6001890249d726953" title="Get instrumentInsurances." alt="" coords="272,5,497,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,32,259,34,253,35,224,37"/>
+</map>

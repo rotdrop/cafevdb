@@ -29,7 +29,7 @@ use DateTimeImmutable;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
 use OCP\SystemTag\ISystemTagManager;
@@ -67,7 +67,7 @@ class ProjectEvents extends Command
     protected ILogger $logger,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }

@@ -26,8 +26,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
@@ -49,9 +51,6 @@ class InsuranceRate implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\DateTimeTrait;
 
-  public const RATE_PRECISION = 4;
-  public const RATE_SCALE = self::RATE_PRECISION;
-
   #[CJH\ForeignKey(
     targetEntity: 'InsuranceBroker',
     referencedColumnName: 'short_name',
@@ -62,18 +61,18 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\Id]
   private InsuranceBroker $broker;
 
-  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumGeographicalScope::GERMANY])]
   #[ORM\Id]
   private Types\EnumGeographicalScope $geographicalScope;
 
-  #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
-  private RationalNumber $rate;
+  #[ORM\Column(type: RateDatabaseType::NAME_BASE . '_' . RateNumberType::PRECISION . '_' . RateNumberType::SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
+  private RateNumberType $rate;
 
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'start of the yearly insurance period'])]
-  private DateTimeImmutable $dueDate;
+  private ?DateTimeImmutable $dueDate = null;
 
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private ?string $policyNumber;
+  private ?string $policyNumber = null;
 
   /** @var Collection<InstrumentInsurance> */
   #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
@@ -92,9 +91,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param null|int|InsuranceBroker $broker
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setBroker(mixed $broker):InsuranceRate
+  public function setBroker(mixed $broker): self
   {
     $this->broker = $broker;
 
@@ -104,9 +103,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get broker.
    *
-   * @return string
+   * @return InsuranceBroker
    */
-  public function getBroker():InsuranceBroker
+  public function getBroker(): InsuranceBroker
   {
     return $this->broker;
   }
@@ -116,9 +115,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string|Types\EnumGeographicalScope $geographicalScope
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setGeographicalScope(string|EnumGeographicalScope $geographicalScope): InsuranceRate
+  public function setGeographicalScope(string|EnumGeographicalScope $geographicalScope): self
   {
     $geographicalScope = EnumGeographicalScope::get($geographicalScope);
     $this->geographicalScope = $geographicalScope;
@@ -129,9 +128,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get geographicalScope.
    *
-   * @return array
+   * @return Types\EnumGeographicalScope
    */
-  public function getGeographicalScope():Types\EnumGeographicalScope
+  public function getGeographicalScope(): Types\EnumGeographicalScope
   {
     return $this->geographicalScope;
   }
@@ -141,11 +140,11 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param int|float|string|RationalNumber $rate
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setRate(int|float|string|RationalNumber $rate):InsuranceRate
+  public function setRate(int|float|string|RationalNumber $rate): self
   {
-    $this->rate = RationalNumber::create($rate);
+    $this->rate = RateNumberType::create($rate);
 
     return $this;
   }
@@ -153,9 +152,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get rate.
    *
-   * @return null|RationalNumber
+   * @return ?RateNumberType
    */
-  public function getRate():?RationalNumber
+  public function getRate(): ?RateNumberType
   {
     return $this->rate ?? null;
   }
@@ -165,9 +164,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param null|string|DateTimeInterface $dueDate
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setDueDate($dueDate):InsuranceRate
+  public function setDueDate($dueDate): self
   {
     $this->dueDate = self::convertToDateTime($dueDate);
     return $this;
@@ -178,7 +177,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return DateTimeInterface
    */
-  public function getDueDate():?DateTimeInterface
+  public function getDueDate(): ?DateTimeInterface
   {
     return $this->dueDate;
   }
@@ -188,9 +187,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string $policyNumber
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setPolicyNumber(?string $policyNumber):InsuranceRate
+  public function setPolicyNumber(?string $policyNumber): self
   {
     $this->policyNumber = $policyNumber;
 
@@ -212,9 +211,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param ArrayCollection $instrumentInsurances
    *
-   * @return InsuranceBroker
+   * @return self
    */
-  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceRate
+  public function setInstrumentInsurances(Collection $instrumentInsurances): self
   {
     $this->instrumentInsurances = $instrumentInsurances;
 
@@ -224,9 +223,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get instrumentInsurances.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
-  public function getInstrumentInsurances():Collection
+  public function getInstrumentInsurances(): Collection
   {
     return $this->instrumentInsurances;
   }

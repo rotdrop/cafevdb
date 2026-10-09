@@ -1,30 +1,30 @@
 <map id="logException" name="logException">
 <area shape="rect" id="Node000001" title=" " alt="" coords="1029,312,1125,339"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#ae41bfe81b67dc7952c7a75d6dbc16c85" title="Change the given group&#45;shared folder – given by its old mount&#45;point – to a new mount&#45;point." alt="" coords="768,29,964,88"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1068,298,1059,255,1042,202,1015,149,999,124,979,102,962,89,966,85,982,98,1003,121,1020,146,1047,200,1064,253,1074,296"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1069,296,1059,255,1042,202,1015,149,999,124,979,102,964,90,964,85,982,98,1003,121,1020,146,1047,200,1064,253,1073,298"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#a5b5aa8bf49254aa23cf827319fe58166" title="Try to convert the given data&#45;block $data to PDF using any of the known converters." alt="" coords="763,112,969,155"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="1064,298,1032,233,1009,198,979,169,961,157,964,153,982,165,1013,195,1037,230,1068,296"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="1064,296,1032,233,1009,198,979,169,962,158,962,152,982,165,1013,195,1037,230,1069,298"/>
 <area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="807,179,925,205"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="1057,300,1024,258,1003,237,979,220,953,208,925,200,926,195,955,203,982,215,1007,233,1028,254,1061,297"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="1057,298,1024,258,1003,237,979,220,953,208,925,200,925,195,955,203,982,215,1007,233,1028,254,1062,299"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#aeee0631a4c9f1a75df0fff9ec3a37584" title="Diagnose the state of the builtin&#45;converter chains, i.e." alt="" coords="756,229,976,272"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="1031,308,980,286,946,275,947,270,982,282,1033,303"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="1029,305,980,286,946,275,946,270,982,282,1035,305"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="775,296,957,355"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="1013,328,957,328,957,323,1013,323"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="1011,326,958,328,957,323,1016,325"/>
 <area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="815,379,917,405"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1035,348,981,369,918,386,916,380,980,364,1033,343"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1036,345,981,369,918,386,916,380,980,364,1031,346"/>
 <area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a700b0335035909f6817fb197ae6ef571" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="765,429,967,456"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="1058,353,1025,388,982,420,954,431,952,426,979,415,1021,384,1054,349"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="1058,350,1025,388,982,420,954,431,953,426,979,415,1021,384,1053,353"/>
 <area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#ade04ef4d1f96d1fd4e6ec896cefb6f76" title="Convert using unoconv service (based on LibreOffice)." alt="" coords="751,480,981,523"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1067,354,1034,413,1011,444,982,470,963,482,960,477,979,466,1007,440,1030,410,1062,352"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1066,352,1034,413,1011,444,982,470,962,482,961,477,979,466,1007,440,1030,410,1062,355"/>
 <area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#ab470d3920734ba53be89cf6c5b518d25" title="Convert using unoconvert service (based on LibreOffice)." alt="" coords="767,547,965,605"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="1072,355,1062,395,1044,444,1018,493,983,537,967,548,964,544,979,533,1014,490,1039,441,1057,393,1067,353"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="899,17,887,10,866,8,848,10,836,15,830,21,830,29,824,29,825,19,833,10,846,5,866,3,888,5,902,12"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="1072,352,1062,395,1044,444,1018,493,983,537,967,549,965,544,979,533,1014,490,1039,441,1057,393,1068,356"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="898,15,887,10,866,8,848,10,836,15,830,21,829,30,825,28,825,19,833,10,846,5,866,3,888,5,903,14"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html#a32093fe0abe4f324af6bda53cb2a2a07" title="Delete the token and its cookie, e.g." alt="" coords="510,163,692,221"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="791,195,693,195,693,189,791,189"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="789,193,694,195,692,189,794,191"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="499,296,703,355"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="759,328,704,328,704,323,759,323"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="757,326,704,328,703,323,762,325"/>
 <area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="267,296,451,355"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="483,328,452,328,452,323,483,323"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="481,326,452,328,451,323,486,325"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a89cc023810bad0773bc2699e1265c96c" title=" " alt="" coords="5,296,219,355"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="251,328,219,328,219,323,251,323"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="249,327,220,328,218,323,253,324"/>
 </map>

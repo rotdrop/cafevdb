@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 /**
+ * @file Copied from the Nextcloud mail app, {@see https://github.com/nextcloud/mail.git}.
+ *
  * @author Alexander Weidinger <alexwegoo@gmail.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Christoph Wurst <wurst.christoph@gmail.com>

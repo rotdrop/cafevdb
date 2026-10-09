@@ -1,8 +1,8 @@
 <map id="restoreAppKeyPair" name="restoreAppKeyPair">
 <area shape="rect" id="Node000001" title="Restore a potential backup e.g." alt="" coords="5,5,136,32"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aef02d325583d49207e4852023acf572d" title=" " alt="" coords="339,5,486,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,16,323,16,323,21,136,21"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,16,324,16,322,21,136,21"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a830652bacd2fe88b917967c2db01e092" title=" " alt="" coords="184,31,291,57"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,26,169,31,168,36,136,31"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="291,34,323,29,324,34,292,39"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,26,171,33,166,34,136,31"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="291,34,321,32,326,31,292,39"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="doSetUserValue" name="doSetUserValue">
+<area shape="rect" id="Node000001" title="Set faked user preferences." alt="" coords="193,31,308,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title="Mock the cloud config provider." alt="" coords="19,5,131,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,34,131,29,131,24,180,33"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a65f835eff19c744118054eb15caddcfc" title="Mock the cloud user config provider." alt="" coords="5,56,145,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,55,145,62,145,57,180,54"/>
+</map>

@@ -33,12 +33,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\PageRenderer;
-use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
-use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
-use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\GeoCodingService;
@@ -46,6 +44,10 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+use OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation as DoctrineDeprecation;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
@@ -65,19 +67,19 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
@@ -96,6 +98,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\InvoiceNumberHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
@@ -106,9 +109,12 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Documents\OpenDocumentFiller::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Documents\TemplateService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
@@ -123,28 +129,49 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260207000624::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094146::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094422::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819105948::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20261009150233::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\FilesCacheService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ImagesService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\OrganizationalRolesService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AnyToPdf::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
@@ -152,6 +179,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class AllMusiciansTest extends TestCase
 {
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
   private PageRenderer\AllMusicians $renderer;
@@ -167,7 +195,7 @@ class AllMusiciansTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations();
 
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
@@ -175,6 +203,8 @@ class AllMusiciansTest extends TestCase
     }
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
 
     $this->request = $this->mockProvider->getRequest();
     $this->request->method('getParam')->willReturnCallback(

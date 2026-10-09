@@ -1,0 +1,22 @@
+<map id="InvoicesTest" name="InvoicesTest">
+<area shape="rect" id="Node000001" title="Test aspects of the Invoices page renderer." alt="" coords="94,408,189,435"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,309,83,336"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,344,131,407,126,409,66,349"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html" title="Table generator for Instruments table." alt="" coords="106,309,176,336"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,350,144,409,139,407,139,353"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="58,233,198,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="134,273,142,309,136,308,132,278"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="51,157,205,184"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="129,197,131,234,125,232,127,202"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="34,81,108,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="89,117,121,156,116,158,90,123"/>
+<area shape="rect" id="Node000007" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="89,5,167,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="108,46,83,82,78,80,110,41"/>
+<area shape="rect" id="Node000008" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="132,81,241,108"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="147,41,179,80,174,82,147,47"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="166,122,140,158,136,155,169,118"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="215,309,305,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="245,347,210,386,171,410,169,405,206,382,240,349"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="223,233,308,260"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="265,273,263,310,259,308,262,277"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="SharingFiles" name="SharingFiles">
+<area shape="rect" id="Node000001" title=" " alt="" coords="42,256,136,283"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="40,81,138,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,119,28,136,11,159,8,171,12,183,23,205,39,224,73,254,68,257,35,228,19,208,7,185,3,171,7,156,24,132,50,114"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing_files_folders.html" title=" " alt="" coords="21,157,157,184"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="90,121,92,158,86,156,88,126"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing_files_sub_folders.html" title=" " alt="" coords="181,157,341,184"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="133,112,234,156,230,158,132,117"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="31,5,147,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,44,92,81,86,81,88,50"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="91,198,92,256,86,255,87,201"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="228,193,113,258,110,253,223,190"/>
+</map>

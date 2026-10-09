@@ -1,0 +1,5 @@
+<map id="MockProvider" name="MockProvider">
+<area shape="rect" id="Node000001" title="Provide a couple of important services, partially using mocked classes." alt="" coords="30,80,131,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="5,5,156,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,46,83,81,78,79,79,50"/>
+</map>

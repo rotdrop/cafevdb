@@ -30,6 +30,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -39,12 +40,13 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Common\TimeFactoryTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /** Test the SepaBulkTransactionsService */
 #[Attributes\CoversClass(SepaBulkTransactionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -86,6 +88,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class SepaBulkTransactionServiceTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TimeFactoryTrait;
 
   private FinanceService $financeService;
 
@@ -117,13 +120,18 @@ class SepaBulkTransactionServiceTest extends TestCase
 
     $l10n = $mockProvider->getL10N();
 
+    $this->mockTimeFactory();
+
     $this->sepaBulkTransactionsService = new SepaBulkTransactionService(
-      entityManager: $this->entityManager,
-      financeService: $this->financeService,
-      eventsService: $eventsService,
       appContainer: $appContainer,
-      logger: $logger,
+      configService: $configService,
+      dateTimeFormatter: $appContainer->get(IDateTimeFormatter::class),
+      entityManager: $this->entityManager,
+      eventsService: $eventsService,
+      financeService: $this->financeService,
       l: $l10n,
+      logger: $logger,
+      timeFactory: $this->timeFactory,
     );
   }
 

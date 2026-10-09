@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Controller\DTO\InsuranceRateValidationResponse
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -173,13 +177,13 @@ InstrumentInsurancesController.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-MessagesResponse.html#property_hints">$hints</a>
     <span>
-                        &nbsp;: array&lt;string|int, string&gt;            </span>
+                        &nbsp;: string[]            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-MessagesResponse.html#property_messages">$messages</a>
     <span>
-                        &nbsp;: array&lt;string|int, string&gt;            </span>
+                        &nbsp;: string[]            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
@@ -191,13 +195,13 @@ InstrumentInsurancesController.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#property_rate">$rate</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#property_keys">$keys</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;|null            </span>
+                        &nbsp;: array|null            </span>
 </dt>
 
     </dl>
@@ -225,7 +229,7 @@ InstrumentInsurancesController.</p>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_getKeys">getKeys()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Return the name of all public properties.</dd>
 
@@ -246,7 +250,7 @@ InstrumentInsurancesController.</p>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -271,6 +275,15 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
                                 &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
 </dt>
 <dd>Ensure a valid date.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate">getCurrentDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Return the current date according to the given or the current user&#039;s
+timezone and return it as DateTime object at midnight according to the
+timeozone.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_initKeys">initKeys()</a>
@@ -356,7 +369,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, string&gt;</span>
+            <span class="phpdocumentor-signature__type">string[]</span>
     <span class="phpdocumentor-signature__name">$hints</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
@@ -394,7 +407,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, string&gt;</span>
+            <span class="phpdocumentor-signature__type">string[]</span>
     <span class="phpdocumentor-signature__name">$messages</span>
     </code>
 
@@ -470,7 +483,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a></span>
     <span class="phpdocumentor-signature__name">$rate</span>
     </code>
 
@@ -508,7 +521,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array|null</span>
     <span class="phpdocumentor-signature__name">$keys</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -551,7 +564,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$messages</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rate</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$policyNumber</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$messages</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rate</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$policyNumber</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -561,14 +574,14 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$messages</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$rate</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -618,7 +631,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">fromArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">fromArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -628,7 +641,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$data</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -636,31 +649,26 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_fromArray_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#method_fromArray#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#method_fromArray_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -693,7 +701,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getKeys</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getKeys</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -706,7 +714,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -820,7 +828,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -833,7 +841,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -851,9 +859,9 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert the given argument to a DateTimeImmutable object. allowed are
@@ -903,9 +911,9 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
@@ -937,22 +945,21 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_convertToTimezoneDate_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -976,9 +983,9 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Ensure a valid date.</p>
@@ -1009,6 +1016,58 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getCurrentDate">
+        getCurrentDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/DateTimeTrait.php"><a href="files/lib-toolkit-traits-datetimetrait.html"><abbr title="lib/Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">115</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-InsuranceRateValidationResponse.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return the current date according to the given or the current user&#039;s
+timezone and return it as DateTime object at midnight according to the
+timeozone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getCurrentDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeZone">DateTimeZone</abbr>|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
             </section>
 
 </article>
@@ -1184,6 +1243,7 @@ understood by the constructor or DateTimeImmutable (see PHP manual).</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate">getCurrentDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_initKeys">initKeys()</a></li>
                                     </ul>
             </li>

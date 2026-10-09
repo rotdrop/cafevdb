@@ -65,7 +65,7 @@ class AsymmetricKeyServiceTest extends TestCase
       appContainer: $appContainer,
       userSession: $mockProvider->getUserSession(),
       credentialsStore: $mockProvider->getCredentialsStore(),
-      cloudConfig: $mockProvider->getCloudConfig(),
+      cloudUserConfig: $mockProvider->getCloudUserConfig(),
       eventDispatcher: $mockProvider->getEventDispatcher(),
       l: $mockProvider->getL10N(),
       logger: $mockProvider->getLoggerInterface(),
@@ -115,7 +115,7 @@ class AsymmetricKeyServiceTest extends TestCase
     );
     $result = $this->service->getSharedPrivateValue(
       ownerId: $ownerId,
-      key: $key2,
+      key: $key2
     );
     $this->assertEquals($value2, $result);
 

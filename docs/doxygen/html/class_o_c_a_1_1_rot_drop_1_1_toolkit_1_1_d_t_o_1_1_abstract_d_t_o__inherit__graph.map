@@ -1,0 +1,23 @@
+<map id="AbstractDTO" name="AbstractDTO">
+<area shape="rect" id="Node000001" title="Base class for DTOs." alt="" coords="170,132,268,159"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_database_config.html" title="Database access parameters." alt="" coords="345,5,460,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,118,270,79,315,42,347,30,342,32,317,46,274,82,240,121"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="324,56,481,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,122,315,92,351,82,346,84,317,97,258,126"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info.html" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php from one ancient Nextcloud version." alt="" coords="350,107,456,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="283,134,352,126,347,128,284,139"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection.html" title="Simple entity reference with optional class name and flattened identifier." alt="" coords="316,157,489,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="283,151,318,158,313,159,283,157"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html" title="Base class for EntityReference and CollectionEntityReference." alt="" coords="320,208,485,235"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="257,164,317,194,351,207,346,207,315,198,256,169"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info.html" title="DTO class in order to communicate the archive info to the JS frontend." alt="" coords="359,259,446,285"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="239,169,274,208,317,244,361,264,356,264,315,249,270,212,237,174"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,132,122,159"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,143,172,144,167,147,138,148"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response.html" title="A collection of entities without duplicates." alt="" coords="567,56,681,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="497,67,569,69,564,70,497,72"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_collection_entity_reference.html" title="Simple entity reference with optional class name and flattened identifier." alt="" coords="537,183,711,209"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="500,208,539,206,534,206,501,213"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference.html" title="Simple entity reference with optional class name and flattened identifier." alt="" coords="566,233,682,260"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="501,230,568,240,563,240,501,235"/>
+</map>

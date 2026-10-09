@@ -1,5 +1,19 @@
 <map id="beforeDeleteDoDeleteSubPayments" name="beforeDeleteDoDeleteSubPayments">
-<area shape="rect" id="Node000001" title="Sub&#45;payment aware delete." alt="" coords="5,5,238,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="286,5,428,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,16,270,16,270,21,238,21"/>
+<area shape="rect" id="Node000001" title="Sub&#45;payment aware delete." alt="" coords="5,96,238,123"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="299,5,522,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,93,287,66,282,69,177,98"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="286,88,535,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="238,107,273,109,267,110,238,112"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="339,155,482,181"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="191,121,328,150,324,152,191,126"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7366f4cd17cfac976a1b643f34542bcb" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit\rec to somethi..." alt="" coords="583,5,811,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="522,32,570,34,565,35,522,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52123174818955fa46c5c9d7669097e0" title="Print an entity id without causing print_r infinite recursion." alt="" coords="859,13,1070,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="812,32,846,34,841,35,812,37"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a685664a241ded617239a4d9f395eb2bf" title="Debug helper, flatten an entity id." alt="" coords="1118,13,1352,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1070,32,1105,34,1099,35,1070,37"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="610,88,785,131"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="535,107,597,109,591,110,536,112"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="594,155,800,197"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="505,129,590,151,585,151,505,134"/>
 </map>

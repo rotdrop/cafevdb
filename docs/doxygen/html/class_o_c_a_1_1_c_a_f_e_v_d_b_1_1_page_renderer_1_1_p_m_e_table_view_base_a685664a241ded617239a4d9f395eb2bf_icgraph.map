@@ -1,0 +1,34 @@
+<map id="flattenIdentifier" name="flattenIdentifier">
+<area shape="rect" id="Node000001" title="Debug helper, flatten an entity id." alt="" coords="924,155,1031,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52123174818955fa46c5c9d7669097e0" title="Print an entity id without causing print_r infinite recursion." alt="" coords="792,155,876,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="905,169,877,171,876,165,911,167"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="580,80,735,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="784,149,691,110,691,104,789,148"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="571,155,744,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="774,169,746,171,744,165,779,167"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7366f4cd17cfac976a1b643f34542bcb" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit\rec to somethi..." alt="" coords="578,304,738,331"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="808,190,676,306,673,301,803,193"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="274,5,523,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="585,77,485,51,484,46,590,75"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="296,72,501,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="562,94,502,96,501,91,567,92"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="596,150,522,129,483,118,482,113,524,124,601,149"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="296,139,501,197"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="553,169,502,171,501,165,558,167"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="276,221,521,280"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="597,188,493,223,491,218,601,185"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="303,304,494,331"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="559,318,495,320,494,315,564,317"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit\rec to somethi..." alt="" coords="324,416,473,443"/>
+<area shape="poly" id="edge13_Node000009_Node000013" title=" " alt="" coords="613,336,433,418,431,413,608,338"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="12,205,219,264"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="303,301,273,295,196,267,195,262,274,289,308,299"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="5,288,226,347"/>
+<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="285,319,227,320,225,315,290,316"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="13,371,218,413"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="306,419,219,408,218,403,310,416"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="11,437,220,496"/>
+<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="306,442,221,455,220,450,310,440"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="9,520,222,579"/>
+<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="357,449,227,510,198,522,196,517,225,506,352,451"/>
+</map>

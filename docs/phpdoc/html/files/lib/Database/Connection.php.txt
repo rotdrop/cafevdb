@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DBALConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
@@ -36,17 +35,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
  */
 class Connection extends DBALConnection
 {
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    array $params,
-    Driver $driver,
-    ?Configuration $config = null,
-    ?EventManager $eventManager = null,
-  ) {
-    parent::__construct($params, $driver, $config, $eventManager);
-  }
-  // phpcs:enable
-
   /**
    * Create a new instance and bind it to the given database, keeping all
    * other params.
@@ -87,7 +75,6 @@ class Connection extends DBALConnection
       $params,
       $this->getDriver(),
       $this->getConfiguration(),
-      $this->getEventManager(),
     );
     $connection->connect();
     return $connection;

@@ -1,0 +1,11 @@
+<map id="values_with_defaults" name="values_with_defaults">
+<area shape="rect" id="Node000001" title="Add some defaults for missing &#39;values&#39; fields." alt="" coords="401,31,545,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#af407e0360079510bbf7b0f115b187086" title="Compute meta&#45;data to translate data&#45;base values etc." alt="" coords="269,5,353,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,30,354,28,354,23,389,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ad7818a8e551fddf2b45ccabf9536f070" title="Substitute placeholders in sql field:" alt="" coords="276,56,346,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="388,57,347,67,346,61,383,58"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aed1b50c8c16937db335f1d22ecaf41d1" title="Generate the query code for one field." alt="" coords="182,56,221,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="258,69,221,72,221,67,264,69"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a2175ab9fcaf0327806ba3eeee525b695" title=" " alt="" coords="5,56,134,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="164,70,134,72,134,67,169,69"/>
+</map>

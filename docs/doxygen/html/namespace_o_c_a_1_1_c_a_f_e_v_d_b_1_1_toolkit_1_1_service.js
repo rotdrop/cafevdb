@@ -1,6 +1,8 @@
 var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service =
 [
+    [ "ArchiveService", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service" ],
     [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf" ],
+    [ "AppInfoService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service" ],
     [ "AppPasswordService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service" ],
     [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure" ],
     [ "ArchiveService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service" ],

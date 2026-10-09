@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -61,10 +61,10 @@ class MailingListsEmailChangedListener implements IEventListener
   private static $subscriptionRequests = [];
 
   /**
-   * @param IAppContainer $appContainer App-container in order to have a leight-weight constructor.
+   * @param ContainerInterface $appContainer App-container in order to have a leight-weight constructor.
    */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
 

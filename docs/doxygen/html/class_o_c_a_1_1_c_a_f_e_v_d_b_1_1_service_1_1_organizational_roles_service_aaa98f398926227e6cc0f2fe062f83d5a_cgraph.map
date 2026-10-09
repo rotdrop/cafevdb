@@ -1,0 +1,5 @@
+<map id="isClubMember" name="isClubMember">
+<area shape="rect" id="Node000001" title="Check whether the given user is a club&#45;member." alt="" coords="5,21,111,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a0d00b746fa1f2ecf4394e2ba4bf0bb55" title="Export the group&#45;id prefix in order to aid the members app." alt="" coords="159,5,350,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,32,146,34,141,35,111,37"/>
+</map>

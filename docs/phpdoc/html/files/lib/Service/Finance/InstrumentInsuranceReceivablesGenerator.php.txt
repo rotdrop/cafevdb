@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ use DateTimeImmutable as DateTime;
 use RuntimeException;
 use UnexpectedValueException;
 
-use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -41,6 +40,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
@@ -61,10 +61,10 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
   /** {@inheritdoc} */
   public function __construct(
-    protected ConfigService $configService,
     private InstrumentInsuranceService $insuranceService,
-    protected ToolTipsService $toolTipsService,
     private StorageFactory $storageFactory,
+    protected ConfigService $configService,
+    protected ToolTipsService $toolTipsService,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
   ) {
@@ -160,7 +160,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $tooltipText = $this->l->t($tooltipTemplate);
         } else {
           // TRANSLATORS: First parameter is a year YYYY, second parameter year plus one, third parameter a name.
-          $labelText = $this->l->t($labelTemplate = 'Insurance Fee %1$d-%2$d: %3$s', [ $year, $year + 1, $brokerShortName ]);
+          $labelText = $this->l->t($labelTemplate = 'Insurance Fee %1$d-%2$d; %3$s', [ $year, $year + 1, $brokerShortName ]);
           $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee'] ?? '';
           $tooltipText = $this->l->t($tooltipTemplate);
         }
@@ -371,10 +371,15 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
         if (!$openingBalance) {
           // store overview letter
+
           $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
           $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
           $supportingDocumentFile = new Entities\EncryptedFile(
-            $overviewFilename, $overviewLetter, 'application/pdf', $musician);
+            fileName: $overviewFilename,
+            data: $overviewLetter,
+            mimeType: 'application/pdf',
+            owner: $musician,
+          );
           $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
           $datum->setSupportingDocument($supportingDocument);
         }
@@ -426,7 +431,6 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           if (!$openingBalance) {
             $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
             $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
-            $this->logInfo('OVERVIEW ' . print_r($overview, true));
             /** @var Entities\DatabaseStorageFile $supportingDocument */
             $supportingDocument = $datum->getSupportingDocument();
             if (empty($supportingDocument)) {
@@ -440,10 +444,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
               $datum->setSupportingDocument($supportingDocument);
             } elseif (true || $updateStrategy == self::UPDATE_STRATEGY_REPLACE || $fee->toDecimal(2) != $datum->getOptionValue()) {
-              $supportingDocument
+              $supportingDocumentFile = $supportingDocument
                 ->setName($overviewFilename)
                 ->getFile()
-                ->setFileName($overviewFilename)
+                ->addOwner($musician)
+                ;
+              $supportingDocumentFile->setFileName($overviewFilename)
                 ->setMimeType('application/pdf')
                 ->setSize(strlen($overviewLetter))
                 ->getFileData()->setData($overviewLetter);

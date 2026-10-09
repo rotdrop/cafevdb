@@ -1,5 +1,6 @@
 <map id="addOwner" name="addOwner">
 <area shape="rect" id="Node000001" title="Add the given musician to the list of owners." alt="" coords="5,21,86,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="134,5,312,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,32,118,32,118,37,86,37"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a392b07f87396a8c4fd915e28366229eb" title=" " alt="" coords="134,5,316,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,40,121,43,115,44,86,45"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="131,26,102,29,101,24,136,25"/>
 </map>

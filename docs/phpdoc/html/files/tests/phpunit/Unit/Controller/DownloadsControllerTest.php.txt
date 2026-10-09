@@ -36,10 +36,10 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\ICache as FileCache;
 
 use OCA\CAFEVDB\Controller\DownloadsController;
-use OCA\RotDrop\Tests\DeprecationException;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EntityRepositoryController. */
 #[Attributes\CoversClass(DownloadsController::class)]

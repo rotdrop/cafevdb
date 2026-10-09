@@ -259,6 +259,10 @@ class InstrumentInsuranceController extends Controller
             // fall through
           case 'accessory':
             $value = $values['accessory'];
+            if (is_array($value)) {
+              $value = array_values($value)[0];
+              $values['accessory'] = $value;
+            }
             if (false && empty($value)) {
               // checkbox, may be empty.
               $errorMessage[] = $this->l->t('Object classification (instrument, accessory) is missing.');

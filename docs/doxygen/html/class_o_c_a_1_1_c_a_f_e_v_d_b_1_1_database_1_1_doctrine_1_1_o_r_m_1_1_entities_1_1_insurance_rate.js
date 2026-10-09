@@ -8,7 +8,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a0fce9d4f0648053551fdec4b3ee35c9c", null ],
     [ "setBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#ac783ab121f0f274fbc133a585cbec62d", null ],
     [ "setDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#ac79670cd30ec3c78ad97a8b8f50218b7", null ],
-    [ "setGeographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a850db4218354c59a76965679d005a50e", null ],
+    [ "setGeographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a5b204f0dcba56412d7faa5a664bb8f33", null ],
     [ "setInstrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#ad4663e6089c7d45f3f23b4b81222a0ec", null ],
     [ "setPolicyNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a884a1cc63250436819ac3dcc0ebcc9b9", null ],
     [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a890d5b46634b3a8b3b63c96effe65b8b", null ]

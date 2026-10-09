@@ -29,7 +29,7 @@ use Throwable;
 use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent as HandledEvent;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\INavigationManager;
@@ -53,7 +53,7 @@ class BeforeTemplateRenderedListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

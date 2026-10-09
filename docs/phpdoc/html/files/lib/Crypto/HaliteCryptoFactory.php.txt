@@ -24,16 +24,16 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /** Factory class using Halite as encryption backend. */
 class HaliteCryptoFactory implements CryptoFactoryInterface
 {
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    */
   public function __construct(
-    private IAppContainer $appContainer,
+    private ContainerInterface $appContainer,
   ) {
   }
 

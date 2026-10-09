@@ -66,7 +66,8 @@ class ConfigCheckController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT)]
   #[Attributes\NoGroupMemberRequired]
-  public function get(): JSONResponse {
+  public function get(): JSONResponse
+  {
     $configCheck = $this->configCheckService->configured();
     return DTO\ConfigCheckResponse::fromArray($configCheck)->response();
   }

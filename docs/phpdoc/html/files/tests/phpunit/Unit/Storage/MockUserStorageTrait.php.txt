@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Storage;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
@@ -43,7 +43,7 @@ trait MockUserStorageTrait
 
   private MockProvider $mockProvider;
 
-  private IAppContainer $appContainer;
+  private ContainerInterface $appContainer;
 
   private IURLGenerator $urlGenerator;
 

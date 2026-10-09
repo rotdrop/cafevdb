@@ -1,0 +1,7 @@
+<map id="EventMatrixEvent" name="EventMatrixEvent">
+<area shape="rect" id="Node000001" title="DTO for the event matrix events." alt="" coords="5,155,131,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="19,80,117,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,121,71,155,65,153,66,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="10,5,126,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,45,71,80,65,79,67,50"/>
+</map>

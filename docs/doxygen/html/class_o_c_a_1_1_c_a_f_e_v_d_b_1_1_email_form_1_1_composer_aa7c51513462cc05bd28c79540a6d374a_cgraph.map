@@ -1,5 +1,12 @@
 <map id="eventAttachments" name="eventAttachments">
-<area shape="rect" id="Node000001" title="Return the calendar attachment data." alt="" coords="5,5,133,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="181,5,251,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,16,165,16,165,21,133,21"/>
+<area shape="rect" id="Node000001" title="Return the calendar attachment data." alt="" coords="5,67,133,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="226,37,296,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,68,213,57,208,59,134,73"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="181,88,341,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,87,168,94,163,95,133,92"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="394,5,582,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="328,85,380,70,385,69,329,90"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="389,88,586,131"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="341,115,376,118,370,118,341,121"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="386,101,357,103,356,98,391,100"/>
 </map>

@@ -1,0 +1,22 @@
+<map id="DoctrineMigrationsServiceTest" name="DoctrineMigrationsServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the DoctrineMigrationsService class." alt="" coords="368,279,568,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="313,180,390,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,214,455,278,450,278,378,219"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="415,180,520,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="470,221,470,280,466,277,466,224"/>
+<area shape="poly" id="edge8_Node000003_Node000003" title=" " alt="" coords="536,184,547,193,539,202,521,205,520,200,537,197,542,193,535,189"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager.html" title="Abstract base class with functionality needed by the classes in this namespace." alt="" coords="220,81,374,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="333,113,448,179,443,180,332,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,5,168,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="137,35,263,79,259,82,137,40"/>
+<area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html" title="Simplify acces to a single entity namespace is nothing more is managed." alt="" coords="192,5,403,32"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="298,45,300,82,295,80,296,49"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html" title="Override the default listener to use a modified event subscriber which also queries other sources of ..." alt="" coords="403,81,583,108"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="488,121,473,181,469,178,484,125"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="427,5,565,32"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="496,45,496,82,491,80,493,49"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_doctrine_migrations_service.html" title="Manage doctrine database migrations." alt="" coords="633,180,807,207"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="678,213,571,257,506,281,504,275,570,252,673,214"/>
+<area shape="rect" id="Node000010" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service_interface.html" title="Interface for database migration services." alt="" coords="632,81,808,108"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="722,122,722,181,718,178,718,126"/>
+</map>

@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -132,9 +136,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Invoices collects a couple of InvoiceItems of the same Musician.</p>
@@ -227,13 +231,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#constant_INVOICE_NUMBER_FIELDS">INVOICE_NUMBER_FIELDS</a>
     <span>
-        &nbsp;= [&#039;project&#039;, &#039;balanceDocumentsFolder&#039;]                            </span>
+        &nbsp;: array&nbsp;= [&#039;project&#039;, &#039;balanceDocumentsFolder&#039;]                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#constant_INVOICE_NUMBER_SEPARATOR">INVOICE_NUMBER_SEPARATOR</a>
     <span>
-        &nbsp;= &#039;/&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;/&#039;                            </span>
 </dt>
 
     </dl>
@@ -269,7 +273,7 @@ we really do not want this as TS only received initialized entities.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount">$amount</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a>            </span>
 </dt>
 <dd>The total amount for the bank transaction. This must equal the
 sum of the self::$invoiceItems collection.</dd>
@@ -451,7 +455,7 @@ supporting documents folder sequence number.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getAmount">getAmount()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a>    </span>
 </dt>
 <dd>Get amount.</dd>
 
@@ -627,7 +631,7 @@ next call to delete.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_jsonSerialize">jsonSerialize()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
@@ -676,7 +680,7 @@ next call to delete.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setAmount">setAmount()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set amount.</dd>
 
@@ -828,7 +832,7 @@ next call to delete.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_sumInvoiceItemsAmount">sumInvoiceItemsAmount()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a>    </span>
 </dt>
 <dd>Return the sum of the amounts of the individual payments, which
 should sum up to $this-&gt;amount, of course.</dd>
@@ -836,7 +840,7 @@ should sum up to $this-&gt;amount, of course.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -1052,16 +1056,16 @@ receivables.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">INVOICE_NUMBER_FIELDS</span>
     = <span class="phpdocumentor-signature__default-value">[&#039;project&#039;, &#039;balanceDocumentsFolder&#039;]</span>
 </code>
@@ -1085,9 +1089,9 @@ receivables.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1153,8 +1157,8 @@ receivables.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#property_appL10n#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_appL10n_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#property_appL10n_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1202,8 +1206,8 @@ receivables.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_deleted_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1264,8 +1268,8 @@ may not change the visibility of a property.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_id_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1321,9 +1325,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The total amount for the bank transaction. This must equal the
@@ -1332,35 +1336,34 @@ sum of the self::$invoiceItems collection.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a></span>
     <span class="phpdocumentor-signature__name">$amount</span>
     </code>
 
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="property_amount_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>If this is always the sum and thus can be computed, why then this
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>If this is always the sum and thus can be computed, why then this
 field?</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_amount_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1368,7 +1371,7 @@ field?</p>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;decimal_rational_monetary&#039;
+        $type: \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::NAME
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: false
@@ -1398,9 +1401,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1417,8 +1420,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balancedDate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_balancedDate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balancedDate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1453,9 +1456,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">172</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1472,8 +1475,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balanceDocumentsFolder#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_balanceDocumentsFolder_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balanceDocumentsFolder_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1508,9 +1511,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1527,8 +1530,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_debitor#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_debitor_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_debitor_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1574,9 +1577,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1593,8 +1596,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_dueDate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_dueDate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_dueDate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1629,9 +1632,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">110</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">This should be set to the date of the actual sending out of the invoice.</p>
@@ -1649,8 +1652,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceDate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_invoiceDate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceDate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1688,9 +1691,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1707,8 +1710,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceItems#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_invoiceItems_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceItems_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1749,9 +1752,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -1768,8 +1771,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceNumber#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_invoiceNumber_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceNumber_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1854,8 +1857,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_keys_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1884,9 +1887,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Pre notification email sent out to the recipients.</p>
@@ -1904,8 +1907,8 @@ field?</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_notificationEmail#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_notificationEmail_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_notificationEmail_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1954,9 +1957,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">This will -- must be -- a member of the executive borad. But the plan is
@@ -1976,8 +1979,8 @@ so better use it here.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_originator#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_originator_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_originator_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2012,9 +2015,9 @@ so better use it here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -2031,8 +2034,8 @@ so better use it here.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_project#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_project_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_project_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2081,9 +2084,9 @@ so better use it here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">167</span>
+    <span class="phpdocumentor-element-found-in__line">169</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -2100,8 +2103,8 @@ so better use it here.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_projectParticipant#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_projectParticipant_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_projectParticipant_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2167,9 +2170,9 @@ so better use it here.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">133</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Free-text lead-in of the invoice letter.</p>
@@ -2184,28 +2187,27 @@ so better use it here.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="property_purpose_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_purpose#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_purpose_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Should be remove and replaced by a table listing just the
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">todo</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>Should be remove and replaced by a table listing just the
 individual invoice items which just should be enough.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_purpose#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_purpose_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_purpose_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2240,9 +2242,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">152</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The bank account used for this payment.</p>
@@ -2260,8 +2262,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaBankAccount#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_sepaBankAccount_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaBankAccount_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2300,9 +2302,6 @@ individual invoice items which just should be enough.</p>
         $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $inversedBy: &#039;payments&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
         $fetch: &#039;EXTRA_LAZY&#039;
     </dd>
     </dl>
@@ -2327,9 +2326,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The debit-mandate used for this payment, if any.</p>
@@ -2347,8 +2346,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaDebitMandate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_sepaDebitMandate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaDebitMandate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2387,9 +2386,6 @@ individual invoice items which just should be enough.</p>
         $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $inversedBy: &#039;payments&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
         $fetch: &#039;EXTRA_LAZY&#039;
     </dd>
     </dl>
@@ -2414,9 +2410,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">145</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">There may be an associated debit-note. If so: this it is.</p>
@@ -2434,8 +2430,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaTransaction#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_sepaTransaction_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaTransaction_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2444,9 +2440,6 @@ individual invoice items which just should be enough.</p>
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction::class
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $inversedBy: &#039;payments&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $fetch: &#039;EXTRA_LAZY&#039;
@@ -2484,9 +2477,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Subject of the bank transaction.</p>
@@ -2504,8 +2497,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_subject#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_subject_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_subject_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2543,9 +2536,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">181</span>
+    <span class="phpdocumentor-element-found-in__line">183</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.181" class="phpdocumentor-element-found-in__source" data-line="181" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The legal reason for the taxation (sales tax)</p>
@@ -2563,8 +2556,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_taxationStatutorySource#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_taxationStatutorySource_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_taxationStatutorySource_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2610,9 +2603,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">175</span>
+    <span class="phpdocumentor-element-found-in__line">177</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -2629,8 +2622,8 @@ individual invoice items which just should be enough.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_writtenInvoice#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_writtenInvoice_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_writtenInvoice_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2670,9 +2663,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">193</span>
+    <span class="phpdocumentor-element-found-in__line">195</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2706,9 +2699,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">822</span>
+    <span class="phpdocumentor-element-found-in__line">824</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.822" class="phpdocumentor-element-found-in__source" data-line="822" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.824" class="phpdocumentor-element-found-in__source" data-line="824" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2870,9 +2863,9 @@ individual invoice items which just should be enough.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">765</span>
+    <span class="phpdocumentor-element-found-in__line">767</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.765" class="phpdocumentor-element-found-in__source" data-line="765" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.767" class="phpdocumentor-element-found-in__source" data-line="767" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a suitable invoice number from the project and possibly the
@@ -2911,16 +2904,16 @@ supporting documents folder sequence number.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">243</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get amount.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">getAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2933,7 +2926,7 @@ supporting documents folder sequence number.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a></span>
             </section>
 
 </article>
@@ -2951,9 +2944,9 @@ supporting documents folder sequence number.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">439</span>
+    <span class="phpdocumentor-element-found-in__line">441</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.439" class="phpdocumentor-element-found-in__source" data-line="439" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.441" class="phpdocumentor-element-found-in__source" data-line="441" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get balancedDate.</p>
@@ -2991,9 +2984,9 @@ supporting documents folder sequence number.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">685</span>
+    <span class="phpdocumentor-element-found-in__line">687</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.685" class="phpdocumentor-element-found-in__source" data-line="685" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.687" class="phpdocumentor-element-found-in__source" data-line="687" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get balanceDocumentsFolder.</p>
@@ -3031,9 +3024,9 @@ supporting documents folder sequence number.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">535</span>
+    <span class="phpdocumentor-element-found-in__line">537</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.535" class="phpdocumentor-element-found-in__source" data-line="535" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.537" class="phpdocumentor-element-found-in__source" data-line="537" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get debitNote.</p>
@@ -3071,9 +3064,9 @@ supporting documents folder sequence number.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">295</span>
+    <span class="phpdocumentor-element-found-in__line">297</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.295" class="phpdocumentor-element-found-in__source" data-line="295" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.297" class="phpdocumentor-element-found-in__source" data-line="297" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get debitor.</p>
@@ -3152,9 +3145,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">415</span>
+    <span class="phpdocumentor-element-found-in__line">417</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.417" class="phpdocumentor-element-found-in__source" data-line="417" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dueDate.</p>
@@ -3232,9 +3225,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">391</span>
+    <span class="phpdocumentor-element-found-in__line">393</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.391" class="phpdocumentor-element-found-in__source" data-line="391" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get invoiceDate.</p>
@@ -3272,9 +3265,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">219</span>
+    <span class="phpdocumentor-element-found-in__line">221</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get invoiceItems.</p>
@@ -3312,9 +3305,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">511</span>
+    <span class="phpdocumentor-element-found-in__line">513</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.511" class="phpdocumentor-element-found-in__source" data-line="511" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get invoiceNumber.</p>
@@ -3352,9 +3345,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">634</span>
+    <span class="phpdocumentor-element-found-in__line">636</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.634" class="phpdocumentor-element-found-in__source" data-line="634" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get notificationEmail.</p>
@@ -3392,9 +3385,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">319</span>
+    <span class="phpdocumentor-element-found-in__line">321</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.319" class="phpdocumentor-element-found-in__source" data-line="319" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.321" class="phpdocumentor-element-found-in__source" data-line="321" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get originator.</p>
@@ -3432,9 +3425,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">343</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.343" class="phpdocumentor-element-found-in__source" data-line="343" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get project.</p>
@@ -3472,9 +3465,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">367</span>
+    <span class="phpdocumentor-element-found-in__line">369</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.367" class="phpdocumentor-element-found-in__source" data-line="367" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.369" class="phpdocumentor-element-found-in__source" data-line="369" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectParticipant.</p>
@@ -3512,9 +3505,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">487</span>
+    <span class="phpdocumentor-element-found-in__line">489</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.487" class="phpdocumentor-element-found-in__source" data-line="487" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.489" class="phpdocumentor-element-found-in__source" data-line="489" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get purpose.</p>
@@ -3552,9 +3545,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">559</span>
+    <span class="phpdocumentor-element-found-in__line">561</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.559" class="phpdocumentor-element-found-in__source" data-line="559" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.561" class="phpdocumentor-element-found-in__source" data-line="561" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaBankAccount.</p>
@@ -3592,9 +3585,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">583</span>
+    <span class="phpdocumentor-element-found-in__line">585</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.583" class="phpdocumentor-element-found-in__source" data-line="583" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.585" class="phpdocumentor-element-found-in__source" data-line="585" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandate.</p>
@@ -3632,9 +3625,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">607</span>
+    <span class="phpdocumentor-element-found-in__line">609</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.607" class="phpdocumentor-element-found-in__source" data-line="607" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.609" class="phpdocumentor-element-found-in__source" data-line="609" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaTransaction.</p>
@@ -3672,9 +3665,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">463</span>
+    <span class="phpdocumentor-element-found-in__line">465</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.465" class="phpdocumentor-element-found-in__source" data-line="465" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get subject.</p>
@@ -3712,9 +3705,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">713</span>
+    <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.713" class="phpdocumentor-element-found-in__source" data-line="713" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -3751,9 +3744,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">693</span>
+    <span class="phpdocumentor-element-found-in__line">695</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.693" class="phpdocumentor-element-found-in__source" data-line="693" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.695" class="phpdocumentor-element-found-in__source" data-line="695" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -3790,9 +3783,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">268</span>
+    <span class="phpdocumentor-element-found-in__line">270</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the data is internally consistent, in particular if the
@@ -3912,16 +3905,16 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">754</span>
+    <span class="phpdocumentor-element-found-in__line">756</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.754" class="phpdocumentor-element-found-in__source" data-line="754" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.756" class="phpdocumentor-element-found-in__source" data-line="756" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">jsonSerialize</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">jsonSerialize</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3934,7 +3927,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -4147,9 +4140,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">804</span>
+    <span class="phpdocumentor-element-found-in__line">806</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.804" class="phpdocumentor-element-found-in__source" data-line="804" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.806" class="phpdocumentor-element-found-in__source" data-line="806" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4177,8 +4170,8 @@ next call to delete.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preFlush#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_preFlush_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preFlush_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -4204,9 +4197,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">810</span>
+    <span class="phpdocumentor-element-found-in__line">812</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.812" class="phpdocumentor-element-found-in__source" data-line="812" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4234,8 +4227,8 @@ next call to delete.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preUpate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_preUpate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preUpate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -4261,16 +4254,16 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">231</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.231" class="phpdocumentor-element-found-in__source" data-line="231" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set amount.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setAmount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$amount</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setAmount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$amount</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4280,7 +4273,7 @@ next call to delete.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$amount</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\RationalNumber">RationalNumber</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -4293,7 +4286,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -4311,9 +4304,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">427</span>
+    <span class="phpdocumentor-element-found-in__line">429</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.427" class="phpdocumentor-element-found-in__source" data-line="427" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.429" class="phpdocumentor-element-found-in__source" data-line="429" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set balancedDate.</p>
@@ -4361,9 +4354,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">646</span>
+    <span class="phpdocumentor-element-found-in__line">648</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.646" class="phpdocumentor-element-found-in__source" data-line="646" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.648" class="phpdocumentor-element-found-in__source" data-line="648" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set balanceDocumentsFolder.</p>
@@ -4411,9 +4404,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">523</span>
+    <span class="phpdocumentor-element-found-in__line">525</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.523" class="phpdocumentor-element-found-in__source" data-line="523" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set debitNote.</p>
@@ -4461,9 +4454,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">283</span>
+    <span class="phpdocumentor-element-found-in__line">285</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.285" class="phpdocumentor-element-found-in__source" data-line="285" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set debitor.</p>
@@ -4561,9 +4554,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">403</span>
+    <span class="phpdocumentor-element-found-in__line">405</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.403" class="phpdocumentor-element-found-in__source" data-line="403" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.405" class="phpdocumentor-element-found-in__source" data-line="405" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dueDate.</p>
@@ -4661,9 +4654,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">379</span>
+    <span class="phpdocumentor-element-found-in__line">381</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.379" class="phpdocumentor-element-found-in__source" data-line="379" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.381" class="phpdocumentor-element-found-in__source" data-line="381" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set invoiceDate.</p>
@@ -4711,9 +4704,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">209</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.209" class="phpdocumentor-element-found-in__source" data-line="209" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set invoiceItems.</p>
@@ -4761,9 +4754,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">499</span>
+    <span class="phpdocumentor-element-found-in__line">501</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.499" class="phpdocumentor-element-found-in__source" data-line="499" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.501" class="phpdocumentor-element-found-in__source" data-line="501" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set invoiceNumber.</p>
@@ -4811,9 +4804,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">619</span>
+    <span class="phpdocumentor-element-found-in__line">621</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.619" class="phpdocumentor-element-found-in__source" data-line="619" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.621" class="phpdocumentor-element-found-in__source" data-line="621" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set notificationEmail.</p>
@@ -4861,9 +4854,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">307</span>
+    <span class="phpdocumentor-element-found-in__line">309</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.307" class="phpdocumentor-element-found-in__source" data-line="307" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.309" class="phpdocumentor-element-found-in__source" data-line="309" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set originator.</p>
@@ -4911,9 +4904,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">331</span>
+    <span class="phpdocumentor-element-found-in__line">333</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.331" class="phpdocumentor-element-found-in__source" data-line="331" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set project.</p>
@@ -4961,9 +4954,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">357</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.357" class="phpdocumentor-element-found-in__source" data-line="357" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectParticipant.</p>
@@ -5011,9 +5004,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">475</span>
+    <span class="phpdocumentor-element-found-in__line">477</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.475" class="phpdocumentor-element-found-in__source" data-line="475" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.477" class="phpdocumentor-element-found-in__source" data-line="477" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set purpose.</p>
@@ -5061,9 +5054,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">547</span>
+    <span class="phpdocumentor-element-found-in__line">549</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.547" class="phpdocumentor-element-found-in__source" data-line="547" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.549" class="phpdocumentor-element-found-in__source" data-line="549" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaBankAccount.</p>
@@ -5111,9 +5104,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">571</span>
+    <span class="phpdocumentor-element-found-in__line">573</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.571" class="phpdocumentor-element-found-in__source" data-line="571" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.573" class="phpdocumentor-element-found-in__source" data-line="573" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandate.</p>
@@ -5161,9 +5154,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">595</span>
+    <span class="phpdocumentor-element-found-in__line">597</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.595" class="phpdocumentor-element-found-in__source" data-line="595" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaTransaction.</p>
@@ -5211,9 +5204,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">451</span>
+    <span class="phpdocumentor-element-found-in__line">453</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.451" class="phpdocumentor-element-found-in__source" data-line="451" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.453" class="phpdocumentor-element-found-in__source" data-line="453" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set subject.</p>
@@ -5261,9 +5254,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">723</span>
+    <span class="phpdocumentor-element-found-in__line">725</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.723" class="phpdocumentor-element-found-in__source" data-line="723" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.725" class="phpdocumentor-element-found-in__source" data-line="725" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -5310,9 +5303,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">703</span>
+    <span class="phpdocumentor-element-found-in__line">705</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.703" class="phpdocumentor-element-found-in__source" data-line="703" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.705" class="phpdocumentor-element-found-in__source" data-line="705" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
     
@@ -5359,9 +5352,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">254</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the sum of the amounts of the individual payments, which
@@ -5369,7 +5362,7 @@ should sum up to $this-&gt;amount, of course.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">sumInvoiceItemsAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">sumInvoiceItemsAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -5382,7 +5375,7 @@ should sum up to $this-&gt;amount, of course.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary">DecimalRationalMonetary</abbr></a></span>
             </section>
 
 </article>
@@ -5408,7 +5401,7 @@ should sum up to $this-&gt;amount, of course.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -5421,7 +5414,7 @@ should sum up to $this-&gt;amount, of course.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -5439,9 +5432,9 @@ should sum up to $this-&gt;amount, of course.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">747</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the stored payment-subject by calling
@@ -5492,9 +5485,9 @@ Invoice::generateSubject().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/Invoice.php"><a href="files/lib-database-doctrine-orm-entities-invoice.html"><abbr title="lib/Database/Doctrine/ORM/Entities/Invoice.php">Invoice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">787</span>
+    <span class="phpdocumentor-element-found-in__line">789</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.787" class="phpdocumentor-element-found-in__source" data-line="787" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/Invoice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a &quot;usage&quot; count to tag the invoice undeleteable after it has been
@@ -5555,8 +5548,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_arrayCTOR_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -6361,7 +6354,7 @@ bank-transactions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">getLegacyTaxExemptionNoticeFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$taxTypes</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodStart</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodEnd</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getLegacyTaxExemptionNoticeFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$taxTypes</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodStart</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodEnd</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -6371,7 +6364,7 @@ bank-transactions.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$taxTypes</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

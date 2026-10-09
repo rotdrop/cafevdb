@@ -41,6 +41,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener =
     [ "SepaBulkTransactionAnnouncedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_announced_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_announced_listener" ],
     [ "SepaBulkTransactionEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener" ],
     [ "SepaBulkTransactionSubmittedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_submitted_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_submitted_listener" ],
+    [ "ShareDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_share_deleted_event_listener.html", null ],
     [ "SubAdminEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sub_admin_event_listener.html", null ],
     [ "TranslationNotFoundListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_translation_not_found_listener.html", null ],
     [ "UserLoggedInEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_in_event_listener.html", null ],

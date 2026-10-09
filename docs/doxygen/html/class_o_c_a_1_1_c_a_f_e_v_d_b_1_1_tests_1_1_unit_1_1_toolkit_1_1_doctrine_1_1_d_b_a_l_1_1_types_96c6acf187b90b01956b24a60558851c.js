@@ -1,0 +1,7 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c =
+[
+    [ "convertToDatabaseValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html#a0ae730043e291e03415856dd8690228e", null ],
+    [ "convertToPHPValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html#a0ea33ff75003444fbe0d28066525197e", null ],
+    [ "getName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html#a3d0963e68bb313b163a73f2803c64600", null ],
+    [ "getSQLDeclaration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html#a24d8db42c7d978d2989826ad48135c02", null ]
+];

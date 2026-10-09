@@ -1,5 +1,5 @@
 <map id="BeforeTemplateRenderedListener" name="BeforeTemplateRenderedListener">
 <area shape="rect" id="Node000001" title="Install the navigation entries if the current user is logged and is authorized." alt="" coords="5,80,220,107"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="60,5,165,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,48,115,80,110,80,110,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,46,115,81,110,78,111,50"/>
 </map>

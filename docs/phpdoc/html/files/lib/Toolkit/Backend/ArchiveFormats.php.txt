@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Toolkit\Backend;
 
-use wapmorgan\UnifiedArchive;
+use OCA\CAFEVDB\Wrapped\wapmorgan\UnifiedArchive;
 
 /**
  * Overload \wapmorgan\UnifiedArchive\Formats in order to get all supported

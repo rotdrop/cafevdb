@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html" title="Autofill for Libre&#45;/Openoffice documents." alt="" coords="5,5,146,32"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html" title="Extremely generic debit&#45;note exporter." alt="" coords="5,47,174,73"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html" title="Generate AqBanking data&#45;sets for submission to the bank." alt="" coords="246,5,424,48"/>
+<area shape="poly" id="edge450_Node000000_Node000001" title=" " alt="" coords="188,44,248,38,243,40,190,49"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter.html" title="Generate balancing items for a bank bulk transactions for use in an accounting software." alt="" coords="222,72,449,115"/>
+<area shape="poly" id="edge451_Node000000_Node000002" title=" " alt="" coords="189,71,224,78,218,78,189,76"/>
 </map>

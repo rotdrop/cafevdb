@@ -1,0 +1,7 @@
+<map id="registerServices" name="registerServices">
+<area shape="rect" id="Node000001" title=" " alt="" coords="429,13,544,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aa3e1104912f42060e2134e04e71d1b57" title="{}" alt="" coords="292,13,381,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="411,27,382,29,382,24,416,27"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a759ad1cadd7c899979313412c248830e" title="Fake the bank account validator as obtaining real result is really involved and would result in a rou..." alt="" coords="5,5,244,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,27,244,29,244,24,279,27"/>
+</map>

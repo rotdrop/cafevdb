@@ -1,0 +1,8 @@
+<map id="urlDisplay" name="urlDisplay">
+<area shape="rect" id="Node000001" title="Print URL." alt="" coords="5,43,85,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a90608573fae22cb4f9402396da072d39" title="Wrapper around core htmlspecialchars; avoid double encoding, standard options." alt="" coords="164,5,206,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,43,151,26,147,30,86,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#adc3f1c2ed5d89f6fbc7c1430834f92df" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="133,80,237,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,64,120,75,115,76,85,69"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="160,78,156,71,159,62,169,56,185,53,202,56,212,65,207,64,200,61,185,59,171,61,163,65,161,71,165,81"/>
+</map>

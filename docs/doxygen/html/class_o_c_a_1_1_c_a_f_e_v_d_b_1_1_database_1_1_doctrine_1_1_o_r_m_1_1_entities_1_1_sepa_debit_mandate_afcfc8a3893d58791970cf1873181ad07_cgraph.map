@@ -1,5 +1,9 @@
 <map id="setSequence" name="setSequence">
-<area shape="rect" id="Node000001" title="Set sequence." alt="" coords="5,5,103,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a2dc77fa12c2a97f848e70a207ed60b5a" title="See that the mandate&#45;sequence is reflected by the mandate reference." alt="" coords="151,5,317,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,16,135,16,135,21,103,21"/>
+<area shape="rect" id="Node000001" title="Set sequence." alt="" coords="5,31,103,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a2dc77fa12c2a97f848e70a207ed60b5a" title="See that the mandate&#45;sequence is reflected by the mandate reference." alt="" coords="151,31,317,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,41,138,43,132,45,104,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a279c13f523f475a030abb96915c56872" title="Get mandateReference." alt="" coords="365,5,514,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="317,31,352,29,347,30,318,36"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a8600d8f62839e755389787d12683bf5a" title="Get sequence." alt="" coords="391,56,488,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="317,52,378,61,373,62,317,57"/>
 </map>

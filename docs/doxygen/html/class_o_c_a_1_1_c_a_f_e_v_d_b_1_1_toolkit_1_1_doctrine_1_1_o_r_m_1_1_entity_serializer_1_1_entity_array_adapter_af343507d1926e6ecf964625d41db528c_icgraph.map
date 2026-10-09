@@ -1,0 +1,8 @@
+<map id="current" name="current">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="102,31,163,57"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="148,15,143,11,132,9,122,11,117,16,116,22,119,31,113,29,110,22,113,13,120,6,132,4,145,7,153,15"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#a729e946b4ef600e71740113c6d4332c0" title="{}" alt="" coords="8,5,51,32"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="85,34,51,26,51,21,89,31"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#abb9f0d6adf1eb9b3b55712056861a247" title="{}" alt="" coords="5,56,54,83"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="84,56,55,66,53,61,89,54"/>
+</map>

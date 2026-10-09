@@ -688,48 +688,13 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "",
+            "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method___construct"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003ArunScanner\u0028\u0029",
-            "name": "runScanner",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_runScanner"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003AgetUserToScan\u0028\u0029",
-            "name": "getUserToScan",
-            "summary": "Find\u0020a\u0020storage\u0020which\u0020have\u0020unindexed\u0020files\u0020and\u0020return\u0020a\u0020user\u0020with\u0020access\u0020to\u0020the\u0020storage",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_getUserToScan"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003Arun\u0028\u0029",
             "name": "run",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_run"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003AUSERS_PER_SESSION",
-            "name": "USERS_PER_SESSION",
-            "summary": "Amount\u0020of\u0020users\u0020that\u0020should\u0020get\u0020scanned\u0020per\u0020execution",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#constant_USERS_PER_SESSION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003A\u0024config",
-            "name": "config",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_config"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003A\u0024dispatcher",
-            "name": "dispatcher",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_dispatcher"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003A\u0024logger",
-            "name": "logger",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_logger"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\ScanFiles\u003A\u003A\u0024connection",
-            "name": "connection",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_connection"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\BackgroundJob\\UpdateAppMTimes",
             "name": "UpdateAppMTimes",
@@ -933,23 +898,18 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "",
+            "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#method___construct"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003Aconfigure\u0028\u0029",
-            "name": "configure",
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A__invoke\u0028\u0029",
+            "name": "__invoke",
             "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#method_configure"
+            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#method___invoke"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003Aexecute\u0028\u0029",
-            "name": "execute",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#method_execute"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024appName",
-            "name": "appName",
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_appName"
+            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_appContainer"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024l",
             "name": "l",
@@ -966,10 +926,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_userSession"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024appContainer",
-            "name": "appContainer",
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024appName",
+            "name": "appName",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_appContainer"
+            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_appName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\FilesScan\u003A\u003A\u0024filesScan",
+            "name": "filesScan",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-FilesScan.html#property_filesScan"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\GnuCashSetup",
             "name": "GnuCashSetup",
@@ -1046,15 +1011,10 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Command-HelloWorld.html#method___construct"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\HelloWorld\u003A\u003Aconfigure\u0028\u0029",
-            "name": "configure",
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\HelloWorld\u003A\u003A__invoke\u0028\u0029",
+            "name": "__invoke",
             "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-HelloWorld.html#method_configure"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\HelloWorld\u003A\u003Aexecute\u0028\u0029",
-            "name": "execute",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-HelloWorld.html#method_execute"
+            "url": "classes/OCA-CAFEVDB-Command-HelloWorld.html#method___invoke"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\HelloWorld\u003A\u003A\u0024appName",
             "name": "appName",
@@ -1291,15 +1251,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___construct"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003Aconfigure\u0028\u0029",
-            "name": "configure",
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A__invoke\u0028\u0029",
+            "name": "__invoke",
             "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_configure"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003Aexecute\u0028\u0029",
-            "name": "execute",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_execute"
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___invoke"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024appName",
             "name": "appName",
@@ -1325,6 +1280,11 @@ Search.appendIndex(
             "name": "userSession",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_userSession"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024filesCommand",
+            "name": "filesCommand",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_filesCommand"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\SentNotifications",
             "name": "SentNotifications",
@@ -1720,11 +1680,6 @@ Search.appendIndex(
             "name": "logger",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Common-ConsoleLogger.html#property_logger"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\ConsoleOutput",
-            "name": "ConsoleOutput",
-            "summary": "Just\u0020kind\u0020of\u0020a\u0020wrapper\u0020for\u0020a\u0020singleton\u0020console\u0020output\u0020through\u0020the\u0020app\u002Dcontainer.",
-            "url": "classes/OCA-CAFEVDB-Common-ConsoleOutput.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\DatabaseProgressStatus",
             "name": "DatabaseProgressStatus",
@@ -2401,220 +2356,40 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Common-PlainFileProgressStatus.html#property_storage"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber",
-            "name": "RationalNumber",
-            "summary": "Rational\u0020numbers,\u0020exact\u0020fractions.\u0020This\u0020is\u0020mainly\u0020useful\u0020in\u0020a\u0020context\u0020where\nthe\u0020possible\u0020denominator\u0020are\u0020well\u0020known,\u0020which\u0020often\u0020is\u0020the\u0020case\u0020in\u0020a\nmonetary\u0020context.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method___construct"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Acreate\u0028\u0029",
-            "name": "create",
-            "summary": "Generator\u0020method.\u0020If\u0020called\u0020with\u0020only\u0020one\u0020argument\u0020try\u0020to\u0020gracefully\nconvert\u0020the\u0020argument\u0020to\u0020RationalNumber.\u0020Passing\u0020even\u0020null\u0020as\u0020first\nargument\u0020will\u0020create\u0020a\u0020representation\u0020of\u0020zero\u0020as\u0020RationalNumber.\u0020Empty\nstrings\u0020will\u0020also\u0020generate\u0020a\u0020zero.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_create"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AfromRational\u0028\u0029",
-            "name": "fromRational",
-            "summary": "Generate\u0020a\u0020new\u0020instance\u0020from\u0020a\u0020given\u0020base\u002Dclass\u0020instance.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_fromRational"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Around\u0028\u0029",
-            "name": "round",
-            "summary": "Round\u0020\u0022half\u0020away\u0020from\u0020zero\u0022.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_round"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Asign\u0028\u0029",
-            "name": "sign",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_sign"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AtoDecimal\u0028\u0029",
-            "name": "toDecimal",
-            "summary": "Return\u0020a\u0020correctly\u0020rounded\u0020floating\u0020point\u0020string\u0020with\u0020the\u0020given\u0020number\u0020of\nfractional\u0020digits.\u0020Intentionally\u0020the\u0020naming\u0020of\u0020the\u0020arguments\u0020\u0024scale\u0020and\n\u0024precision\u0020corresponds\u0020to\u0020the\u0020Doctrine\u0020ORM\u0020\u0022decimal\u0022\u002Dtype\u0020parameters.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_toDecimal"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AfromDecimal\u0028\u0029",
-            "name": "fromDecimal",
-            "summary": "Initialize\u0020an\u0020instance\u0020from\u0020a\u0020\u0022vanilla\u0022\u0020decimal\u0020string.\u0020Only\u0020supported\nformats\u0020are\u0020\u0028optional\u0020in\u0020square\u0020brackets\u0029\u003A",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_fromDecimal"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AfromFloat\u0028\u0029",
-            "name": "fromFloat",
-            "summary": "Try\u0020to\u0020convert\u0020the\u0020given\u0020float\u0020into\u0020a\u0020RationalNumber.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_fromFloat"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aassign\u0028\u0029",
-            "name": "assign",
-            "summary": "Replace\u0020this\u0020instance\u0020by\u0020the\u0020given\u0020argument.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_assign"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aabs\u0028\u0029",
-            "name": "abs",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_abs"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AabsEq\u0028\u0029",
-            "name": "absEq",
-            "summary": "Make\u0020the\u0020current\u0020number\u0020non\u002Dnegative\u0020in\u002Dplace.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_absEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Ainverse\u0028\u0029",
-            "name": "inverse",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_inverse"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Ainv\u0028\u0029",
-            "name": "inv",
-            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Ainvsere\u0028\u0029.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_inv"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AinvEq\u0028\u0029",
-            "name": "invEq",
-            "summary": "Invert\u0020the\u0020current\u0020instance\u0020in\u0020place.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_invEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Anegate\u0028\u0029",
-            "name": "negate",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_negate"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aneg\u0028\u0029",
-            "name": "neg",
-            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Anegate\u0028\u0029.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_neg"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AnegEq\u0028\u0029",
-            "name": "negEq",
-            "summary": "Negate\u0020the\u0020current\u0020instance\u0020in\u0020place.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_negEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aadd\u0028\u0029",
-            "name": "add",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_add"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AaddEq\u0028\u0029",
-            "name": "addEq",
-            "summary": "Add\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\u0020result\u0020to\n\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\nprotected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\navoided.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_addEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Asubtract\u0028\u0029",
-            "name": "subtract",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_subtract"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Asub\u0028\u0029",
-            "name": "sub",
-            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Asubtract\u0028\u0029.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_sub"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AsubEq\u0028\u0029",
-            "name": "subEq",
-            "summary": "Subtract\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance.\u0020This\u0020could\u0020be\noptimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\u0020protected,\u0020in\u0020this\u0020case\nthe\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\u0020avoided.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_subEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Amultiply\u0028\u0029",
-            "name": "multiply",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_multiply"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Amul\u0028\u0029",
-            "name": "mul",
-            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Amultiply\u0028\u0029.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_mul"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AmulEq\u0028\u0029",
-            "name": "mulEq",
-            "summary": "Multiply\u0020the\u0020given\u0020argument\u0020with\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_mulEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Adivide\u0028\u0029",
-            "name": "divide",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_divide"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Adiv\u0028\u0029",
-            "name": "div",
-            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Adivide\u0028\u0029.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_div"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AdivEq\u0028\u0029",
-            "name": "divEq",
-            "summary": "Divide\u0020the\u0020current\u0020instance\u0020by\u0020the\u0020given\u0020argument\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_divEq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Apow\u0028\u0029",
-            "name": "pow",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_pow"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AcreateZeroValue\u0028\u0029",
-            "name": "createZeroValue",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_createZeroValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Azero\u0028\u0029",
-            "name": "zero",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_zero"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aequals\u0028\u0029",
-            "name": "equals",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_equals"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Aeq\u0028\u0029",
-            "name": "eq",
-            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003D\u003D\u0020\u0024other",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_eq"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Agt\u0028\u0029",
-            "name": "gt",
-            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u0020\u0024other",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_gt"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Age\u0028\u0029",
-            "name": "ge",
-            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u003D\u0020\u0024other",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_ge"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Alt\u0028\u0029",
-            "name": "lt",
-            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u0020\u0024other",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_lt"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Ale\u0028\u0029",
-            "name": "le",
-            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u003D\u0020\u0024other",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_le"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Amin\u0028\u0029",
-            "name": "min",
-            "summary": "Convenience,\u0020return\u0020the\u0020minimum\u0020using\u0020exact\u0020arithmetic.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_min"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003Amax\u0028\u0029",
-            "name": "max",
-            "summary": "Convenience,\u0020return\u0020the\u0020maximum\u0020using\u0020exact\u0020arithmetic.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_max"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003AensureRationalNumber\u0028\u0029",
-            "name": "ensureRationalNumber",
-            "summary": "Generate\u0020an\u0020instance\u0020of\u0020RationalNumber\u0020from\u0020\u0024other\u0020if\u0020it\u0020is\u0020not\u0020already\nan\u0020instance\u0020of\u0020RationalNumber.",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#method_ensureRationalNumber"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\RationalNumber\u003A\u003ADECIMAL_DIGITS_MAX",
-            "name": "DECIMAL_DIGITS_MAX",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Common-RationalNumber.html#constant_DECIMAL_DIGITS_MAX"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory",
             "name": "TimeFactory",
             "summary": "Like\u0020ITimeFactory\u0020but\u0020stop\u0020using\u0020DateTime\u0020in\u0020favour\u0020of\u0020DateTimeImmutable.",
             "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003Anow\u0028\u0029",
+            "name": "now",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_now"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003AgetTime\u0028\u0029",
+            "name": "getTime",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getTime"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003AgetDateTime\u0028\u0029",
+            "name": "getDateTime",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getDateTime"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003AwithTimeZone\u0028\u0029",
+            "name": "withTimeZone",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_withTimeZone"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003AgetTimeZone\u0028\u0029",
+            "name": "getTimeZone",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_getTimeZone"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003AgetDateTimeImmutable\u0028\u0029",
             "name": "getDateTimeImmutable",
@@ -2625,6 +2400,11 @@ Search.appendIndex(
             "name": "sleepUntil",
             "summary": "A\u0020wrapper\u0020around\u0020time_sleep_until\u0028\u0029.",
             "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#method_sleepUntil"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\TimeFactory\u003A\u003A\u0024timeFactory",
+            "name": "timeFactory",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Common-TimeFactory.html#property_timeFactory"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\Transliterator",
             "name": "Transliterator",
@@ -3898,33 +3678,23 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses",
             "name": "CssClasses",
-            "summary": "CSS\u0020classes\u0020shared\u0020between\u0020the\u0020legacy\u0020templates,\u0020scss\u0020and\u0020typescript.",
+            "summary": "CSS\u0020classes\u0020shared\u0020between\u0020the\u0020legacy\u0020templates,\u0020scss\u0020and\ntypescript.\u0020Perhaps\u0020one\u0020should\u0020move\u0020this\u0020file\u0020somewhere\u0020else.",
             "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ACLASS_SEPARATOR",
-            "name": "CLASS_SEPARATOR",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_CLASS_SEPARATOR"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AAPP_NAME_TAG_PREFIX",
             "name": "APP_NAME_TAG_PREFIX",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_APP_NAME_TAG_PREFIX"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AHIDE_ONLY_CHILD",
-            "name": "HIDE_ONLY_CHILD",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_HIDE_ONLY_CHILD"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ABUSY",
             "name": "BUSY",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_BUSY"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ANO_WRITTEN_MANDATE",
-            "name": "NO_WRITTEN_MANDATE",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ACLASS_SEPARATOR",
+            "name": "CLASS_SEPARATOR",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_NO_WRITTEN_MANDATE"
+            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_CLASS_SEPARATOR"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AHAVE_WRITTEN_MANDATE",
             "name": "HAVE_WRITTEN_MANDATE",
@@ -3936,6 +3706,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_HIDDEN"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AHIDE_ONLY_CHILD",
+            "name": "HIDE_ONLY_CHILD",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_HIDE_ONLY_CHILD"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ANO_WRITTEN_MANDATE",
+            "name": "NO_WRITTEN_MANDATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_NO_WRITTEN_MANDATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003ARESIZE_TARGET",
+            "name": "RESIZE_TARGET",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_RESIZE_TARGET"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AUPLOAD_WRITTEN_MANDATE_LATER",
             "name": "UPLOAD_WRITTEN_MANDATE_LATER",
             "summary": "",
@@ -3945,6 +3730,11 @@ Search.appendIndex(
             "name": "WRITTEN_MANDATE_UPLOAD",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_WRITTEN_MANDATE_UPLOAD"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CssClasses\u003A\u003AWYSIWYG_EDITOR",
+            "name": "WYSIWYG_EDITOR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-CssClasses.html#constant_WYSIWYG_EDITOR"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DocumentStorageUploadController",
             "name": "DocumentStorageUploadController",
@@ -4291,6 +4081,56 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompleteGnuCashAccountsResponse.html#property_accounts"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse",
+            "name": "AutocompletePlaceResponse",
+            "summary": "Response\u0020to\u0020an\u0020autocomplete\u0020place\u0020requests,\u0020asserted\u0020by\u0020the\u0020MusicianValidationController.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse\u003A\u003A\u0024cities",
+            "name": "cities",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html#property_cities"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse\u003A\u003A\u0024postalCodes",
+            "name": "postalCodes",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html#property_postalCodes"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompletePlaceResponse\u003A\u003A\u0024countries",
+            "name": "countries",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompletePlaceResponse.html#property_countries"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompleteStreetResponse",
+            "name": "AutocompleteStreetResponse",
+            "summary": "Response\u0020to\u0020an\u0020autocomplete\u0020street\u0020requests,\u0020asserted\u0020by\u0020the\u0020MusicianValidationController.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompleteStreetResponse.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompleteStreetResponse\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompleteStreetResponse.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompleteStreetResponse\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompleteStreetResponse.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\AutocompleteStreetResponse\u003A\u003A\u0024streets",
+            "name": "streets",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-AutocompleteStreetResponse.html#property_streets"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\BlogResponse",
             "name": "BlogResponse",
             "summary": "DTO\u0020document\u0020storage\u0020file\u0020uploads\u0020meta\u0020data.",
@@ -4585,6 +4425,31 @@ Search.appendIndex(
             "name": "sharedAddressBooks",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfigCheckResponse.html#property_sharedAddressBooks"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\ConfirmFeedback",
+            "name": "ConfirmFeedback",
+            "summary": "DTO\u0020for\u0020communication\u0020prompts\u0020to\u0020the\u0020frontend.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfirmFeedback.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\ConfirmFeedback\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfirmFeedback.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\ConfirmFeedback\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfirmFeedback.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\ConfirmFeedback\u003A\u003A\u0024title",
+            "name": "title",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfirmFeedback.html#property_title"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\ConfirmFeedback\u003A\u003A\u0024message",
+            "name": "message",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-ConfirmFeedback.html#property_message"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\DownloadsShareResponse",
             "name": "DownloadsShareResponse",
@@ -6711,6 +6576,26 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-DTO-SimpleSetValueResponse.html#property_humanValue"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse\\ConfirmFeedback",
+            "name": "ConfirmFeedback",
+            "summary": "DTO\u0020for\u0020communication\u0020prompts\u0020to\u0020the\u0020frontend.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-SpecialProjectsResponse-ConfirmFeedback.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse\\ConfirmFeedback\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-SpecialProjectsResponse-ConfirmFeedback.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse\\ConfirmFeedback\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-SpecialProjectsResponse-ConfirmFeedback.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse\\ConfirmFeedback\u003A\u003A\u0024action",
+            "name": "action",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DTO-SpecialProjectsResponse-ConfirmFeedback.html#property_action"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse",
             "name": "SpecialProjectsResponse",
             "summary": "DTO\u0020special\u0020projects\u0020config\u0020\u0028members,\u0020executive\u0020board\u0029.",
@@ -7211,11 +7096,6 @@ Search.appendIndex(
             "summary": "Handle\u0020bulk\u0020recryption\u0020requests.",
             "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#method_bulkRecryptionRequest"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003ArecryptForUser\u0028\u0029",
-            "name": "recryptForUser",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#method_recryptForUser"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003AisMatchingUserOrAdmin\u0028\u0029",
             "name": "isMatchingUserOrAdmin",
             "summary": "",
@@ -7246,11 +7126,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#constant_END_POINT_BULK_ENCRYPTION"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003AROW_ACCESS_TOKEN_KEY",
-            "name": "ROW_ACCESS_TOKEN_KEY",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#constant_ROW_ACCESS_TOKEN_KEY"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003A\u0024appContainer",
             "name": "appContainer",
             "summary": "",
@@ -7260,6 +7135,11 @@ Search.appendIndex(
             "name": "keyService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#property_keyService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003A\u0024userEncryptionService",
+            "name": "userEncryptionService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#property_userEncryptionService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\EncryptionController\u003A\u003A\u0024logger",
             "name": "logger",
@@ -7936,6 +7816,36 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-EnumRecryptionStatus.html#enumcase_FAILURE"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsExportPurpose",
+            "name": "EnumSepaBulkTransactionsExportPurpose",
+            "summary": "Operation\u0020topics\u0020understood\u0020by\u0020SepaBulkTransactionsController\u003A\u003Acomposer\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsExportPurpose.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsExportPurpose\u003A\u003ABANK_IMPORT",
+            "name": "BANK_IMPORT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsExportPurpose.html#enumcase_BANK_IMPORT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsExportPurpose\u003A\u003ABALANCING_ITEMS",
+            "name": "BALANCING_ITEMS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsExportPurpose.html#enumcase_BALANCING_ITEMS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsTopic",
+            "name": "EnumSepaBulkTransactionsTopic",
+            "summary": "Operation\u0020topics\u0020understood\u0020by\u0020SepaBulkTransactionsController\u003A\u003Acomposer\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsTopic.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsTopic\u003A\u003ACREATE",
+            "name": "CREATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsTopic.html#enumcase_CREATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaBulkTransactionsTopic\u003A\u003AEXPORT",
+            "name": "EXPORT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSepaBulkTransactionsTopic.html#enumcase_EXPORT"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSepaDebitMandateBinding",
             "name": "EnumSepaDebitMandateBinding",
             "summary": "The\u0020two\u0020possible\u0020bindings\u0020for\u0020debit\u0020mandates.",
@@ -8345,6 +8255,26 @@ Search.appendIndex(
             "name": "TREASURER_EMAIL",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-EnumSimpleSettingsKey.html#enumcase_TREASURER_EMAIL"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSpecialProjectsAction",
+            "name": "EnumSpecialProjectsAction",
+            "summary": "Actions\u0020for\u0020the\u0020special\u0020projects\u0020\u0028executive\u0020board\u0020and\u0020members\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSpecialProjectsAction.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSpecialProjectsAction\u003A\u003ADELETE",
+            "name": "DELETE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSpecialProjectsAction.html#enumcase_DELETE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSpecialProjectsAction\u003A\u003ARENAME",
+            "name": "RENAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSpecialProjectsAction.html#enumcase_RENAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumSpecialProjectsAction\u003A\u003ACREATE",
+            "name": "CREATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumSpecialProjectsAction.html#enumcase_CREATE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumValidateInstrumentsContext",
             "name": "EnumValidateInstrumentsContext",
@@ -8855,6 +8785,21 @@ Search.appendIndex(
             "name": "END_POINT",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-MusicianValidationController.html#constant_END_POINT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MusicianValidationController\u003A\u003AEMAIL_VALIDATION_ON_FAILURE_ERROR",
+            "name": "EMAIL_VALIDATION_ON_FAILURE_ERROR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MusicianValidationController.html#constant_EMAIL_VALIDATION_ON_FAILURE_ERROR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MusicianValidationController\u003A\u003AEMAIL_VALIDATION_ON_FAILURE_NOTICE",
+            "name": "EMAIL_VALIDATION_ON_FAILURE_NOTICE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MusicianValidationController.html#constant_EMAIL_VALIDATION_ON_FAILURE_NOTICE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MusicianValidationController\u003A\u003AEMAIL_VALIDATION_ON_FAILURE",
+            "name": "EMAIL_VALIDATION_ON_FAILURE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MusicianValidationController.html#constant_EMAIL_VALIDATION_ON_FAILURE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\MusicianValidationController\u003A\u003A\u0024dataPrefix",
             "name": "dataPrefix",
@@ -9593,7 +9538,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\ProjectsController\u003A\u003AGET_EVENT_MATRIX",
             "name": "GET_EVENT_MATRIX",
-            "summary": "Return\u0020the\u0020\u0022event\u0020matrix\u0022,\u0020project\u0020events\u0020sorted\u0020by\u0020category\u0020with\u0020extra\ninformation.",
+            "summary": "Return\u0020the\u0020\u0027event\u0020matrix\u0027,\u0020project\u0020events\u0020sorted\u0020by\u0020category\u0020with\u0020extra\ninformation.",
             "url": "classes/OCA-CAFEVDB-Controller-ProjectsController.html#constant_GET_EVENT_MATRIX"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\ProjectsController\u003A\u003A\u0024configService",
@@ -9670,51 +9615,6 @@ Search.appendIndex(
             "name": "END_POINT",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_END_POINT"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003ATOPIC_CREATE",
-            "name": "TOPIC_CREATE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_TOPIC_CREATE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003ATOPIC_EXPORTT",
-            "name": "TOPIC_EXPORTT",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_TOPIC_EXPORTT"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003ATRANSACTION_TYPE_DEBIT_NOTE",
-            "name": "TRANSACTION_TYPE_DEBIT_NOTE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_TRANSACTION_TYPE_DEBIT_NOTE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003ATRANSACTION_TYPE_BANK_TRANSFER",
-            "name": "TRANSACTION_TYPE_BANK_TRANSFER",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_TRANSACTION_TYPE_BANK_TRANSFER"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003ATRANSACTION_TYPES",
-            "name": "TRANSACTION_TYPES",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_TRANSACTION_TYPES"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003AALARM_FROM_START",
-            "name": "ALARM_FROM_START",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_ALARM_FROM_START"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003AALARM_FROM_END",
-            "name": "ALARM_FROM_END",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_ALARM_FROM_END"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003AEXPORT_PURPOSE_BANK_IMPORT",
-            "name": "EXPORT_PURPOSE_BANK_IMPORT",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_EXPORT_PURPOSE_BANK_IMPORT"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003AEXPORT_PUPROSE_BALANCING_ITEMS",
-            "name": "EXPORT_PUPROSE_BALANCING_ITEMS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-SepaBulkTransactionsController.html#constant_EXPORT_PUPROSE_BALANCING_ITEMS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\SepaBulkTransactionsController\u003A\u003A\u0024financeService",
             "name": "financeService",
@@ -10168,7 +10068,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\WebBrowserHistoryController",
             "name": "WebBrowserHistoryController",
-            "summary": "Fetch\u0020one\u0020or\u0020multiple\u0020tooltip\u0020via\u0020AJAX.",
+            "summary": "Fetch\u0020stored\u0020web\u002Dbrowser\u0020history\u0020entries.",
             "url": "classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\WebBrowserHistoryController\u003A\u003A__construct\u0028\u0029",
@@ -10441,30 +10341,20 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_keyPairs"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024appName",
-            "name": "appName",
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024cryptorPrototype",
+            "name": "cryptorPrototype",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_appName"
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_cryptorPrototype"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024appContainer",
-            "name": "appContainer",
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024keyStorage",
+            "name": "keyStorage",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_appContainer"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024userSession",
-            "name": "userSession",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_userSession"
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_keyStorage"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024credentialsStore",
             "name": "credentialsStore",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_credentialsStore"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024cloudConfig",
-            "name": "cloudConfig",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_cloudConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024eventDispatcher",
             "name": "eventDispatcher",
@@ -10476,20 +10366,30 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024userSession",
+            "name": "userSession",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_userSession"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_appContainer"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024logger",
             "name": "logger",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_logger"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024keyStorage",
-            "name": "keyStorage",
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_keyStorage"
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_cloudUserConfig"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024cryptorPrototype",
-            "name": "cryptorPrototype",
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyService\u003A\u003A\u0024appName",
+            "name": "appName",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_cryptorPrototype"
+            "url": "classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html#property_appName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto\\AsymmetricKeyStorageInterface",
             "name": "AsymmetricKeyStorageInterface",
@@ -10641,10 +10541,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_l"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\CloudAsymmetricKeyStorage\u003A\u003A\u0024cloudConfig",
-            "name": "cloudConfig",
+            "fqsen": "\\OCA\\CAFEVDB\\Crypto\\CloudAsymmetricKeyStorage\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudConfig"
+            "url": "classes/OCA-CAFEVDB-Crypto-CloudAsymmetricKeyStorage.html#property_cloudUserConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto\\CloudAsymmetricKeyStorage\u003A\u003A\u0024cryptor",
             "name": "cryptor",
@@ -11406,11 +11306,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Cloud-Entities-ProgressStatus.html#property_id"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Cloud\\Entities\\ProgressStatus\u003A\u003A\u0024userId",
-            "name": "userId",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Cloud-Entities-ProgressStatus.html#property_userId"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Cloud\\Entities\\ProgressStatus\u003A\u003A\u0024current",
             "name": "current",
             "summary": "",
@@ -11656,11 +11551,6 @@ Search.appendIndex(
             "summary": "DBAL\u0020wrapper.\u0020In\u0020principle\u0020no\u0020longer\u0020neccessary,\u0020but\u0020we\u0020keep\u0020it\u0020in\u0020order\u0020to\nseparate\u0020the\u0020DI\u0020features\u0020of\u0020the\u0020app\u002Dcontainer\u0020from\u0020the\u0020actual\u0020DB\u0020backend.",
             "url": "classes/OCA-CAFEVDB-Database-Connection.html"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Connection\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Connection.html#method___construct"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Connection\u003A\u003Abind\u0028\u0029",
             "name": "bind",
             "summary": "Create\u0020a\u0020new\u0020instance\u0020and\u0020bind\u0020it\u0020to\u0020the\u0020given\u0020database,\u0020keeping\u0020all\nother\u0020params.",
@@ -11785,141 +11675,6 @@ Search.appendIndex(
             "name": "l",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Logging-CloudLogger.html#property_l"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType",
-            "name": "AbstractDecimalRationalType",
-            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetName\u0028\u0029",
-            "name": "getName",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getName"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetSQLDeclaration\u0028\u0029",
-            "name": "getSQLDeclaration",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getSQLDeclaration"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToPHPValue\u0028\u0029",
-            "name": "convertToPHPValue",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToPHPValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
-            "name": "convertToDatabaseValue",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToDatabaseValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003APRECISION",
-            "name": "PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ASCALE",
-            "name": "SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_SCALE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ANAME",
-            "name": "NAME",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_NAME"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType",
-            "name": "ArrayType",
-            "summary": "Type\u0020that\u0020maps\u0020a\u0020PHP\u0020array\u0020to\u0020a\u0020clob\u0020SQL\u0020type.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetSQLDeclaration\u0028\u0029",
-            "name": "getSQLDeclaration",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html#method_getSQLDeclaration"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
-            "name": "convertToDatabaseValue",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html#method_convertToDatabaseValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToPHPValue\u0028\u0029",
-            "name": "convertToPHPValue",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html#method_convertToPHPValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetName\u0028\u0029",
-            "name": "getName",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html#method_getName"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003ArequiresSQLCommentHint\u0028\u0029",
-            "name": "requiresSQLCommentHint",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-ArrayType.html#method_requiresSQLCommentHint"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType",
-            "name": "DecimalRationalMonetaryType",
-            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003AgetName\u0028\u0029",
-            "name": "getName",
-            "summary": "\u007B\u0040inheritDoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#method_getName"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003APRECISION",
-            "name": "PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003ASCALE",
-            "name": "SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_SCALE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type",
-            "name": "DecimalRationalP2S2Type",
-            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type\u003A\u003APRECISION",
-            "name": "PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html#constant_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type\u003A\u003ASCALE",
-            "name": "SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html#constant_SCALE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type",
-            "name": "DecimalRationalP4S4Type",
-            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type\u003A\u003APRECISION",
-            "name": "PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html#constant_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type\u003A\u003ASCALE",
-            "name": "SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html#constant_SCALE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP7S2Type",
-            "name": "DecimalRationalP7S2Type",
-            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP7S2Type.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP7S2Type\u003A\u003APRECISION",
-            "name": "PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP7S2Type.html#constant_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\DecimalRationalP7S2Type\u003A\u003ASCALE",
-            "name": "SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-DecimalRationalP7S2Type.html#constant_SCALE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumAccessPermission",
             "name": "EnumAccessPermission",
@@ -12360,21 +12115,6 @@ Search.appendIndex(
             "name": "VCARD",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumVCalendarType.html#enumcase_VCARD"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\UuidType",
-            "name": "UuidType",
-            "summary": "Like\u0020UuidBinaryType,\u0020but\u0020implement\u0020a\u0020more\u0020allowing\nconvertToPHPValue\u0028\u0029\u0020which\u0020accepts\u0020also\u0020string\u0020inputs.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-UuidType.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToPHPValue\u0028\u0029",
-            "name": "convertToPHPValue",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-UuidType.html#method_convertToPHPValue"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
-            "name": "convertToDatabaseValue",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-UuidType.html#method_convertToDatabaseValue"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DeprecationLogger",
             "name": "DeprecationLogger",
@@ -13681,6 +13421,11 @@ Search.appendIndex(
             "summary": "Add\u0020the\u0020given\u0020musician\u0020to\u0020the\u0020list\u0020of\u0020owners.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html#method_addOwner"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFile\u003A\u003ApostPersist\u0028\u0029",
+            "name": "postPersist",
+            "summary": "The\u0020id\u0020of\u0020this\u0020entity\u0020is\u0020note\u0020available\u0020before\u0020it\u0020has\u0020been\u0020persisted.\u0020So\nupdate\u0020any\u0020needed\u0020file\u002Downership\u0020updates\u0020after\u0020being\u0020persisted.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html#method_postPersist"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFile\u003A\u003AremoveOwner\u0028\u0029",
             "name": "removeOwner",
             "summary": "Remove\u0020the\u0020given\u0020musician\u0020from\u0020the\u0020list\u0020of\u0020owners",
@@ -13731,9 +13476,14 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFileData.html#method_handleLifecycleEvent"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileData\u003A\u003A__toString\u0028\u0029",
+            "name": "__toString",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFileData.html#method___toString"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileData\u003A\u003A\u0024file",
             "name": "file",
-            "summary": "As\u0020ORM\u0020still\u0020does\u0020not\u0020support\u0020lazy\u0020one\u002Dto\u002Done\u0020associations\u0020from\u0020the\ninverse\u0020side\u0020we\u0020use\u0020a\u0020OneToMany\u0020\u002D\u0020ManyToOne\u0020trick\u0020which\u0020inserts\u0020a\u0020lazy\nassociation\u0020in\u0020between.",
+            "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFileData.html#property_file"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileData\u003A\u003A\u0024data",
@@ -13928,8 +13678,13 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\FileData\u003A\u003A\u0024file",
             "name": "file",
-            "summary": "As\u0020ORM\u0020still\u0020does\u0020not\u0020support\u0020lazy\u0020one\u002Dto\u002Done\u0020associations\u0020from\u0020the\ninverse\u0020side\u0020we\u0020use\u0020a\u0020OneToMany\u0020\u002D\u0020ManyToOne\u0020trick\u0020which\u0020inserts\u0020a\u0020lazy\nassociation\u0020in\u0020between.",
+            "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_file"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\FileData\u003A\u003A\u0024lazyFileDataDummy",
+            "name": "lazyFileDataDummy",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_lazyFileDataDummy"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\FileData\u003A\u003A\u0024dataHash",
             "name": "dataHash",
@@ -14330,6 +14085,11 @@ Search.appendIndex(
             "name": "getIso3166_2",
             "summary": "Return\u0020the\u0020ISO\u00203166\u002D2\u0020code\u0020for\u0020the\u0020state\u0020or\u0020province.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-GeoStateProvince.html#method_getIso3166_2"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\GeoStateProvince\u003A\u003A__toString\u0028\u0029",
+            "name": "__toString",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-GeoStateProvince.html#method___toString"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\GeoStateProvince\u003A\u003A\u0024countryIso",
             "name": "countryIso",
@@ -15263,7 +15023,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ImageFileData\u003A\u003A\u0024file",
             "name": "file",
-            "summary": "As\u0020ORM\u0020still\u0020does\u0020not\u0020support\u0020lazy\u0020one\u002Dto\u002Done\u0020associations\u0020from\u0020the\ninverse\u0020side\u0020we\u0020use\u0020a\u0020OneToMany\u0020\u002D\u0020ManyToOne\u0020trick\u0020which\u0020inserts\u0020a\u0020lazy\nassociation\u0020in\u0020between.",
+            "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ImageFileData.html#property_file"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument",
@@ -15780,16 +15540,6 @@ Search.appendIndex(
             "name": "getInstrumentInsurances",
             "summary": "Get\u0020instrumentInsurances.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_getInstrumentInsurances"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InsuranceRate\u003A\u003ARATE_PRECISION",
-            "name": "RATE_PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InsuranceRate\u003A\u003ARATE_SCALE",
-            "name": "RATE_SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_SCALE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InsuranceRate\u003A\u003A\u0024broker",
             "name": "broker",
@@ -16786,6 +16536,11 @@ Search.appendIndex(
             "summary": "Get\u0020projectParticipantFieldsData.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectParticipantFieldsData"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddProjectParticipantFieldDatum\u0028\u0029",
+            "name": "addProjectParticipantFieldDatum",
+            "summary": "Add\u0020the\u0020give\u0020datum\u0020to\u0020the\u0020fields\u002Ddata\u0020collection.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addProjectParticipantFieldDatum"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetProjectParticipantFieldsDatum\u0028\u0029",
             "name": "getProjectParticipantFieldsDatum",
             "summary": "Get\u0020one\u0020specific\u0020participant\u002Dfield\u0020datum\u0020indexed\u0020by\u0020its\u0020key",
@@ -16851,6 +16606,11 @@ Search.appendIndex(
             "summary": "Get\u0020encryptedFiles.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getEncryptedFiles"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddEncryptedFile\u0028\u0029",
+            "name": "addEncryptedFile",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addEncryptedFile"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetDisplayName\u0028\u0029",
             "name": "setDisplayName",
             "summary": "Set\u0020displayName.",
@@ -16875,6 +16635,11 @@ Search.appendIndex(
             "name": "getPublicName",
             "summary": "Get\u0020the\u0020cooked\u0020display\u002Dname,\u0020taking\u0020nick\u002Dname\u0020into\u0020account\u0020and\njust\u0020using\u0020\u0024displayName\u0020if\u0020that\u0020set.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getPublicName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetFunctionalName\u0028\u0029",
+            "name": "getFunctionalName",
+            "summary": "Compose\u0020a\u0020description\u0020including\u0020organization\u0020and\u0020job\u002Dtitle.\u0020If\u0020the\u0020person\ndoes\u0020not\u0020represent\u0020an\u0020organization\u0020then\u0020fall\u0020back\u0020to\u0020getPublicName\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getFunctionalName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetInitials\u0028\u0029",
             "name": "getInitials",
@@ -16975,6 +16740,11 @@ Search.appendIndex(
             "name": "prePersist",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_prePersist"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003ApostPersist\u0028\u0029",
+            "name": "postPersist",
+            "summary": "The\u0020id\u0020of\u0020this\u0020entity\u0020is\u0020note\u0020available\u0020before\u0020it\u0020has\u0020been\u0020persisted.\u0020So\nupdate\u0020any\u0020needed\u0020file\u002Downership\u0020updates\u0020after\u0020being\u0020persisted.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_postPersist"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A__toString\u0028\u0029",
             "name": "__toString",
@@ -17385,6 +17155,11 @@ Search.appendIndex(
             "name": "getAccessTokenHash",
             "summary": "Get\u0020accessTokenHash.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_getAccessTokenHash"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianRowAccessToken\u003A\u003A__toString\u0028\u0029",
+            "name": "__toString",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method___toString"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianRowAccessToken\u003A\u003AHASH_LENGTH",
             "name": "HASH_LENGTH",
@@ -18366,6 +18141,16 @@ Search.appendIndex(
             "summary": "Get\u0020participantFieldsData.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getParticipantFieldsData"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AaddParticipantFieldDatum\u0028\u0029",
+            "name": "addParticipantFieldDatum",
+            "summary": "Add\u0020the\u0020give\u0020datum\u0020to\u0020the\u0020fields\u002Ddata\u0020collection.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_addParticipantFieldDatum"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AremoveParticipantFieldDatum\u0028\u0029",
+            "name": "removeParticipantFieldDatum",
+            "summary": "Remove\u0020the\u0020data\u0020item\u0020corresponding\u0020to\u0020the\u0020given\u0020option\u0020key.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_removeParticipantFieldDatum"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AgetParticipantFieldsDatum\u0028\u0029",
             "name": "getParticipantFieldsDatum",
             "summary": "Get\u0020one\u0020specific\u0020participant\u002Dfield\u0020datum\u0020indexed\u0020by\u0020its\u0020key",
@@ -18525,6 +18310,11 @@ Search.appendIndex(
             "name": "getDataOptions",
             "summary": "Get\u0020dataOption.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#method_getDataOptions"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003AaddDataOption\u0028\u0029",
+            "name": "addDataOption",
+            "summary": "Add\u0020a\u0020new\u0020option.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#method_addDataOption"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003AgetSelectableOptions\u0028\u0029",
             "name": "getSelectableOptions",
@@ -19048,7 +18838,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003A\u0024deposit",
             "name": "deposit",
-            "summary": "",
+            "summary": "Optional\u0020value\u0020of\u0020a\u0020deposit\u0020for\u0020monetary\u0020options.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#property_deposit"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003A\u0024limit",
@@ -19921,6 +19711,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_handleLifecycleEvent"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A__toString\u0028\u0029",
+            "name": "__toString",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method___toString"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A\u0024musician",
             "name": "musician",
             "summary": "",
@@ -20115,6 +19910,16 @@ Search.appendIndex(
             "name": "getPayments",
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AgetProject\u0028\u0029",
+            "name": "getProject",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getProject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020paymente\u0020and\u0020enforce\u0020that\u0020it\u0020references\u0020the\u0020same\u0020Project\u0020entity\u0020as\nall\u0020other\u0020payments.\u0020Merging\u0020payments\u0020from\u0020different\u0020projects\u0020is\u0020not\nsupported.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPayment"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AgetPayment\u0028\u0029",
             "name": "getPayment",
@@ -20596,16 +20401,6 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_jsonSerialize"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003ARATE_PRECISION",
-            "name": "RATE_PRECISION",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#constant_RATE_PRECISION"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003ARATE_SCALE",
-            "name": "RATE_SCALE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#constant_RATE_SCALE"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024taxType",
             "name": "taxType",
             "summary": "",
@@ -21081,15 +20876,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_setState"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AgetKey\u0028\u0029",
-            "name": "getKey",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AgetPosition\u0028\u0029",
+            "name": "getPosition",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_getKey"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_getPosition"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AsetKey\u0028\u0029",
-            "name": "setKey",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AsetPosition\u0028\u0029",
+            "name": "setPosition",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_setKey"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_setPosition"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AgetPath\u0028\u0029",
             "name": "getPath",
@@ -21116,6 +20911,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_getDataHash"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AgetWindowHistoryState\u0028\u0029",
+            "name": "getWindowHistoryState",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_getWindowHistoryState"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003AsetWindowHistoryState\u0028\u0029",
+            "name": "setWindowHistoryState",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#method_setWindowHistoryState"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003ApreRemove\u0028\u0029",
             "name": "preRemove",
             "summary": "\u007B\u0040inheritdoc\u007D",
@@ -21126,15 +20931,20 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#property_state"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003A\u0024key",
-            "name": "key",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003A\u0024position",
+            "name": "position",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#property_key"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#property_position"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003A\u0024path",
             "name": "path",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#property_path"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003A\u0024windowHistoryState",
+            "name": "windowHistoryState",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-WebBrowserHistoryEntry.html#property_windowHistoryState"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryEntry\u003A\u003A\u0024data",
             "name": "data",
@@ -22828,7 +22638,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Traits\\TranslatableTrait\u003A\u003A\u0024translationChangeSet",
             "name": "translationChangeSet",
-            "summary": "Gedmo\\Translatable\u0020\u0028has\u0020to\u003F\u0029\u0020clean\u0020the\u0020changeset\u0020of\u0020the\u0020actual\nentity.\u0020Unfortunately\u0020this\u0020also\u0020spoils\u0020the\u0020update\u0020listeners.\u0020We\u0020work\naround\u0020by\u0020remembering\u0020any\u0020old\u0020value.",
+            "summary": "Gedmo\\Translatable\u0020cleans\u0020\u0028has\u0020to\u0020clean\u003F\u0029\u0020the\u0020changeset\u0020of\u0020the\u0020actual\nentity.\u0020Unfortunately\u0020this\u0020also\u0020spoils\u0020the\u0020update\u0020listeners.\u0020We\u0020work\naround\u0020by\u0020remembering\u0020any\u0020old\u0020value.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#property_translationChangeSet"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Traits\\UnusedTrait",
@@ -23241,11 +23051,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#constant_TRANSFORM_HASH"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003ADBAL_TYPES",
-            "name": "DBAL_TYPES",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#constant_DBAL_TYPES"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024entityManager",
             "name": "entityManager",
             "summary": "",
@@ -23395,6 +23200,11 @@ Search.appendIndex(
             "name": "cloudConfig",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_cloudConfig"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_cloudUserConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Legacy\\PME\\DefaultOptions",
             "name": "DefaultOptions",
@@ -25010,6 +24820,26 @@ Search.appendIndex(
             "name": "NO_ATTACHMENTS",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-ComposerCssClasses.html#constant_NO_ATTACHMENTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\EmailFormCssClasses",
+            "name": "EmailFormCssClasses",
+            "summary": "CSS\u0020classes\u0020shared\u0020between\u0020the\u0020legacy\u0020templates,\u0020scss\u0020and\u0020typescript.",
+            "url": "classes/OCA-CAFEVDB-EmailForm-EmailFormCssClasses.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\EmailFormCssClasses\u003A\u003AFORM_DATA",
+            "name": "FORM_DATA",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-EmailForm-EmailFormCssClasses.html#constant_FORM_DATA"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\EmailFormCssClasses\u003A\u003AEMAIL_FORM",
+            "name": "EMAIL_FORM",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-EmailForm-EmailFormCssClasses.html#constant_EMAIL_FORM"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\EmailFormCssClasses\u003A\u003AROW",
+            "name": "ROW",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-EmailForm-EmailFormCssClasses.html#constant_ROW"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\EnumFormStatus",
             "name": "EnumFormStatus",
@@ -28406,6 +28236,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Legacy-PhpMyEdit-PhpMyEdit.html#constant_CGI_OPERATION_KEY"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Legacy\\PhpMyEdit\\PhpMyEdit\u003A\u003AMRECS_KEY",
+            "name": "MRECS_KEY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Legacy-PhpMyEdit-PhpMyEdit.html#constant_MRECS_KEY"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Legacy\\PhpMyEdit\\PhpMyEdit\u003A\u003ACOMP_OPS",
             "name": "COMP_OPS",
             "summary": "",
@@ -29416,20 +29251,25 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_preCommitAction"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024logger",
-            "name": "logger",
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_logger"
+            "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_entityManager"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024l",
             "name": "l",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_l"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024entityManager",
-            "name": "entityManager",
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener\u003A\u003A\u0024logger",
+            "name": "logger",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_entityManager"
+            "url": "classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\FileNodeListener",
             "name": "FileNodeListener",
@@ -31021,6 +30861,86 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260207000624.html#method_postDown"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146",
+            "name": "Version20260819094146",
+            "summary": "Auto\u002Dgenerated\u0020Migration\u003A\u0020Please\u0020modify\u0020to\u0020your\u0020needs\u0021",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094146.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146\u003A\u003AgetDescription\u0028\u0029",
+            "name": "getDescription",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094146.html#method_getDescription"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146\u003A\u003Aup\u0028\u0029",
+            "name": "up",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094146.html#method_up"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146\u003A\u003Adown\u0028\u0029",
+            "name": "down",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094146.html#method_down"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422",
+            "name": "Version20260819094422",
+            "summary": "Auto\u002Dgenerated\u0020Migration\u003A\u0020Please\u0020modify\u0020to\u0020your\u0020needs\u0021",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094422.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422\u003A\u003AgetDescription\u0028\u0029",
+            "name": "getDescription",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094422.html#method_getDescription"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422\u003A\u003ApreUp\u0028\u0029",
+            "name": "preUp",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094422.html#method_preUp"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422\u003A\u003ApreDown\u0028\u0029",
+            "name": "preDown",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819094422.html#method_preDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948",
+            "name": "Version20260819105948",
+            "summary": "Replace\u0020the\u0020web\u002Dbrowser\u0020history\u0020entry\u0020key\u0020by\u0020the\u0020history\u0020stack\u0020position.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819105948.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948\u003A\u003AgetDescription\u0028\u0029",
+            "name": "getDescription",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819105948.html#method_getDescription"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948\u003A\u003Aup\u0028\u0029",
+            "name": "up",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819105948.html#method_up"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948\u003A\u003Adown\u0028\u0029",
+            "name": "down",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260819105948.html#method_down"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20261009150233",
+            "name": "Version20261009150233",
+            "summary": "Introduce\u0020a\u0020dummy\u0020column\u0020into\u0020file\u002Ddata\u0020in\u0020order\u0020to\u0020silence\u0020an\u0020error\nemitted\u0020by\u0020the\u0020schema\u0020tool\u0020of\u0020\u003E\u003D\u0020ORM\u0020v3.7.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20261009150233.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20261009150233\u003A\u003AgetDescription\u0028\u0029",
+            "name": "getDescription",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20261009150233.html#method_getDescription"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20261009150233\u003A\u003Aup\u0028\u0029",
+            "name": "up",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20261009150233.html#method_up"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20261009150233\u003A\u003Adown\u0028\u0029",
+            "name": "down",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20261009150233.html#method_down"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\SanitizerRegistration",
             "name": "SanitizerRegistration",
             "summary": "Simplistic\u0020registration\u0020interface\u0020which\u0020gives\u0020access\u0020to\u0020a\u0020hard\u002Dcoded\u0020list\nof\u0020sanitizers.",
@@ -31281,56 +31201,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Middleware-DebugModeMiddleware.html#property_configService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware",
-            "name": "ExceptionMiddleware",
-            "summary": "Turn\u0020an\u0020exception\u0020into\u0020a\u0020data\u0020response\u0020which\u0020can\u0020be\u0020parsed\u0020by\u0020the\nfrontend.\u0020Can\u0020be\u0020disabled\u0020by\u0020the\u0020DoNotCatchExceptions\u0020attribute.",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#method___construct"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003AafterController\u0028\u0029",
-            "name": "afterController",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#method_afterController"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003AafterException\u0028\u0029",
-            "name": "afterException",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#method_afterException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003AafterThrowable\u0028\u0029",
-            "name": "afterThrowable",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#method_afterThrowable"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024appContainer",
-            "name": "appContainer",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#property_appContainer"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024reflector",
-            "name": "reflector",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#property_reflector"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024l",
-            "name": "l",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#property_l"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024request",
-            "name": "request",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#property_request"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024logger",
-            "name": "logger",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Middleware-ExceptionMiddleware.html#property_logger"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Middleware\\GroupMemberMiddleware",
             "name": "GroupMemberMiddleware",
             "summary": "Verifies\u0020whether\u0020an\u0020user\u0020has\u0020at\u0020least\u0020subadmin\u0020rights.\u0020To\u0020bypass\u0020use\u0020the\n\u0060\u0040NoGroupMemberRequired\u0060\u0020annotation\u0020or\u0020attribute.",
@@ -31545,11 +31415,6 @@ Search.appendIndex(
             "name": "changeSchema",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Migration-Version060000Date20201022230000.html#method_changeSchema"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Migration\\Version060000Date20201022230000\u003A\u003ApostSchemaChange\u0028\u0029",
-            "name": "postSchemaChange",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Migration-Version060000Date20201022230000.html#method_postSchemaChange"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Migration\\Version060000Date20201022230000\u003A\u003A\u0024connection",
             "name": "connection",
@@ -31896,10 +31761,30 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_ACCEPT_GENDER_DETECTION"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003AALLOW_EMPTY",
+            "name": "ALLOW_EMPTY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_ALLOW_EMPTY"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003AAMOUNT_CHECK_FAILURE",
             "name": "AMOUNT_CHECK_FAILURE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_AMOUNT_CHECK_FAILURE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ACELL_WRAPPER",
+            "name": "CELL_WRAPPER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_CELL_WRAPPER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ACLIP_LONG_TEXT",
+            "name": "CLIP_LONG_TEXT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_CLIP_LONG_TEXT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ACONSTRAINED",
+            "name": "CONSTRAINED",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_CONSTRAINED"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ACSS_PREFIX_POSTFIX",
             "name": "CSS_PREFIX_POSTFIX",
@@ -31911,10 +31796,35 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_DIRECT_CHANGE"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003AHIDE_SUBSEQUENT_LINES",
+            "name": "HIDE_SUBSEQUENT_LINES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_HIDE_SUBSEQUENT_LINES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003AONE_LINER",
+            "name": "ONE_LINER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_ONE_LINER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003APME_CELL_SQUEEZER",
+            "name": "PME_CELL_SQUEEZER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_PME_CELL_SQUEEZER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003APME_CELL_WRAPPER",
+            "name": "PME_CELL_WRAPPER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_PME_CELL_WRAPPER"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003APROJECT_PARTICIPANT_FIELDS_DISPLAY",
             "name": "PROJECT_PARTICIPANT_FIELDS_DISPLAY",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_PROJECT_PARTICIPANT_FIELDS_DISPLAY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ARESTRICT_HEIGHT",
+            "name": "RESTRICT_HEIGHT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_RESTRICT_HEIGHT"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003AREVERT_TO_DEFAULT",
             "name": "REVERT_TO_DEFAULT",
@@ -31925,6 +31835,11 @@ Search.appendIndex(
             "name": "SHOW_HIDE_DISABLED",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_SHOW_HIDE_DISABLED"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\CssClasses\u003A\u003ASQUEEZE_SUBSEQUENT_LINES",
+            "name": "SQUEEZE_SUBSEQUENT_LINES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-CssClasses.html#constant_SQUEEZE_SUBSEQUENT_LINES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DatabaseTables",
             "name": "DatabaseTables",
@@ -32225,6 +32140,36 @@ Search.appendIndex(
             "name": "DATA_PME_TAB_INDEX",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_DATA_PME_TAB_INDEX"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AMRECS_KEY",
+            "name": "MRECS_KEY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_MRECS_KEY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AOPERATION_CHANGE",
+            "name": "OPERATION_CHANGE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_OPERATION_CHANGE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AOPERATION_COPY_ADD",
+            "name": "OPERATION_COPY_ADD",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_OPERATION_COPY_ADD"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AOPERATION_DELETE",
+            "name": "OPERATION_DELETE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_OPERATION_DELETE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AOPERATION_LIST",
+            "name": "OPERATION_LIST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_OPERATION_LIST"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DataConstants\u003A\u003AOPERATION_VIEW",
+            "name": "OPERATION_VIEW",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-DataConstants.html#constant_OPERATION_VIEW"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\DonationReceipts",
             "name": "DonationReceipts",
@@ -32716,15 +32661,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-Export-InsuranceSpreadsheetExporter.html#constant_INPUT_INDEX_INSURANCE_RATE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Export\\InsuranceSpreadsheetExporter\u003A\u003AINPUT_INDEX_DUE_DATE",
-            "name": "INPUT_INDEX_DUE_DATE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-Export-InsuranceSpreadsheetExporter.html#constant_INPUT_INDEX_DUE_DATE"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Export\\InsuranceSpreadsheetExporter\u003A\u003AINPUT_INDEX_INSURANCE_FEES",
             "name": "INPUT_INDEX_INSURANCE_FEES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-Export-InsuranceSpreadsheetExporter.html#constant_INPUT_INDEX_INSURANCE_FEES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Export\\InsuranceSpreadsheetExporter\u003A\u003AINPUT_INDEX_DUE_DATE",
+            "name": "INPUT_INDEX_DUE_DATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Export-InsuranceSpreadsheetExporter.html#constant_INPUT_INDEX_DUE_DATE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Export\\InsuranceSpreadsheetExporter\u003A\u003AINPUT_INDEX_INSURANCE_START",
             "name": "INPUT_INDEX_INSURANCE_START",
@@ -33070,6 +33015,11 @@ Search.appendIndex(
             "name": "musicianPublicNameSql",
             "summary": "Generate\u0020an\u0020SQL\u0020fragment\u0020which\u0020composes\u0020a\u0020display\u0020name\u0020from\u0020the\u0020available\nname\u002Dparts\u0020sur_name,\u0020first_name,\u0020nick_name,\u0020display_name.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianPublicNameSql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\MusicianPublicNameTrait\u003A\u003AmusicianFunctionalNameSql\u0028\u0029",
+            "name": "musicianFunctionalNameSql",
+            "summary": "Generate\u0020an\u0020SQL\u0020fragment\u0020which\u0020composes\u0020a\u0020\u0022functional\u0020name\u0022\u0020including\u0020organization\u0020and\u0020role\u0020if\u0020the\u0020person\nrepresents\u0020an\u0020organization\u0020\u0028company,\u0020job\u002Dtitle\u0029.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianFunctionalNameSql"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ParticipantFieldsCgiNameTrait",
             "name": "ParticipantFieldsCgiNameTrait",
@@ -36776,6 +36726,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ConfigService.html#method_getCloudConfig"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ConfigService\u003A\u003AgetCloudUserConfig\u0028\u0029",
+            "name": "getCloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ConfigService.html#method_getCloudUserConfig"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ConfigService\u003A\u003AgetAppName\u0028\u0029",
             "name": "getAppName",
             "summary": "",
@@ -37131,6 +37086,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ConfigService.html#property_cloudConfig"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ConfigService\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ConfigService.html#property_cloudUserConfig"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ConfigService\u003A\u003A\u0024userSession",
             "name": "userSession",
             "summary": "",
@@ -37198,7 +37158,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AflattenVCard\u0028\u0029",
             "name": "flattenVCard",
-            "summary": "",
+            "summary": "A\u0020clone\u0020of\u0020OCA\\DAV\\CardDAV\\AddressBookImpl\u003A\u003AvCard2Array\u0028\u0029\u0020but\u0020for\u0020the\nhandling\u0020of\u0020PHOTO\u0020data.",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_flattenVCard"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AgetTypeFromProperty\u0028\u0029",
@@ -37223,7 +37183,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AmergeMusician\u0028\u0029",
             "name": "mergeMusician",
-            "summary": "Merge\u0020a\u0020musician\u0020entity\u0020into\u0020an\u0020existing\u0020contact.\u0020The\u0020result\u0020can\u0020be\u0020fed\nin\u0020to\u0020IAddressBook\u003A\u003AcreateOrUpdate\u0028\u0029.\u0020The\u0020URI\u0020component\u0020of\u0020\u0024target\u0020is\npreserved.\u0020If\u0020the\u0020musician\u0020is\u0020\u0028soft\u002D\u0029deleted,\u0020then\u0020the\u0020link\u0020to\u0020the\naddress\u002Dbook\u0020is\u0020removed.",
+            "summary": "Merge\u0020a\u0020musician\u0020entity\u0020into\u0020an\u0020existing\u0020contact.\u0020The\u0020result\u0020can\u0020be\u0020fed\ninto\u0020IAddressBook\u003A\u003AcreateOrUpdate\u0028\u0029.\u0020The\u0020URI\u0020component\u0020of\u0020\u0024target\u0020is\npreserved.\u0020If\u0020the\u0020musician\u0020is\u0020\u0028soft\u002D\u0029deleted,\u0020then\u0020the\u0020link\u0020to\u0020the\naddress\u002Dbook\u0020is\u0020removed.",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_mergeMusician"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AregisterContactSynchronization\u0028\u0029",
@@ -37250,6 +37210,11 @@ Search.appendIndex(
             "name": "TYPED_PROPERTIES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#constant_TYPED_PROPERTIES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AASSOCIATES_SUFFIX",
+            "name": "ASSOCIATES_SUFFIX",
+            "summary": "In\u0020order\u0020not\u0020to\u0020\u0022spoil\u0022\u0020the\u0020member\u0020ship\u0020of\u0020contact\u0020groups\u0020the\u0020business\ncontacts\u0020of\u0020a\u0020project\u0020get\u0020the\u0020project\u002Dname\u0020with\u0020this\u0020suffix\u0020attached\u0020as\ncategory,\u0020e.g.\u0020ManagementBoardContacts,\u0020or\u0020Requiem1984Contacts.\u0020The\nsuffix\u0020will\u0020be\u0020translated\u0020to\u0020the\u0020orchestra\u0020locale.",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#constant_ASSOCIATES_SUFFIX"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003A\u0024addressBooksByUri",
             "name": "addressBooksByUri",
@@ -37891,30 +37856,35 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appName"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024cloudConfig",
-            "name": "cloudConfig",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudConfig"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024asymKeyService",
             "name": "asymKeyService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_asymKeyService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024hasher",
-            "name": "hasher",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024cloudConfig",
+            "name": "cloudConfig",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_hasher"
+            "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024eventDispatcher",
             "name": "eventDispatcher",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_eventDispatcher"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024hasher",
+            "name": "hasher",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_hasher"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024logger",
             "name": "logger",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\EncryptionService\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-EncryptionService.html#property_cloudUserConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ErrorService",
             "name": "ErrorService",
@@ -39236,25 +39206,25 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_timeZone"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024configService",
-            "name": "configService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_configService"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024insuranceService",
             "name": "insuranceService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_insuranceService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024toolTipsService",
-            "name": "toolTipsService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_toolTipsService"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024storageFactory",
             "name": "storageFactory",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_storageFactory"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024configService",
+            "name": "configService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_configService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceReceivablesGenerator\u003A\u003A\u0024toolTipsService",
+            "name": "toolTipsService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceReceivablesGenerator.html#property_toolTipsService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceService",
             "name": "InstrumentInsuranceService",
@@ -39333,7 +39303,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceService\u003A\u003A\u0024taxRate",
             "name": "taxRate",
-            "summary": "",
+            "summary": "The\u0020insurance\u0020tax\u0020rate.",
             "url": "classes/OCA-CAFEVDB-Service-Finance-InstrumentInsuranceService.html#property_taxRate"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\InstrumentInsuranceService\u003A\u003A\u0024configService",
@@ -39676,6 +39646,61 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EnumExportFormat",
+            "name": "EnumExportFormat",
+            "summary": "Supported\u0020export\u0020formats.",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EnumExportFormat.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EnumExportFormat\u003A\u003AAQBANKING",
+            "name": "AQBANKING",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EnumExportFormat.html#enumcase_AQBANKING"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EnumExportFormat\u003A\u003AGNU_CASH",
+            "name": "GNU_CASH",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EnumExportFormat.html#enumcase_GNU_CASH"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO",
+            "name": "EventDataDTO",
+            "summary": "DTO\u0020for\u0020bulk\u002Dtransaction\u0020calendar\u0020event\u0020data.",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024end",
+            "name": "end",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_end"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024summary",
+            "name": "summary",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_summary"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024description",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024start",
+            "name": "start",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_start"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024allDay",
+            "name": "allDay",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_allDay"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTO\u003A\u003A\u0024alarm",
+            "name": "alarm",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService-EventDataDTO.html#property_alarm"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService",
             "name": "SepaBulkTransactionService",
             "summary": "Service\u0020class\u0020for\u0020generating\u0020bulk\u002Dtransactions\u0020for\u0020submittance\u0020to\u0020the\nrespective\u0020bank.",
@@ -39685,6 +39710,11 @@ Search.appendIndex(
             "name": "__construct",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AcreateSubmissionEventData\u0028\u0029",
+            "name": "createSubmissionEventData",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_createSubmissionEventData"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AmarkBulkTransactionSubmitted\u0028\u0029",
             "name": "markBulkTransactionSubmitted",
@@ -39696,10 +39726,15 @@ Search.appendIndex(
             "summary": "Handle\u0020bulk\u0020transaction\u0020pre\u0020notifications\u0020and\u0020gradually\u0020complete\u0020the\npre\u002Dnotification\u0020task.",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_handlePreNotification"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AcalculateDebitNoteDeadlines\u0028\u0029",
-            "name": "calculateDebitNoteDeadlines",
-            "summary": "Given\u0020the\u0020raw\u0020due\u002Ddata\u0020calculate\u0020the\u0020deadlines\u0020for\u0020submission\u0020and\npre\u002Dnotification.\u0020We\u0020allow\u0020for\u0020extra\u0020\u0022space\u0022\u0020between\u0020the\u0020resulting\ndue\u002Ddate\u0020and\u0020the\u0020submission\u0020date.\u0020So\u0020the\u0020idea\u0020is\u0020to\u0020allow\u0020two\u0020more\nbusiness\u0020days\u0020by\u0020adding\u0020another\u0020work\u002Dday\u0020between\u0020due\u002Ddate\u0020and\u0020hard\nbank\u002Dsubmission\u0020dead\u002Dline.",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_calculateDebitNoteDeadlines"
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AcalculateDebitNotePreNotificationDeadline\u0028\u0029",
+            "name": "calculateDebitNotePreNotificationDeadline",
+            "summary": "Given\u0020the\u0020due\u002Ddate\u0020calculate\u0020the\u0020pre\u002Dnotification\u0020deadline\u0020for\u0020the\u0020debit\nmandate.\u0020\u0020We\u0020allow\u0020for\u0020extra\u0020\u0022space\u0022\u0020between\u0020the\u0020resulting\u0020due\u002Ddate\u0020and\nthe\u0020submission\u0020date.\u0020So\u0020the\u0020idea\u0020is\u0020to\u0020allow\u0020two\u0020more\u0020business\u0020days\u0020by\nadding\u0020another\u0020work\u002Dday\u0020between\u0020due\u002Ddate\u0020and\u0020hard\u0020bank\u002Dsubmission\ndead\u002Dline.",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_calculateDebitNotePreNotificationDeadline"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AcalculateDebitNoteDueDate\u0028\u0029",
+            "name": "calculateDebitNoteDueDate",
+            "summary": "Calculate\u0020the\u0020debit\u002Dnote\u0020due\u002Ddate\u0020based\u0020on\u0020the\u0020current\u0020date.\u0020\u0020We\u0020allow\nfor\u0020extra\u0020\u0022space\u0022\u0020between\u0020the\u0020resulting\u0020due\u002Ddate\u0020and\u0020the\u0020submission\ndate.\u0020So\u0020the\u0020idea\u0020is\u0020to\u0020allow\u0020two\u0020more\u0020business\u0020days\u0020by\u0020adding\u0020another\nwork\u002Dday\u0020between\u0020due\u002Ddate\u0020and\u0020hard\u0020bank\u002Dsubmission\u0020dead\u002Dline.",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_calculateDebitNoteDueDate"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003AgetTransactionExporter\u0028\u0029",
             "name": "getTransactionExporter",
@@ -39761,6 +39796,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_DEBIT_NOTE_SUBMISSION_DEADLINE"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003ABANK_TRANSFER_SUBMISSION_DEADLINE",
+            "name": "BANK_TRANSFER_SUBMISSION_DEADLINE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BANK_TRANSFER_SUBMISSION_DEADLINE"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003ADEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS",
             "name": "DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS",
             "summary": "",
@@ -39775,16 +39815,6 @@ Search.appendIndex(
             "name": "TRANSACTION_TYPE_BANK_TRANSFER",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_TRANSACTION_TYPE_BANK_TRANSFER"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003ABANK_TRANSFER_SUBMISSION_DEADLINE",
-            "name": "BANK_TRANSFER_SUBMISSION_DEADLINE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BANK_TRANSFER_SUBMISSION_DEADLINE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003ATRANSACTION_TYPES",
-            "name": "TRANSACTION_TYPES",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_TRANSACTION_TYPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003ASUBMISSION_EVENT",
             "name": "SUBMISSION_EVENT",
@@ -39881,35 +39911,50 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_SUBJECT_OPTION_SEPARATOR"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024entityManager",
-            "name": "entityManager",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024configService",
+            "name": "configService",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_entityManager"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024financeService",
-            "name": "financeService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_financeService"
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_configService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024eventsService",
             "name": "eventsService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_eventsService"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024financeService",
+            "name": "financeService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_financeService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024dateTimeFormatter",
+            "name": "dateTimeFormatter",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_dateTimeFormatter"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024timeFactory",
+            "name": "timeFactory",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_timeFactory"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024appContainer",
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_appContainer"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024logger",
-            "name": "logger",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_logger"
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_entityManager"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024l",
             "name": "l",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\FontService",
             "name": "FontService",
@@ -40235,6 +40280,11 @@ Search.appendIndex(
             "name": "updateCountriesForLanguage",
             "summary": "Update\u0020the\u0020locale\u0020cache\u0020for\u0020one\u0020specific\u0020language.\u0020This\u0020should\u0020only\u0020be\nneeded\u0020once.",
             "url": "classes/OCA-CAFEVDB-Service-GeoCodingService.html#method_updateCountriesForLanguage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\GeoCodingService\u003A\u003AgetCountryISOFromName\u0028\u0029",
+            "name": "getCountryISOFromName",
+            "summary": "Query\u0020the\u0020database\u0020for\u0020the\u0020ISO\u0020two\u002Dletter\u0020code\u0020given\u0020a\u0020country\u0020name\u0020in\nany\u0020language.",
+            "url": "classes/OCA-CAFEVDB-Service-GeoCodingService.html#method_getCountryISOFromName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\GeoCodingService\u003A\u003AgetLanguages\u0028\u0029",
             "name": "getLanguages",
@@ -42788,7 +42838,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AparticipantFieldSurcharge\u0028\u0029",
             "name": "participantFieldSurcharge",
-            "summary": "Internal\u0020function\u003A\u0020given\u0020a\u0020surcharge\u0020choice\u0020compute\u0020the\u0020associated\u0020amount\nof\u0020money\u0020and\u0020return\u0020that\u0020as\u0020RationalNumber.\u0020This\u0020is\u0020used\u0020in\u0020the\u0020legacy\ndisplay\u0020code\u0020in\u0020ParticipantTotalFeesTrait.",
+            "summary": "Internal\u0020function\u003A\u0020given\u0020a\u0020surcharge\u0020choice\u0020compute\u0020the\u0020associated\u0020amount\nof\u0020money\u0020and\u0020return\u0020that\u0020as\u0020MonetaryNumberType.\u0020This\u0020is\u0020used\u0020in\u0020the\u0020legacy\ndisplay\u0020code\u0020in\u0020ParticipantTotalFeesTrait.",
             "url": "classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_participantFieldSurcharge"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AisSupportedType\u0028\u0029",
@@ -42833,7 +42883,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AgetEffectiveFieldDatum\u0028\u0029",
             "name": "getEffectiveFieldDatum",
-            "summary": "Return\u0020the\u0020effective\u0020value\u0020of\u0020the\u0020given\u0020datum.\u0020In\u0020particular\nreferenced\u0020files\u0020are\u0020returned\u0020as\u0020cloud\u0020file\u002Dnode\u0020or\u0020DB\nfile\u002Dentity.\u0020Dates\u0020are\u0020converted\u0020to\u0020\\DateTimeImmutable.\u0020Float\nvalues\u0020to\u0020RationalNumber,\u0020int\u0020to\u0020int,\u0020boolean\u0020to\u0020boolean.",
+            "summary": "Return\u0020the\u0020effective\u0020value\u0020of\u0020the\u0020given\u0020datum.\u0020In\u0020particular\nreferenced\u0020files\u0020are\u0020returned\u0020as\u0020cloud\u0020file\u002Dnode\u0020or\u0020DB\nfile\u002Dentity.\u0020Dates\u0020are\u0020converted\u0020to\u0020\\DateTimeImmutable.\u0020Float\nvalues\u0020to\u0020MonetaryNumberType,\u0020int\u0020to\u0020int,\u0020boolean\u0020to\u0020boolean.",
             "url": "classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_getEffectiveFieldDatum"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AprintEffectiveFieldDatum\u0028\u0029",
@@ -42911,10 +42961,10 @@ Search.appendIndex(
             "summary": "Check\u0020if\u0020the\u0020transistion\u0020from\u0020\u0024old\u0020to\u0020\u0024new\u0020is\u0020implemented.",
             "url": "classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_isSupportedFieldMultiplicityTransition"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AhandleChangeFieldFieldMultiplicity\u0028\u0029",
-            "name": "handleChangeFieldFieldMultiplicity",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003AhandleChangeFieldMultiplicity\u0028\u0029",
+            "name": "handleChangeFieldMultiplicity",
             "summary": "Try\u0020to\u0020gracefully\u0020change\u0020the\u0020field\u002Dtype.",
-            "url": "classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_handleChangeFieldFieldMultiplicity"
+            "url": "classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_handleChangeFieldMultiplicity"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectParticipantFieldsService\u003A\u003ApopulateCloudFolderField\u0028\u0029",
             "name": "populateCloudFolderField",
@@ -43511,6 +43561,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ToolTipsDataService.html#constant_PME_SHOW_ALL_TEXT"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ToolTipsDataService\u003A\u003ADEFAULT",
+            "name": "DEFAULT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ToolTipsDataService.html#constant_DEFAULT"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ToolTipsDataService\u003A\u003A\u0024toolTipsData",
             "name": "toolTipsData",
             "summary": "",
@@ -43606,6 +43661,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_DEFAULT_OPTIONS"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ToolTipsService\u003A\u003ADEFAULT_KEY",
+            "name": "DEFAULT_KEY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_DEFAULT_KEY"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ToolTipsService\u003A\u003A\u0024lastKey",
             "name": "lastKey",
             "summary": "",
@@ -43635,6 +43695,56 @@ Search.appendIndex(
             "name": "logger",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService",
+            "name": "UserEncryptionService",
+            "summary": "Helper\u0020for\u0020managing\u0020sealed\u0020encrypted\u0020columns\u0020which\u0020should\u0020be\u0020decodable\u0020by\nthe\u0020user.",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003Arecrypt\u0028\u0029",
+            "name": "recrypt",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#method_recrypt"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003AROW_ACCESS_TOKEN_KEY",
+            "name": "ROW_ACCESS_TOKEN_KEY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#constant_ROW_ACCESS_TOKEN_KEY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024asymmetricKeyService",
+            "name": "asymmetricKeyService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_asymmetricKeyService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024authorizationService",
+            "name": "authorizationService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_authorizationService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024encryptionService",
+            "name": "encryptionService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_encryptionService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_entityManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\UserEncryptionService\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-UserEncryptionService.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\VCalendarService",
             "name": "VCalendarService",
@@ -43890,11 +44000,6 @@ Search.appendIndex(
             "name": "CLOUD_USER_BACKEND",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Settings-Admin.html#constant_CLOUD_USER_BACKEND"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Settings\\Admin\u003A\u003ACLOUD_USER_BACKEND_RESTRICTIONS",
-            "name": "CLOUD_USER_BACKEND_RESTRICTIONS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Settings-Admin.html#constant_CLOUD_USER_BACKEND_RESTRICTIONS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Settings\\Admin\u003A\u003ADEFAULT_OFFICE_FONT_CONFIG",
             "name": "DEFAULT_OFFICE_FONT_CONFIG",
@@ -44215,11 +44320,6 @@ Search.appendIndex(
             "name": "DEBUG_GEOCODING",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Settings-ConfigConstants.html#constant_DEBUG_GEOCODING"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Settings\\ConfigConstants\u003A\u003ADEBUG_VUE",
-            "name": "DEBUG_VUE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Settings-ConfigConstants.html#constant_DEBUG_VUE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Settings\\ConfigConstants\u003A\u003ADEBUG_SMAPS",
             "name": "DEBUG_SMAPS",
@@ -46516,15 +46616,20 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-DatabaseStorageUtil.html#property_entityManager"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\DatabaseStorageUtil\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-DatabaseStorageUtil.html#property_l"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\DatabaseStorageUtil\u003A\u003A\u0024logger",
             "name": "logger",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-DatabaseStorageUtil.html#property_logger"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\DatabaseStorageUtil\u003A\u003A\u0024l",
-            "name": "l",
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\DatabaseStorageUtil\u003A\u003A\u0024urlGenerator",
+            "name": "urlGenerator",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Storage-DatabaseStorageUtil.html#property_l"
+            "url": "classes/OCA-CAFEVDB-Storage-DatabaseStorageUtil.html#property_urlGenerator"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\StorageUtil",
             "name": "StorageUtil",
@@ -46756,10 +46861,25 @@ Search.appendIndex(
             "summary": "Static\u0020query\u0020of\u0020a\u0020service\u0020through\u0020the\u0020app\u0020container.",
             "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#method_get"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003Aboot\u0028\u0029",
+            "name": "boot",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#method_boot"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003Aregister\u0028\u0029",
             "name": "register",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#method_register"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003AAPP_ROOT_FOLDER",
+            "name": "APP_ROOT_FOLDER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#constant_APP_ROOT_FOLDER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003AMIDDLEWARE_OPTIONS",
+            "name": "MIDDLEWARE_OPTIONS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#constant_MIDDLEWARE_OPTIONS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003A\u0024appContainer",
             "name": "appContainer",
@@ -46770,6 +46890,11 @@ Search.appendIndex(
             "name": "appName",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-AppInfo-AbstractApplication.html#property_appName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Attributes\\DoNotCatchExceptions",
+            "name": "DoNotCatchExceptions",
+            "summary": "Indicate\u0020the\u0020the\u0020ExceptionMiddelware\u0020should\u0020ignore\u0020any\u0020exceptions\u0020thrown\nfrom\u0020this\u0020method.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Attributes-DoNotCatchExceptions.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Backend\\ArchiveBackend",
             "name": "ArchiveBackend",
@@ -46801,10 +46926,400 @@ Search.appendIndex(
             "summary": "Fetch\u0020all\u0020drivers\u0020matching\u0020the\u0020given\u0020abilities",
             "url": "classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveFormats.html#method_getFormatDrivers"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\AbstractDecimalRational",
+            "name": "AbstractDecimalRational",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020configured\u0020precision\u0020and\u0020scale.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-AbstractDecimalRational.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003AtoDecimal\u0028\u0029",
+            "name": "toDecimal",
+            "summary": "Return\u0020a\u0020correctly\u0020rounded\u0020floating\u0020point\u0020string\u0020with\u0020the\u0020given\u0020number\u0020of\nfractional\u0020digits.\u0020Intentionally\u0020the\u0020naming\u0020of\u0020the\u0020arguments\u0020\u0024scale\u0020and\n\u0024precision\u0020corresponds\u0020to\u0020the\u0020Doctrine\u0020ORM\u0020\u0022decimal\u0022\u002Dtype\u0020parameters.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-AbstractDecimalRational.html#method_toDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "Potentially\u0020lossy\u0020conversion\u0020to\u0020a\u0020decimal\u0020number\u0020string.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-AbstractDecimalRational.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-AbstractDecimalRational.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-AbstractDecimalRational.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalMonetary",
+            "name": "DecimalRationalMonetary",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020two\u0020digits\u0020after\u0020the\u0020separator.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalMonetary\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalMonetary\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalMonetary.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP2S2",
+            "name": "DecimalRationalP2S2",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020the\u0020given\u0020scale\u0020and\u0020maximum\u0020precision.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP2S2.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP2S2\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP2S2.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP2S2\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP2S2.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP4S4",
+            "name": "DecimalRationalP4S4",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020the\u0020given\u0020scale\u0020and\u0020maximum\u0020precision.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP4S4\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\DecimalRationalP4S4\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber",
+            "name": "RationalNumber",
+            "summary": "Rational\u0020numbers,\u0020exact\u0020fractions.\u0020This\u0020is\u0020mainly\u0020useful\u0020in\u0020a\u0020context\u0020where\nthe\u0020possible\u0020denominator\u0020are\u0020well\u0020known,\u0020which\u0020often\u0020is\u0020the\u0020case\u0020in\u0020a\nmonetary\u0020context.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Acreate\u0028\u0029",
+            "name": "create",
+            "summary": "Generator\u0020method.\u0020If\u0020called\u0020with\u0020only\u0020one\u0020argument\u0020try\u0020to\u0020gracefully\nconvert\u0020the\u0020argument\u0020to\u0020RationalNumber.\u0020Passing\u0020even\u0020null\u0020as\u0020first\nargument\u0020will\u0020create\u0020a\u0020representation\u0020of\u0020zero\u0020as\u0020RationalNumber.\u0020Empty\nstrings\u0020will\u0020also\u0020generate\u0020a\u0020zero.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_create"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AfromRational\u0028\u0029",
+            "name": "fromRational",
+            "summary": "Generate\u0020a\u0020new\u0020instance\u0020from\u0020a\u0020given\u0020base\u002Dclass\u0020instance.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_fromRational"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Around\u0028\u0029",
+            "name": "round",
+            "summary": "Round\u0020\u0022half\u0020away\u0020from\u0020zero\u0022.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_round"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Asign\u0028\u0029",
+            "name": "sign",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_sign"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AtoDecimal\u0028\u0029",
+            "name": "toDecimal",
+            "summary": "Return\u0020a\u0020correctly\u0020rounded\u0020floating\u0020point\u0020string\u0020with\u0020the\u0020given\u0020number\u0020of\nfractional\u0020digits.\u0020Intentionally\u0020the\u0020naming\u0020of\u0020the\u0020arguments\u0020\u0024scale\u0020and\n\u0024precision\u0020corresponds\u0020to\u0020the\u0020Doctrine\u0020ORM\u0020\u0022decimal\u0022\u002Dtype\u0020parameters.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_toDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AfromDecimal\u0028\u0029",
+            "name": "fromDecimal",
+            "summary": "Initialize\u0020an\u0020instance\u0020from\u0020a\u0020\u0022vanilla\u0022\u0020decimal\u0020string.\u0020Only\u0020supported\nformats\u0020are\u0020\u0028optional\u0020in\u0020square\u0020brackets\u0029\u003A",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_fromDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AfromFractionString\u0028\u0029",
+            "name": "fromFractionString",
+            "summary": "Parse\u0020a\u0020string\u0020previously\u0020generated\u0020by\u0020Rational\u003A\u003A__toString\u0028\u0029\u0020or\nself\u003A\u003AjsonSerialize\u0028\u0029\u0020back\u0020to\u0020a\u0020number.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_fromFractionString"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AfromFloat\u0028\u0029",
+            "name": "fromFloat",
+            "summary": "Try\u0020to\u0020convert\u0020the\u0020given\u0020float\u0020into\u0020a\u0020RationalNumber.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_fromFloat"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aassign\u0028\u0029",
+            "name": "assign",
+            "summary": "Replace\u0020this\u0020instance\u0020by\u0020the\u0020given\u0020argument.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_assign"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aabs\u0028\u0029",
+            "name": "abs",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_abs"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AabsEq\u0028\u0029",
+            "name": "absEq",
+            "summary": "Make\u0020the\u0020current\u0020number\u0020non\u002Dnegative\u0020in\u002Dplace.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_absEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Ainverse\u0028\u0029",
+            "name": "inverse",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_inverse"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Ainv\u0028\u0029",
+            "name": "inv",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Ainvsere\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_inv"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AinvEq\u0028\u0029",
+            "name": "invEq",
+            "summary": "Invert\u0020the\u0020current\u0020instance\u0020in\u0020place.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_invEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Anegate\u0028\u0029",
+            "name": "negate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_negate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aneg\u0028\u0029",
+            "name": "neg",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Anegate\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_neg"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AnegEq\u0028\u0029",
+            "name": "negEq",
+            "summary": "Negate\u0020the\u0020current\u0020instance\u0020in\u0020place.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_negEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aadd\u0028\u0029",
+            "name": "add",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_add"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AaddEq\u0028\u0029",
+            "name": "addEq",
+            "summary": "Add\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\u0020result\u0020to\n\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\nprotected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\navoided.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_addEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Asubtract\u0028\u0029",
+            "name": "subtract",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_subtract"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Asub\u0028\u0029",
+            "name": "sub",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Asubtract\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_sub"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AsubEq\u0028\u0029",
+            "name": "subEq",
+            "summary": "Subtract\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance.\u0020This\u0020could\u0020be\noptimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\u0020protected,\u0020in\u0020this\u0020case\nthe\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\u0020avoided.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_subEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Amultiply\u0028\u0029",
+            "name": "multiply",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_multiply"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Amul\u0028\u0029",
+            "name": "mul",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Amultiply\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_mul"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AmulEq\u0028\u0029",
+            "name": "mulEq",
+            "summary": "Multiply\u0020the\u0020given\u0020argument\u0020with\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_mulEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Adivide\u0028\u0029",
+            "name": "divide",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_divide"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Adiv\u0028\u0029",
+            "name": "div",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Adivide\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_div"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AdivEq\u0028\u0029",
+            "name": "divEq",
+            "summary": "Divide\u0020the\u0020current\u0020instance\u0020by\u0020the\u0020given\u0020argument\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_divEq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Apow\u0028\u0029",
+            "name": "pow",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_pow"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AcreateZeroValue\u0028\u0029",
+            "name": "createZeroValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_createZeroValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Azero\u0028\u0029",
+            "name": "zero",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_zero"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aequals\u0028\u0029",
+            "name": "equals",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_equals"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Aeq\u0028\u0029",
+            "name": "eq",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003D\u003D\u0020\u0024other",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_eq"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Agt\u0028\u0029",
+            "name": "gt",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u0020\u0024other",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_gt"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Age\u0028\u0029",
+            "name": "ge",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u003D\u0020\u0024other",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_ge"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Alt\u0028\u0029",
+            "name": "lt",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u0020\u0024other",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_lt"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Ale\u0028\u0029",
+            "name": "le",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u003D\u0020\u0024other",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_le"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Amin\u0028\u0029",
+            "name": "min",
+            "summary": "Convenience,\u0020return\u0020the\u0020minimum\u0020using\u0020exact\u0020arithmetic.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_min"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003Amax\u0028\u0029",
+            "name": "max",
+            "summary": "Convenience,\u0020return\u0020the\u0020maximum\u0020using\u0020exact\u0020arithmetic.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_max"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AensureRationalNumber\u0028\u0029",
+            "name": "ensureRationalNumber",
+            "summary": "Generate\u0020an\u0020instance\u0020of\u0020RationalNumber\u0020from\u0020\u0024other\u0020if\u0020it\u0020is\u0020not\u0020already\nan\u0020instance\u0020of\u0020RationalNumber.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_ensureRationalNumber"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "Return\u0020a\u0020less\u0020fancy\u0020string\u0020repesentation\u0020\u0028\u002D\u0029W\u002BN\/D\u0020without\u0020Unicode\u0020super\u002D\nand\u0020sub\u002Dscripts.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003ADECIMAL_DIGITS_MAX",
+            "name": "DECIMAL_DIGITS_MAX",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#constant_DECIMAL_DIGITS_MAX"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003ASUPER_SCRIPTS",
+            "name": "SUPER_SCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#constant_SUPER_SCRIPTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common\\RationalNumber\u003A\u003ASUB_SCRIPTS",
+            "name": "SUB_SCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html#constant_SUB_SCRIPTS"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Console\\ConsoleOutput",
             "name": "ConsoleOutput",
             "summary": "Just\u0020kind\u0020of\u0020a\u0020wrapper\u0020for\u0020a\u0020singleton\u0020console\u0020output\u0020through\u0020the\u0020app\u002Dcontainer.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Console-ConsoleOutput.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants",
+            "name": "Constants",
+            "summary": "A\u0020couple\u0020of\u0020constants\u0020in\u0020order\u0020to\u0020avoid\u0020string\u0020literals.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003APATH_SEPARATOR",
+            "name": "PATH_SEPARATOR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_PATH_SEPARATOR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003APATH_SEP",
+            "name": "PATH_SEP",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_PATH_SEP"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ADEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
+            "name": "DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AUSER_FOLDER_PREFIX",
+            "name": "USER_FOLDER_PREFIX",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_USER_FOLDER_PREFIX"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AJS",
+            "name": "JS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_JS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ACSS",
+            "name": "CSS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_CSS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AWEB_ASSET_META",
+            "name": "WEB_ASSET_META",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_WEB_ASSET_META"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AINFO_FILE",
+            "name": "INFO_FILE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_INFO_FILE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AENUM_VALUE_L10N_TAG",
+            "name": "ENUM_VALUE_L10N_TAG",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_ENUM_VALUE_L10N_TAG"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_GUEST",
+            "name": "RENDER_AS_GUEST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_GUEST"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_BLANK",
+            "name": "RENDER_AS_BLANK",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_BLANK"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_BASE",
+            "name": "RENDER_AS_BASE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_BASE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_USER",
+            "name": "RENDER_AS_USER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_USER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_ERROR",
+            "name": "RENDER_AS_ERROR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_ERROR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003ARENDER_AS_PUBLIC",
+            "name": "RENDER_AS_PUBLIC",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_RENDER_AS_PUBLIC"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AMONETARY_PRECISION",
+            "name": "MONETARY_PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_MONETARY_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Constants\u003A\u003AMONETARY_SCALE",
+            "name": "MONETARY_SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Constants.html#constant_MONETARY_SCALE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Controller\\EntityRepositoryControllerTrait",
             "name": "EntityRepositoryControllerTrait",
@@ -46831,6 +47346,141 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Controller-EntityRepositoryControllerTrait.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType",
+            "name": "AbstractDecimalRationalType",
+            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetSQLDeclaration\u0028\u0029",
+            "name": "getSQLDeclaration",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getSQLDeclaration"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ANAME_BASE",
+            "name": "NAME_BASE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_NAME_BASE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType",
+            "name": "ArrayType",
+            "summary": "Type\u0020that\u0020maps\u0020a\u0020PHP\u0020array\u0020to\u0020a\u0020clob\u0020SQL\u0020type.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetSQLDeclaration\u0028\u0029",
+            "name": "getSQLDeclaration",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_getSQLDeclaration"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003ArequiresSQLCommentHint\u0028\u0029",
+            "name": "requiresSQLCommentHint",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_requiresSQLCommentHint"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-ArrayType.html#constant_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType",
+            "name": "DecimalRationalMonetaryType",
+            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type",
+            "name": "DecimalRationalP2S2Type",
+            "summary": "Database\u0020type\u0020for\u0020whole\u0020number\u0020percentages.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type",
+            "name": "DecimalRationalP4S4Type",
+            "summary": "Database\u0020type\u0020fractions\u0020of\u0020percentages.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType",
+            "name": "UuidType",
+            "summary": "Like\u0020UuidBinaryType,\u0020but\u0020implement\u0020a\u0020more\u0020allowing\nconvertToPHPValue\u0028\u0029\u0020which\u0020accepts\u0020also\u0020string\u0020inputs.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-UuidType.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-DBAL-Types-UuidType.html#constant_NAME"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager",
             "name": "AbstractEntityManager",
             "summary": "Abstract\u0020base\u0020class\u0020with\u0020functionality\u0020needed\u0020by\u0020the\u0020classes\u0020in\nthis\u0020namespace.\u0020The\u0020consuming\u0020project\u0027s\u0020entity\u0020manager\u0020must\u0020extend\nthis\u0020class.",
@@ -46846,6 +47496,16 @@ Search.appendIndex(
             "summary": "Toggle\u0020a\u0020filter\u0020without\u0020triggering\u0020an\u0020exception\u0020from\u0020the\u0020FilterCollection\nif\u0020the\u0020filter\u0020does\u0020not\u0020exist.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003AgetWrappedObject\u0028\u0029",
+            "name": "getWrappedObject",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_getWrappedObject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003AregisterTypes\u0028\u0029",
+            "name": "registerTypes",
+            "summary": "Register\u0020the\u0020needed\u0020additional\u0020DBAL\u0020types.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_registerTypes"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003ASOFT_DELETEABLE_FILTER",
             "name": "SOFT_DELETEABLE_FILTER",
             "summary": "",
@@ -46855,6 +47515,11 @@ Search.appendIndex(
             "name": "BASE_FILTER_SET",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_BASE_FILTER_SET"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003ADBAL_TYPES",
+            "name": "DBAL_TYPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_DBAL_TYPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\Constants",
             "name": "Constants",
@@ -46880,6 +47545,26 @@ Search.appendIndex(
             "name": "EntityRepository",
             "summary": "A\u0020class\u0020to\u0020extends\u0020from\u0020pulling\u0020in\u0020the\u0020FindLikeTrait.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntityRepository.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference",
+            "name": "CollectionEntityReference",
+            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\u0020identifier.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003A\u0024entityClassName",
+            "name": "entityClassName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#property_entityClassName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapter",
             "name": "EntityArrayAdapter",
@@ -47013,7 +47698,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference",
             "name": "EntityReference",
-            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\u0020identifier.",
+            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\nidentifier.\u0020The\u0020difference\u0020to\u0020the\u0020CollectionEntityReference\u0020is\u0020that\u0020the\nentityClassName\u0020is\u0020not\u0020allowed\u0020to\u0020be\u0020null.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A__construct\u0028\u0029",
@@ -47025,11 +47710,6 @@ Search.appendIndex(
             "name": "fromArray",
             "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#method_fromArray"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A\u0024flatIdentifier",
-            "name": "flatIdentifier",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_flatIdentifier"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A\u0024entityClassName",
             "name": "entityClassName",
@@ -47060,6 +47740,26 @@ Search.appendIndex(
             "name": "entities",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceCollection.html#property_entities"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier",
+            "name": "EntityReferenceIdentifier",
+            "summary": "Base\u0020class\u0020for\u0020EntityReference\u0020and\u0020CollectionEntityReference.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003A\u0024flatIdentifier",
+            "name": "flatIdentifier",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#property_flatIdentifier"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityResponse",
             "name": "EntityResponse",
@@ -47110,6 +47810,11 @@ Search.appendIndex(
             "name": "export",
             "summary": "Export\u0020the\u0020collected\u0020entities\u0020as\u0020DTO.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html#method_export"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer\u003A\u003AgetWrappedObject\u0028\u0029",
+            "name": "getWrappedObject",
+            "summary": "If\u0020\u0024object\u0020is\u0020a\u0020decorator\u0020and\u0020implements\u0020the\u0020method\u0020getWrappedObject\u0028\u0029\nthen\u0020return\u0020the\u0020wrapped\u0020object,\u0020otherwise\u0020return\u0020\u0024object.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html#method_getWrappedObject"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer\u003A\u003AflattenIdentifier\u0028\u0029",
             "name": "flattenIdentifier",
@@ -47170,6 +47875,11 @@ Search.appendIndex(
             "name": "EnumOrderByOptions",
             "summary": "Possible\u0020order\u002Dby\u0020options\u0020for\u0020findBy\u0028\u0029.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EnumOrderByOptions.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EnumOrderByOptions\u003A\u003AasSortDirection\u0028\u0029",
+            "name": "asSortDirection",
+            "summary": "Try\u0020to\u0020convert\u0020to\u0020a\u0020native\u0020PHP\u00208.6\u0020SortDirection\u0020enum.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EnumOrderByOptions.html#method_asSortDirection"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EnumOrderByOptions\u003A\u003AASC",
             "name": "ASC",
@@ -47296,6 +48006,101 @@ Search.appendIndex(
             "summary": "Stuff\u0020into\u0020a\u0020DataResponse.",
             "url": "classes/OCA-CAFEVDB-Toolkit-DTO-AbstractResponseDTO.html#method_response"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo",
+            "name": "LegacyFileInfo",
+            "summary": "Borrowed\u0020and\u0020enhanced\u0020from\u0020OC\\Files\\Template\\TemplateManager.php\u0020from\u0020one\nancient\u0020Nextcloud\u0020version.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003ATYPE_FILE",
+            "name": "TYPE_FILE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#constant_TYPE_FILE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003ATYPE_FOLDER",
+            "name": "TYPE_FOLDER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#constant_TYPE_FOLDER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024fileid",
+            "name": "fileid",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_fileid"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024path",
+            "name": "path",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_path"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024topLevelFolder",
+            "name": "topLevelFolder",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_topLevelFolder"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024relativePath",
+            "name": "relativePath",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_relativePath"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024basename",
+            "name": "basename",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_basename"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024lastmod",
+            "name": "lastmod",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_lastmod"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024mime",
+            "name": "mime",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_mime"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024size",
+            "name": "size",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_size"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024type",
+            "name": "type",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_type"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024hasPreview",
+            "name": "hasPreview",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_hasPreview"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024permissions",
+            "name": "permissions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_permissions"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024mountType",
+            "name": "mountType",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_mountType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024etag",
+            "name": "etag",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-DTO-LegacyFileInfo.html#property_etag"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\ArchiveCannotOpenException",
             "name": "ArchiveCannotOpenException",
             "summary": "Transparent\u0020archive\u0020extraction\u0020exception.",
@@ -47401,6 +48206,41 @@ Search.appendIndex(
             "summary": "This\u0020exception\u0020should\u0020provide\u0020an\u0020error\u0020message\u0020which\u0020informs\u0020an\nend\u002Duser\u0020about\u0020an\u0020error.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AsetHttpStatusCode\u0028\u0029",
+            "name": "setHttpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#method_setHttpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AgetHttpStatusCode\u0028\u0029",
+            "name": "getHttpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#method_getHttpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AsetContext\u0028\u0029",
+            "name": "setContext",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#method_setContext"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AgetContext\u0028\u0029",
+            "name": "getContext",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#method_getContext"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024httpStatusCode",
+            "name": "httpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#property_httpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024context",
+            "name": "context",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#property_context"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Exceptions\\EntitySerializationException",
             "name": "EntitySerializationException",
             "summary": "Exception\u0020thrown\u0020by\u0020\u0020OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer.",
@@ -47461,6 +48301,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method___construct"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003AclearLogEntry\u0028\u0029",
+            "name": "clearLogEntry",
+            "summary": "Clear\u0020a\u0020recently\u0020captuerd\u0020log\u002Dentry.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method_clearLogEntry"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003AgetLogEntry\u0028\u0029",
+            "name": "getLogEntry",
+            "summary": "Return\u0020a\u0020recently\u0020captured\u0020log\u002Dentry\u0020if\u0020any.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method_getLogEntry"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003Ahandle\u0028\u0029",
             "name": "handle",
             "summary": "\u007B\u0040inheritdoc\u007D",
@@ -47471,10 +48321,85 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#constant_EVENT"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003A\u0024logEntry",
+            "name": "logEntry",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#property_logEntry"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003A\u0024appContainer",
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware",
+            "name": "ExceptionMiddleware",
+            "summary": "Turn\u0020an\u0020exception\u0020into\u0020a\u0020data\u0020response\u0020which\u0020can\u0020be\u0020parsed\u0020by\u0020the\nfrontend.\u0020Can\u0020be\u0020disabled\u0020by\u0020the\u0020DoNotCatchExceptions\u0020attribute.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterController\u0028\u0029",
+            "name": "afterController",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#method_afterController"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterException\u0028\u0029",
+            "name": "afterException",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#method_afterException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterThrowable\u0028\u0029",
+            "name": "afterThrowable",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#method_afterThrowable"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003ADEFAULT_HTTP_STATUS_CODE_MAPPING",
+            "name": "DEFAULT_HTTP_STATUS_CODE_MAPPING",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#constant_DEFAULT_HTTP_STATUS_CODE_MAPPING"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024catchAll",
+            "name": "catchAll",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_catchAll"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024httpStatusCodeMapping",
+            "name": "httpStatusCodeMapping",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_httpStatusCodeMapping"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024reflector",
+            "name": "reflector",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_reflector"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024request",
+            "name": "request",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_request"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024middlewareOptions",
+            "name": "middlewareOptions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Middleware-ExceptionMiddleware.html#property_middlewareOptions"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Response\\HttpStatus",
             "name": "HttpStatus",
@@ -47731,6 +48656,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Service-AppInfoService.html#method_getAppInfoAppName"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\AppInfoService\u003A\u003AgetAppInfoXML\u0028\u0029",
+            "name": "getAppInfoXML",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-AppInfoService.html#method_getAppInfoXML"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\AppInfoService\u003A\u003AgetAppInfo\u0028\u0029",
             "name": "getAppInfo",
             "summary": "Ask\u0020IAppManager\u0020about\u0020the\u0020full\u0020app\u002Dinfo\u0020file.",
@@ -47750,6 +48680,11 @@ Search.appendIndex(
             "name": "appInfo",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Service-AppInfoService.html#property_appInfo"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\AppInfoService\u003A\u003A\u0024appInfoXML",
+            "name": "appInfoXML",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-AppInfoService.html#property_appInfoXML"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\AppPasswordService",
             "name": "AppPasswordService",
@@ -47866,6 +48801,71 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Service-AppStorageDisclosure.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo",
+            "name": "ArchiveInfo",
+            "summary": "DTO\u0020class\u0020in\u0020order\u0020to\u0020communicate\u0020the\u0020archive\u0020info\u0020to\u0020the\u0020JS\u0020frontend.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024format",
+            "name": "format",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_format"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024mimeType",
+            "name": "mimeType",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_mimeType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024size",
+            "name": "size",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_size"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024compressedSize",
+            "name": "compressedSize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_compressedSize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024originalSize",
+            "name": "originalSize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_originalSize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024numberOfFiles",
+            "name": "numberOfFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_numberOfFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024comment",
+            "name": "comment",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_comment"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024defaultMountPoint",
+            "name": "defaultMountPoint",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_defaultMountPoint"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024commonPathPrefix",
+            "name": "commonPathPrefix",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_commonPathPrefix"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024backendDriver",
+            "name": "backendDriver",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_backendDriver"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService",
             "name": "ArchiveService",
             "summary": "Wrapper\u0020around\u0020the\u0020actual\u0020archive\u0020backend\u0020class\u0020in\u0020order\u0020to\u0020interface\u0020with\nthe\u0020virtual\u0020storage\u0020and\u0020actual\u0020archive\u0020extraction\u0020controllers.",
@@ -47945,6 +48945,16 @@ Search.appendIndex(
             "name": "getFileStream",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getFileStream"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003AresolveMemberName\u0028\u0029",
+            "name": "resolveMemberName",
+            "summary": "Resolve\u0020a\u0020member\u0020name\u0020as\u0020requested\u0020by\u0020the\u0020virtual\u0020storage\u0020\u0028normalized\u0020to\nNFC\u0020by\u0020Nextcloud\u0029\u0020back\u0020to\u0020the\u0020raw\u0020member\u0020name\u0020as\u0020actually\u0020stored\u0020in\u0020the\nbackend\u0020archive.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_resolveMemberName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003AgetCollidingMembers\u0028\u0029",
+            "name": "getCollidingMembers",
+            "summary": "Return\u0020the\u0020groups\u0020of\u0020archive\u0020members\u0020which\u0020collapse\u0020onto\u0020the\u0020same\u0020name\nafter\u0020Unicode\u0020\u0028NFC\u0029\u0020normalization.\u0020The\u0020array\u0020is\u0020keyed\u0020by\u0020the\u0020colliding\nnormalized\u0020name,\u0020the\u0020values\u0020are\u0020the\u0020lists\u0020of\u0020raw\u0020member\u0020names.\u0020Only\u0020one\nmember\u0020of\u0020each\u0020group\u0020can\u0020be\u0020extracted\u0020as\u0020a\u0020distinct\u0020file\u003B\u0020the\u0020callers\nshould\u0020report\u0020the\u0020others\u0020instead\u0020of\u0020dropping\u0020them\u0020silently.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCollidingMembers"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003AsetProcessEnvironment\u0028\u0029",
             "name": "setProcessEnvironment",
@@ -48046,10 +49056,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_savedProcessEnvironment"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024unicodeNormalization",
-            "name": "unicodeNormalization",
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024memberNameMap",
+            "name": "memberNameMap",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_unicodeNormalization"
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_memberNameMap"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024collidingMembers",
+            "name": "collidingMembers",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_collidingMembers"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024logger",
             "name": "logger",
@@ -49041,96 +50056,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Traits-CloudAdminTrait.html#property_groupManager"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants",
-            "name": "Constants",
-            "summary": "A\u0020couple\u0020of\u0020constants\u0020in\u0020order\u0020to\u0020avoid\u0020string\u0020literals.",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003APATH_SEPARATOR",
-            "name": "PATH_SEPARATOR",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_PATH_SEPARATOR"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003APATH_SEP",
-            "name": "PATH_SEP",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_PATH_SEP"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ADEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
-            "name": "DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AUSER_FOLDER_PREFIX",
-            "name": "USER_FOLDER_PREFIX",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_USER_FOLDER_PREFIX"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AJS",
-            "name": "JS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_JS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ACSS",
-            "name": "CSS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_CSS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AASSET",
-            "name": "ASSET",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_ASSET"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AHASH",
-            "name": "HASH",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_HASH"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AWEB_ASSET_META",
-            "name": "WEB_ASSET_META",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_WEB_ASSET_META"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AINFO_FILE",
-            "name": "INFO_FILE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_INFO_FILE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003AENUM_VALUE_L10N_TAG",
-            "name": "ENUM_VALUE_L10N_TAG",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_ENUM_VALUE_L10N_TAG"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_GUEST",
-            "name": "RENDER_AS_GUEST",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_GUEST"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_BLANK",
-            "name": "RENDER_AS_BLANK",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_BLANK"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_BASE",
-            "name": "RENDER_AS_BASE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_BASE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_USER",
-            "name": "RENDER_AS_USER",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_USER"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_ERROR",
-            "name": "RENDER_AS_ERROR",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_ERROR"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_PUBLIC",
-            "name": "RENDER_AS_PUBLIC",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#constant_RENDER_AS_PUBLIC"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\DateTimeTrait",
             "name": "DateTimeTrait",
             "summary": "Support\u0020traits\u0020for\u0020date\u002Dtime\u0020stuff",
@@ -49150,6 +50075,11 @@ Search.appendIndex(
             "name": "convertToTimezoneDate",
             "summary": "Reinterprete\u0020the\u0020date\u0020portion\u0020of\u0020a\u0020\\DateTimeInterface\u0020object\u0020at\u0020time\u002000\u003A00\u003A00\u0020in\u0020another\u0020time\u002Dzone.",
             "url": "classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\DateTimeTrait\u003A\u003AgetCurrentDate\u0028\u0029",
+            "name": "getCurrentDate",
+            "summary": "Return\u0020the\u0020current\u0020date\u0020according\u0020to\u0020the\u0020given\u0020or\u0020the\u0020current\u0020user\u0027s\ntimezone\u0020and\u0020return\u0020it\u0020as\u0020DateTime\u0020object\u0020at\u0020midnight\u0020according\u0020to\u0020the\ntimeozone.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\FakeTranslationTrait",
             "name": "FakeTranslationTrait",
@@ -49335,6 +50265,11 @@ Search.appendIndex(
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\SanitizeFilenameTrait\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#property_l"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\TranslatableEnumTrait",
             "name": "TranslatableEnumTrait",
@@ -49545,6 +50480,11 @@ Search.appendIndex(
             "name": "cloudConfig",
             "summary": "Return\u0020the\u0020stored\u0020config\u002Dservice\u0020of\u0020the\u0020embedding\u0020cloud\ncontainer.",
             "url": "classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_cloudConfig"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\ConfigTrait\u003A\u003AcloudUserConfig\u0028\u0029",
+            "name": "cloudUserConfig",
+            "summary": "Return\u0020the\u0020stored\u0020config\u002Dservice\u0020of\u0020the\u0020embedding\u0020cloud\ncontainer.",
+            "url": "classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_cloudUserConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Traits\\ConfigTrait\u003A\u003Al10n\u0028\u0029",
             "name": "l10n",
@@ -50401,6 +51341,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\UserPreferencesTrait\u003A\u003A__doGetUserValue\u0028\u0029",
+            "name": "__doGetUserValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___doGetUserValue"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Traits\\UserPreferencesTrait\u003A\u003AgetUserValue\u0028\u0029",
             "name": "getUserValue",
             "summary": "",
@@ -50420,6 +51365,11 @@ Search.appendIndex(
             "name": "appName",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#property_appName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\UserPreferencesTrait\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#property_cloudUserConfig"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication",
             "name": "AbstractApplication",
@@ -50446,10 +51396,25 @@ Search.appendIndex(
             "summary": "Static\u0020query\u0020of\u0020a\u0020service\u0020through\u0020the\u0020app\u0020container.",
             "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#method_get"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003Aboot\u0028\u0029",
+            "name": "boot",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#method_boot"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003Aregister\u0028\u0029",
             "name": "register",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#method_register"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003AAPP_ROOT_FOLDER",
+            "name": "APP_ROOT_FOLDER",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#constant_APP_ROOT_FOLDER"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003AMIDDLEWARE_OPTIONS",
+            "name": "MIDDLEWARE_OPTIONS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#constant_MIDDLEWARE_OPTIONS"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\AppInfo\\AbstractApplication\u003A\u003A\u0024appContainer",
             "name": "appContainer",
@@ -50460,6 +51425,11 @@ Search.appendIndex(
             "name": "appName",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-AppInfo-AbstractApplication.html#property_appName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Attributes\\DoNotCatchExceptions",
+            "name": "DoNotCatchExceptions",
+            "summary": "Indicate\u0020the\u0020the\u0020ExceptionMiddelware\u0020should\u0020ignore\u0020any\u0020exceptions\u0020thrown\nfrom\u0020this\u0020method.",
+            "url": "classes/OCA-RotDrop-Toolkit-Attributes-DoNotCatchExceptions.html"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Backend\\ArchiveBackend",
             "name": "ArchiveBackend",
@@ -50491,10 +51461,400 @@ Search.appendIndex(
             "summary": "Fetch\u0020all\u0020drivers\u0020matching\u0020the\u0020given\u0020abilities",
             "url": "classes/OCA-RotDrop-Toolkit-Backend-ArchiveFormats.html#method_getFormatDrivers"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\AbstractDecimalRational",
+            "name": "AbstractDecimalRational",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020configured\u0020precision\u0020and\u0020scale.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-AbstractDecimalRational.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003AtoDecimal\u0028\u0029",
+            "name": "toDecimal",
+            "summary": "Return\u0020a\u0020correctly\u0020rounded\u0020floating\u0020point\u0020string\u0020with\u0020the\u0020given\u0020number\u0020of\nfractional\u0020digits.\u0020Intentionally\u0020the\u0020naming\u0020of\u0020the\u0020arguments\u0020\u0024scale\u0020and\n\u0024precision\u0020corresponds\u0020to\u0020the\u0020Doctrine\u0020ORM\u0020\u0022decimal\u0022\u002Dtype\u0020parameters.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-AbstractDecimalRational.html#method_toDecimal"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "Potentially\u0020lossy\u0020conversion\u0020to\u0020a\u0020decimal\u0020number\u0020string.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-AbstractDecimalRational.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-AbstractDecimalRational.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\AbstractDecimalRational\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-AbstractDecimalRational.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalMonetary",
+            "name": "DecimalRationalMonetary",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020two\u0020digits\u0020after\u0020the\u0020separator.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalMonetary.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalMonetary\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalMonetary.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalMonetary\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalMonetary.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP2S2",
+            "name": "DecimalRationalP2S2",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020the\u0020given\u0020scale\u0020and\u0020maximum\u0020precision.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP2S2.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP2S2\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP2S2.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP2S2\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP2S2.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP4S4",
+            "name": "DecimalRationalP4S4",
+            "summary": "Just\u0020like\u0020RationalNumber,\u0020but\u0020the\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020yields\u0020a\ndecimal\u0020number\u0020string\u0020with\u0020the\u0020given\u0020scale\u0020and\u0020maximum\u0020precision.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP4S4.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP4S4\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP4S4.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\DecimalRationalP4S4\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-DecimalRationalP4S4.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber",
+            "name": "RationalNumber",
+            "summary": "Rational\u0020numbers,\u0020exact\u0020fractions.\u0020This\u0020is\u0020mainly\u0020useful\u0020in\u0020a\u0020context\u0020where\nthe\u0020possible\u0020denominator\u0020are\u0020well\u0020known,\u0020which\u0020often\u0020is\u0020the\u0020case\u0020in\u0020a\nmonetary\u0020context.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Acreate\u0028\u0029",
+            "name": "create",
+            "summary": "Generator\u0020method.\u0020If\u0020called\u0020with\u0020only\u0020one\u0020argument\u0020try\u0020to\u0020gracefully\nconvert\u0020the\u0020argument\u0020to\u0020RationalNumber.\u0020Passing\u0020even\u0020null\u0020as\u0020first\nargument\u0020will\u0020create\u0020a\u0020representation\u0020of\u0020zero\u0020as\u0020RationalNumber.\u0020Empty\nstrings\u0020will\u0020also\u0020generate\u0020a\u0020zero.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_create"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AfromRational\u0028\u0029",
+            "name": "fromRational",
+            "summary": "Generate\u0020a\u0020new\u0020instance\u0020from\u0020a\u0020given\u0020base\u002Dclass\u0020instance.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_fromRational"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Around\u0028\u0029",
+            "name": "round",
+            "summary": "Round\u0020\u0022half\u0020away\u0020from\u0020zero\u0022.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_round"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Asign\u0028\u0029",
+            "name": "sign",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_sign"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AtoDecimal\u0028\u0029",
+            "name": "toDecimal",
+            "summary": "Return\u0020a\u0020correctly\u0020rounded\u0020floating\u0020point\u0020string\u0020with\u0020the\u0020given\u0020number\u0020of\nfractional\u0020digits.\u0020Intentionally\u0020the\u0020naming\u0020of\u0020the\u0020arguments\u0020\u0024scale\u0020and\n\u0024precision\u0020corresponds\u0020to\u0020the\u0020Doctrine\u0020ORM\u0020\u0022decimal\u0022\u002Dtype\u0020parameters.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_toDecimal"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AfromDecimal\u0028\u0029",
+            "name": "fromDecimal",
+            "summary": "Initialize\u0020an\u0020instance\u0020from\u0020a\u0020\u0022vanilla\u0022\u0020decimal\u0020string.\u0020Only\u0020supported\nformats\u0020are\u0020\u0028optional\u0020in\u0020square\u0020brackets\u0029\u003A",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_fromDecimal"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AfromFractionString\u0028\u0029",
+            "name": "fromFractionString",
+            "summary": "Parse\u0020a\u0020string\u0020previously\u0020generated\u0020by\u0020Rational\u003A\u003A__toString\u0028\u0029\u0020or\nself\u003A\u003AjsonSerialize\u0028\u0029\u0020back\u0020to\u0020a\u0020number.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_fromFractionString"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AfromFloat\u0028\u0029",
+            "name": "fromFloat",
+            "summary": "Try\u0020to\u0020convert\u0020the\u0020given\u0020float\u0020into\u0020a\u0020RationalNumber.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_fromFloat"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aassign\u0028\u0029",
+            "name": "assign",
+            "summary": "Replace\u0020this\u0020instance\u0020by\u0020the\u0020given\u0020argument.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_assign"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aabs\u0028\u0029",
+            "name": "abs",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_abs"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AabsEq\u0028\u0029",
+            "name": "absEq",
+            "summary": "Make\u0020the\u0020current\u0020number\u0020non\u002Dnegative\u0020in\u002Dplace.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_absEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Ainverse\u0028\u0029",
+            "name": "inverse",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_inverse"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Ainv\u0028\u0029",
+            "name": "inv",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Ainvsere\u0028\u0029.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_inv"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AinvEq\u0028\u0029",
+            "name": "invEq",
+            "summary": "Invert\u0020the\u0020current\u0020instance\u0020in\u0020place.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_invEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Anegate\u0028\u0029",
+            "name": "negate",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_negate"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aneg\u0028\u0029",
+            "name": "neg",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Anegate\u0028\u0029.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_neg"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AnegEq\u0028\u0029",
+            "name": "negEq",
+            "summary": "Negate\u0020the\u0020current\u0020instance\u0020in\u0020place.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_negEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aadd\u0028\u0029",
+            "name": "add",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_add"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AaddEq\u0028\u0029",
+            "name": "addEq",
+            "summary": "Add\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\u0020result\u0020to\n\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\nprotected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\navoided.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_addEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Asubtract\u0028\u0029",
+            "name": "subtract",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_subtract"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Asub\u0028\u0029",
+            "name": "sub",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Asubtract\u0028\u0029.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_sub"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AsubEq\u0028\u0029",
+            "name": "subEq",
+            "summary": "Subtract\u0020the\u0020given\u0020argument\u0020to\u0020the\u0020current\u0020instance.\u0020This\u0020could\u0020be\noptimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\u0020would\u0020be\u0020protected,\u0020in\u0020this\u0020case\nthe\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\u0020be\u0020avoided.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_subEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Amultiply\u0028\u0029",
+            "name": "multiply",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_multiply"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Amul\u0028\u0029",
+            "name": "mul",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Amultiply\u0028\u0029.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_mul"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AmulEq\u0028\u0029",
+            "name": "mulEq",
+            "summary": "Multiply\u0020the\u0020given\u0020argument\u0020with\u0020the\u0020current\u0020instance\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_mulEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Adivide\u0028\u0029",
+            "name": "divide",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_divide"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Adiv\u0028\u0029",
+            "name": "div",
+            "summary": "Shortcut\u0020for\u0020RationalNumber\u003A\u003Adivide\u0028\u0029.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_div"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AdivEq\u0028\u0029",
+            "name": "divEq",
+            "summary": "Divide\u0020the\u0020current\u0020instance\u0020by\u0020the\u0020given\u0020argument\u0020and\u0020assign\u0020the\nresult\u0020to\u0020\u0024this.\u0020This\u0020could\u0020be\u0020optimized\u0020if\u0020the\u0020Rational\u003A\u003Anormalize\u0028\u0029\nwould\u0020be\u0020protected,\u0020in\u0020this\u0020case\u0020the\u0020construction\u0020of\u0020a\u0020new\u0020instance\u0020could\nbe\u0020avoided.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_divEq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Apow\u0028\u0029",
+            "name": "pow",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_pow"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AcreateZeroValue\u0028\u0029",
+            "name": "createZeroValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_createZeroValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Azero\u0028\u0029",
+            "name": "zero",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_zero"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aequals\u0028\u0029",
+            "name": "equals",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_equals"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Aeq\u0028\u0029",
+            "name": "eq",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003D\u003D\u0020\u0024other",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_eq"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Agt\u0028\u0029",
+            "name": "gt",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u0020\u0024other",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_gt"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Age\u0028\u0029",
+            "name": "ge",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003E\u003D\u0020\u0024other",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_ge"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Alt\u0028\u0029",
+            "name": "lt",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u0020\u0024other",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_lt"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Ale\u0028\u0029",
+            "name": "le",
+            "summary": "\\true\u0020iff\u0020\u0024this\u0020\u003C\u003D\u0020\u0024other",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_le"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Amin\u0028\u0029",
+            "name": "min",
+            "summary": "Convenience,\u0020return\u0020the\u0020minimum\u0020using\u0020exact\u0020arithmetic.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_min"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003Amax\u0028\u0029",
+            "name": "max",
+            "summary": "Convenience,\u0020return\u0020the\u0020maximum\u0020using\u0020exact\u0020arithmetic.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_max"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AensureRationalNumber\u0028\u0029",
+            "name": "ensureRationalNumber",
+            "summary": "Generate\u0020an\u0020instance\u0020of\u0020RationalNumber\u0020from\u0020\u0024other\u0020if\u0020it\u0020is\u0020not\u0020already\nan\u0020instance\u0020of\u0020RationalNumber.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_ensureRationalNumber"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "Return\u0020a\u0020less\u0020fancy\u0020string\u0020repesentation\u0020\u0028\u002D\u0029W\u002BN\/D\u0020without\u0020Unicode\u0020super\u002D\nand\u0020sub\u002Dscripts.",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003ADECIMAL_DIGITS_MAX",
+            "name": "DECIMAL_DIGITS_MAX",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#constant_DECIMAL_DIGITS_MAX"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003ASUPER_SCRIPTS",
+            "name": "SUPER_SCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#constant_SUPER_SCRIPTS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common\\RationalNumber\u003A\u003ASUB_SCRIPTS",
+            "name": "SUB_SCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Common-RationalNumber.html#constant_SUB_SCRIPTS"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Console\\ConsoleOutput",
             "name": "ConsoleOutput",
             "summary": "Just\u0020kind\u0020of\u0020a\u0020wrapper\u0020for\u0020a\u0020singleton\u0020console\u0020output\u0020through\u0020the\u0020app\u002Dcontainer.",
             "url": "classes/OCA-RotDrop-Toolkit-Console-ConsoleOutput.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants",
+            "name": "Constants",
+            "summary": "A\u0020couple\u0020of\u0020constants\u0020in\u0020order\u0020to\u0020avoid\u0020string\u0020literals.",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003APATH_SEPARATOR",
+            "name": "PATH_SEPARATOR",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_PATH_SEPARATOR"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003APATH_SEP",
+            "name": "PATH_SEP",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_PATH_SEP"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ADEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
+            "name": "DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AUSER_FOLDER_PREFIX",
+            "name": "USER_FOLDER_PREFIX",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_USER_FOLDER_PREFIX"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AJS",
+            "name": "JS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_JS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ACSS",
+            "name": "CSS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_CSS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AWEB_ASSET_META",
+            "name": "WEB_ASSET_META",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_WEB_ASSET_META"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AINFO_FILE",
+            "name": "INFO_FILE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_INFO_FILE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AENUM_VALUE_L10N_TAG",
+            "name": "ENUM_VALUE_L10N_TAG",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_ENUM_VALUE_L10N_TAG"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_GUEST",
+            "name": "RENDER_AS_GUEST",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_GUEST"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_BLANK",
+            "name": "RENDER_AS_BLANK",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_BLANK"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_BASE",
+            "name": "RENDER_AS_BASE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_BASE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_USER",
+            "name": "RENDER_AS_USER",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_USER"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_ERROR",
+            "name": "RENDER_AS_ERROR",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_ERROR"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003ARENDER_AS_PUBLIC",
+            "name": "RENDER_AS_PUBLIC",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_RENDER_AS_PUBLIC"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AMONETARY_PRECISION",
+            "name": "MONETARY_PRECISION",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_MONETARY_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Constants\u003A\u003AMONETARY_SCALE",
+            "name": "MONETARY_SCALE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Constants.html#constant_MONETARY_SCALE"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Controller\\EntityRepositoryControllerTrait",
             "name": "EntityRepositoryControllerTrait",
@@ -50521,6 +51881,141 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Controller-EntityRepositoryControllerTrait.html#property_l"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType",
+            "name": "AbstractDecimalRationalType",
+            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AgetSQLDeclaration\u0028\u0029",
+            "name": "getSQLDeclaration",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_getSQLDeclaration"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\AbstractDecimalRationalType\u003A\u003ANAME_BASE",
+            "name": "NAME_BASE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-AbstractDecimalRationalType.html#constant_NAME_BASE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType",
+            "name": "ArrayType",
+            "summary": "Type\u0020that\u0020maps\u0020a\u0020PHP\u0020array\u0020to\u0020a\u0020clob\u0020SQL\u0020type.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetSQLDeclaration\u0028\u0029",
+            "name": "getSQLDeclaration",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_getSQLDeclaration"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003ArequiresSQLCommentHint\u0028\u0029",
+            "name": "requiresSQLCommentHint",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#method_requiresSQLCommentHint"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\ArrayType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-ArrayType.html#constant_NAME"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType",
+            "name": "DecimalRationalMonetaryType",
+            "summary": "Abstract\u0020base\u0020class\u0020for\u0020decimal\u0020types",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "\u007B\u0040inheritDoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryType.html#constant_NAME"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type",
+            "name": "DecimalRationalP2S2Type",
+            "summary": "Database\u0020type\u0020for\u0020whole\u0020number\u0020percentages.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2Type\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2Type.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type",
+            "name": "DecimalRationalP4S4Type",
+            "summary": "Database\u0020type\u0020fractions\u0020of\u0020percentages.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4Type\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4Type.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType",
+            "name": "UuidType",
+            "summary": "Like\u0020UuidBinaryType,\u0020but\u0020implement\u0020a\u0020more\u0020allowing\nconvertToPHPValue\u0028\u0029\u0020which\u0020accepts\u0020also\u0020string\u0020inputs.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-UuidType.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToPHPValue\u0028\u0029",
+            "name": "convertToPHPValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_convertToPHPValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003AconvertToDatabaseValue\u0028\u0029",
+            "name": "convertToDatabaseValue",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-UuidType.html#method_convertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types\\UuidType\u003A\u003ANAME",
+            "name": "NAME",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-DBAL-Types-UuidType.html#constant_NAME"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager",
             "name": "AbstractEntityManager",
             "summary": "Abstract\u0020base\u0020class\u0020with\u0020functionality\u0020needed\u0020by\u0020the\u0020classes\u0020in\nthis\u0020namespace.\u0020The\u0020consuming\u0020project\u0027s\u0020entity\u0020manager\u0020must\u0020extend\nthis\u0020class.",
@@ -50536,6 +52031,16 @@ Search.appendIndex(
             "summary": "Toggle\u0020a\u0020filter\u0020without\u0020triggering\u0020an\u0020exception\u0020from\u0020the\u0020FilterCollection\nif\u0020the\u0020filter\u0020does\u0020not\u0020exist.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003AgetWrappedObject\u0028\u0029",
+            "name": "getWrappedObject",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_getWrappedObject"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003AregisterTypes\u0028\u0029",
+            "name": "registerTypes",
+            "summary": "Register\u0020the\u0020needed\u0020additional\u0020DBAL\u0020types.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_registerTypes"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003ASOFT_DELETEABLE_FILTER",
             "name": "SOFT_DELETEABLE_FILTER",
             "summary": "",
@@ -50545,6 +52050,11 @@ Search.appendIndex(
             "name": "BASE_FILTER_SET",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_BASE_FILTER_SET"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\AbstractEntityManager\u003A\u003ADBAL_TYPES",
+            "name": "DBAL_TYPES",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_DBAL_TYPES"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\Constants",
             "name": "Constants",
@@ -50570,6 +52080,26 @@ Search.appendIndex(
             "name": "EntityRepository",
             "summary": "A\u0020class\u0020to\u0020extends\u0020from\u0020pulling\u0020in\u0020the\u0020FindLikeTrait.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntityRepository.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference",
+            "name": "CollectionEntityReference",
+            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\u0020identifier.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\CollectionEntityReference\u003A\u003A\u0024entityClassName",
+            "name": "entityClassName",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-CollectionEntityReference.html#property_entityClassName"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapter",
             "name": "EntityArrayAdapter",
@@ -50703,7 +52233,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference",
             "name": "EntityReference",
-            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\u0020identifier.",
+            "summary": "Simple\u0020entity\u0020reference\u0020with\u0020optional\u0020class\u0020name\u0020and\u0020flattened\nidentifier.\u0020The\u0020difference\u0020to\u0020the\u0020CollectionEntityReference\u0020is\u0020that\u0020the\nentityClassName\u0020is\u0020not\u0020allowed\u0020to\u0020be\u0020null.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A__construct\u0028\u0029",
@@ -50715,11 +52245,6 @@ Search.appendIndex(
             "name": "fromArray",
             "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#method_fromArray"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A\u0024flatIdentifier",
-            "name": "flatIdentifier",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_flatIdentifier"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReference\u003A\u003A\u0024entityClassName",
             "name": "entityClassName",
@@ -50750,6 +52275,26 @@ Search.appendIndex(
             "name": "entities",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceCollection.html#property_entities"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier",
+            "name": "EntityReferenceIdentifier",
+            "summary": "Base\u0020class\u0020for\u0020EntityReference\u0020and\u0020CollectionEntityReference.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Create\u0020an\u0020instance\u0020from\u0020a\u0020data\u0020array.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityReferenceIdentifier\u003A\u003A\u0024flatIdentifier",
+            "name": "flatIdentifier",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#property_flatIdentifier"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityResponse",
             "name": "EntityResponse",
@@ -50800,6 +52345,11 @@ Search.appendIndex(
             "name": "export",
             "summary": "Export\u0020the\u0020collected\u0020entities\u0020as\u0020DTO.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html#method_export"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer\u003A\u003AgetWrappedObject\u0028\u0029",
+            "name": "getWrappedObject",
+            "summary": "If\u0020\u0024object\u0020is\u0020a\u0020decorator\u0020and\u0020implements\u0020the\u0020method\u0020getWrappedObject\u0028\u0029\nthen\u0020return\u0020the\u0020wrapped\u0020object,\u0020otherwise\u0020return\u0020\u0024object.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html#method_getWrappedObject"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer\u003A\u003AflattenIdentifier\u0028\u0029",
             "name": "flattenIdentifier",
@@ -50860,6 +52410,11 @@ Search.appendIndex(
             "name": "EnumOrderByOptions",
             "summary": "Possible\u0020order\u002Dby\u0020options\u0020for\u0020findBy\u0028\u0029.",
             "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EnumOrderByOptions.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EnumOrderByOptions\u003A\u003AasSortDirection\u0028\u0029",
+            "name": "asSortDirection",
+            "summary": "Try\u0020to\u0020convert\u0020to\u0020a\u0020native\u0020PHP\u00208.6\u0020SortDirection\u0020enum.",
+            "url": "classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EnumOrderByOptions.html#method_asSortDirection"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EnumOrderByOptions\u003A\u003AASC",
             "name": "ASC",
@@ -50986,6 +52541,101 @@ Search.appendIndex(
             "summary": "Stuff\u0020into\u0020a\u0020DataResponse.",
             "url": "classes/OCA-RotDrop-Toolkit-DTO-AbstractResponseDTO.html#method_response"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo",
+            "name": "LegacyFileInfo",
+            "summary": "Borrowed\u0020and\u0020enhanced\u0020from\u0020OC\\Files\\Template\\TemplateManager.php\u0020from\u0020one\nancient\u0020Nextcloud\u0020version.",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003ATYPE_FILE",
+            "name": "TYPE_FILE",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#constant_TYPE_FILE"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003ATYPE_FOLDER",
+            "name": "TYPE_FOLDER",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#constant_TYPE_FOLDER"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024fileid",
+            "name": "fileid",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_fileid"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024path",
+            "name": "path",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_path"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024topLevelFolder",
+            "name": "topLevelFolder",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_topLevelFolder"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024relativePath",
+            "name": "relativePath",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_relativePath"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024basename",
+            "name": "basename",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_basename"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024lastmod",
+            "name": "lastmod",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_lastmod"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024mime",
+            "name": "mime",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_mime"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024size",
+            "name": "size",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_size"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024type",
+            "name": "type",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_type"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024hasPreview",
+            "name": "hasPreview",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_hasPreview"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024permissions",
+            "name": "permissions",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_permissions"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024mountType",
+            "name": "mountType",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_mountType"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\DTO\\LegacyFileInfo\u003A\u003A\u0024etag",
+            "name": "etag",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-DTO-LegacyFileInfo.html#property_etag"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\ArchiveCannotOpenException",
             "name": "ArchiveCannotOpenException",
             "summary": "Transparent\u0020archive\u0020extraction\u0020exception.",
@@ -51091,6 +52741,41 @@ Search.appendIndex(
             "summary": "This\u0020exception\u0020should\u0020provide\u0020an\u0020error\u0020message\u0020which\u0020informs\u0020an\nend\u002Duser\u0020about\u0020an\u0020error.",
             "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AsetHttpStatusCode\u0028\u0029",
+            "name": "setHttpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#method_setHttpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AgetHttpStatusCode\u0028\u0029",
+            "name": "getHttpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#method_getHttpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AsetContext\u0028\u0029",
+            "name": "setContext",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#method_setContext"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003AgetContext\u0028\u0029",
+            "name": "getContext",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#method_getContext"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024httpStatusCode",
+            "name": "httpStatusCode",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#property_httpStatusCode"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024context",
+            "name": "context",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Exceptions-EnduserNotificationException.html#property_context"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Exceptions\\EntitySerializationException",
             "name": "EntitySerializationException",
             "summary": "Exception\u0020thrown\u0020by\u0020\u0020OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializer.",
@@ -51151,6 +52836,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method___construct"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003AclearLogEntry\u0028\u0029",
+            "name": "clearLogEntry",
+            "summary": "Clear\u0020a\u0020recently\u0020captuerd\u0020log\u002Dentry.",
+            "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method_clearLogEntry"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003AgetLogEntry\u0028\u0029",
+            "name": "getLogEntry",
+            "summary": "Return\u0020a\u0020recently\u0020captured\u0020log\u002Dentry\u0020if\u0020any.",
+            "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#method_getLogEntry"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003Ahandle\u0028\u0029",
             "name": "handle",
             "summary": "\u007B\u0040inheritdoc\u007D",
@@ -51161,10 +52856,85 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#constant_EVENT"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003A\u0024logEntry",
+            "name": "logEntry",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#property_logEntry"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Listener\\BeforeMessageLoggedEventListener\u003A\u003A\u0024appContainer",
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Listener-BeforeMessageLoggedEventListener.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware",
+            "name": "ExceptionMiddleware",
+            "summary": "Turn\u0020an\u0020exception\u0020into\u0020a\u0020data\u0020response\u0020which\u0020can\u0020be\u0020parsed\u0020by\u0020the\nfrontend.\u0020Can\u0020be\u0020disabled\u0020by\u0020the\u0020DoNotCatchExceptions\u0020attribute.",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterController\u0028\u0029",
+            "name": "afterController",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#method_afterController"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterException\u0028\u0029",
+            "name": "afterException",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#method_afterException"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003AafterThrowable\u0028\u0029",
+            "name": "afterThrowable",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#method_afterThrowable"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003ADEFAULT_HTTP_STATUS_CODE_MAPPING",
+            "name": "DEFAULT_HTTP_STATUS_CODE_MAPPING",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#constant_DEFAULT_HTTP_STATUS_CODE_MAPPING"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024catchAll",
+            "name": "catchAll",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_catchAll"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024httpStatusCodeMapping",
+            "name": "httpStatusCodeMapping",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_httpStatusCodeMapping"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024reflector",
+            "name": "reflector",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_reflector"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024request",
+            "name": "request",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_request"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware\\ExceptionMiddleware\u003A\u003A\u0024middlewareOptions",
+            "name": "middlewareOptions",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Middleware-ExceptionMiddleware.html#property_middlewareOptions"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Response\\HttpStatus",
             "name": "HttpStatus",
@@ -51421,6 +53191,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Service-AppInfoService.html#method_getAppInfoAppName"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\AppInfoService\u003A\u003AgetAppInfoXML\u0028\u0029",
+            "name": "getAppInfoXML",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-AppInfoService.html#method_getAppInfoXML"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\AppInfoService\u003A\u003AgetAppInfo\u0028\u0029",
             "name": "getAppInfo",
             "summary": "Ask\u0020IAppManager\u0020about\u0020the\u0020full\u0020app\u002Dinfo\u0020file.",
@@ -51440,6 +53215,11 @@ Search.appendIndex(
             "name": "appInfo",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Service-AppInfoService.html#property_appInfo"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\AppInfoService\u003A\u003A\u0024appInfoXML",
+            "name": "appInfoXML",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-AppInfoService.html#property_appInfoXML"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\AppPasswordService",
             "name": "AppPasswordService",
@@ -51556,6 +53336,71 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Service-AppStorageDisclosure.html#property_l"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo",
+            "name": "ArchiveInfo",
+            "summary": "DTO\u0020class\u0020in\u0020order\u0020to\u0020communicate\u0020the\u0020archive\u0020info\u0020to\u0020the\u0020JS\u0020frontend.",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003AfromArray\u0028\u0029",
+            "name": "fromArray",
+            "summary": "Initialize\u0020from\u0020the\u0020given\u0020array.",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#method_fromArray"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024format",
+            "name": "format",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_format"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024mimeType",
+            "name": "mimeType",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_mimeType"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024size",
+            "name": "size",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_size"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024compressedSize",
+            "name": "compressedSize",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_compressedSize"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024originalSize",
+            "name": "originalSize",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_originalSize"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024numberOfFiles",
+            "name": "numberOfFiles",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_numberOfFiles"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024comment",
+            "name": "comment",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_comment"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024defaultMountPoint",
+            "name": "defaultMountPoint",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_defaultMountPoint"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024commonPathPrefix",
+            "name": "commonPathPrefix",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_commonPathPrefix"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\\ArchiveInfo\u003A\u003A\u0024backendDriver",
+            "name": "backendDriver",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService-ArchiveInfo.html#property_backendDriver"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService",
             "name": "ArchiveService",
             "summary": "Wrapper\u0020around\u0020the\u0020actual\u0020archive\u0020backend\u0020class\u0020in\u0020order\u0020to\u0020interface\u0020with\nthe\u0020virtual\u0020storage\u0020and\u0020actual\u0020archive\u0020extraction\u0020controllers.",
@@ -51635,6 +53480,16 @@ Search.appendIndex(
             "name": "getFileStream",
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#method_getFileStream"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003AresolveMemberName\u0028\u0029",
+            "name": "resolveMemberName",
+            "summary": "Resolve\u0020a\u0020member\u0020name\u0020as\u0020requested\u0020by\u0020the\u0020virtual\u0020storage\u0020\u0028normalized\u0020to\nNFC\u0020by\u0020Nextcloud\u0029\u0020back\u0020to\u0020the\u0020raw\u0020member\u0020name\u0020as\u0020actually\u0020stored\u0020in\u0020the\nbackend\u0020archive.",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#method_resolveMemberName"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003AgetCollidingMembers\u0028\u0029",
+            "name": "getCollidingMembers",
+            "summary": "Return\u0020the\u0020groups\u0020of\u0020archive\u0020members\u0020which\u0020collapse\u0020onto\u0020the\u0020same\u0020name\nafter\u0020Unicode\u0020\u0028NFC\u0029\u0020normalization.\u0020The\u0020array\u0020is\u0020keyed\u0020by\u0020the\u0020colliding\nnormalized\u0020name,\u0020the\u0020values\u0020are\u0020the\u0020lists\u0020of\u0020raw\u0020member\u0020names.\u0020Only\u0020one\nmember\u0020of\u0020each\u0020group\u0020can\u0020be\u0020extracted\u0020as\u0020a\u0020distinct\u0020file\u003B\u0020the\u0020callers\nshould\u0020report\u0020the\u0020others\u0020instead\u0020of\u0020dropping\u0020them\u0020silently.",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#method_getCollidingMembers"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003AsetProcessEnvironment\u0028\u0029",
             "name": "setProcessEnvironment",
@@ -51736,10 +53591,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#property_savedProcessEnvironment"
         },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024unicodeNormalization",
-            "name": "unicodeNormalization",
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024memberNameMap",
+            "name": "memberNameMap",
             "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#property_unicodeNormalization"
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#property_memberNameMap"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024collidingMembers",
+            "name": "collidingMembers",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Service-ArchiveService.html#property_collidingMembers"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService\u003A\u003A\u0024logger",
             "name": "logger",
@@ -52731,96 +54591,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Traits-CloudAdminTrait.html#property_groupManager"
         },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants",
-            "name": "Constants",
-            "summary": "A\u0020couple\u0020of\u0020constants\u0020in\u0020order\u0020to\u0020avoid\u0020string\u0020literals.",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003APATH_SEPARATOR",
-            "name": "PATH_SEPARATOR",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_PATH_SEPARATOR"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003APATH_SEP",
-            "name": "PATH_SEP",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_PATH_SEP"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ADEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
-            "name": "DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AUSER_FOLDER_PREFIX",
-            "name": "USER_FOLDER_PREFIX",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_USER_FOLDER_PREFIX"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AJS",
-            "name": "JS",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_JS"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ACSS",
-            "name": "CSS",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_CSS"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AASSET",
-            "name": "ASSET",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_ASSET"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AHASH",
-            "name": "HASH",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_HASH"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AWEB_ASSET_META",
-            "name": "WEB_ASSET_META",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_WEB_ASSET_META"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AINFO_FILE",
-            "name": "INFO_FILE",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_INFO_FILE"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003AENUM_VALUE_L10N_TAG",
-            "name": "ENUM_VALUE_L10N_TAG",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_ENUM_VALUE_L10N_TAG"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_GUEST",
-            "name": "RENDER_AS_GUEST",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_GUEST"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_BLANK",
-            "name": "RENDER_AS_BLANK",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_BLANK"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_BASE",
-            "name": "RENDER_AS_BASE",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_BASE"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_USER",
-            "name": "RENDER_AS_USER",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_USER"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_ERROR",
-            "name": "RENDER_AS_ERROR",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_ERROR"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\Constants\u003A\u003ARENDER_AS_PUBLIC",
-            "name": "RENDER_AS_PUBLIC",
-            "summary": "",
-            "url": "classes/OCA-RotDrop-Toolkit-Traits-Constants.html#constant_RENDER_AS_PUBLIC"
-        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\DateTimeTrait",
             "name": "DateTimeTrait",
             "summary": "Support\u0020traits\u0020for\u0020date\u002Dtime\u0020stuff",
@@ -52840,6 +54610,11 @@ Search.appendIndex(
             "name": "convertToTimezoneDate",
             "summary": "Reinterprete\u0020the\u0020date\u0020portion\u0020of\u0020a\u0020\\DateTimeInterface\u0020object\u0020at\u0020time\u002000\u003A00\u003A00\u0020in\u0020another\u0020time\u002Dzone.",
             "url": "classes/OCA-RotDrop-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\DateTimeTrait\u003A\u003AgetCurrentDate\u0028\u0029",
+            "name": "getCurrentDate",
+            "summary": "Return\u0020the\u0020current\u0020date\u0020according\u0020to\u0020the\u0020given\u0020or\u0020the\u0020current\u0020user\u0027s\ntimezone\u0020and\u0020return\u0020it\u0020as\u0020DateTime\u0020object\u0020at\u0020midnight\u0020according\u0020to\u0020the\ntimeozone.",
+            "url": "classes/OCA-RotDrop-Toolkit-Traits-DateTimeTrait.html#method_getCurrentDate"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\FakeTranslationTrait",
             "name": "FakeTranslationTrait",
@@ -53026,6 +54801,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-RotDrop-Toolkit-Traits-SanitizeFilenameTrait.html#property_appContainer"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\SanitizeFilenameTrait\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Toolkit-Traits-SanitizeFilenameTrait.html#property_l"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits\\TranslatableEnumTrait",
             "name": "TranslatableEnumTrait",
             "summary": "Some\u0020convenience\u0020stuff\u0020for\u0020PHP\u0020enums.",
@@ -53201,6 +54981,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html#constant_PHPUNIT_NC_APP_NAMESPACE"
         },                {
+            "fqsen": "\\PHPUNIT_NC_MOCKED_APPS",
+            "name": "PHPUNIT_NC_MOCKED_APPS",
+            "summary": "",
+            "url": "namespaces/default.html#constant_PHPUNIT_NC_MOCKED_APPS"
+        },                {
             "fqsen": "\\PHPUNIT_APPDIR",
             "name": "PHPUNIT_APPDIR",
             "summary": "",
@@ -53245,6 +55030,11 @@ Search.appendIndex(
             "name": "registerClassInstance",
             "summary": "Register\u0020a\u0020class\u0020instance\u0020to\u0020be\u0020returned\u0020by\u0020the\u0020app\u002Dcontainer.",
             "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_registerClassInstance"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AisServiceMocked\u0028\u0029",
+            "name": "isServiceMocked",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_isServiceMocked"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AregisterServices\u0028\u0029",
             "name": "registerServices",
@@ -53310,6 +55100,31 @@ Search.appendIndex(
             "name": "cloudConfigGet",
             "summary": "Callback\u0020hook\u0020for\u0020the\u0020mocked\u0020cloud\u002Dconfig\u0020class.",
             "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_cloudConfigGet"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AdoGetUserValue\u0028\u0029",
+            "name": "doGetUserValue",
+            "summary": "Get\u0020faked\u0020user\u0020preferences.",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_doGetUserValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AdoDeleteUserValue\u0028\u0029",
+            "name": "doDeleteUserValue",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_doDeleteUserValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AdoGetUserKeys\u0028\u0029",
+            "name": "doGetUserKeys",
+            "summary": "Return\u0020the\u0020available\u0020user\u0020preferences\u0020keys\u0020for\u0020the\u0020given\u0020user.",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_doGetUserKeys"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AdoSetUserValue\u0028\u0029",
+            "name": "doSetUserValue",
+            "summary": "Set\u0020faked\u0020user\u0020preferences.",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_doSetUserValue"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AgetCloudUserConfig\u0028\u0029",
+            "name": "getCloudUserConfig",
+            "summary": "Mock\u0020the\u0020cloud\u0020user\u0020config\u0020provider.",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#method_getCloudUserConfig"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003AgetCloudConfig\u0028\u0029",
             "name": "getCloudConfig",
@@ -53390,6 +55205,11 @@ Search.appendIndex(
             "name": "userConfigValues",
             "summary": "",
             "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#property_userConfigValues"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003A\u0024userConfigTypes",
+            "name": "userConfigTypes",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Tests-AbstractMockProvider.html#property_userConfigTypes"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Tests\\AbstractMockProvider\u003A\u003A\u0024systemConfigValues",
             "name": "systemConfigValues",
@@ -53485,6 +55305,11 @@ Search.appendIndex(
             "name": "getDatabaseConfig",
             "summary": "",
             "url": "classes/OCA-RotDrop-Tests-DatabaseProvider.html#method_getDatabaseConfig"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Tests\\DatabaseProvider\u003A\u003AgetConnection\u0028\u0029",
+            "name": "getConnection",
+            "summary": "",
+            "url": "classes/OCA-RotDrop-Tests-DatabaseProvider.html#method_getConnection"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Tests\\DatabaseProvider\u003A\u003AstopServer\u0028\u0029",
             "name": "stopServer",
@@ -53791,6 +55616,16 @@ Search.appendIndex(
             "summary": "Misuse\u0020the\u0020PHPUnit\u0020framework\u0020to\u0020generate\u0020test\u002Ddata\u0020for\u0020the\u0020members\ncompanion\u0020app.\u0020The\u0020idea\u0020is\u0020that\u0020the\u0020generated\u0020SQL\u0020dumps\u0020are\u0020selectively\ncopied\u0020to\u0020the\u0020test\u002Dsuite\u0020of\u0020the\u0020companion\u0020app\u0020and\u0020are\u0020just\u0020loaded\u0020there\nverbatim\u0020into\u0020the\u0020test\u0020database.",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-ArtifactsTest.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\ArtifactsTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-ArtifactsTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\ArtifactsTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-ArtifactsTest.html#method_tearDown"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\ArtifactsTest\u003A\u003AtestArtifacts\u0028\u0029",
             "name": "testArtifacts",
             "summary": "",
@@ -53961,100 +55796,30 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-NumberFormatterTest.html#property_numberFormatter"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest",
-            "name": "RationalNumberTest",
-            "summary": "Test\u0020the\u0020RationalNumber\u0020class.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html"
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TimeFactoryTrait",
+            "name": "TimeFactoryTrait",
+            "summary": "Helper\u0020trait\u0020to\u0020generate\u0020a\u0020mocked\u0020TimeFactory.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-TimeFactoryTrait.html"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003Asetup\u0028\u0029",
-            "name": "setup",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_setup"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestFromDecimal\u0028\u0029",
-            "name": "testFromDecimal",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TimeFactoryTrait\u003A\u003AmockTimeFactory\u0028\u0029",
+            "name": "mockTimeFactory",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testFromDecimal"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-TimeFactoryTrait.html#method_mockTimeFactory"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestToDecimal\u0028\u0029",
-            "name": "testToDecimal",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TimeFactoryTrait\u003A\u003A\u0024mockProvider",
+            "name": "mockProvider",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testToDecimal"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-TimeFactoryTrait.html#property_mockProvider"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestFromFloat\u0028\u0029",
-            "name": "testFromFloat",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TimeFactoryTrait\u003A\u003A\u0024now",
+            "name": "now",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testFromFloat"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-TimeFactoryTrait.html#property_now"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestSign\u0028\u0029",
-            "name": "testSign",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TimeFactoryTrait\u003A\u003A\u0024timeFactory",
+            "name": "timeFactory",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testSign"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestZero\u0028\u0029",
-            "name": "testZero",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testZero"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestCreate\u0028\u0029",
-            "name": "testCreate",
-            "summary": "Test\u0020generation\u0020from\u0020various\u0020stuff.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testCreate"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AfromRational\u0028\u0029",
-            "name": "fromRational",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_fromRational"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestRound\u0028\u0029",
-            "name": "testRound",
-            "summary": "Test\u0020whether\u0020all\u0020this\u0020solves\u0020the\u0020floating\u0020point\u0020round\u002Doff\u0020problems.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testRound"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestPow\u0028\u0029",
-            "name": "testPow",
-            "summary": "Test\u0020some\u0020more\u0020arithmetic.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testPow"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestMinMax\u0028\u0029",
-            "name": "testMinMax",
-            "summary": "Test\u0020some\u0020more\u0020arithmetic.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testMinMax"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestInPlaceOperations\u0028\u0029",
-            "name": "testInPlaceOperations",
-            "summary": "Test\u0020in\u002Dplace\u0020assignments.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testInPlaceOperations"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestComparisons\u0028\u0029",
-            "name": "testComparisons",
-            "summary": "Test\u0020comparisons.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testComparisons"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestResultTypes\u0028\u0029",
-            "name": "testResultTypes",
-            "summary": "Test\u0020the\u0020result\u0020type\u0020of\u0020the\u0020basic\u0020operations.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testResultTypes"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ADECIMALS",
-            "name": "DECIMALS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_DECIMALS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AFLOATS",
-            "name": "FLOATS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_FLOATS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ASIGNS",
-            "name": "SIGNS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_SIGNS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ACREATE_DATA",
-            "name": "CREATE_DATA",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_CREATE_DATA"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-TimeFactoryTrait.html#property_timeFactory"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\TransliteratorTest",
             "name": "TransliteratorTest",
@@ -54240,6 +56005,11 @@ Search.appendIndex(
             "name": "tearDown",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-AccountingControllerTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\AccountingControllerTest\u003A\u003AgenerateController\u0028\u0029",
+            "name": "generateController",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-AccountingControllerTest.html#method_generateController"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\AccountingControllerTest\u003A\u003AtestAutocompleteGnuCashAccounts\u0028\u0029",
             "name": "testAutocompleteGnuCashAccounts",
@@ -54776,6 +56546,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AmountResponseDTOTest.html#method_setup"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AmountResponseDTOTest\u003A\u003AtestSerializedAmountRepresentation\u0028\u0029",
+            "name": "testSerializedAmountRepresentation",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AmountResponseDTOTest.html#method_testSerializedAmountRepresentation"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AmountResponseDTOTest\u003A\u003ADTO_CLASS",
             "name": "DTO_CLASS",
             "summary": "",
@@ -54785,6 +56560,11 @@ Search.appendIndex(
             "name": "dto",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AmountResponseDTOTest.html#property_dto"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AmountResponseDTOTest\u003A\u003A\u0024number",
+            "name": "number",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AmountResponseDTOTest.html#property_number"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\ApplyMigrationsResponseDTOTest",
             "name": "ApplyMigrationsResponseDTOTest",
@@ -54825,6 +56605,46 @@ Search.appendIndex(
             "name": "dto",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompleteGnuCashAccountsResponseDTOTest.html#property_dto"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompletePlaceResponseDTOTest",
+            "name": "AutocompletePlaceResponseDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020ValidatePhoneResponse\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompletePlaceResponseDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompletePlaceResponseDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompletePlaceResponseDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompletePlaceResponseDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompletePlaceResponseDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompletePlaceResponseDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompletePlaceResponseDTOTest.html#property_dto"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompleteStreetResponseDTOTest",
+            "name": "AutocompleteStreetResponseDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020ValidatePhoneResponse\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompleteStreetResponseDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompleteStreetResponseDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompleteStreetResponseDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompleteStreetResponseDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompleteStreetResponseDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\AutocompleteStreetResponseDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-AutocompleteStreetResponseDTOTest.html#property_dto"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\CAFEVDBInitialStateTest",
             "name": "CAFEVDBInitialStateTest",
@@ -54880,6 +56700,61 @@ Search.appendIndex(
             "name": "dto",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DownloadsShareResponseTest.html#property_dto"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest",
+            "name": "DuplicateMusicianDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020the\u0020DuplicateMusician\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003AtestConstructor\u0028\u0029",
+            "name": "testConstructor",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#method_testConstructor"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003AtestFromArray\u0028\u0029",
+            "name": "testFromArray",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#method_testFromArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusicianDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusicianDTOTest.html#property_dto"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusiciansResponseDTOTest",
+            "name": "DuplicateMusiciansResponseDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020ValidatePhoneResponse\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusiciansResponseDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusiciansResponseDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusiciansResponseDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusiciansResponseDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusiciansResponseDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\DuplicateMusiciansResponseDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-DuplicateMusiciansResponseDTOTest.html#property_dto"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\EmailFormComposerRequestDataTest",
             "name": "EmailFormComposerRequestDataTest",
@@ -55090,6 +56965,16 @@ Search.appendIndex(
             "name": "setup",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-InsuranceRateValidationResponseDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\InsuranceRateValidationResponseDTOTest\u003A\u003AtestSerializedRateRepresentation\u0028\u0029",
+            "name": "testSerializedRateRepresentation",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-InsuranceRateValidationResponseDTOTest.html#method_testSerializedRateRepresentation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\InsuranceRateValidationResponseDTOTest\u003A\u003ATEST_RATE_STRING",
+            "name": "TEST_RATE_STRING",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-InsuranceRateValidationResponseDTOTest.html#constant_TEST_RATE_STRING"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\InsuranceRateValidationResponseDTOTest\u003A\u003ADTO_CLASS",
             "name": "DTO_CLASS",
@@ -55316,6 +57201,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SepaDebitMandateDTOTest.html#property_dto"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\SpecialProjectsResponseDTOTest",
+            "name": "SpecialProjectsResponseDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020SepaBankAccount\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SpecialProjectsResponseDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\SpecialProjectsResponseDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SpecialProjectsResponseDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\SpecialProjectsResponseDTOTest\u003A\u003AtestFeedback\u0028\u0029",
+            "name": "testFeedback",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SpecialProjectsResponseDTOTest.html#method_testFeedback"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\SpecialProjectsResponseDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SpecialProjectsResponseDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\SpecialProjectsResponseDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-SpecialProjectsResponseDTOTest.html#property_dto"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\TestDTOTrait",
             "name": "TestDTOTrait",
             "summary": "Just\u0020test\u0020in\u0020order\u0020to\u0020avoid\u0020typos.\u0020The\u0020consuming\u0020test\u0020has\u0020to\u0020define\u0020the\nconstant\u0020self\u003A\u003ADTO_CLASS\u0020to\u0020the\u0020class\u0020name\u0020of\u0020the\u0020DTO\u0020that\u0020should\u0020be\ntested.",
@@ -55405,6 +57315,11 @@ Search.appendIndex(
             "name": "setup",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-EmailFormControllerTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\EmailFormControllerTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-EmailFormControllerTest.html#method_tearDown"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\EmailFormControllerTest\u003A\u003AmockHttpClient\u0028\u0029",
             "name": "mockHttpClient",
@@ -55936,6 +57851,61 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_tearDown"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestValidateEmail\u0028\u0029",
+            "name": "testValidateEmail",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testValidateEmail"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestValidatePhoneNumbersInvalid\u0028\u0029",
+            "name": "testValidatePhoneNumbersInvalid",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testValidatePhoneNumbersInvalid"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestValidatePhoneNumbersValidMobile\u0028\u0029",
+            "name": "testValidatePhoneNumbersValidMobile",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testValidatePhoneNumbersValidMobile"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestValidatePhoneNumbersValidFixedLine\u0028\u0029",
+            "name": "testValidatePhoneNumbersValidFixedLine",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testValidatePhoneNumbersValidFixedLine"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestValidatePhoneNumbersValidInterchanged\u0028\u0029",
+            "name": "testValidatePhoneNumbersValidInterchanged",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testValidatePhoneNumbersValidInterchanged"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestAutocompleteStreet\u0028\u0029",
+            "name": "testAutocompleteStreet",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testAutocompleteStreet"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestAutocompletePlace\u0028\u0029",
+            "name": "testAutocompletePlace",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testAutocompletePlace"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestFindDuplicateMusician\u0028\u0029",
+            "name": "testFindDuplicateMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testFindDuplicateMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestFindProbablyDuplicateMusician\u0028\u0029",
+            "name": "testFindProbablyDuplicateMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testFindProbablyDuplicateMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestDoNotFindDuplicateMusician\u0028\u0029",
+            "name": "testDoNotFindDuplicateMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testDoNotFindDuplicateMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AtestDoNotFindMusicianForDuplicatesCheck\u0028\u0029",
+            "name": "testDoNotFindMusicianForDuplicatesCheck",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#method_testDoNotFindMusicianForDuplicatesCheck"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003ACONTROLLER_CLASS",
             "name": "CONTROLLER_CLASS",
             "summary": "",
@@ -55946,6 +57916,51 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_EXPECTED_ROUTES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003ADATA_PREFIX",
+            "name": "DATA_PREFIX",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_DATA_PREFIX"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003ATEST_EMAIL",
+            "name": "TEST_EMAIL",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_TEST_EMAIL"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AINVALID_NUMBER",
+            "name": "INVALID_NUMBER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_INVALID_NUMBER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AFIXED_LINE_NUMBER",
+            "name": "FIXED_LINE_NUMBER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_FIXED_LINE_NUMBER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AMOBILE_NUMBER",
+            "name": "MOBILE_NUMBER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_MOBILE_NUMBER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AAUTOCOMPLETE_DATA",
+            "name": "AUTOCOMPLETE_DATA",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_AUTOCOMPLETE_DATA"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AAUTOCOMPLETED_STREETS",
+            "name": "AUTOCOMPLETED_STREETS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_AUTOCOMPLETED_STREETS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003AAUTOCOMPLETED_PLACES",
+            "name": "AUTOCOMPLETED_PLACES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_AUTOCOMPLETED_PLACES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003ACONFLICT_KEYS",
+            "name": "CONFLICT_KEYS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#constant_CONFLICT_KEYS"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003A\u0024mockProvider",
             "name": "mockProvider",
             "summary": "",
@@ -55955,6 +57970,11 @@ Search.appendIndex(
             "name": "controller",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#property_controller"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003A\u0024geoCodingService",
+            "name": "geoCodingService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-MusicianValidationControllerTest.html#property_geoCodingService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\MusicianValidationControllerTest\u003A\u003A\u0024postData",
             "name": "postData",
@@ -56191,6 +58211,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_tearDown"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003AtestPropertyGetDefaultValue\u0028\u0029",
+            "name": "testPropertyGetDefaultValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_testPropertyGetDefaultValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003AtestPropertyGetDefaultDeposit\u0028\u0029",
+            "name": "testPropertyGetDefaultDeposit",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_testPropertyGetDefaultDeposit"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003AtestOptionRegenerate\u0028\u0029",
+            "name": "testOptionRegenerate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_testOptionRegenerate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003AtestGeneratorBogusSubtopic\u0028\u0029",
+            "name": "testGeneratorBogusSubtopic",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_testGeneratorBogusSubtopic"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003AtestUnapplyMigrations\u0028\u0029",
+            "name": "testUnapplyMigrations",
+            "summary": "This\u0020is\u0020quas\u0020a\u0020tearDownAfterClass\u0028\u0029\u0020but\u0020we\u0020need\u0020some\u0020mocked\u0020\/\u0020stubbed\nclasses\u0020for\u0020the\u0020entity\u002Dmanager.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#method_testUnapplyMigrations"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003ACONTROLLER_CLASS",
             "name": "CONTROLLER_CLASS",
             "summary": "",
@@ -56201,6 +58246,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#constant_EXPECTED_ROUTES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003ARECEIVABLES_GENERATOR",
+            "name": "RECEIVABLES_GENERATOR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#constant_RECEIVABLES_GENERATOR"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024mockProvider",
             "name": "mockProvider",
             "summary": "",
@@ -56210,6 +58260,41 @@ Search.appendIndex(
             "name": "controller",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_controller"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024timeFactory",
+            "name": "timeFactory",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_timeFactory"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024field",
+            "name": "field",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_field"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024migrationsApplied",
+            "name": "migrationsApplied",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_migrationsApplied"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024projectId",
+            "name": "projectId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_projectId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024musicianId",
+            "name": "musicianId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_musicianId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024fieldId",
+            "name": "fieldId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_fieldId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024now",
+            "name": "now",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_now"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024postData",
             "name": "postData",
@@ -56266,6 +58351,26 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_setup"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003AtestValidateUnknownRequest\u0028\u0029",
+            "name": "testValidateUnknownRequest",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateUnknownRequest"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003AtestValidateProjectName\u0028\u0029",
+            "name": "testValidateProjectName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateProjectName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003AtestPostFailures\u0028\u0029",
+            "name": "testPostFailures",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostFailures"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003AtestPostProjectShare\u0028\u0029",
+            "name": "testPostProjectShare",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostProjectShare"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003AtestGetEventMatrix\u0028\u0029",
             "name": "testGetEventMatrix",
             "summary": "",
@@ -56281,10 +58386,55 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_EXPECTED_ROUTES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003APROJECT_YEAR",
+            "name": "PROJECT_YEAR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_YEAR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003APROJECT_NAME",
+            "name": "PROJECT_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003ANAME_VALIDATION",
+            "name": "NAME_VALIDATION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_NAME_VALIDATION"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024projectsController",
             "name": "projectsController",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_projectsController"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024urlGenerator",
+            "name": "urlGenerator",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_urlGenerator"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024simpleSharingService",
+            "name": "simpleSharingService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_simpleSharingService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024postData",
+            "name": "postData",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_postData"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024linkShares",
+            "name": "linkShares",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkShares"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024linkSharesByPath",
+            "name": "linkSharesByPath",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkSharesByPath"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectsControllerTest\u003A\u003A\u0024shareId",
+            "name": "shareId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_shareId"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectWebPagesControllerTest",
             "name": "ProjectWebPagesControllerTest",
@@ -56341,6 +58491,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#method_tearDown"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003AtestUnapplyMigrations\u0028\u0029",
+            "name": "testUnapplyMigrations",
+            "summary": "This\u0020is\u0020quas\u0020a\u0020tearDownAfterClass\u0028\u0029\u0020but\u0020we\u0020need\u0020some\u0020mocked\u0020\/\u0020stubbed\nclasses\u0020for\u0020the\u0020entity\u002Dmanager.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#method_testUnapplyMigrations"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003AtestGenerateBulkTransactions\u0028\u0029",
+            "name": "testGenerateBulkTransactions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#method_testGenerateBulkTransactions"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003ACONTROLLER_CLASS",
             "name": "CONTROLLER_CLASS",
             "summary": "",
@@ -56351,6 +58511,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#constant_EXPECTED_ROUTES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003ACONFIG_MOCK",
+            "name": "CONFIG_MOCK",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#constant_CONFIG_MOCK"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024mockProvider",
             "name": "mockProvider",
             "summary": "",
@@ -56360,6 +58525,31 @@ Search.appendIndex(
             "name": "controller",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_controller"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024now",
+            "name": "now",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_now"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024migrationsApplied",
+            "name": "migrationsApplied",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_migrationsApplied"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024projectId",
+            "name": "projectId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_projectId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024musicianId",
+            "name": "musicianId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_musicianId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024fieldId",
+            "name": "fieldId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaBulkTransactionsControllerTest.html#property_fieldId"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaBulkTransactionsControllerTest\u003A\u003A\u0024postData",
             "name": "postData",
@@ -56431,15 +58621,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaDebitMandatesControllerTest.html#constant_EXPECTED_ROUTES"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaDebitMandatesControllerTest\u003A\u003AFILE_NAME",
-            "name": "FILE_NAME",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaDebitMandatesControllerTest\u003A\u003AINITIAL_FORM_VALUES",
+            "name": "INITIAL_FORM_VALUES",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaDebitMandatesControllerTest.html#constant_FILE_NAME"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaDebitMandatesControllerTest\u003A\u003AFILE_DATA",
-            "name": "FILE_DATA",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaDebitMandatesControllerTest.html#constant_FILE_DATA"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-SepaDebitMandatesControllerTest.html#constant_INITIAL_FORM_VALUES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\SepaDebitMandatesControllerTest\u003A\u003A\u0024controller",
             "name": "controller",
@@ -56556,6 +58741,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ValidationControllerTest.html#method_tearDown"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ValidationControllerTest\u003A\u003AtestValidateMonetaryValue\u0028\u0029",
+            "name": "testValidateMonetaryValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ValidationControllerTest.html#method_testValidateMonetaryValue"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ValidationControllerTest\u003A\u003ACONTROLLER_CLASS",
             "name": "CONTROLLER_CLASS",
             "summary": "",
@@ -56565,6 +58755,11 @@ Search.appendIndex(
             "name": "EXPECTED_ROUTES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ValidationControllerTest.html#constant_EXPECTED_ROUTES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ValidationControllerTest\u003A\u003AMONETARY_INPUT_VALUES",
+            "name": "MONETARY_INPUT_VALUES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ValidationControllerTest.html#constant_MONETARY_INPUT_VALUES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ValidationControllerTest\u003A\u003A\u0024mockProvider",
             "name": "mockProvider",
@@ -56896,6 +59091,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-DBAL-Types-EnumTest.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\EnableDeprecationsTrait",
+            "name": "EnableDeprecationsTrait",
+            "summary": "Enable\u0020throwing\u0020doctrine\u0020deprecations\u0020without\u0020deduplication.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\EnableDeprecationsTrait\u003A\u003AenableDeprecations\u0028\u0029",
+            "name": "enableDeprecations",
+            "summary": "Enable\u0020throwing\u0020Doctrine\u0020deprecations.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_enableDeprecations"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\CompositePaymentTest",
             "name": "CompositePaymentTest",
             "summary": "Test\u0020the\u0020Entities\\CompositePayment\u0020entity.",
@@ -57041,6 +59246,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-DatabaseStorageFolderTest.html#property_folder"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileTest",
+            "name": "EncryptedFileTest",
+            "summary": "Test\u0020the\u0020Entities\\CompositePayment\u0020entity.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EncryptedFileTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EncryptedFileTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileTest\u003A\u003AtestCTOR\u0028\u0029",
+            "name": "testCTOR",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EncryptedFileTest.html#method_testCTOR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileTest\u003A\u003AtestOwnerReflexivity\u0028\u0029",
+            "name": "testOwnerReflexivity",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EncryptedFileTest.html#method_testOwnerReflexivity"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EncryptedFileTest\u003A\u003AtestPostPersistOwnerReflexivity\u0028\u0029",
+            "name": "testPostPersistOwnerReflexivity",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EncryptedFileTest.html#method_testPostPersistOwnerReflexivity"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait",
             "name": "EntityGeneratorTrait",
             "summary": "Trait\u0020class\u0020in\u0020order\u0020to\u0020generate\u0020entities\u0020without\u0020database\u0020access.",
@@ -57055,6 +59285,21 @@ Search.appendIndex(
             "name": "generateInstruments",
             "summary": "Add\u0020one\u0020instrument\u0020to\u0020\u0024this\u002D\u003Emusician,\u0020\u0024this\u002D\u003Eproject,\u0020\u0024this\u002D\u003Eparticipant.",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003AgetUuid\u0028\u0029",
+            "name": "getUuid",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_getUuid"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003AgenerateYesNoField\u0028\u0029",
+            "name": "generateYesNoField",
+            "summary": "Generate\u0020a\u0020checkbox\u0020field.\u0020Background\u0020is\u0020the\u0020handling\u0020of\u0020missing\u0020data\u0020on\nform\u0020submit,\u0020where\u0020unchecked\u0020checkboxes\u0020simply\u0020do\u0020not\u0020contribute\u0020to\u0020the\ndata\u0020set.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateYesNoField"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003AgenerateEncryptedFile\u0028\u0029",
+            "name": "generateEncryptedFile",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateEncryptedFile"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003AgenerateReceivable\u0028\u0029",
             "name": "generateReceivable",
@@ -57095,6 +59340,11 @@ Search.appendIndex(
             "name": "participant",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_participant"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003A\u0024uuidIndex",
+            "name": "uuidIndex",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_uuidIndex"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\EntityGeneratorTrait\u003A\u003A\u0024entityManager",
             "name": "entityManager",
@@ -57181,6 +59431,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-MockMusiciansRepositoryTrait.html#method_getMusiciansRepositoryMock"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\MockMusiciansRepositoryTrait\u003A\u003A\u0024forcedRepositoryResults",
+            "name": "forcedRepositoryResults",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-MockMusiciansRepositoryTrait.html#property_forcedRepositoryResults"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\MockProjectsRepositoryTrait",
             "name": "MockProjectsRepositoryTrait",
             "summary": "Provide\u0020a\u0020mock\u0020for\u0020the\u0020ProjectsEntityRepository\u0020class.",
@@ -57190,6 +59445,46 @@ Search.appendIndex(
             "name": "getProjectsRepositoryMock",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-MockProjectsRepositoryTrait.html#method_getProjectsRepositoryMock"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatumTest",
+            "name": "ProjectParticipantFieldDatumTest",
+            "summary": "Test\u0020aspects\u0020of\u0020the\u0020ProjectParticipantFieldDatum\u0020entity.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatumTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatumTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatumTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatumTest\u003A\u003AtestConstructNullFromBogusDefaultValue\u0028\u0029",
+            "name": "testConstructNullFromBogusDefaultValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatumTest.html#method_testConstructNullFromBogusDefaultValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatumTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatumTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatumTest\u003A\u003ABOGUS_DEFAULT_VALUES",
+            "name": "BOGUS_DEFAULT_VALUES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatumTest.html#constant_BOGUS_DEFAULT_VALUES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest",
+            "name": "SepaBulkTransactionTest",
+            "summary": "Test\u0020the\u0020Entities\\SepaBankTransaction\u0020entity.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest\u003A\u003AtestCompositePaymentsAssociation\u0028\u0029",
+            "name": "testCompositePaymentsAssociation",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#method_testCompositePaymentsAssociation"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepositoryTest",
             "name": "InstrumentsRepositoryTest",
@@ -57335,6 +59630,21 @@ Search.appendIndex(
             "name": "entityManager",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#property_entityManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Legacy\\PME\\GetPMEStubTrait",
+            "name": "GetPMEStubTrait",
+            "summary": "Mock\u0020IAppData\u0020up\u0020to\u0020the\u0020point\u0020that\u0020we\u0020can\u0020fake\u0020file\u002Daccess.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Legacy\\PME\\GetPMEStubTrait\u003A\u003AgetPHPMyEditStub\u0028\u0029",
+            "name": "getPHPMyEditStub",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#method_getPHPMyEditStub"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Legacy\\PME\\GetPMEStubTrait\u003A\u003A\u0024pme",
+            "name": "pme",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#property_pme"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\MockEntityManagerTrait",
             "name": "MockEntityManagerTrait",
@@ -57556,6 +59866,101 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-UndoableRunQueueExceptionTest.html#constant_CONTEXT"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest",
+            "name": "ContactsCardEventListenerTest",
+            "summary": "Test\u0020aspects\u0020of\u0020the\u0020ContactsCardEventListener\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AtestApplyMigrations\u0028\u0029",
+            "name": "testApplyMigrations",
+            "summary": "This\u0020is\u0020quas\u0020a\u0020setupBeforeClass\u0028\u0029\u0020but\u0020we\u0020need\u0020some\u0020mocked\u0020\/\u0020stubbed\nclasses\u0020for\u0020the\u0020entity\u002Dmanager.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_testApplyMigrations"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AtestUnapplyMigrations\u0028\u0029",
+            "name": "testUnapplyMigrations",
+            "summary": "This\u0020is\u0020quas\u0020a\u0020tearDownAfterClass\u0028\u0029\u0020but\u0020we\u0020need\u0020some\u0020mocked\u0020\/\u0020stubbed\nclasses\u0020for\u0020the\u0020entity\u002Dmanager.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_testUnapplyMigrations"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AtestHandleCardUpdatedNewMusician\u0028\u0029",
+            "name": "testHandleCardUpdatedNewMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_testHandleCardUpdatedNewMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AtestHandleCardUpdatedExistingMusician\u0028\u0029",
+            "name": "testHandleCardUpdatedExistingMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#method_testHandleCardUpdatedExistingMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003AADDRESS_BOOK_URI",
+            "name": "ADDRESS_BOOK_URI",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#constant_ADDRESS_BOOK_URI"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003ASHARED_ADDRESS_BOOK_URI",
+            "name": "SHARED_ADDRESS_BOOK_URI",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#constant_SHARED_ADDRESS_BOOK_URI"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003ACARD_UID",
+            "name": "CARD_UID",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#constant_CARD_UID"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003ACARD_DB_ROW",
+            "name": "CARD_DB_ROW",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#constant_CARD_DB_ROW"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024instance",
+            "name": "instance",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_instance"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024mockProvider",
+            "name": "mockProvider",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_mockProvider"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024appL10n",
+            "name": "appL10n",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_appL10n"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024migrationsApplied",
+            "name": "migrationsApplied",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_migrationsApplied"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024projectId",
+            "name": "projectId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_projectId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024musicianId",
+            "name": "musicianId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_musicianId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener\\ContactsCardEventListenerTest\u003A\u003A\u0024addressBooks",
+            "name": "addressBooks",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Listener-ContactsCardEventListenerTest.html#property_addressBooks"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\Migrations\\SetupMigrationTrait",
             "name": "SetupMigrationTrait",
             "summary": "Setup\u0020code\u0020for\u0020testing\u0020migrations.",
@@ -57620,6 +60025,16 @@ Search.appendIndex(
             "name": "Version20260206193722Test",
             "summary": "Test\u0020integer\u0020overflow\u0020for\u0020Unix\u0020epoche\u0020after\u00202028.",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-Version20260206193722Test.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\Migrations\\Version20260206193722Test\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-Version20260206193722Test.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\Migrations\\Version20260206193722Test\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-Version20260206193722Test.html#method_tearDown"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\Migrations\\Version20260206193722Test\u003A\u003AtestVersion20260206193722\u0028\u0029",
             "name": "testVersion20260206193722",
@@ -57705,6 +60120,26 @@ Search.appendIndex(
             "name": "testVersion20260206193722",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-MigrationsTest.html#method_testVersion20260206193722"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\MigrationsTest\u003A\u003AtestVersion20260819094146\u0028\u0029",
+            "name": "testVersion20260819094146",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-MigrationsTest.html#method_testVersion20260819094146"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\MigrationsTest\u003A\u003AtestVersion20260819094422\u0028\u0029",
+            "name": "testVersion20260819094422",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-MigrationsTest.html#method_testVersion20260819094422"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\MigrationsTest\u003A\u003AtestVersion20260819105948\u0028\u0029",
+            "name": "testVersion20260819105948",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-MigrationsTest.html#method_testVersion20260819105948"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\MigrationsTest\u003A\u003AtestVersion20261009150233\u0028\u0029",
+            "name": "testVersion20261009150233",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Maintenance-MigrationsTest.html#method_testVersion20261009150233"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\MigrationsTest\u003A\u003AtestUpToLatest\u0028\u0029",
             "name": "testUpToLatest",
@@ -58766,25 +61201,45 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderUpdate"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderUpdateApply\u0028\u0029",
-            "name": "testRenderUpdateApply",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdate\u0028\u0029",
+            "name": "testRenderApplyUpdate",
             "summary": "Test\u0020clicking\u0020the\u0020apply\u0020button\u0020whithout\u0020acutally\u0020changing\u0020anything.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderUpdateApply"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdate"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderUpdateApplyAddInstrument\u0028\u0029",
-            "name": "testRenderUpdateApplyAddInstrument",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdateAddInstrument\u0028\u0029",
+            "name": "testRenderApplyUpdateAddInstrument",
             "summary": "Add\u0020an\u0020instrument",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderUpdateApplyAddInstrument"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdateAddInstrument"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderUpdateApplyAddVoice\u0028\u0029",
-            "name": "testRenderUpdateApplyAddVoice",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdateAddVoice\u0028\u0029",
+            "name": "testRenderApplyUpdateAddVoice",
             "summary": "Add\u0020a\u0020voice",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderUpdateApplyAddVoice"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdateAddVoice"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderUpdateApplyRemoveInstrument\u0028\u0029",
-            "name": "testRenderUpdateApplyRemoveInstrument",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdateRemoveInstrument\u0028\u0029",
+            "name": "testRenderApplyUpdateRemoveInstrument",
             "summary": "Remove\u0020the\u0020instrument\u0020again.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderUpdateApplyRemoveInstrument"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdateRemoveInstrument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdateToggleCheckBoxes\u0028\u0029",
+            "name": "testRenderApplyUpdateToggleCheckBoxes",
+            "summary": "Uncheck\u0020the\u0020three\u0020standard\u0020check\u002Dboxes\u0020and\u0020check\u0020them\u0020again\u0020in\u0020a\nfollowing\u0020test.\u0020Additionally,\u0020an\u0020unchecked\u0020\u0022paritcipant\u0020field\u0022\u0020will\u0020be\nchecked\u0020here\u0020and\u0020unchecked\u0020again\u0020in\u0020the\u0020following\u0020test.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdateToggleCheckBoxes"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyUpdateToggleCheckBoxesAgain\u0028\u0029",
+            "name": "testRenderApplyUpdateToggleCheckBoxesAgain",
+            "summary": "Check\u0020a\u0020yes\u002Dno\u0020option.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyUpdateToggleCheckBoxesAgain"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyDelete\u0028\u0029",
+            "name": "testRenderApplyDelete",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyDelete"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestRenderApplyDeleteSoftDeleted\u0028\u0029",
+            "name": "testRenderApplyDeleteSoftDeleted",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#method_testRenderApplyDeleteSoftDeleted"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003AtestUnapplyMigrations\u0028\u0029",
             "name": "testUnapplyMigrations",
@@ -58805,6 +61260,11 @@ Search.appendIndex(
             "name": "ADD_INSTRUMENT_NEWVALS",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#constant_ADD_INSTRUMENT_NEWVALS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003ACHECKBOX_VALUES",
+            "name": "CHECKBOX_VALUES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#constant_CHECKBOX_VALUES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003A\u0024renderer",
             "name": "renderer",
@@ -58845,6 +61305,11 @@ Search.appendIndex(
             "name": "projectInstrumentId",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#property_projectInstrumentId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003A\u0024yesNoFieldId",
+            "name": "yesNoFieldId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-ProjectParticipantsTest.html#property_yesNoFieldId"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\PageRenderer\\ProjectParticipantsTest\u003A\u003A\u0024now",
             "name": "now",
@@ -59476,6 +61941,61 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CalendarObjects.html#constant_CALENDARS"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest",
+            "name": "CloudAccountsServiceTest",
+            "summary": "Test\u0020aspects\u0020of\u0020the\u0020CloudAccountsService\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003AtestConstruction\u0028\u0029",
+            "name": "testConstruction",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#method_testConstruction"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003AtestAddUserToBackend\u0028\u0029",
+            "name": "testAddUserToBackend",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#method_testAddUserToBackend"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003AOLD_USER_BACKEND_NAME",
+            "name": "OLD_USER_BACKEND_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#constant_OLD_USER_BACKEND_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003ANEW_USER_BACKEND_NAME",
+            "name": "NEW_USER_BACKEND_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#constant_NEW_USER_BACKEND_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003A\u0024service",
+            "name": "service",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#property_service"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003A\u0024mockProvider",
+            "name": "mockProvider",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#property_mockProvider"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003A\u0024userManager",
+            "name": "userManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#property_userManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudAccountsServiceTest\u003A\u003A\u0024newUserMailHelper",
+            "name": "newUserMailHelper",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-CloudAccountsServiceTest.html#property_newUserMailHelper"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\CloudUserConnectorServiceTest",
             "name": "CloudUserConnectorServiceTest",
             "summary": "Test\u0020aspects\u0020of\u0020the\u0020CloudUserConnectorService.",
@@ -59570,6 +62090,106 @@ Search.appendIndex(
             "name": "configService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ConfigServiceTest.html#property_configService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest",
+            "name": "ContactsServiceTest",
+            "summary": "Test\u0020aspects\u0020of\u0020the\u0020ContactsService\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestConstruction\u0028\u0029",
+            "name": "testConstruction",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testConstruction"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestFlattenVCard\u0028\u0029",
+            "name": "testFlattenVCard",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testFlattenVCard"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestImportCardDataNew\u0028\u0029",
+            "name": "testImportCardDataNew",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testImportCardDataNew"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestImportCardDataMergeInstruments\u0028\u0029",
+            "name": "testImportCardDataMergeInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testImportCardDataMergeInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestImportVCard\u0028\u0029",
+            "name": "testImportVCard",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testImportVCard"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestExport\u0028\u0029",
+            "name": "testExport",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testExport"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AtestMergeMusician\u0028\u0029",
+            "name": "testMergeMusician",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#method_testMergeMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003ACOUNTRY_NAMES",
+            "name": "COUNTRY_NAMES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#constant_COUNTRY_NAMES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003ACARD_UID",
+            "name": "CARD_UID",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#constant_CARD_UID"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AVCARD_DATA",
+            "name": "VCARD_DATA",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#constant_VCARD_DATA"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AFLAT_CONTACT_DATA",
+            "name": "FLAT_CONTACT_DATA",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#constant_FLAT_CONTACT_DATA"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003AGENDER_MAPPING",
+            "name": "GENDER_MAPPING",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#constant_GENDER_MAPPING"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003A\u0024service",
+            "name": "service",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#property_service"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003A\u0024mockProvider",
+            "name": "mockProvider",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#property_mockProvider"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003A\u0024geoCodingService",
+            "name": "geoCodingService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#property_geoCodingService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\ContactsServiceTest\u003A\u003A\u0024avatarManager",
+            "name": "avatarManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-ContactsServiceTest.html#property_avatarManager"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\DoctrineMigrationsServiceTest",
             "name": "DoctrineMigrationsServiceTest",
@@ -60010,6 +62630,36 @@ Search.appendIndex(
             "name": "compositePayment",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-GnuCashConnectorServiceTest.html#property_compositePayment"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest",
+            "name": "EventDataDTOTest",
+            "summary": "Consistency\u0020test\u0020for\u0020ValidatePhoneResponse\u0020DTO.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest\u003A\u003AtestDefaultArguments\u0028\u0029",
+            "name": "testDefaultArguments",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html#method_testDefaultArguments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest\u003A\u003AtestNonDefaultArguments\u0028\u0029",
+            "name": "testNonDefaultArguments",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html#method_testNonDefaultArguments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService\\EventDataDTOTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-SepaBulkTransactionService-EventDataDTOTest.html#property_dto"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionServiceTest",
             "name": "SepaBulkTransactionServiceTest",
@@ -60581,6 +63231,351 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalMonetaryTest",
+            "name": "DecimalRationalMonetaryTest",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalMonetaryTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalMonetaryTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalMonetaryTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalP2S2Test",
+            "name": "DecimalRationalP2S2Test",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalP2S2Test.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalP2S2Test\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalP2S2Test.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalP4S4Test",
+            "name": "DecimalRationalP4S4Test",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalP4S4Test.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalP4S4Test\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalP4S4Test.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalTestClass",
+            "name": "DecimalRationalTestClass",
+            "summary": "Unit\u002Dtest\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalTestClass.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalTestClass\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalTestClass.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalTestClass\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalTestClass.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalTest",
+            "name": "DecimalRationalTest",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-DecimalRationalTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest",
+            "name": "RationalNumberTest",
+            "summary": "Test\u0020the\u0020RationalNumber\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestFromDecimal\u0028\u0029",
+            "name": "testFromDecimal",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testFromDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestToDecimal\u0028\u0029",
+            "name": "testToDecimal",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testToDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestJsonSerialize\u0028\u0029",
+            "name": "testJsonSerialize",
+            "summary": "Test\u0020less\u0020fancy\u0020jsonSerialize\u0028\u0029\u0020implementation\u0020which\u0020returns\u0020a\u0020non\u002DUnicode\u0020string.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testJsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestFromFractionString\u0028\u0029",
+            "name": "testFromFractionString",
+            "summary": "Test\u0020back\u0020conversion\u0020from\u0020__toString\u0028\u0029\u0020or\u0020jsonSerialize\u0028\u0029.\u0020Both\u0020are\nlossless,\u0020so\u0020a\u0020back\u0020conversion\u0020makes\u0020perfect\u0020sense.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testFromFractionString"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestFromFloat\u0028\u0029",
+            "name": "testFromFloat",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testFromFloat"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestSign\u0028\u0029",
+            "name": "testSign",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testSign"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestZero\u0028\u0029",
+            "name": "testZero",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testZero"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestCreate\u0028\u0029",
+            "name": "testCreate",
+            "summary": "Test\u0020generation\u0020from\u0020various\u0020stuff.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testCreate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AfromRational\u0028\u0029",
+            "name": "fromRational",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_fromRational"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestRound\u0028\u0029",
+            "name": "testRound",
+            "summary": "Test\u0020whether\u0020all\u0020this\u0020solves\u0020the\u0020floating\u0020point\u0020round\u002Doff\u0020problems.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testRound"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestPow\u0028\u0029",
+            "name": "testPow",
+            "summary": "Test\u0020some\u0020more\u0020arithmetic.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testPow"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestMinMax\u0028\u0029",
+            "name": "testMinMax",
+            "summary": "Test\u0020some\u0020more\u0020arithmetic.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testMinMax"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestInPlaceOperations\u0028\u0029",
+            "name": "testInPlaceOperations",
+            "summary": "Test\u0020in\u002Dplace\u0020assignments.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testInPlaceOperations"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestComparisons\u0028\u0029",
+            "name": "testComparisons",
+            "summary": "Test\u0020comparisons.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testComparisons"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AtestResultTypes\u0028\u0029",
+            "name": "testResultTypes",
+            "summary": "Test\u0020the\u0020result\u0020type\u0020of\u0020the\u0020basic\u0020operations.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#method_testResultTypes"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ASUPERSCRIPTS",
+            "name": "SUPERSCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_SUPERSCRIPTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ASUBSCRIPTS",
+            "name": "SUBSCRIPTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_SUBSCRIPTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ADECIMALS",
+            "name": "DECIMALS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_DECIMALS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003AFLOATS",
+            "name": "FLOATS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_FLOATS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ASIGNS",
+            "name": "SIGNS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_SIGNS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\RationalNumberTest\u003A\u003ACREATE_DATA",
+            "name": "CREATE_DATA",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-RationalNumberTest.html#constant_CREATE_DATA"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait",
+            "name": "TestDecimalRationalTrait",
+            "summary": "Test\u0020quasi\u002Dfixed\u002Dpoint\u0020numbers.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003ApadDecimal\u0028\u0029",
+            "name": "padDecimal",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#method_padDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003AtestToDecimal\u0028\u0029",
+            "name": "testToDecimal",
+            "summary": "Test\u0020toDecimal\u0028\u0029\u0020and\u0020jsonSerialize\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#method_testToDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003A\u0024precision",
+            "name": "precision",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#property_precision"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\TestDecimalRationalTrait\u003A\u003A\u0024scale",
+            "name": "scale",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Common-TestDecimalRationalTrait.html#property_scale"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryTypeTest",
+            "name": "DecimalRationalMonetaryTypeTest",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryTypeTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryTypeTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryTypeTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalMonetaryTypeTest\u003A\u003ADATABASE_TYPE_CLASS",
+            "name": "DATABASE_TYPE_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalMonetaryTypeTest.html#constant_DATABASE_TYPE_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2TypeTest",
+            "name": "DecimalRationalP2S2TypeTest",
+            "summary": "Test\u0020some\u0020aspects\u0020of\u0020quasi\u002Dfixed\u002Dpoint\u0020numbers.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2TypeTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2TypeTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2TypeTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP2S2TypeTest\u003A\u003ADATABASE_TYPE_CLASS",
+            "name": "DATABASE_TYPE_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP2S2TypeTest.html#constant_DATABASE_TYPE_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4TypeTest",
+            "name": "DecimalRationalP4S4TypeTest",
+            "summary": "Test\u0020some\u0020aspects\u0020of\u0020quasi\u002Dfixed\u002Dpoint\u0020numbers.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4TypeTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4TypeTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4TypeTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalP4S4TypeTest\u003A\u003ADATABASE_TYPE_CLASS",
+            "name": "DATABASE_TYPE_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalP4S4TypeTest.html#constant_DATABASE_TYPE_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTestClass",
+            "name": "DecimalRationalTestClass",
+            "summary": "Unit\u002Dtest\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTestClass.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTestClass\u003A\u003APRECISION",
+            "name": "PRECISION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTestClass.html#constant_PRECISION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTestClass\u003A\u003ASCALE",
+            "name": "SCALE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTestClass.html#constant_SCALE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTypeTestClass",
+            "name": "DecimalRationalTypeTestClass",
+            "summary": "Unit\u002Dtest\u0020class.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTypeTestClass.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTypeTestClass\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTypeTestClass.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTypeTest",
+            "name": "DecimalRationalTypeTest",
+            "summary": "Test\u0020the\u0020given\u0020number\u0020type\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTypeTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTypeTest\u003A\u003ANUMBER_CLASS",
+            "name": "NUMBER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTypeTest.html#constant_NUMBER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\DecimalRationalTypeTest\u003A\u003ADATABASE_TYPE_CLASS",
+            "name": "DATABASE_TYPE_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-DecimalRationalTypeTest.html#constant_DATABASE_TYPE_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait",
+            "name": "TestDecimalRationalTypeTrait",
+            "summary": "Test\u0020quasi\u002Dfixed\u002Dpoint\u0020numbers.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003AtestGetName\u0028\u0029",
+            "name": "testGetName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_testGetName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003AtestGetSqlDeclaration\u0028\u0029",
+            "name": "testGetSqlDeclaration",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_testGetSqlDeclaration"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003ApadDecimal\u0028\u0029",
+            "name": "padDecimal",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_padDecimal"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003AtestConvertToPhpValue\u0028\u0029",
+            "name": "testConvertToPhpValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_testConvertToPhpValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003AtestConvertToDatabaseValue\u0028\u0029",
+            "name": "testConvertToDatabaseValue",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#method_testConvertToDatabaseValue"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003A\u0024dbPlatform",
+            "name": "dbPlatform",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#property_dbPlatform"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003A\u0024precision",
+            "name": "precision",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#property_precision"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types\\TestDecimalRationalTypeTrait\u003A\u003A\u0024scale",
+            "name": "scale",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-DBAL-Types-TestDecimalRationalTypeTrait.html#property_scale"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapterTest",
             "name": "EntityArrayAdapterTest",
             "summary": "Test\u0020aspects\u0020of\u0020the\u0020EntityArrayAdapter",
@@ -60596,10 +63591,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#method_tearDown"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapterTest\u003A\u003AtestConstrution\u0028\u0029",
-            "name": "testConstrution",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapterTest\u003A\u003AtestConstruction\u0028\u0029",
+            "name": "testConstruction",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#method_testConstrution"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#method_testConstruction"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntityArrayAdapterTest\u003A\u003AtestArrayAccess\u0028\u0029",
             "name": "testArrayAccess",
@@ -60665,6 +63660,11 @@ Search.appendIndex(
             "name": "testExport",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializerTest.html#method_testExport"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializerTest\u003A\u003AtestNonMatchingCommonPrefix\u0028\u0029",
+            "name": "testNonMatchingCommonPrefix",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializerTest.html#method_testNonMatchingCommonPrefix"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer\\EntitySerializerTest\u003A\u003AtestExportWithShortNames\u0028\u0029",
             "name": "testExportWithShortNames",
@@ -60931,6 +63931,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-DateTimeTraitTest.html#method_testConvertToTimezoneDate"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits\\DateTimeTraitTest\u003A\u003AtestGetCurrentDate\u0028\u0029",
+            "name": "testGetCurrentDate",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-DateTimeTraitTest.html#method_testGetCurrentDate"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits\\DateTimeTraitTest\u003A\u003ADATE_TIME_CLASSES",
             "name": "DATE_TIME_CLASSES",
             "summary": "",
@@ -61091,6 +64096,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Traits-AppConfigTraitTest.html#property_cloudConfig"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Traits\\AppConfigTraitTest\u003A\u003A\u0024cloudUserConfig",
+            "name": "cloudUserConfig",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Traits-AppConfigTraitTest.html#property_cloudUserConfig"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Traits\\Instance",
             "name": "Instance",
             "summary": "",
@@ -61190,6 +64200,11 @@ Search.appendIndex(
             "name": "FilesInitialState",
             "summary": "",
             "url": "namespaces/oca-cafevdb-controller-dto-filesinitialstate.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DTO\\SpecialProjectsResponse",
+            "name": "SpecialProjectsResponse",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-controller-dto-specialprojectsresponse.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Crypto",
             "name": "Crypto",
@@ -61436,6 +64451,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-service-finance.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\SepaBulkTransactionService",
+            "name": "SepaBulkTransactionService",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-service-finance-sepabulktransactionservice.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP",
             "name": "IMAP",
             "summary": "",
@@ -61466,35 +64486,55 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-appinfo.html"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit",
-            "name": "Toolkit",
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Attributes",
+            "name": "Attributes",
             "summary": "",
-            "url": "namespaces/oca-cafevdb-toolkit.html"
+            "url": "namespaces/oca-cafevdb-toolkit-attributes.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Backend",
             "name": "Backend",
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-backend.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Common",
+            "name": "Common",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit-common.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Console",
             "name": "Console",
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-console.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit",
+            "name": "Toolkit",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Controller",
             "name": "Controller",
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-controller.html"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM",
-            "name": "ORM",
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL\\Types",
+            "name": "Types",
             "summary": "",
-            "url": "namespaces/oca-cafevdb-toolkit-doctrine-orm.html"
+            "url": "namespaces/oca-cafevdb-toolkit-doctrine-dbal-types.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\DBAL",
+            "name": "DBAL",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit-doctrine-dbal.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine",
             "name": "Doctrine",
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-doctrine.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM",
+            "name": "ORM",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit-doctrine-orm.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Doctrine\\ORM\\EntitySerializer",
             "name": "EntitySerializer",
@@ -61516,6 +64556,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-listener.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Middleware",
+            "name": "Middleware",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit-middleware.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Response",
             "name": "Response",
             "summary": "",
@@ -61525,6 +64570,11 @@ Search.appendIndex(
             "name": "Service",
             "summary": "",
             "url": "namespaces/oca-cafevdb-toolkit-service.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Service\\ArchiveService",
+            "name": "ArchiveService",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-toolkit-service-archiveservice.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits",
             "name": "Traits",
@@ -61541,6 +64591,26 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-rotdrop-toolkit-appinfo.html"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Attributes",
+            "name": "Attributes",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-attributes.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Backend",
+            "name": "Backend",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-backend.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Common",
+            "name": "Common",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-common.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Console",
+            "name": "Console",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-console.html"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit",
             "name": "Toolkit",
             "summary": "",
@@ -61551,30 +64621,30 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-rotdrop.html"
         },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Backend",
-            "name": "Backend",
-            "summary": "",
-            "url": "namespaces/oca-rotdrop-toolkit-backend.html"
-        },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Console",
-            "name": "Console",
-            "summary": "",
-            "url": "namespaces/oca-rotdrop-toolkit-console.html"
-        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Controller",
             "name": "Controller",
             "summary": "",
             "url": "namespaces/oca-rotdrop-toolkit-controller.html"
         },                {
-            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM",
-            "name": "ORM",
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL\\Types",
+            "name": "Types",
             "summary": "",
-            "url": "namespaces/oca-rotdrop-toolkit-doctrine-orm.html"
+            "url": "namespaces/oca-rotdrop-toolkit-doctrine-dbal-types.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\DBAL",
+            "name": "DBAL",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-doctrine-dbal.html"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine",
             "name": "Doctrine",
             "summary": "",
             "url": "namespaces/oca-rotdrop-toolkit-doctrine.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM",
+            "name": "ORM",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-doctrine-orm.html"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Doctrine\\ORM\\EntitySerializer",
             "name": "EntitySerializer",
@@ -61596,6 +64666,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-rotdrop-toolkit-listener.html"
         },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Middleware",
+            "name": "Middleware",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-middleware.html"
+        },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Response",
             "name": "Response",
             "summary": "",
@@ -61605,6 +64680,11 @@ Search.appendIndex(
             "name": "Service",
             "summary": "",
             "url": "namespaces/oca-rotdrop-toolkit-service.html"
+        },                {
+            "fqsen": "\\OCA\\RotDrop\\Toolkit\\Service\\ArchiveService",
+            "name": "ArchiveService",
+            "summary": "",
+            "url": "namespaces/oca-rotdrop-toolkit-service-archiveservice.html"
         },                {
             "fqsen": "\\OCA\\RotDrop\\Toolkit\\Traits",
             "name": "Traits",
@@ -61691,6 +64771,16 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-database.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Legacy\\PME",
+            "name": "PME",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-database-legacy-pme.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Legacy",
+            "name": "Legacy",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-database-legacy.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits",
             "name": "Traits",
             "summary": "",
@@ -61705,6 +64795,11 @@ Search.appendIndex(
             "name": "Exceptions",
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-exceptions.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Listener",
+            "name": "Listener",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-listener.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Maintenance\\Migrations",
             "name": "Migrations",
@@ -61726,6 +64821,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-service-finance.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\Finance\\SepaBulkTransactionService",
+            "name": "SepaBulkTransactionService",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-service-finance-sepabulktransactionservice.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Service\\L10N",
             "name": "L10N",
             "summary": "",
@@ -61741,6 +64841,26 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-storage.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common",
+            "name": "Common",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-common.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL\\Types",
+            "name": "Types",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-doctrine-dbal-types.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\DBAL",
+            "name": "DBAL",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-doctrine-dbal.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine",
+            "name": "Doctrine",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-doctrine.html"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine\\ORM\\EntitySerializer",
             "name": "EntitySerializer",
             "summary": "",
@@ -61750,11 +64870,6 @@ Search.appendIndex(
             "name": "ORM",
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-toolkit-doctrine-orm.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Doctrine",
-            "name": "Doctrine",
-            "summary": "",
-            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-doctrine.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\DTO",
             "name": "DTO",

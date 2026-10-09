@@ -28,7 +28,10 @@ use DateTimeZone;
 use DateTimeImmutable as DateTime;
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP2S2 as TaxRateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as InsuranceRateNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -38,6 +41,7 @@ use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
@@ -56,11 +60,9 @@ class InstrumentInsuranceService
   private $insurancesRepository;
 
   /**
-   * @var null|RationalNumber
-   *
    * The insurance tax rate.
    */
-  private ?RationalNumber $taxRate = null;
+  private ?TaxRateNumberType $taxRate = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -133,8 +135,7 @@ class InstrumentInsuranceService
     DateTimeInterface $insuranceStart,
     ?DateTimeInterface $insuranceEnd,
     DateTimeInterface $dueDate,
-  ):RationalNumber
-  {
+  ): RationalNumber {
     $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
     $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone);
@@ -200,9 +201,9 @@ class InstrumentInsuranceService
   /**
    * Fetch the tax rate from the TaxationStatutorySources table.
    *
-   * @return RationalNumber
+   * @return TaxRateNumberType
    */
-  public function getTaxRate():RationalNumber
+  public function getTaxRate(): TaxRateNumberType
   {
     if ($this->taxRate !== null) {
       return $this->taxRate;
@@ -243,14 +244,14 @@ class InstrumentInsuranceService
    * @param null|array $dueInterval Return the minimum and maximum due dates
    * found for the musician.
    *
-   * @return RationalNumber Insurance fees computed.
+   * @return MonetaryNumberType Insurance fees computed.
    */
   public function insuranceFee(
     mixed $musicianOrId,
     null|string|Entities\InsuranceBroker $broker,
     $date = null,
     ?array &$dueInterval = null,
-  ):RationalNumber {
+  ): MonetaryNumberType {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
       $date = new DateTime();
@@ -261,7 +262,7 @@ class InstrumentInsuranceService
 
     $taxFactor = $this->getTaxRate()->add(1);
 
-    $fee = RationalNumber::zero();
+    $fee = MonetaryNumberType::zero();
     /** @var \DateTimeInterface $minDueDate */
     /** @var \DateTimeInterface $maxDueDate */
     $minDueDate = $maxDueDate = null;
@@ -284,7 +285,7 @@ class InstrumentInsuranceService
       $minDueDate = empty($minDueDate) ? $dueDate : min($dueDate, $minDueDate);
       $maxDueDate = empty($maxDueDate) ? $dueDate : max($dueDate, $maxDueDate);
 
-      $annualFee = $rate->getRate()->mul($insurance->getInsuranceAmount());
+      $annualFee = MonetaryNumberType::create($insurance->getInsuranceAmount())->mul($rate->getRate());
       $annualFee->mulEq($this->yearFraction($insuranceStart, $insuranceEnd, $dueDate));
 
       $fee->addEq($annualFee->mul($taxFactor));
@@ -327,7 +328,7 @@ class InstrumentInsuranceService
     $entities = $this->getDatabaseRepository(Entities\InsuranceRate::class)->findAll();
     /** @var Entities\InsuranceRate $entity */
     foreach ($entities as $entity) {
-      $scope = (string)$entity->getGeographicalScope();
+      $scope = $entity->getGeographicalScope()->value;
       if ($translate) {
         $scope = $this->l->t($scope);
       }
@@ -406,10 +407,6 @@ class InstrumentInsuranceService
    *
    * @param null|DateTime $date Determines the insurance year.
    *
-   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
-   * database entity or null. If null compute the fee for all brokers,
-   * otherwise only for the given one.
-   *
    * @return array
    */
   public function musicianOverview(
@@ -472,16 +469,16 @@ class InstrumentInsuranceService
         continue;
       }
 
-      $amount = $insurance->getInsuranceAmount();
+      $amount = MonetaryNumberType::create($insurance->getInsuranceAmount());
       $fraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
-      $annualFee = $rate->getRate()->mul($amount);
+      $annualFee = $amount->mul($rate->getRate());
 
       $instrumentHolder = $insurance->getInstrumentHolder();
       $instrumentHolderId = $instrumentHolder->getId();
       if (empty($insuranceOverview['musicians'][$instrumentHolderId])) {
         $insuranceOverview['musicians'][$instrumentHolderId] = [
           'name' => $instrumentHolder->getPublicName(true),
-          'subTotals' => RationalNumber::create(0),
+          'subTotals' => MonetaryNumberType::create(0),
           'items' => [],
         ];
       }
@@ -504,10 +501,10 @@ class InstrumentInsuranceService
       $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
     }
 
-    $annual = RationalNumber::zero();
+    $annual = MonetaryNumberType::zero();
     foreach ($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
-      $subTotals = RationalNumber::zero();
+      $subTotals = MonetaryNumberType::zero();
       foreach ($info['items'] as $itemInfo) {
         $subTotals = $subTotals->add($itemInfo['fee']);
       }
@@ -534,19 +531,21 @@ class InstrumentInsuranceService
     $billToParty = $overview['billTo'];
 
     $userIdSlug = $billToParty['userIdSlug'];
-    $camelCaseSlug = Util::dashesToCamelCase($userIdSlug, true, '_-.');
+
+    $dashes = ' _-.';
 
     $year = $overview['date']->format('Y');
 
     $components = [
-      $this->timeStamp(),
-      $billToParty['id'],
-      $camelCaseSlug,
-      strtolower($this->l->t('insurance')),
-      $year, $year + 1,
+      Util::dashesToCamelCase($this->l->t('Insurance Fee'), true, $dashes),
+      $year,
+      $year + 1,
     ];
+    if (!empty($overview['broker'])) {
+      $components[] = Util::dashesToCamelCase($overview['broker'], true, $dashes);
+    }
 
-    return implode('-', $components) . '.pdf';
+    return MusicianService::slugifyFileName(implode('-', $components) . '.pdf', $userIdSlug);
   }
 
   /**
@@ -573,7 +572,7 @@ class InstrumentInsuranceService
     // Prepare the data doing some translations first
     foreach ($overview['musicians'] as &$insurance) {
       foreach ($insurance['items'] as &$item) {
-        $item['scope'] = $this->l->t($item['scope']);
+        $item['scope'] = $item['scope']->t($this->l);
       }
     }
 

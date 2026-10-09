@@ -27,8 +27,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use RuntimeException;
 use Throwable;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -60,15 +62,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private ProjectParticipantField $field;
+  private ?ProjectParticipantField $field;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private Project $project;
+  private ?Project $project;
 
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private Musician $musician;
+  private ?Musician $musician;
 
   #[ORM\Column(type: 'uuid_binary')]
   #[ORM\Id]
@@ -83,18 +85,18 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * options. Supported range is IIIII.DD which is plenty at the time of this
    * writing.
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
-  private ?RationalNumber $deposit = null;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: true)]
+  private ?MonetaryNumberType $deposit = null;
 
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
-  private ProjectParticipantFieldDataOption $dataOption;
+  private ?ProjectParticipantFieldDataOption $dataOption;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
-  private ProjectParticipant $projectParticipant;
+  private ?ProjectParticipant $projectParticipant;
 
   /**
    * @var Collection<ProjectPayment>
@@ -125,11 +127,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int|null|Project $project
+   * @param ?Project $project
    *
-   * @return ProjectParticipantProjectsData
+   * @return self
    */
-  public function setProject($project):ProjectParticipantFieldDatum
+  public function setProject(?Project $project): self
   {
     $this->project = $project;
 
@@ -139,9 +141,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return Project
+   * @return ?Project
    */
-  public function getProject():Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
@@ -149,11 +151,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int|null|Musician $musician
+   * @param ?Musician $musician
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setMusician($musician):ProjectParticipantFieldDatum
+  public function setMusician(?Musician $musician): self
   {
     $this->musician = $musician;
 
@@ -163,25 +165,29 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician
+   * @return ?Musician
    */
-  public function getMusician():Musician
+  public function getMusician(): ?Musician
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**
    * Set projectParticipant.
    *
-   * @param ProjectParticipant $projectParticipant
+   * @param ?ProjectParticipant $projectParticipant
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectParticipantFieldDatum
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant): self
   {
     $this->projectParticipant = $projectParticipant;
-    $this->musician = $projectParticipant->getMusician();
-    $this->project = $projectParticipant->getProject();
+    $this->musician = $projectParticipant?->getMusician();
+    $this->project = $projectParticipant?->getProject();
+    if ($projectParticipant === null) {
+      $this->field = null;
+      $this->dataOption = null;
+    }
 
     return $this;
   }
@@ -189,21 +195,21 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get projectParticipant.
    *
-   * @return ProjectParticipant
+   * @return ?ProjectParticipant
    */
-  public function getProjectParticipant():ProjectParticipant
+  public function getProjectParticipant(): ?ProjectParticipant
   {
-    return $this->projectParticipant;
+    return $this->projectParticipant ?? null;
   }
 
   /**
    * Set field.
    *
-   * @param int|null|ProjectParticipantField $field
+   * @param ProjectParticipantField $field
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setField($field):ProjectParticipantFieldDatum
+  public function setField(?ProjectParticipantField $field): self
   {
     $this->field = $field;
 
@@ -213,25 +219,27 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get field.
    *
-   * @return ProjectParticipantField
+   * @return ?ProjectParticipantField
    */
-  public function getField():ProjectParticipantField
+  public function getField(): ?ProjectParticipantField
   {
-    return $this->field;
+    return $this->field ?? null;
   }
 
   /**
    * Set dataOption.
    *
-   * @param ProjectParticipantFieldDataOption $dataOption
+   * @param ?ProjectParticipantFieldDataOption $dataOption
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setDataOption(ProjectParticipantFieldDataOption $dataOption):ProjectParticipantFieldDatum
+  public function setDataOption(?ProjectParticipantFieldDataOption $dataOption): self
   {
     $this->dataOption = $dataOption;
-    $this->field = $dataOption->getField();
-    $this->optionKey = $dataOption->getKey();
+    if ($dataOption) {
+      $this->field = $dataOption->getField();
+      $this->optionKey = $dataOption->getKey();
+    }
 
     return $this;
   }
@@ -239,11 +247,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get dataOption.
    *
-   * @return ProjectParticipantFieldDataOption
+   * @return ?ProjectParticipantFieldDataOption
    */
-  public function getDataOption():ProjectParticipantFieldDataOption
+  public function getDataOption(): ?ProjectParticipantFieldDataOption
   {
-    return $this->dataOption;
+    return $this->dataOption ?? null;
   }
 
   /**
@@ -252,13 +260,13 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * @param null|string|RationalNumber $optionValue RationalNumber is only
    * allowed for monetary fields.
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setOptionValue(null|string|RationalNumber $optionValue):ProjectParticipantFieldDatum
+  public function setOptionValue(null|string|RationalNumber $optionValue): self
   {
     if ($optionValue instanceof RationalNumber) {
       $scale = ($this->field->getDataType() == FieldDataType::LIABILITIES || $this->field->getDataType() == FieldDataType::RECEIVABLES)
-        ? 2
+        ? MonetaryNumberType::SCALE
         : -1;
       $this->optionValue = $optionValue->toDecimal($scale);
     } else {
@@ -314,12 +322,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @param null|int|float|string|RationalNumber $deposit
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDatum
+  public function setDeposit(null|int|float|string|RationalNumber $deposit): self
   {
     if ($deposit !== null) {
-      $deposit = RationalNumber::create($deposit);
+      $deposit = MonetaryNumberType::create($deposit);
     }
     $this->deposit = $deposit;
 
@@ -329,9 +337,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|RationalNumber
+   * @return ?MonetaryNumberType
    */
-  public function getDeposit():?RationalNumber
+  public function getDeposit(): ?MonetaryNumberType
   {
     return $this->deposit ?? null;
   }
@@ -416,9 +424,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @param ProjectParticipant $participant
    *
-   * @return null|ProjectParticipantFieldDatum
+   * @return ?self
    */
-  public static function fromDefaultValue(ProjectParticipantField $field, ProjectParticipant $participant):?ProjectParticipantFieldDatum
+  public static function fromDefaultValue(ProjectParticipantField $field, ProjectParticipant $participant): ?self
   {
     $defaultValue = $field->getDefaultValue();
     if ($defaultValue === null) {
@@ -437,6 +445,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       ->setProjectParticipant($participant)
       ->setDataOption($defaultValue);
     switch ($field->getMultiplicity()) {
+      case FieldMultiplicity::RECURRING:
       case FieldMultiplicity::SIMPLE:
         // value is stored in the the data item
         $datum->setOptionValue($defaultValue->getData());
@@ -445,6 +454,51 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       default:
         break;
     }
+    // Perform some validation and check whether the resulting field value makes sense.
+    $effectiveValue = $datum->getEffectiveValue();
+    switch ($field->getDataType()) {
+      case FieldDataType::BOOLEAN:
+        $valid = null !== filter_var($effectiveValue, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        break;
+      case FieldDataType::INTEGER:
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_INT);
+        break;
+      case FieldDataType::DB_FILE:
+        // database id must be >= 1
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        break;
+      case FieldDataType::DATE:
+        // fallthrough
+      case FieldDataType::DATETIME:
+        try {
+          new DateTimeImmutable($effectiveValue);
+          $valid = true;
+        } catch (Throwable) {
+          $valid = false;
+        }
+        break;
+      case FieldDataType::FLOAT:
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_FLOAT);
+        break;
+      // string types
+      case FieldDataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FOLDER:
+      case FieldDataType::TEXT:
+      case FieldDataType::HTML:
+        $valid = is_string($effectiveValue);
+        break;
+      case FieldDataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
+        $valid = null !== MonetaryNumberType::create($effectiveValue);
+        break;
+      default:
+        // not reached, but a safeguard for future changes
+        return null;
+    }
+    if (!$valid) {
+      return null;
+    }
+
     $field->getFieldData()->add($datum);
     $defaultValue->getFieldData()->set($participant->getMusician()->getId(), $datum);
 
@@ -460,9 +514,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For FieldDataType::LIABILITIES the amount is negated.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountPayable():RationalNumber
+  public function amountPayable(): MonetaryNumberType
   {
     switch ($this->field->getMultiplicity()) {
       case FieldMultiplicity::SINGLE:
@@ -471,7 +525,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       case FieldMultiplicity::GROUPSOFPEOPLE:
         $storedValue = $this->dataOption->getData();
         try {
-          $value = RationalNumber::fromDecimal($storedValue);
+          $value = MonetaryNumberType::fromDecimal($storedValue);
         } catch (Throwable $t) {
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
@@ -484,7 +538,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         }
         $storedValue = $managementOption->getData();
         try {
-          $value = RationalNumber::fromDecimal($storedValue);
+          $value = MonetaryNumberType::fromDecimal($storedValue);
         } catch (Throwable $t) {
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
@@ -492,11 +546,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       case FieldMultiplicity::SIMPLE:
       case FieldMultiplicity::RECURRING:
         if (empty($this->optionValue)) {
-          $value = RationalNumber::zero();
+          $value = MonetaryNumberType::zero();
         } else {
           $storedValue = $this->optionValue;
           try {
-            $value = RationalNumber::fromDecimal($storedValue);
+            $value = MonetaryNumberType::fromDecimal($storedValue);
           } catch (Throwable $t) {
             throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
           }
@@ -520,9 +574,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For FieldDataType::LIABILITIES the amount is negated.
    *
-   * @return null|RationalNumber
+   * @return null|MonetaryNumberType
    */
-  public function depositAmount():?RationalNumber
+  public function depositAmount():?MonetaryNumberType
   {
     $value = null;
     switch ($this->field->getMultiplicity()) {
@@ -561,14 +615,14 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * ProjectParticipantFieldDatum::getField()::getDataType() is
    * 'service-fee'.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountPaid():RationalNumber
+  public function amountPaid(): MonetaryNumberType
   {
     // sum up the values of all related payments
     return $this->payments->reduce(
-      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 
@@ -578,14 +632,14 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if this is a monetary field.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountInvoiced():RationalNumber
+  public function amountInvoiced(): MonetaryNumberType
   {
     // sum up the values of all related invoice items
     return $this->invoiceItems->reduce(
-      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 

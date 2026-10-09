@@ -1,0 +1,15 @@
+<map id="DatabaseException" name="DatabaseException">
+<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="263,155,398,181"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception.html" title="Base class for database exceptions providing an entity&#45;class." alt="" coords="146,229,315,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="303,189,249,231,247,226,299,192"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception.html" title="Exception thrown by OCA\RotDrop\Toolkit\Doctrine\ORMntitySerializerntitySerializer." alt="" coords="340,229,524,256"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="361,188,417,229,411,229,360,193"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="291,80,370,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,120,333,155,328,153,329,125"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="291,5,370,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,45,333,81,328,79,329,50"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="5,312,232,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="204,264,137,314,135,309,198,266"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception.html" title="Thrown if an identifier is missing trying to fetch an entity." alt="" coords="256,304,429,347"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="261,263,316,304,311,303,259,268"/>
+</map>

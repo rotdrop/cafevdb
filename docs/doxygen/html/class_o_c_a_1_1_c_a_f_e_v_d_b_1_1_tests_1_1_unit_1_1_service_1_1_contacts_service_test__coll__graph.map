@@ -1,0 +1,13 @@
+<map id="ContactsServiceTest" name="ContactsServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the ContactsService class." alt="" coords="172,180,316,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,113,220,178,216,181,83,118"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html" title="Add some cloud account service related actions which are needed by the current layout." alt="" coords="107,81,261,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,119,220,155,237,180,232,179,215,157,196,124"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="285,81,387,108"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="316,119,257,182,254,178,311,120"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="261,5,411,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="338,45,338,82,334,80,334,49"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html" title="Cache&#45;service which fetches geo&#45;coding information in the background in order to use them in autocomp..." alt="" coords="411,81,541,108"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="456,118,431,141,403,158,360,175,316,185,316,180,358,170,400,154,428,137,451,120"/>
+</map>

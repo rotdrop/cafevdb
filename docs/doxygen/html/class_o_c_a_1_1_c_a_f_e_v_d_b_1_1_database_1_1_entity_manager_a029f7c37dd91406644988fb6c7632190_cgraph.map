@@ -1,0 +1,23 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,157,95,184"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#adbfe2d3a1d0de813eca7f57d95f9b6c1" title="Initialize the wrapper if the EncryptionService has been bound to a user and password." alt="" coords="214,107,259,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,156,142,143,201,128,197,131,143,148,96,161"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ac00a76ffe038ef8a433357bd4114bb52" title=" " alt="" coords="208,157,264,184"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="95,168,195,169,191,173,96,173"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html#ab29dc70e7b95492ed21ad98a9f824d80" title=" " alt="" coords="143,208,330,267"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="90,182,141,201,136,203,90,187"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa69c8bf1f1dcf4e72552efff1fe3e87e" title="{}" alt="" coords="432,5,484,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="258,106,377,48,419,33,415,35,379,53,261,111"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a784e976615f077aeaf77bcdae028c21c" title=" " alt="" coords="586,31,690,57"/>
+<area shape="poly" id="edge8_Node000002_Node000004" title=" " alt="" coords="258,113,572,54,569,59,260,119"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a166cb1f72761ff7c95d5d24055fe03f5" title="Check for a valid database connection, try to establish a connection if not connected." alt="" coords="417,107,498,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="259,117,404,119,399,121,260,123"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a59a737e766c664731fa838025a01dcd1" title="Switch metadata&#45;decoration on and off." alt="" coords="378,181,537,208"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="260,123,331,143,412,175,407,175,329,148,259,128"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a6f9cd2445e02a75dd6d7992676bd9684" title="Register the needed additional DBAL types." alt="" coords="408,232,507,259"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="259,119,295,126,332,143,349,162,357,181,364,200,380,218,396,230,391,229,376,222,360,203,352,183,344,165,328,147,294,131,260,124"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="484,20,573,34,568,35,485,25"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ab7a0a080d0e721c656eef11cd641638b" title="{}" alt="" coords="585,107,691,133"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="499,117,572,120,567,120,499,123"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="427,180,421,173,425,163,438,157,458,155,479,157,492,166,487,166,478,162,458,160,439,162,429,167,427,172,431,182"/>
+</map>

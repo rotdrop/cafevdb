@@ -1,0 +1,8 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a =
+[
+    [ "fromArray", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a.html#a03af6452b3ff02618dfef97106d6f30c", null ],
+    [ "getKeys", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a.html#aedd764a40b47ff6fabf993c461833228", null ],
+    [ "initKeys", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a.html#a5f1c2a49b97d329088a8b5e5bc154c24", null ],
+    [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a.html#ad402d8679325bc514874370f02b5c2ac", null ],
+    [ "toArray", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_email_form_composer_request_data_typeb87ee27aeecbcc3484fc326364e4c97a.html#a658defb34762c8f40085aec87e16ba1a", null ]
+];

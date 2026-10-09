@@ -1,0 +1,34 @@
+<map id="appName" name="appName">
+<area shape="rect" id="Node000001" title=" " alt="" coords="878,313,956,340"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a02ca325635bd0db120ee118180f9692b" title="{}" alt="" coords="614,155,830,197"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="898,299,869,259,850,237,829,218,798,200,798,195,832,214,854,233,874,255,903,300"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="620,272,825,315"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="860,318,825,314,825,308,866,317"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,5,233,48"/>
+<area shape="poly" id="edge15_Node000001_Node000006" title=" " alt="" coords="888,302,861,282,829,262,771,241,724,233,674,227,613,212,510,174,433,138,356,102,254,63,219,51,217,46,256,57,358,97,435,133,512,169,615,207,675,221,724,227,773,236,831,258,865,278,893,303"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a664b70abef5ee04e7cc265b3502704bb" title="Generate the input data for the link to the CMS in order to edit the project&#39;s public web articles in..." alt="" coords="620,339,825,381"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="860,336,826,345,825,340,866,335"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_taxation_statutory_sources.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="614,405,830,448"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="893,349,864,375,832,396,805,407,804,402,829,391,861,371,888,351"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a2fa5f0c1a4ff92d6eb25d2ea9ac87ff9" title="Generate an HTML snippet for editing web&#45;page templates in the CMS." alt="" coords="620,472,825,515"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="907,353,878,410,857,438,832,462,813,474,811,469,829,458,853,434,874,407,902,356"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a4bc3294be95e06a40ae3bdc7d5419749" title="Generate a join&#45;table field, given join&#45;table and field name." alt="" coords="303,272,566,315"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="601,294,567,296,566,291,607,293"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,405,255,448"/>
+<area shape="poly" id="edge12_Node000003_Node000009" title=" " alt="" coords="609,321,229,407,228,402,609,316"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,472,233,515"/>
+<area shape="poly" id="edge13_Node000003_Node000010" title=" " alt="" coords="623,321,616,329,601,344,593,361,584,378,568,394,528,417,486,437,398,465,311,483,234,492,233,487,310,478,396,460,484,432,525,413,564,390,580,375,588,359,596,341,612,325,618,323"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,205,233,248"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="316,269,231,251,230,246,321,267"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="311,263,301,255,283,230,276,205,274,181,276,156,278,132,277,108,270,85,253,62,234,47,233,42,257,58,274,83,282,107,284,132,282,156,280,181,281,204,288,228,305,252,316,263"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,272,233,315"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="284,294,234,296,232,291,289,292"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{{Show the underlying template page.This is supposed to echo html code to stdout. This is the default..." alt="" coords="27,339,233,381"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="317,320,232,341,230,336,321,317"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="365,323,304,358,281,378,256,396,229,407,227,402,253,391,277,373,301,354,370,320"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="409,325,344,397,302,432,256,462,231,474,229,469,253,458,298,428,340,393,404,328"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,72,233,115"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="313,264,301,255,288,239,280,223,276,190,272,158,265,143,253,129,234,115,233,109,256,125,270,141,277,157,282,189,285,221,292,236,305,251,319,264"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,139,233,181"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="321,266,301,255,285,240,276,224,268,210,253,196,234,184,233,179,256,191,272,206,281,222,289,237,304,251,326,265"/>
+</map>

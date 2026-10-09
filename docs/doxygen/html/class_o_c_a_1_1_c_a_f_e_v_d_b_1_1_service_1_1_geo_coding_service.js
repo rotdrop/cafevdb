@@ -3,6 +3,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service =
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ae336ff85cdf42a37302f84ea0b7c79e8", null ],
     [ "countryContinents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ae3a7d46f98c42f1b36d8cc0a6855760d", null ],
     [ "debug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a586e3ce7bc155a85dae0bbe3149e4181", null ],
+    [ "getCountryISOFromName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#abfda5de69b09009673c3228534bd5b88", null ],
     [ "getLanguages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#aef284afb885965d50f8599e687059f3b", null ],
     [ "localeCountryName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#aa1cce471a9e3dd46e343c56600f3fd48", null ],
     [ "localeCountryNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ac51f04de288099a4dc93927c724933bb", null ],

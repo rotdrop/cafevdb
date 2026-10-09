@@ -28,6 +28,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\Config\IUserConfig;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -53,6 +54,8 @@ class AppConfigTraitTest extends TestCase
 
   private IConfig $cloudConfig;
 
+  private IUserConfig $cloudUserConfig;
+
   public const APP_NAME = 'some_app';
 
   public const USER_ID = 'cloud.user';
@@ -65,8 +68,12 @@ class AppConfigTraitTest extends TestCase
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
     $this->cloudConfig = $mockProvider->getCloudConfig();
+    $this->cloudUserConfig = $mockProvider->getCloudUserConfig();
 
-    $this->classWithMember = new class($this->cloudConfig) {
+    $this->classWithMember = new class(
+      $this->cloudConfig,
+      $this->cloudUserConfig,
+    ) {
       use AppConfigTrait;
       use UserPreferencesTrait;
 
@@ -75,8 +82,10 @@ class AppConfigTraitTest extends TestCase
       protected string $userId = AppConfigTraitTest::USER_ID;
 
       /** {@inheritdoc} */
-      public function __construct(protected IConfig $cloudConfig)
-      {
+      public function __construct(
+        protected IConfig $cloudConfig,
+        protected IUserConfig $cloudUserConfig,
+      ) {
         $this->appName = AppConfigTraitTest::APP_NAME;
       }
 
@@ -87,7 +96,10 @@ class AppConfigTraitTest extends TestCase
       }
     };
 
-    $this->classWithGetter = new class($this->cloudConfig) {
+    $this->classWithGetter = new class(
+      $this->cloudConfig,
+      $this->cloudUserConfig,
+    ) {
       use AppConfigTrait;
       use UserPreferencesTrait;
 
@@ -105,9 +117,17 @@ class AppConfigTraitTest extends TestCase
         return $this->myCloudConfig;
       }
 
-      /** {@inheritdoc} */
-      public function __construct(protected IConfig $myCloudConfig)
+      /**  {@inheritdoc} */
+      public function getCloudUserConfig(): IUserConfig
       {
+        return $this->myCloudUserConfig;
+      }
+
+      /** {@inheritdoc} */
+      public function __construct(
+        protected IConfig $myCloudConfig,
+        protected IUserConfig $myCloudUserConfig,
+      ) {
         $this->appName = AppConfigTraitTest::APP_NAME;
       }
 
@@ -215,7 +235,7 @@ class AppConfigTraitTest extends TestCase
     // compat should have been deleted.
     $this->assertEquals(
       $default,
-      $this->cloudConfig->getUserValue(
+      $this->cloudUserConfig->getValueString(
         self::USER_ID,
         self::APP_NAME,
         OldSettingsKeys::USER_KEYS[$key->value],

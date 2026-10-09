@@ -1,0 +1,8 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test =
+[
+    [ "tearDown", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#a80fe3d17e658907fc75346a0ec9d6fc7", null ],
+    [ "testMandateStoreWithCloudCopyHardCopy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#acecdfd5c72f010b4b0a7924ea78e00d9", null ],
+    [ "testMandateStoreWithCloudLinkHardCopy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#a04e528624443663b9b8972083f0a315f", null ],
+    [ "testMandateStoreWithCloudMoveHardCopy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#ab8c30d2d9cfc940c659fd9445aabce72", null ],
+    [ "testUnapplyMigrations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#af37319e2d168dfe0de154e6938af8442", null ]
+];

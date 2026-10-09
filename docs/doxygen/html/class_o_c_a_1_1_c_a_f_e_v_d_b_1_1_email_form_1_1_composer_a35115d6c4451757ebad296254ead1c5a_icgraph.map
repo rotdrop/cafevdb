@@ -1,36 +1,36 @@
 <map id="cgiValue" name="cgiValue">
 <area shape="rect" id="Node000001" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="642,233,713,260"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#adda03ec92a7028324dd0f3d882e975ba" title="Return non&#45;personalized document templates for use in mass&#45;email." alt="" coords="415,5,594,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="670,219,662,180,648,133,625,86,610,65,593,46,576,35,579,30,596,42,614,61,630,83,653,131,667,179,675,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="670,217,662,180,648,133,625,86,610,65,593,46,577,35,577,30,596,42,614,61,630,83,653,131,667,179,675,219"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a099a1eac786c0fc2c4d7b8c3108b7d13" title=" " alt="" coords="444,56,565,83"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="666,220,640,157,619,124,593,97,564,82,567,77,596,93,623,121,645,155,671,218"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="666,218,640,157,619,124,593,97,566,82,566,77,596,93,623,121,645,155,671,219"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a1dc30339bb1489c3f4a9586dff31066d" title=" " alt="" coords="459,107,550,133"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="659,222,631,183,613,164,593,148,572,137,550,130,552,125,574,132,596,143,617,160,635,180,663,218"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="659,219,631,183,613,164,593,148,572,137,551,130,551,125,574,132,596,143,617,160,635,180,664,221"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac5976a0a50b5addf24a0bd26280f2772" title="Whether recipients are disclosed (send via Cc:) or undisclosed (send via Bcc:)." alt="" coords="439,157,570,184"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="644,227,593,198,562,187,564,182,595,194,646,222"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="642,225,593,198,563,187,563,182,595,194,648,224"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="441,259,568,285"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="627,257,569,265,569,260,626,251"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="624,255,570,265,568,260,629,253"/>
 <area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="448,208,561,235"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="626,242,561,232,562,227,627,237"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#af4f99986b1ae9b61ec22650bf1445a57" title=" " alt="" coords="236,309,318,336"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="649,272,624,287,595,300,520,318,444,327,374,329,319,328,319,323,374,324,444,321,519,313,593,295,621,283,646,267"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="624,240,562,232,561,227,629,239"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a053f7bb4beb3f8068f1f6526572a88fd" title=" " alt="" coords="236,309,318,336"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="650,268,624,287,595,300,520,318,444,327,374,329,319,328,318,323,374,324,444,321,519,313,593,295,621,283,645,270"/>
 <area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a800c350017f527bf880a7aa440dc0ea1" title=" " alt="" coords="470,360,539,387"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="661,275,633,310,596,344,568,358,540,368,538,363,566,353,593,339,629,306,657,271"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="661,272,633,310,596,344,568,358,540,368,539,363,566,353,593,339,629,306,657,274"/>
 <area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad74240dcb020960b41df6447a5b0e1ff" title="Compute the subject tag, depending on whether we are in project mode or not." alt="" coords="452,411,557,437"/>
-<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="671,276,645,339,623,372,596,401,578,412,558,419,557,414,576,407,593,397,619,369,640,336,666,274"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="671,273,645,339,623,372,596,401,578,412,558,419,557,414,576,407,593,397,619,369,640,336,666,276"/>
 <area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad647aec9f224f570e5c79be0a9ddd3d1" title=" " alt="" coords="473,461,536,488"/>
-<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="675,276,667,315,653,362,630,410,614,432,596,451,568,468,537,475,536,470,566,463,593,447,610,429,625,407,648,360,662,313,670,274"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation\selectOptions()." alt="" coords="202,95,352,121"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="436,39,416,46,356,72,306,97,304,92,354,67,414,42,435,34"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="675,273,667,315,653,362,630,410,614,432,596,451,568,468,537,475,536,470,566,463,593,447,610,429,625,407,648,360,662,313,671,277"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation\selectOptions()." alt="" coords="202,183,352,209"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="423,40,416,46,374,79,338,118,289,184,285,181,334,114,371,75,414,42,427,37"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="188,233,367,260"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="426,266,367,259,368,254,426,261"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="433,206,414,198,346,161,295,124,298,120,349,156,416,194,435,201"/>
-<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="434,232,368,239,367,234,433,227"/>
-<area shape="poly" id="edge14_Node000011_Node000010" title=" " alt="" coords="455,365,318,334,319,329,456,360"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a4f11c04f74936507520d5ecf19ce2604" title=" " alt="" coords="230,360,325,387"/>
-<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="455,376,326,376,326,371,455,371"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="423,264,368,259,367,254,429,263"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="431,214,353,207,353,202,436,213"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="431,230,368,239,367,234,436,228"/>
+<area shape="poly" id="edge14_Node000011_Node000010" title=" " alt="" coords="453,363,319,334,319,329,458,362"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a80959c344dc74db4311fc8d62bf56cd5" title=" " alt="" coords="230,360,325,387"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="453,374,326,376,325,371,458,373"/>
 <area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="226,461,329,488"/>
-<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="458,477,329,477,329,472,458,472"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="455,475,329,477,329,472,460,475"/>
 <area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,461,140,488"/>
-<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="210,477,140,477,140,472,210,472"/>
+<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="208,475,140,477,140,472,213,474"/>
 </map>

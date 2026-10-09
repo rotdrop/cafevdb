@@ -1,0 +1,11 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,5,95,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a68257d7bf27c2c66a2475ec9cd5f5a0a" title=" " alt="" coords="143,5,258,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,130,18,124,19,95,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c" title="Register a service globally." alt="" coords="306,5,414,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="258,16,293,19,288,19,258,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6" title=" " alt="" coords="462,5,581,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="415,16,449,19,444,19,415,21"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="629,5,713,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="581,16,615,19,610,19,581,21"/>
+</map>

@@ -1,0 +1,59 @@
+<map id="prepareFindBy" name="prepareFindBy">
+<area shape="rect" id="Node000001" title="Parse the criteria." alt="" coords="1476,648,1582,675"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="1375,648,1428,675"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1458,671,1429,671,1428,666,1463,670"/>
+<area shape="poly" id="edge20_Node000002_Node000001" title=" " alt="" coords="1443,650,1478,652,1473,653,1445,655"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="1070,40,1266,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1398,631,1394,523,1383,374,1374,298,1361,228,1345,171,1325,131,1296,104,1262,86,1262,81,1299,100,1329,128,1350,169,1366,227,1379,297,1388,373,1399,523,1402,634"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="1074,165,1262,208"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="1397,631,1392,541,1380,419,1371,359,1358,304,1343,259,1325,228,1296,207,1263,195,1262,189,1299,202,1329,225,1348,257,1364,302,1376,358,1385,419,1397,540,1402,634"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#adc12d97d4d6b670014369f82669309c1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="742,307,932,349"/>
+<area shape="poly" id="edge22_Node000002_Node000010" title=" " alt="" coords="1397,631,1392,548,1380,438,1371,384,1359,336,1344,297,1325,273,1286,246,1250,231,1215,225,1179,227,1102,247,1010,273,986,284,962,297,929,308,926,304,960,292,983,279,1008,268,1100,242,1178,222,1215,220,1251,225,1289,241,1329,269,1348,295,1364,334,1376,383,1386,438,1397,548,1402,634"/>
+<area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="1123,283,1213,309"/>
+<area shape="poly" id="edge17_Node000002_Node000012" title=" " alt="" coords="1396,631,1388,559,1375,466,1354,378,1340,345,1325,323,1300,307,1272,297,1242,293,1214,293,1213,288,1242,288,1273,292,1303,302,1329,319,1345,343,1359,377,1380,465,1393,558,1401,633"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_mail_merge_response.html#a03af6452b3ff02618dfef97106d6f30c" title="{{}Initialize from the given array.self@SuppressWarnings(PHPMD.UndefinedVariable) @SuppressWarnings(P..." alt="" coords="1079,333,1257,392"/>
+<area shape="poly" id="edge18_Node000002_Node000013" title=" " alt="" coords="1398,631,1395,584,1385,522,1363,460,1346,431,1325,406,1294,384,1258,372,1257,367,1296,380,1329,402,1351,428,1368,457,1390,521,1401,583,1403,634"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_migrations_controller.html#a84a947dcd33fd2c817f6d1c7d2ce82ca" title=" " alt="" coords="1079,416,1257,459"/>
+<area shape="poly" id="edge19_Node000002_Node000014" title=" " alt="" coords="1395,631,1389,596,1376,552,1356,509,1342,490,1325,473,1293,454,1258,443,1257,438,1295,449,1329,469,1346,486,1360,506,1381,550,1394,595,1400,634"/>
+<area shape="rect" id="Node000015" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a951bd240beff63a2246ad6917a3ddf1b" title=" " alt="" coords="1079,483,1257,525"/>
+<area shape="poly" id="edge21_Node000002_Node000015" title=" " alt="" coords="1389,633,1365,585,1348,560,1325,540,1293,522,1258,512,1257,507,1295,517,1329,535,1352,557,1370,582,1394,634"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="1075,549,1260,608"/>
+<area shape="poly" id="edge23_Node000002_Node000016" title=" " alt="" coords="1363,640,1326,622,1261,601,1261,596,1328,618,1369,639"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_crypto_controller_test.html#ae482a27f48c6c6ff9be59690bbb2279e" title=" " alt="" coords="1038,632,1298,691"/>
+<area shape="poly" id="edge24_Node000002_Node000017" title=" " alt="" coords="1357,662,1299,664,1298,659,1362,661"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5.html#a8666e732eed3a566b9fe8909bb77e6fe" title=" " alt="" coords="1065,715,1270,789"/>
+<area shape="poly" id="edge25_Node000002_Node000018" title=" " alt="" coords="1363,684,1328,705,1272,726,1270,721,1326,700,1368,682"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5.html#a757790046b7c8c3132faf4a69fe27708" title=" " alt="" coords="1065,813,1270,888"/>
+<area shape="poly" id="edge26_Node000002_Node000019" title=" " alt="" coords="1394,688,1372,748,1353,778,1329,803,1302,821,1272,834,1270,829,1299,817,1325,799,1349,774,1367,745,1391,692"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_email_form_controller_test.html#a9925c6f727bd3950138dadddb33d754e" title=" " alt="" coords="1009,912,1327,971"/>
+<area shape="poly" id="edge27_Node000002_Node000020" title=" " alt="" coords="1402,688,1399,736,1388,793,1366,851,1349,878,1329,902,1314,914,1311,909,1325,898,1345,875,1361,849,1382,792,1393,735,1399,692"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_entity_repository_controller_test.html#afa83b96cfea1eb252ee78d1f430cc094" title=" " alt="" coords="1059,995,1277,1069"/>
+<area shape="poly" id="edge28_Node000002_Node000021" title=" " alt="" coords="1399,688,1391,760,1377,847,1356,930,1343,962,1329,984,1306,1004,1279,1017,1277,1012,1303,999,1325,981,1339,959,1351,928,1372,846,1386,759,1396,692"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musicians_controller_test.html#ab51ccdd2107e834e9f37469b7d393dc8" title=" " alt="" coords="1068,1093,1268,1152"/>
+<area shape="poly" id="edge29_Node000002_Node000022" title=" " alt="" coords="1401,688,1396,780,1384,897,1363,1009,1348,1053,1329,1083,1302,1104,1269,1117,1268,1112,1299,1100,1325,1080,1343,1050,1357,1007,1379,896,1391,779,1398,693"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html#a04e528624443663b9b8972083f0a315f" title="Try to augment the mandate from the previous test with a file upload (in real life an electronic copy..." alt="" coords="1050,1176,1286,1251"/>
+<area shape="poly" id="edge30_Node000002_Node000023" title=" " alt="" coords="1402,688,1399,795,1389,936,1379,1008,1367,1074,1350,1128,1329,1166,1310,1183,1287,1196,1286,1191,1307,1179,1325,1162,1345,1126,1362,1072,1374,1007,1383,936,1394,794,1398,692"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_email_form_controller_test.html#a6cef6537f09d877f059b0e83c1d3c4a6" title=" " alt="" coords="1066,1275,1270,1333"/>
+<area shape="poly" id="edge31_Node000002_Node000024" title=" " alt="" coords="1402,688,1403,814,1396,985,1387,1073,1373,1153,1354,1219,1343,1244,1329,1264,1303,1286,1271,1299,1270,1294,1300,1281,1325,1261,1338,1242,1349,1217,1368,1151,1381,1072,1390,985,1398,813,1399,693"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musicians_controller_test.html#ad38ded212f22aa6df714aeff735d9f9d" title=" " alt="" coords="1068,1357,1268,1416"/>
+<area shape="poly" id="edge32_Node000002_Node000025" title=" " alt="" coords="1401,688,1394,838,1380,1046,1358,1240,1345,1309,1329,1347,1302,1369,1269,1382,1268,1377,1299,1364,1325,1344,1340,1307,1353,1239,1375,1045,1389,838,1398,692"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="713,5,961,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1052,51,962,42,960,37,1057,48"/>
+<area shape="poly" id="edge9_Node000005_Node000005" title=" " alt="" coords="1204,150,1192,146,1168,144,1146,146,1132,151,1127,157,1129,165,1124,164,1122,155,1129,146,1145,141,1168,139,1193,141,1209,149"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abb68032ee09c309fa68ede14a34e348d" title=" " alt="" coords="472,56,665,99"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1096,160,1031,139,960,120,883,106,806,96,667,84,665,79,806,90,884,101,961,115,1033,134,1101,159"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="239,173,424,216"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="1057,174,938,163,792,155,632,153,472,164,412,175,409,171,472,159,632,148,792,149,939,158,1061,171"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="476,173,662,216"/>
+<area shape="poly" id="edge10_Node000005_Node000009" title=" " alt="" coords="1057,190,663,196,661,191,1061,186"/>
+<area shape="poly" id="edge12_Node000005_Node000010" title=" " alt="" coords="1057,204,1034,215,1010,229,995,245,987,262,979,280,962,297,934,312,931,308,959,293,974,277,982,259,990,242,1007,225,1032,211,1062,201"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="744,224,930,283"/>
+<area shape="poly" id="edge14_Node000005_Node000011" title=" " alt="" coords="1057,210,932,237,929,232,1061,207"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="497,107,473,120,371,175,367,171,471,115,500,103"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa9fbb471eda80cea3b104b21bbdb3b66" title=" " alt="" coords="5,173,191,216"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="221,196,193,197,190,193,225,193"/>
+<area shape="poly" id="edge11_Node000009_Node000007" title=" " alt="" coords="457,196,426,197,423,192,462,193"/>
+<area shape="poly" id="edge13_Node000010_Node000007" title=" " alt="" coords="724,312,603,289,471,255,381,219,379,214,473,249,604,284,729,309"/>
+<area shape="poly" id="edge15_Node000011_Node000007" title=" " alt="" coords="727,252,605,246,472,231,416,219,413,214,472,225,606,240,731,249"/>
+<area shape="poly" id="edge16_Node000011_Node000009" title=" " alt="" coords="727,231,663,218,661,213,732,229"/>
+</map>

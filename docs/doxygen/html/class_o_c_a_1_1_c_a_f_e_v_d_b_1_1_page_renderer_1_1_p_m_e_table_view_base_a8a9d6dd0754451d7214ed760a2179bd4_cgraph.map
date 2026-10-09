@@ -1,8 +1,10 @@
 <map id="addSlug" name="addSlug">
-<area shape="rect" id="Node000001" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="5,5,74,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="252,5,328,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,16,236,16,236,21,74,21"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="122,31,204,57"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,23,107,30,106,35,73,28"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="204,33,236,27,237,32,205,38"/>
+<area shape="rect" id="Node000001" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="5,72,74,99"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="122,5,339,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,73,146,51,143,55,75,77"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="387,97,463,124"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,85,372,105,371,110,74,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="189,123,272,149"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,92,176,119,172,123,74,97"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="272,128,369,118,374,117,272,133"/>
 </map>

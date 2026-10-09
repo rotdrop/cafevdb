@@ -1,0 +1,13 @@
+<map id="AbstractDecimalRationalType" name="AbstractDecimalRationalType">
+<area shape="rect" id="Node000001" title="Abstract base class for decimal types." alt="" coords="103,81,297,108"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html" title="Unit&#45;test class." alt="" coords="345,5,549,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,73,344,41,389,32,384,34,346,47,252,78"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html" title="Abstract base class for decimal types." alt="" coords="348,56,547,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="312,81,350,79,345,80,313,86"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html" title="Database type for whole number percentages." alt="" coords="358,107,536,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="313,104,361,111,355,111,313,109"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html" title="Database type fractions of percentages." alt="" coords="358,157,536,184"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="252,111,346,143,389,157,384,157,344,148,251,116"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,55,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,92,104,93,100,96,71,97"/>
+</map>

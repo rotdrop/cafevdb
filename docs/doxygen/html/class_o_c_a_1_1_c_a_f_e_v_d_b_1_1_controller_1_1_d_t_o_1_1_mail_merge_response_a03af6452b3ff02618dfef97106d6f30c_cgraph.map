@@ -1,0 +1,10 @@
+<map id="fromArray" name="fromArray">
+<area shape="rect" id="Node000001" title="{{}Initialize from the given array.self@SuppressWarnings(PHPMD.UndefinedVariable) @SuppressWarnings(P..." alt="" coords="5,96,84,123"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="132,88,292,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,107,119,109,114,110,84,112"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="344,5,533,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="279,85,331,70,336,69,280,90"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="340,88,537,131"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="292,115,327,118,321,118,292,121"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="337,101,308,103,307,98,342,100"/>
+</map>

@@ -31,7 +31,7 @@ use OCP\Files\Events\Node\NodeRenamedEvent;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -51,10 +51,10 @@ class FileNodeListener implements IEventListener
   protected $appName;
 
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
 

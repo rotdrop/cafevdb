@@ -40,6 +40,10 @@ trait TestDTOTrait
   /** @return void */
   public function testFromArray(): void
   {
+    if (!method_exists(static::DTO_CLASS, 'fromArray')) {
+      $this->expectNotToPerformAssertions();
+      return;
+    }
     $dto = static::DTO_CLASS::fromArray(
       $this->dto->jsonSerialize(),
     );

@@ -56,7 +56,7 @@ class InstrumentInsurance implements \ArrayAccess
    * we assume that the instrument holder is also the instrument owner.
    */
   #[ORM\ManyToOne(targetEntity: Musician::class, fetch: 'EXTRA_LAZY')]
-  private Musician $instrumentOwner;
+  private ?Musician $instrumentOwner = null;
 
   /**
    * A possibly different person which is responsible for paying the

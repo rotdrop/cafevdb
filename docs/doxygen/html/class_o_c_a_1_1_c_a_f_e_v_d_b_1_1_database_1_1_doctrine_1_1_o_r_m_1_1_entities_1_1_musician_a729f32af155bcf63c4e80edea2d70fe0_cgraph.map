@@ -1,5 +1,7 @@
 <map id="isMemberOf" name="isMemberOf">
-<area shape="rect" id="Node000001" title="Check whether the given project is contained in projectParticipation." alt="" coords="5,5,98,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a032dfc1126aae81c173ce3406e12e018" title="Return the project&#45;participant entity for the given project or null if $this is not a participant." alt="" coords="146,5,302,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,16,130,16,130,21,98,21"/>
+<area shape="rect" id="Node000001" title="Check whether the given project is contained in projectParticipation." alt="" coords="5,21,98,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a032dfc1126aae81c173ce3406e12e018" title="Return the project&#45;participant entity for the given project or null if $this is not a participant." alt="" coords="146,21,302,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,32,133,34,128,35,99,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="350,5,541,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,32,337,35,332,35,303,37"/>
 </map>

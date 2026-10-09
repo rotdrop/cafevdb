@@ -28,10 +28,12 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 
-use OC\AppFramework\Utility\TimeFactory as CoreTimeFactory;
+use OCP\AppFramework\Utility\ITimeFactory;
 
 /**
  * Like ITimeFactory but stop using DateTime in favour of DateTimeImmutable.
+ *
+ * @method DateTimeImmutable now()
  *
  * @method int getTime()
  * Result of calling \time().
@@ -49,8 +51,50 @@ use OC\AppFramework\Utility\TimeFactory as CoreTimeFactory;
  * DateTimeZone object. If $timezone is omitted the attached timezone of this
  * instance ist returned.
  */
-class TimeFactory extends CoreTimeFactory
+class TimeFactory implements ITimeFactory
 {
+  private ITimeFactory $timeFactory;
+
+  /**
+   * @param ITimeFactory $timeFactory
+   */
+  public function __construct(
+  ) {
+    $this->timeFactory = \OCP\Server::get(ITimeFactory::class);
+  }
+
+  /** {@inheritdoc} */
+  public function now(): DateTimeImmutable
+  {
+    return $this->timeFactory->now();
+  }
+
+  /** {@inheritdoc} */
+  public function getTime(): int
+  {
+    return $this->timeFactory->getTime();
+  }
+
+  /** {@inheritdoc} */
+  public function getDateTime(string $time = 'now', ?\DateTimeZone $timezone = null): \DateTime
+  {
+    return $this->timeFactory->getDateTime($time, $timezone);
+  }
+
+  /** {@inheritdoc} */
+  public function withTimeZone(\DateTimeZone $timezone): static
+  {
+    $clone = clone $this;
+    $clone->timeFactory = $this->timeFactory->withTimeZone($timezone);
+    return $clone;
+  }
+
+  /** {@inheritdoc} */
+  public function getTimeZone(?string $timezone = null): \DateTimeZone
+  {
+    return $this->timeFactory->getTimeZone($timezone);
+  }
+
   /**
    * Like the parent class but returning an instance of DateTimeImmutable.
    *
@@ -64,7 +108,7 @@ class TimeFactory extends CoreTimeFactory
    */
   public function getDateTimeImmutable(string $time = 'now', ?DateTimeZone $timezone = null): DateTimeImmutable
   {
-    return DateTimeImmutable::createFromMutable($this->getDateTime($time, $timezone));
+    return DateTimeImmutable::createFromMutable($this->timeFactory->getDateTime($time, $timezone));
   }
 
   /**

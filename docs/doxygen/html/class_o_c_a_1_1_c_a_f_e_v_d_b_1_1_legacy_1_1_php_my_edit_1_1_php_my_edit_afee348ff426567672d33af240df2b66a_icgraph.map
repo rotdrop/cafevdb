@@ -1,0 +1,12 @@
+<map id="normalize_field_description" name="normalize_field_description">
+<area shape="rect" id="Node000001" title="Normalize field description to have the form." alt="" coords="574,5,752,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a42ed7f2383e253357b1355d60150fff5" title="Generate the field&#45;description SQL part." alt="" coords="386,5,526,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="555,19,526,21,526,16,561,19"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aed1b50c8c16937db335f1d22ecaf41d1" title="Generate the query code for one field." alt="" coords="182,5,221,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,19,221,21,221,16,373,18"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ad7818a8e551fddf2b45ccabf9536f070" title="Substitute placeholders in sql field:" alt="" coords="269,31,338,57"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="374,33,339,41,338,36,368,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a2175ab9fcaf0327806ba3eeee525b695" title=" " alt="" coords="5,5,134,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="164,19,135,21,134,16,169,18"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="251,32,221,26,222,21,257,32"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="SidebarNavigationItem" name="SidebarNavigationItem">
+<area shape="rect" id="Node000001" title="DTO for the page navigation item of a template renderer, this is used to generate navigation links in..." alt="" coords="5,155,159,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="33,80,131,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,121,85,155,79,153,80,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,5,140,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,45,85,80,79,79,81,50"/>
+</map>

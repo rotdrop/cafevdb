@@ -1,0 +1,9 @@
+<map id="EntityReference" name="EntityReference">
+<area shape="rect" id="Node000001" title="Simple entity reference with optional class name and flattened identifier." alt="" coords="30,229,146,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html" title="Base class for EntityReference and CollectionEntityReference." alt="" coords="5,155,171,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,195,90,230,86,228,86,199"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="39,80,137,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,120,91,155,85,154,87,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="30,5,146,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="89,45,91,80,85,79,87,50"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="getBankAccountValidator" name="getBankAccountValidator">
+<area shape="rect" id="Node000001" title="Fake the bank account validator as obtaining real result is really involved and would result in a rou..." alt="" coords="5,80,173,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aa3e1104912f42060e2134e04e71d1b57" title="{}" alt="" coords="222,5,414,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,77,230,51,226,55,139,82"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aaced7a70d8c7067b23ae830fdaf53e31" title=" " alt="" coords="221,72,416,115"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="172,91,208,93,202,94,173,96"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a5f3c11b90fed1f1f1cd123af8f802285" title="{}" alt="" coords="222,139,414,181"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="138,105,230,133,226,135,138,110"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a68257d7bf27c2c66a2475ec9cd5f5a0a" title=" " alt="" coords="464,5,663,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,24,451,26,446,27,415,29"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c" title="Register a service globally." alt="" coords="711,5,904,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="664,24,699,26,693,27,664,29"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6" title=" " alt="" coords="952,5,1154,48"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="904,24,939,26,934,27,904,29"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="1202,5,1394,48"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1154,24,1189,26,1184,27,1155,29"/>
+</map>

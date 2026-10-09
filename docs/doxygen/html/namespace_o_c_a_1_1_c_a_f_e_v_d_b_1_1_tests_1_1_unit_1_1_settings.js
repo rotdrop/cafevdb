@@ -1,0 +1,4 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings =
+[
+    [ "AdminInitialStateTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test" ]
+];

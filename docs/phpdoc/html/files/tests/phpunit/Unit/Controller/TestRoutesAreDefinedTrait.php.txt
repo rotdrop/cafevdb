@@ -48,6 +48,8 @@ trait TestRoutesAreDefinedTrait
    */
   public function testRoutesAreDefined(): void
   {
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
     $entityManager = $this->entityManager ?? null;
     if ($entityManager && method_exists($entityManager, 'expects')) {
       $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');

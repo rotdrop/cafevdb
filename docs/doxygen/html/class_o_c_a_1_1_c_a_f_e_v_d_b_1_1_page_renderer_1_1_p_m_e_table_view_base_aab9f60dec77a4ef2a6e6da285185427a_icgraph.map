@@ -1,15 +1,15 @@
 <map id="addOperation" name="addOperation">
 <area shape="rect" id="Node000001" title=" " alt="" coords="512,113,610,140"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a7e8ed0cd98a598132a3d162d6546e304" title="To be used by the child classes to compose the shortTitle() method." alt="" coords="259,5,464,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="530,106,498,83,463,62,437,51,439,46,465,58,501,79,533,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="529,103,498,83,463,62,438,51,438,46,465,58,501,79,534,104"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="259,72,464,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="496,119,464,113,465,108,497,113"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="494,116,465,113,464,108,499,116"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,139,464,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="497,140,465,145,464,140,496,135"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="494,138,465,145,464,140,499,137"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,205,464,248"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="533,152,501,174,465,196,439,207,437,202,463,191,498,170,530,147"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="534,149,501,174,465,196,439,207,437,202,463,191,498,170,529,151"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,139,211,181"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="243,163,211,163,211,157,243,157"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="240,161,212,163,211,157,245,159"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,205,211,248"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="243,229,211,229,211,224,243,224"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="240,227,211,229,211,224,245,227"/>
 </map>

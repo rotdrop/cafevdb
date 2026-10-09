@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -45,7 +45,7 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
   protected UserStorage $userStorage;
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer):void
+  public function initialize(ContainerInterface $appContainer):void
   {
     parent::initialize($appContainer);
     $this->userStorage = $this->appContainer->get(UserStorage::class);

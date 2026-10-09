@@ -1,3 +1,29 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_storage_util.html" title="Support functions for the database storage backend." alt="" coords="5,5,148,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,309,87,336"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html" title="Run various databse sanitizers on request." alt="" coords="150,5,286,32"/>
+<area shape="poly" id="edge259_Node000000_Node000001" title=" " alt="" coords="45,293,50,240,64,173,75,138,90,103,109,71,133,42,152,30,149,35,136,46,113,74,95,106,80,140,69,174,56,241,51,294"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html" title="Maintenance for the database file&#45;system backend." alt="" coords="157,56,279,83"/>
+<area shape="poly" id="edge260_Node000000_Node000002" title=" " alt="" coords="48,294,55,250,71,196,96,141,113,115,133,93,158,79,155,83,136,97,117,119,100,143,76,198,61,251,53,295"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html" title="Sanitize some stuff for the members of the management board:" alt="" coords="161,107,274,133"/>
+<area shape="poly" id="edge261_Node000000_Node000003" title=" " alt="" coords="51,293,62,259,78,219,102,178,133,143,162,128,159,133,136,147,106,181,83,221,67,261,56,295"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_gnu_cash_setup.html" title="GnuCash connectivity." alt="" coords="163,157,273,184"/>
+<area shape="poly" id="edge262_Node000000_Node000004" title=" " alt="" coords="57,294,87,243,108,217,133,194,164,180,160,184,136,198,112,220,91,246,62,296"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_participant_folders.html" title="Create all participant sub&#45;folder for each project." alt="" coords="155,208,281,235"/>
+<area shape="poly" id="edge263_Node000000_Node000005" title=" " alt="" coords="68,297,98,269,133,244,162,233,159,237,136,249,101,273,72,300"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html" title="Create all participant sub&#45;folder for each project." alt="" coords="166,259,270,285"/>
+<area shape="poly" id="edge264_Node000000_Node000006" title=" " alt="" coords="100,304,172,284,168,288,103,309"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html" title="Create all participant sub&#45;folder for each project." alt="" coords="165,309,270,336"/>
+<area shape="poly" id="edge265_Node000000_Node000007" title=" " alt="" coords="101,320,167,321,163,324,103,325"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html" title=" " alt="" coords="143,360,292,387"/>
+<area shape="poly" id="edge266_Node000000_Node000008" title=" " alt="" coords="101,336,172,358,168,361,102,341"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_sent_notifications.html" title="Database (and non&#45;database) migration management." alt="" coords="157,411,278,437"/>
+<area shape="poly" id="edge267_Node000000_Node000009" title=" " alt="" coords="69,344,101,372,136,396,163,409,158,411,133,401,98,376,70,350"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_find.html" title="Search for tooltip&#45;tags in PHP code." alt="" coords="172,461,264,488"/>
+<area shape="poly" id="edge268_Node000000_Node000010" title=" " alt="" coords="60,347,91,399,112,425,136,447,174,466,169,467,133,452,108,429,87,402,59,353"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_list.html" title="Command to list all registered tooltips." alt="" coords="174,512,262,539"/>
+<area shape="poly" id="edge269_Node000000_Node000011" title=" " alt="" coords="54,349,67,385,83,424,106,464,136,498,154,509,176,518,171,520,152,514,133,502,102,467,78,427,62,386,54,354"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_update_geo_coding_cache.html" title="Selectively update the GeoCoding cache from various remote sources." alt="" coords="135,563,301,589"/>
+<area shape="poly" id="edge270_Node000000_Node000012" title=" " alt="" coords="50,348,61,394,76,447,100,502,117,527,136,549,154,562,149,562,133,553,113,530,96,505,71,449,55,395,50,354"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_wiki_overview.html" title="Recreate the wiki overview pages." alt="" coords="167,613,269,640"/>
+<area shape="poly" id="edge271_Node000000_Node000013" title=" " alt="" coords="48,349,56,404,69,471,80,506,95,540,113,571,136,599,151,610,169,619,163,619,148,614,133,603,109,575,90,542,75,508,64,472,50,405,48,354"/>
 </map>

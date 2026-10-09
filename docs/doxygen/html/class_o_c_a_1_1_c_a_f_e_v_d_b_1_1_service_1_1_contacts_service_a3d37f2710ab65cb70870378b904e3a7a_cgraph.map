@@ -1,0 +1,5 @@
+<map id="findMusicianContact" name="findMusicianContact">
+<area shape="rect" id="Node000001" title="Find an associated addressbook contact if there is one." alt="" coords="5,21,146,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#abb00ed1d0c8e45214fbe9ad467067e8e" title="Get addressBookUri." alt="" coords="194,5,388,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,32,181,34,176,35,146,37"/>
+</map>

@@ -26,17 +26,22 @@ namespace OCA\CAFEVDB\Controller;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-/** CSS classes shared between the legacy templates, scss and typescript. */
+/**
+ * CSS classes shared between the legacy templates, scss and
+ * typescript. Perhaps one should move this file somewhere else.
+ */
 #[TSAttributes\TypeScript]
 class CssClasses
 {
-  public const CLASS_SEPARATOR = '-';
   public const APP_NAME_TAG_PREFIX = 'app' . self::CLASS_SEPARATOR;
-  public const HIDE_ONLY_CHILD = 'hide-only-child';
   public const BUSY = 'busy';
-  public const NO_WRITTEN_MANDATE = 'no-written-mandate';
+  public const CLASS_SEPARATOR = '-';
   public const HAVE_WRITTEN_MANDATE = 'have-written-mandate';
   public const HIDDEN = 'hidden';
+  public const HIDE_ONLY_CHILD = 'hide-only-child';
+  public const NO_WRITTEN_MANDATE = 'no-written-mandate';
+  public const RESIZE_TARGET = 'resize-target';
   public const UPLOAD_WRITTEN_MANDATE_LATER = 'upload-written-mandate-later';
   public const WRITTEN_MANDATE_UPLOAD = 'written-mandate-upload';
+  public const WYSIWYG_EDITOR = 'wysiwyg-editor';
 }

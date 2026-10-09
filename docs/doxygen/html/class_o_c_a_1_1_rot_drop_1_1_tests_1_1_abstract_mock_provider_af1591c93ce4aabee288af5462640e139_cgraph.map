@@ -1,0 +1,9 @@
+<map id="registerClassInstance" name="registerClassInstance">
+<area shape="rect" id="Node000001" title="Register a class instance to be returned by the app&#45;container." alt="" coords="5,5,154,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c" title="Register a service globally." alt="" coords="202,5,310,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,16,189,19,184,19,154,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6" title=" " alt="" coords="358,5,476,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,16,345,19,340,19,310,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="524,5,609,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="477,16,511,19,506,19,477,21"/>
+</map>

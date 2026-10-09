@@ -1,0 +1,15 @@
+<map id="sql_field" name="sql_field">
+<area shape="rect" id="Node000001" title="Substitute placeholders in sql field:" alt="" coords="5,80,75,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a42ed7f2383e253357b1355d60150fff5" title="Generate the field&#45;description SQL part." alt="" coords="125,29,264,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,80,139,59,136,63,76,85"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#adc3f1c2ed5d89f6fbc7c1430834f92df" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="351,80,455,107"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="75,91,336,91,335,96,75,96"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ab1c89b9812f120dc7ad1889bc4f1886e" title="Add some defaults for missing &#39;values&#39; fields." alt="" coords="123,131,266,157"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="75,102,140,124,135,127,75,107"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#afee348ff426567672d33af240df2b66a" title="Normalize field description to have the form." alt="" coords="314,5,492,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,32,301,30,296,31,265,37"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="253,54,338,77,333,78,252,59"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="367,79,361,71,366,62,380,55,403,53,428,56,443,65,437,64,427,61,403,59,381,61,369,65,367,71,372,80"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a988a51bf88f195f4c5dc158fb1f9e2b9" title="Compute $join_table name (maybe main&#45;table if no info)." alt="" coords="348,131,458,157"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="267,141,335,144,330,144,267,147"/>
+</map>

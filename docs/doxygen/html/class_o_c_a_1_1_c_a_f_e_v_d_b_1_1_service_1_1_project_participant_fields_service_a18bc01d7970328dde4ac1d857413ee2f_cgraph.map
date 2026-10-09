@@ -1,7 +1,5 @@
 <map id="generatedFields" name="generatedFields">
-<area shape="rect" id="Node000001" title="Fetch all generator fields for the given project." alt="" coords="5,29,119,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a230a07923c294c4be56b2ee782123ae7" title="Get participantFields." alt="" coords="167,13,352,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,40,151,40,151,45,119,45"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a75e2ce51a3811fbed7b601203380369b" title="Get participationContext." alt="" coords="400,5,578,80"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,40,384,40,384,45,352,45"/>
+<area shape="rect" id="Node000001" title="Fetch all generator fields for the given project." alt="" coords="5,21,119,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a230a07923c294c4be56b2ee782123ae7" title="Get participantFields." alt="" coords="167,5,352,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,32,154,34,148,35,119,37"/>
 </map>

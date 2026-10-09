@@ -1,0 +1,9 @@
+<map id="prePersist" name="prePersist">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,112,86,139"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="144,5,346,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,109,132,74,148,69,144,72,135,78,71,113"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#af668374a47bf5a3617d43651322897ad" title="Get participationStatus." alt="" coords="134,88,356,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,123,120,124,116,127,87,128"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aad55e1bf055132450f0b76154e95abb9" title="Set participationStatus." alt="" coords="134,187,356,261"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="70,136,135,172,147,179,141,180,132,177,69,142"/>
+</map>

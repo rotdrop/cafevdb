@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'FileData')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
-#[ORM\DiscriminatorMap(['generic' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\DiscriminatorMap([
+  EnumFileType::GENERIC->value => FileData::class,
+  EnumFileType::IMAGE->value => ImageFileData::class,
+  EnumFileType::ENCRYPTED->value => EncryptedFileData::class,
+])]
 #[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 #[ORM\HasLifecycleCallbacks]
@@ -62,6 +66,8 @@ class FileData implements \ArrayAccess
   ];
 
   /**
+   * @var File
+   *
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
@@ -69,6 +75,17 @@ class FileData implements \ArrayAccess
   #[ORM\Id]
   #[ORM\ManyToOne(targetEntity: File::class, inversedBy: 'fileData', cascade: ['all'])]
   protected File $file;
+
+  /**
+   * @var bool
+   *
+   * As of ORM v3.7.x the schema validator emits an error on artifical
+   * OneToMany-ManyToOne associations.
+   */
+  #[ORM\Id]
+  #[ORM\Column(type: 'boolean', nullable: false, options: [ 'default' => true ])]
+  #[TSAttributes\Hidden]
+  protected readonly bool $lazyFileDataDummy;
 
   /**
    * @var string
@@ -103,6 +120,7 @@ class FileData implements \ArrayAccess
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->lazyFileDataDummy = 1;
   }
   // phpcs:enable
 
@@ -111,7 +129,7 @@ class FileData implements \ArrayAccess
    *
    * @param mixed $data
    *
-   * @param string $format The input format of the data
+   * @param string $format The input format of the data.
    *
    * @return FileData
    */

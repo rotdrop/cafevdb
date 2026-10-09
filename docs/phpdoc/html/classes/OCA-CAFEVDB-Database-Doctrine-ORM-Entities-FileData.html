@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -170,7 +174,7 @@
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\DiscriminatorMap">DiscriminatorMap</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        [&#039;generic&#039; =&gt; &#039;FileData&#039;, &#039;image&#039; =&gt; &#039;ImageFileData&#039;, &#039;encrypted&#039; =&gt; &#039;EncryptedFileData&#039;]
+        [\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::GENERIC-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData::class, \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::IMAGE-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ImageFileData::class, \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType::ENCRYPTED-&gt;value =&gt; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFileData::class]
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -237,31 +241,31 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#constant_DATA_FORMAT_BASE64">DATA_FORMAT_BASE64</a>
     <span>
-        &nbsp;= &#039;base64&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;base64&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#constant_DATA_FORMAT_BINARY">DATA_FORMAT_BINARY</a>
     <span>
-        &nbsp;= &#039;binary&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;binary&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#constant_DATA_FORMAT_RESOURCE">DATA_FORMAT_RESOURCE</a>
     <span>
-        &nbsp;= &#039;resource&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;resource&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#constant_DATA_FORMAT_URI">DATA_FORMAT_URI</a>
     <span>
-        &nbsp;= &#039;uri&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;uri&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#constant_DATA_FORMATS">DATA_FORMATS</a>
     <span>
-        &nbsp;= [self::DATA_FORMAT_BINARY, self::DATA_FORMAT_BASE64, self::DATA_FORMAT_RESOURCE, self::DATA_FORMAT_URI]                            </span>
+        &nbsp;: mixed&nbsp;= [self::DATA_FORMAT_BINARY, self::DATA_FORMAT_BA...                            </span>
 </dt>
 
     </dl>
@@ -290,9 +294,12 @@
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a>            </span>
 </dt>
-<dd>As ORM still does not support lazy one-to-one associations from the
-inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
-association in between.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_lazyFileDataDummy">$lazyFileDataDummy</a>
+    <span>
+                        &nbsp;: bool            </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
@@ -386,7 +393,7 @@ association in between.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -430,9 +437,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -461,9 +468,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -492,9 +499,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -523,9 +530,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -554,9 +561,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -601,9 +608,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -624,8 +631,8 @@ yield an ArrayBuffer, probably.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_data#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_data_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_data_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -668,9 +675,9 @@ yield an ArrayBuffer, probably.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -687,8 +694,8 @@ yield an ArrayBuffer, probably.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_dataHash#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_dataHash_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_dataHash_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -762,15 +769,12 @@ yield an ArrayBuffer, probably.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">As ORM still does not support lazy one-to-one associations from the
-inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
-association in between.</p>
-
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
@@ -779,13 +783,17 @@ association in between.</p>
     </code>
 
     
-    
+        <section class="phpdocumentor-description"><p>As ORM still does not support lazy one-to-one associations from the
+inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
+association in between.</p>
+</section>
+
     
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_file#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_file_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_file_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -806,6 +814,77 @@ association in between.</p>
         <dd class="phpdocumentor-argument-list__entry">
         $cascade: [&#039;all&#039;]
     </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                -read-only                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_lazyFileDataDummy">
+        $lazyFileDataDummy
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_lazyFileDataDummy" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                        <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">85</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">bool</span>
+    <span class="phpdocumentor-signature__name">$lazyFileDataDummy</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>As of ORM v3.7.x the schema validator emits an error on artifical
+OneToMany-ManyToOne associations.</p>
+</section>
+
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="property_lazyFileDataDummy_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_lazyFileDataDummy_attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;boolean&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;default&#039; =&gt; true]
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\Hidden">Hidden</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
     </dl>
                     </section>
         
@@ -847,8 +926,8 @@ association in between.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_keys_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -882,9 +961,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
     
@@ -992,9 +1071,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get data.</p>
@@ -1038,9 +1117,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">199</span>
+    <span class="phpdocumentor-element-found-in__line">217</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get file.</p>
@@ -1273,9 +1352,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set data.</p>
@@ -1302,7 +1381,7 @@ association in between.</p>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\self::DATA_FORMAT_BINARY">self::DATA_FORMAT_BINARY</abbr></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The input format of the data</p>
+                    <section class="phpdocumentor-description"><p>The input format of the data.</p>
 </section>
 
             </dd>
@@ -1332,9 +1411,9 @@ association in between.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/FileData.php"><a href="files/lib-database-doctrine-orm-entities-filedata.html"><abbr title="lib/Database/Doctrine/ORM/Entities/FileData.php">FileData.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">187</span>
+    <span class="phpdocumentor-element-found-in__line">205</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#source-view.205" class="phpdocumentor-element-found-in__source" data-line="205" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/FileData.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set file.</p>
@@ -1390,7 +1469,7 @@ association in between.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1403,7 +1482,7 @@ association in between.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -1442,8 +1521,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_arrayCTOR_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -1689,6 +1768,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_data">$data</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_dataHash">$dataHash</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_file">$file</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html#property_lazyFileDataDummy">$lazyFileDataDummy</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                             </ul>
                 </li>

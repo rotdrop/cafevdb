@@ -106,7 +106,7 @@ class InsuranceRates extends PMETableViewBase
 
     $opts['css']['postfix'] = [
       'direct-change',
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
     ];
 
     // Number of records to display on the screen
@@ -156,7 +156,7 @@ class InsuranceRates extends PMETableViewBase
 
     $opts['fdd']['broker_id'] = [
       'name'     => $this->l->t('Broker'),
-      'css'      => [ 'postfix' => [ 'broker', 'squeeze-subsequent-lines', ], ],
+      'css'      => [ 'postfix' => [ 'broker', CssClasses::SQUEEZE_SUBSEQUENT_LINES, ], ],
       'select'   => 'D',
       'maxlen'   => 128,
       'sort'     => $sort,
@@ -172,7 +172,7 @@ class InsuranceRates extends PMETableViewBase
       ],
       'display|LFVD' => [
         'popup' => 'data',
-        'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+        'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
         'postfix' => '</div></div>',
       ],
     ];

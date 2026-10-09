@@ -1,8 +1,16 @@
 <map id="pushHistory" name="pushHistory">
-<area shape="rect" id="Node000001" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="5,43,97,69"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="154,5,224,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,41,138,30,139,35,98,46"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="145,80,233,107"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,66,130,75,129,80,96,71"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="165,81,160,71,163,62,173,56,189,53,206,56,215,63,212,67,204,61,189,59,175,61,168,65,166,71,169,78"/>
+<area shape="rect" id="Node000001" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="5,59,97,85"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="154,8,224,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,56,141,38,137,41,91,60"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="281,88,441,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,75,267,96,264,100,97,80"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="145,133,233,160"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="78,83,152,124,147,127,76,88"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="494,5,682,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="428,85,480,70,486,69,429,90"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="489,88,687,131"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="441,115,476,118,471,118,442,121"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="486,101,457,103,457,98,491,100"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="233,135,263,130,268,130,234,140"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="165,132,160,125,163,115,173,109,189,107,206,109,216,119,211,118,204,114,189,112,175,114,168,118,166,124,169,134"/>
 </map>

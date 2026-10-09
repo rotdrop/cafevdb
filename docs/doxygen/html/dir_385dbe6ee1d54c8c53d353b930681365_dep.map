@@ -1,4 +1,8 @@
-<map id="/var/www/dev3/htdocs/nextcloud&#45;git&#45;32/apps/cafevdb/lib/Controller/DTO" name="/var/www/dev3/htdocs/nextcloud&#45;git&#45;32/apps/cafevdb/lib/Controller/DTO">
-<area shape="rect" id="node1" href="dir_385dbe6ee1d54c8c53d353b930681365.html" title="DTO" alt="" coords="30,53,79,80"/>
-<area shape="rect" id="clust1" href="dir_44fb3714814401477baf4d93fe8e9c4d.html" title="Controller" alt="" coords="16,16,93,91"/>
+<map id="/var/www/dev6/htdocs/nextcloud&#45;git&#45;35/apps/cafevdb/lib/Controller/DTO" name="/var/www/dev6/htdocs/nextcloud&#45;git&#45;35/apps/cafevdb/lib/Controller/DTO">
+<area shape="rect" id="node2" href="dir_230c921b08c5f39a9eac97533bcb905d.html" title="DuplicateMusiciansResponse" alt="" coords="111,72,305,99"/>
+<area shape="rect" id="node3" href="dir_0031f9792a6c7a9e4adfebba7e215cf7.html" title="EmailFormComposerRequest\lDataTypes" alt="" coords="329,64,522,107"/>
+<area shape="rect" id="node4" href="dir_bb1f7563959246b557240ca75cb1db3e.html" title="FilesInitialState" alt="" coords="546,72,657,99"/>
+<area shape="rect" id="node5" href="dir_17c13487426446036dbbc5a437c5513c.html" title="SpecialProjectsResponse" alt="" coords="681,72,852,99"/>
+<area shape="rect" id="clust2" href="dir_385dbe6ee1d54c8c53d353b930681365.html" alt="" coords="27,53,863,117"/>
+<area shape="rect" id="clust1" href="dir_44fb3714814401477baf4d93fe8e9c4d.html" title="Controller" alt="" coords="16,16,873,128"/>
 </map>

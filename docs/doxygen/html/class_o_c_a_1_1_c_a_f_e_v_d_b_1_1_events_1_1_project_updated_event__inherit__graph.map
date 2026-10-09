@@ -1,9 +1,9 @@
 <map id="ProjectUpdatedEvent" name="ProjectUpdatedEvent">
 <area shape="rect" id="Node000001" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="115,80,260,107"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="5,155,178,181"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,118,110,156,106,152,157,114"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,115,109,157,107,152,156,117"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_project_updated_event.html" title="Dispatched before flushing entities to the data&#45;base." alt="" coords="202,155,368,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="218,114,270,152,266,156,215,118"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="217,114,271,154,265,154,216,119"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="160,5,215,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,48,190,80,185,80,185,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,46,190,81,185,79,186,50"/>
 </map>

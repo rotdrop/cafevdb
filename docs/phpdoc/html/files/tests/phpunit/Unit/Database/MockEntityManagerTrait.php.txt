@@ -65,7 +65,7 @@ trait MockEntityManagerTrait
         $repository = $this->entityRepositories[$className] ?? null;
         if ($repository == null) {
           $repository = $this->getMockBuilder(EntityRepository::class)
-          ->disableOriginalConstructor()
+            ->disableOriginalConstructor()
             ->getMock();
           $this->entityRepositories[$className] = $repository;
         } else {

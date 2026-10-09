@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\PageRenderer\FieldTraits\MusicianPublicNameTrait
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -144,6 +148,14 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianFunctionalNameSql">musicianFunctionalNameSql()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Generate an SQL fragment which composes a &quot;functional name&quot; including organization and role if the person
+represents an organization (company, job-title).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianPublicNameSql">musicianPublicNameSql()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -166,6 +178,71 @@ name-parts sur_name, first_name, nick_name, display_name.</dd>
             <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_musicianFunctionalNameSql">
+        musicianFunctionalNameSql()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianFunctionalNameSql" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/MusicianPublicNameTrait.php"><a href="files/lib-pagerenderer-fieldtraits-musicianpublicnametrait.html"><abbr title="lib/PageRenderer/FieldTraits/MusicianPublicNameTrait.php">MusicianPublicNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">79</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/MusicianPublicNameTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate an SQL fragment which composes a &quot;functional name&quot; including organization and role if the person
+represents an organization (company, job-title).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">musicianFunctionalNameSql</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tableAlias</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'$table'</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$firstNameFirst</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$tableAlias</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'$table'</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Table to refer to, defaults to placeholder
+'$table'.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$firstNameFirst</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>SQL fragment.</p>
+</section>
+
+            </section>
+
+</article>
                     <article
         class="phpdocumentor-element
             -method
@@ -344,6 +421,7 @@ name-parts sur_name, first_name, nick_name, display_name.</p>
                                                 <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianFunctionalNameSql">musicianFunctionalNameSql()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianPublicNameTrait.html#method_musicianPublicNameSql">musicianPublicNameSql()</a></li>
                                     </ul>
             </li>

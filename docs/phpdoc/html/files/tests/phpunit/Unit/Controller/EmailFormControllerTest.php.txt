@@ -68,6 +68,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+use OCA\RotDrop\Tests\DeprecationException;
 
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
@@ -85,7 +86,6 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Html2Text::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -112,12 +112,14 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Util\Navigation::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]
@@ -126,17 +128,22 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\IMAPService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\OrganizationalRolesService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProgressStatusService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\HttpStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
@@ -162,6 +169,7 @@ class EmailFormControllerTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockEmailTemplatesRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockInstrumentsRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
@@ -204,6 +212,8 @@ class EmailFormControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     $this->generateEventsService();
 
     $this->generateInstruments();
@@ -247,17 +257,7 @@ class EmailFormControllerTest extends TestCase
     $this->request->method('getServerHost')->willReturn('cloud.tld');
     $mockProvider->registerClassInstance(IRequest::class, $this->request, global: true);
 
-    /** @var PHPMyEdit $pme */
-    $this->pme = $this->createStub(PHPMyEdit::class);
-    $pmeOptions = new PMEOptions([]);
-    foreach ([PHPMyEdit::CGI_SYS_KEY, PHPMyEdit::CGI_DATA_KEY, PHPMyEdit::CGI_OPERATION_KEY] as $key) {
-      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][$key] = $pmeOptions['cgi'][PHPMyEdit::CGI_PREFIX_KEY][$key];
-    }
-    $this->pme->method('cgiSysName')->willReturnCallback(
-      fn(string $suffix = ''): string
-      =>
-      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][PHPMyEdit::CGI_SYS_KEY] . $suffix,
-    );
+    $this->getPHPMyEditStub();
 
     /** @var ProjectParticipantFieldsService $projectParticipantFieldsService */
     $projectParticipantFieldsService = $this->createStub(Service\ProjectParticipantFieldsService::class);
@@ -298,12 +298,12 @@ class EmailFormControllerTest extends TestCase
           $share = $this->linkShares[$filesSharing]['share'];
           $dav = $this->linkShares[$filesSharing]['dav'];
         } else {
-          $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
+          $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Constants::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
           $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
           $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
           $share = $this->createStub(\OCP\Share\IShare::class);
           $share->method('getNode')->willReturn($folder);
-          $share->method('getId')->willReturn($this->shareId++);
+          $share->method('getId')->willReturn((string)$this->shareId++);
           $share->method('getPassword')->willReturn($password);
           $share->method('getExpirationDate')->willReturn($expirationDate);
           $this->linkSharesByPath[$folder->getPath()] = $filesSharing;
@@ -382,6 +382,12 @@ class EmailFormControllerTest extends TestCase
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /**
@@ -1167,7 +1173,7 @@ class EmailFormControllerTest extends TestCase
       },
       $globalSubstitutionKeys,
     );
-    $this->assertEqualsCanonicalizing($enumL10NValues, $globalL10NSubstitutionKeys);
+    $this->assertEqualsCanonicalizing(array_values($enumL10NValues), $globalL10NSubstitutionKeys);
     foreach ($enumL10NValues as $untranslated => $translated) {
       $this->assertNotEquals($untranslated, $translated);
     }
@@ -1204,7 +1210,7 @@ class EmailFormControllerTest extends TestCase
       },
       $untranslatedKeys,
     );
-    $this->assertEqualsCanonicalizing($enumL10NValues, $memberL10NSubstitutionKeys);
+    $this->assertEqualsCanonicalizing(array_values($enumL10NValues), $memberL10NSubstitutionKeys);
     foreach ($enumL10NValues as $untranslated => $translated) {
       if (!in_array($untranslated, self::L10N_EXCEPTIONS)) {
         $this->assertNotEquals($untranslated, $translated);

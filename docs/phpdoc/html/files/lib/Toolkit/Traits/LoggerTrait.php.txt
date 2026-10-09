@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ use Psr\Log\LogLevel;
 
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Toolkit\Listener\BeforeMessageLoggedEventListener;
 
@@ -41,8 +41,8 @@ trait LoggerTrait
   /** @var LoggerInterface */
   protected LoggerInterface $logger;
 
-  /** @var IAppContainer */
-  protected IAppContainer $appContainer;
+  /** @var ContainerInterface */
+  protected ContainerInterface $appContainer;
 
   /**
    * Return the stored logger class
@@ -57,9 +57,9 @@ trait LoggerTrait
   /**
    * Return the stored appConmtainer instance.
    *
-   * @return IAppContainer
+   * @return ContainerInterface
    */
-  protected function appContainer():IAppContainer
+  protected function appContainer():ContainerInterface
   {
     return $this->appContainer;
   }
@@ -140,29 +140,21 @@ trait LoggerTrait
       } while ($showTrace && --$shift > 0);
     }
 
-    $logEntry = null;
+    $listener = null;
     if ($returnLogEntry) {
       /** @var IEventDispatcher $eventDispatcher */
       $eventDispatcher = $this->appContainer()->get(IEventDispatcher::class);
       /** @var BeforeMessageLoggedEventListener $listener */
       $listener = $this->appContainer()->get(BeforeMessageLoggedEventListener::class);
-      $appName = $this->appContainer()->get('AppName');
+      $listener->clearLogEntry();
       $eventDispatcher->addListener(
         BeforeMessageLoggedEventListener::EVENT,
         [$listener, 'handle'],
       );
-      $context = [
-        ...$context,
-        $appName => [
-          'callback' => function(array $logData) use (&$logEntry) {
-            $logEntry = $logData;
-          },
-        ],
-      ];
     }
     $this->logger()->log($level, $prefix . $message, $context);
 
-    return $logEntry;
+    return $listener?->getLogEntry();
   }
 
   /**
@@ -231,8 +223,7 @@ trait LoggerTrait
     int $shift = 0,
     bool $showTrace = false,
     bool $returnLogEntry = false,
-  ):?array
-  {
+  ):?array {
     return $this->log(LogLevel::DEBUG, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 

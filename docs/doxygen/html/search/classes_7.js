@@ -10,5 +10,8 @@ var searchData=
   ['hashhandler_7',['HashHandler',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_hash_handler.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Listeners::Sluggable']]],
   ['helloworld_8',['HelloWorld',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html',1,'OCA::CAFEVDB::Command']]],
   ['historyservice_9',['HistoryService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html',1,'OCA::CAFEVDB::Service']]],
-  ['html2text_10',['Html2Text',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html',1,'OCA::CAFEVDB::Common']]]
+  ['historyservicetest_10',['HistoryServiceTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_history_service_test.html',1,'OCA::CAFEVDB::Tests::Unit::Service']]],
+  ['html2text_11',['Html2Text',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html',1,'OCA::CAFEVDB::Common']]],
+  ['httpstatus_12',['HttpStatus',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus']]],
+  ['humandatetime_13',['HumanDateTime',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o_1_1_human_date_time.html',1,'OCA::CAFEVDB::Service::DTO']]]
 ];

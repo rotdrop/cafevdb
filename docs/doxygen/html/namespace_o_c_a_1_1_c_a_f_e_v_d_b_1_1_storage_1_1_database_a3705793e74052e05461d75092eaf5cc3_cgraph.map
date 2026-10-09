@@ -1,5 +1,7 @@
 <map id="getReceivablesFolderName" name="getReceivablesFolderName">
-<area shape="rect" id="Node000001" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,5,188,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="236,5,326,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,16,220,16,220,21,188,21"/>
+<area shape="rect" id="Node000001" title="Get the name of the sub&#45;folder containing supporting documents for receivables." alt="" coords="5,13,188,40"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="236,13,326,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,24,223,26,218,27,188,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="374,5,583,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="326,24,361,27,356,27,327,29"/>
 </map>

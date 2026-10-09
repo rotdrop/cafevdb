@@ -1,5 +1,11 @@
 <map id="getMusician" name="getMusician">
-<area shape="rect" id="Node000001" title="Get musician." alt="" coords="248,29,339,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="5,5,200,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,45,200,45,200,40,232,40"/>
+<area shape="rect" id="Node000001" title="Get musician." alt="" coords="397,67,488,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="155,5,349,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="379,68,349,64,349,59,385,68"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a4bd64e7e15548294c0162046ca408172" title="Update indexed associations." alt="" coords="184,104,320,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="384,91,321,107,320,101,379,92"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#ad365a5634275892d81265fe701066848" title="Set instrument." alt="" coords="5,79,107,105"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="166,108,107,101,107,96,171,105"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="10,129,102,156"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="166,129,102,139,101,134,171,127"/>
 </map>

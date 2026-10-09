@@ -1,7 +1,7 @@
 <map id="fileAttachments" name="fileAttachments">
 <area shape="rect" id="Node000001" title="Return the file attachment data." alt="" coords="233,31,345,57"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation\selectOptions()." alt="" coords="20,5,170,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,37,170,31,171,26,218,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,35,171,31,171,26,220,34"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="5,56,185,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,56,185,60,185,55,217,51"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,54,185,60,185,55,220,53"/>
 </map>

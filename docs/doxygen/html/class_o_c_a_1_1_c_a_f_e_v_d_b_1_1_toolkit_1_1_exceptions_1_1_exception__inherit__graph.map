@@ -1,21 +1,31 @@
 <map id="Exception" name="Exception">
-<area shape="rect" id="Node000001" title="Exception class abstaction." alt="" coords="5,132,85,159"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="27,114,33,108,45,105,56,108,63,114,65,123,62,132,57,131,60,123,58,117,54,112,45,111,36,113,31,118"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="11,120,8,107,12,94,25,85,45,81,68,86,81,99,81,116,69,133,65,130,76,114,76,101,66,91,45,87,27,90,17,97,13,107,17,119"/>
+<area shape="rect" id="Node000001" title="Exception class abstaction." alt="" coords="5,157,85,184"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="27,140,33,133,45,131,56,133,63,139,65,148,62,158,57,156,60,148,58,142,54,138,45,136,36,138,31,143"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="11,145,8,132,12,119,25,110,45,107,68,111,81,124,81,141,69,158,64,155,76,140,76,126,66,116,45,112,27,115,17,122,13,132,17,145"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html" title="Transparent archive extraction exception." alt="" coords="168,56,291,83"/>
-<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="78,121,132,92,166,80,168,85,134,97,80,126"/>
+<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="67,144,96,117,131,92,169,79,165,83,134,97,99,121,71,147"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_authorization_exception.html" title="Thrown to signal that somethings needs additional authorization." alt="" coords="152,107,307,133"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="100,135,151,128,152,133,100,140"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="133,157,326,184"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="101,150,133,155,132,160,100,156"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html" title="Thrown if there is something wrong with the access to the PHP session." alt="" coords="155,208,304,235"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="80,165,134,194,167,205,165,210,132,198,78,170"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="98,153,132,143,177,132,172,136,133,148,101,157"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="162,157,297,184"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="100,168,163,169,159,172,101,173"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="133,208,326,235"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="99,184,133,193,177,207,172,208,132,199,100,189"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html" title="Thrown if there is something wrong with the access to the PHP session." alt="" coords="155,259,304,285"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="69,193,99,221,134,244,163,258,157,258,131,249,96,225,68,198"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_cannot_open_exception.html" title="Transparent archive extraction exception." alt="" coords="374,5,570,32"/>
-<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="305,51,404,30,405,35,306,56"/>
+<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="305,51,407,31,402,34,307,56"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_not_open_exception.html" title="Transparent archive extraction exception." alt="" coords="384,56,560,83"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="307,67,384,67,384,72,307,72"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="306,67,386,68,381,70,307,72"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception.html" title="Transparent archive extraction exception." alt="" coords="384,107,560,133"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="306,83,405,103,404,109,305,88"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="382,208,562,235"/>
-<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="319,219,382,219,382,224,319,224"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="306,83,407,105,402,107,306,88"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception.html" title="Base class for database exceptions providing an entity&#45;class." alt="" coords="388,157,557,184"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="312,168,390,170,385,171,313,173"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception.html" title="Exception thrown by OCA\CAFEVDB\Toolkit\Doctrine\ORMntitySerializerntitySerializer." alt="" coords="380,208,564,235"/>
+<area shape="poly" id="edge12_Node000007_Node000011" title=" " alt="" coords="312,185,407,207,402,208,312,190"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="618,128,845,155"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="572,157,621,154,615,155,572,162"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception.html" title="Thrown if an identifier is missing trying to fetch an entity." alt="" coords="645,179,818,221"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="572,179,647,190,642,190,572,185"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="382,259,562,285"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="319,269,385,272,379,272,319,275"/>
 </map>

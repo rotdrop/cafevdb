@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -214,13 +218,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapter.html#property_keys">$keys</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;|null            </span>
+                        &nbsp;: array|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapter.html#property_overriddenData">$overriddenData</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 <dd>Array of overridden data which has to be maintained as EntityResponse
 has only readonly properties.</dd>
@@ -647,7 +651,7 @@ has only readonly properties.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
+            <span class="phpdocumentor-signature__type">array|null</span>
     <span class="phpdocumentor-signature__name">$keys</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
@@ -687,7 +691,7 @@ has only readonly properties.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$overriddenData</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -1343,7 +1347,7 @@ s.t. that each top-level array-adapter has its own caching instance.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$depth</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">2</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">self|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$root</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flatIdentifier</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html"><abbr title="\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer">EntitySerializer</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entitySerializer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$depth</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">2</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">self|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$root</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flatIdentifier</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-EntitySerializer-EntitySerializer.html"><abbr title="\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer">EntitySerializer</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entitySerializer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1398,7 +1402,7 @@ s.t. that each top-level array-adapter has its own caching instance.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>|null</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

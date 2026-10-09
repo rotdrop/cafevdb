@@ -1,6 +1,13 @@
 <map id="applyHistory" name="applyHistory">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,100,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,29,236,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,40,132,40,132,45,100,45"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="167,30,163,21,166,11,176,5,192,3,209,5,218,12,215,16,207,10,192,8,178,10,170,14,168,20,172,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,100,123"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,96,236,123"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,107,134,109,129,110,100,112"/>
+<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="167,94,163,87,166,78,176,72,192,69,209,72,219,81,214,80,207,77,192,75,178,77,170,81,168,87,172,97"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="284,88,444,131"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,107,271,109,266,109,237,112"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="497,5,685,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="431,85,483,70,489,69,432,90"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="492,88,690,131"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="445,115,479,118,474,118,445,121"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="489,100,460,103,460,98,494,100"/>
 </map>

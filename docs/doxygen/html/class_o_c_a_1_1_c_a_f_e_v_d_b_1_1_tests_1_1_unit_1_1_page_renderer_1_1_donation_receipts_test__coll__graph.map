@@ -1,0 +1,22 @@
+<map id="DonationReceiptsTest" name="DonationReceiptsTest">
+<area shape="rect" id="Node000001" title="Test aspects of the DonationReceipts page renderer." alt="" coords="94,408,244,435"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,309,83,336"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,343,155,406,151,409,71,348"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html" title="Table generator for DonationReceipt entities." alt="" coords="107,309,232,336"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,350,172,409,167,407,167,353"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="96,233,237,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="169,273,171,310,166,308,166,277"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="90,157,243,184"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="168,197,169,234,164,232,166,202"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="72,81,146,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="128,117,160,156,154,157,128,123"/>
+<area shape="rect" id="Node000007" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="128,5,206,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="147,46,121,82,117,80,149,42"/>
+<area shape="rect" id="Node000008" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="171,81,280,108"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="186,41,218,81,213,81,186,47"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="205,122,179,159,174,155,208,118"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="258,309,348,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="282,346,238,386,197,410,195,405,234,382,278,348"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="261,233,347,260"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="305,273,305,310,301,308,302,277"/>
+</map>

@@ -1,0 +1,8 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test =
+[
+    [ "testDatabaseEntityException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html#a2e7cfece108d90ff39f1bbd4ade3fa1d", null ],
+    [ "testDatabaseEntityInconsistenValueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html#a4cb36f2bb4d66725815be2bc3bc0dd38", null ],
+    [ "testDatabaseEntityNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html#a3c5bacee88c526983c897b0f6aa292bd", null ],
+    [ "testDatabaseEntityNotUniqueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html#a0dd06ba30801448a4bdfb711c7fb699f", null ],
+    [ "testDatabaseMissingIdentifierException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html#adf2a6f1e3b7ad1b5303f15bdc9eeae7e", null ]
+];

@@ -297,7 +297,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['fdd']['voice'] = [
       'name'     => $this->l->t('Voice'),
-      'css'      => [ 'postfix' => [ 'allow-empty', ], ],
+      'css'      => [ 'postfix' => [ CssClasses::ALLOW_EMPTY, ], ],
       'select'   => 'D',
       'options'  => 'LACPDVF',
       'maxlen'   => 5,

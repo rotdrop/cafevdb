@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\Node;
 use OCP\IAppConfig;
 use OCP\IGroupManager;
@@ -55,7 +55,7 @@ class ProjectFolders extends Command
   /** {@inheritdoc} */
   public function __construct(
     protected IAppConfig $appConfig,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IGroupManager $groupManager,
     protected IL10N $l,
     protected IUserManager $userManager,

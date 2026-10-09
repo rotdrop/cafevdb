@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Events;
@@ -43,10 +43,10 @@ class SepaBulkTransactionSubmittedListener implements IEventListener
   const EVENT = Events\PostChangeSepaBulkTransactionSubmitDate::class;
 
   /**
-   * @param IAppContainer $appContainer App-container in order to have a leight-weight constructor.
+   * @param ContainerInterface $appContainer App-container in order to have a leight-weight constructor.
    */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
 

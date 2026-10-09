@@ -1,0 +1,21 @@
+<map id="CloudUserConnectorServiceTest" name="CloudUserConnectorServiceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the CloudUserConnectorService." alt="" coords="303,355,516,381"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,256,83,283"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,286,143,308,205,328,319,353,313,355,203,333,141,313,86,292"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html" title="Manage database&#45;views and grants in order to selectively provide only the neccessary information to t..." alt="" coords="106,256,294,283"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,296,216,314,228,329,258,342,305,354,300,354,256,347,224,333,211,317,205,300"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html" title="Handle some encryption tasks:" alt="" coords="346,256,473,283"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="411,297,412,356,407,353,407,300"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="503,256,604,283"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="550,296,543,317,531,333,511,347,488,357,487,352,508,342,527,329,539,314,546,299"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="476,157,626,184"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="553,198,555,257,551,254,550,202"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_database_provider.html" title="Setup a real database server in order to avoid excessive mocking." alt="" coords="637,256,763,283"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="686,294,669,317,647,333,592,349,516,360,516,355,591,344,644,328,665,313,681,296"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_database_config.html" title="Database access parameters." alt="" coords="650,157,766,184"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="708,198,703,257,699,254,704,202"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="659,81,757,108"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="710,121,710,158,706,155,706,125"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="650,5,766,32"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="710,45,710,82,706,80,706,49"/>
+</map>

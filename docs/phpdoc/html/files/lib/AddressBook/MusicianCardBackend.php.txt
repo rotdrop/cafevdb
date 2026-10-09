@@ -109,6 +109,8 @@ class MusicianCardBackend implements ICardBackend
       return [];
     }
 
+    $softDeletableState = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, true);
+
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findBy([ 'addressBookUri' => null ]);
     } else {
@@ -165,12 +167,17 @@ class MusicianCardBackend implements ICardBackend
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
     }
+
+    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeletableState);
+
     return $vCards;
   }
 
   /** {@inheritdoc} */
   public function getCards(): array
   {
+    $softDeletableState = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, true);
+
     // to appear in the contacts app, this must really return everything
     // as search is only by client in the presented contacts
     $musicians = $this->musiciansRepository->findBy([ 'addressBookUri' => null ]);
@@ -178,6 +185,9 @@ class MusicianCardBackend implements ICardBackend
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
     }
+
+    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeletableState);
+
     return $vCards;
   }
 

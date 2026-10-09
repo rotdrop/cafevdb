@@ -1,15 +1,15 @@
 <map id="getDefaultFontName" name="getDefaultFontName">
 <area shape="rect" id="Node000001" title="Return the chosen font&#45;default if it is available and set, otherwise one of the installed fonts." alt="" coords="5,43,148,69"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a4f12fbd8873025e70264e416c3cb9308" title="Check whether the given font." alt="" coords="196,43,306,69"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,53,180,53,180,59,148,59"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,53,183,56,178,56,148,59"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ad4a3b7b4eedfc6652afc11bd2f63a89e" title="Obtain the cached contents of the font&#45;folder, grouped by family." alt="" coords="354,43,496,69"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,53,338,53,338,59,306,59"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,53,341,56,336,56,307,59"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a11370c328f78412deb89ea3a113e01dc" title="Scan the app&#39;s fonts folder and return the contents grouped by font family." alt="" coords="544,43,663,69"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="497,53,529,53,529,59,497,59"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="497,53,532,56,526,56,497,59"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o_1_1_font_file_names.html#a03af6452b3ff02618dfef97106d6f30c" title="Initialize from the given array." alt="" coords="711,5,918,48"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="662,45,695,41,696,46,663,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="663,45,693,44,698,43,663,50"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="743,72,886,99"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="663,62,728,71,727,76,662,67"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="663,62,730,73,725,73,663,67"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a1548029c9c58b03ee3a95f9d5c143920" title=" " alt="" coords="966,72,1074,99"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="886,83,951,83,951,88,886,88"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="886,83,954,85,948,85,886,88"/>
 </map>

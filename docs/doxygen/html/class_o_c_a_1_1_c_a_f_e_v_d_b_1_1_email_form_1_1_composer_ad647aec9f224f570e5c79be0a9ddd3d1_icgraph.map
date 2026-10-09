@@ -1,7 +1,7 @@
 <map id="subject" name="subject">
 <area shape="rect" id="Node000001" title=" " alt="" coords="339,5,402,32"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="188,5,291,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,21,292,21,292,16,324,16"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="321,19,292,21,292,16,326,19"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,5,140,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,21,140,21,140,16,172,16"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,19,140,21,140,16,175,18"/>
 </map>

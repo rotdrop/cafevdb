@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Database;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Constants as AppConstants;
+
 /**
  * Define some database specific constants like the desired character set and
  * collation
@@ -42,7 +44,7 @@ class Constants extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\Constants
    * The number of signification digits for monetary values, this means we can
    * handle values in the ragne of [-99,999.99, +99,999.99].
    */
-  public const MONETARY_PRECISION = 7;
-  public const MONETARY_SCALE = 2;
+  public const MONETARY_PRECISION = AppConstants::MONETARY_PRECISION;
+  public const MONETARY_SCALE = AppConstants::MONETARY_SCALE;
   public const MONETARY_TYPE = 'DECIMAL(' . self::MONETARY_PRECISION . ', ' . self::MONETARY_SCALE . ')';
 }

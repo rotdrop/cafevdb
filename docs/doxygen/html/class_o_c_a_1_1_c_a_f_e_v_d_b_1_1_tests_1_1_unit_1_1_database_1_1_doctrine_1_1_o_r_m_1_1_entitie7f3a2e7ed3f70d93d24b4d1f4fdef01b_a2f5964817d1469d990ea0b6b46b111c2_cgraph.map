@@ -1,0 +1,11 @@
+<map id="testCompositePaymentsAssociation" name="testCompositePaymentsAssociation">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,21,239,48"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#ac5282f0e1e55593bdfbdd6dfc6cf3156" title=" " alt="" coords="287,5,518,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,32,274,34,269,35,239,37"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a7bef87f184170c7616633d9152db74ce" title=" " alt="" coords="566,5,797,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="519,32,553,35,548,35,519,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="845,5,1053,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="798,32,832,35,827,35,798,37"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#aaaa70f227c74a7188f3cca243f2b41e0" title="Get bankAccountOwner." alt="" coords="1101,5,1372,64"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1053,32,1088,35,1082,35,1053,37"/>
+</map>

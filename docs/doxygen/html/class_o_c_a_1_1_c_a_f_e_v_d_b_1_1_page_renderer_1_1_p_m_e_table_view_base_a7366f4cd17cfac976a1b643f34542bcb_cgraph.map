@@ -1,0 +1,7 @@
+<map id="legacyRecordToEntityId" name="legacyRecordToEntityId">
+<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit\rec to somethi..." alt="" coords="5,5,166,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52123174818955fa46c5c9d7669097e0" title="Print an entity id without causing print_r infinite recursion." alt="" coords="214,5,297,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,16,201,19,196,19,166,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a685664a241ded617239a4d9f395eb2bf" title="Debug helper, flatten an entity id." alt="" coords="345,5,452,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="297,16,332,19,327,19,297,21"/>
+</map>

@@ -1,0 +1,8 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations =
+[
+    [ "AbstractMigration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_migration.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_migration" ],
+    [ "AbstractStructuralMigration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_structural_migration.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_structural_migration" ],
+    [ "AbstractTransactionalMigration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_transactional_migration.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_transactional_migration" ],
+    [ "DependencyFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_dependency_factory.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_dependency_factory" ],
+    [ "EnumMigrationDirection", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations.html#a51041f8ca9368263c93b0cf402009c38", null ]
+];

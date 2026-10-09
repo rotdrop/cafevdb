@@ -1,0 +1,7 @@
+<map id="EntityReferenceIdentifier" name="EntityReferenceIdentifier">
+<area shape="rect" id="Node000001" title="Base class for EntityReference and CollectionEntityReference." alt="" coords="5,155,171,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="39,80,137,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,121,90,155,86,153,86,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="30,5,146,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,45,91,80,85,79,87,50"/>
+</map>

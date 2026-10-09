@@ -1,0 +1,13 @@
+<map id="getEntityManager" name="getEntityManager">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,129,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a962ab21e9952e773558800c77a0dfe2d" title=" " alt="" coords="211,5,356,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,53,211,34,206,38,128,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html#a1038704d0a304d447214b6a700e7607f" title=" " alt="" coords="215,56,352,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,67,202,68,197,71,129,72"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#af3eb844578a5afcee8733bd2c40bf18d" title=" " alt="" coords="177,107,390,149"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="119,81,190,101,185,103,119,86"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aaced7a70d8c7067b23ae830fdaf53e31" title=" " alt="" coords="438,15,633,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="351,58,425,50,420,51,352,63"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a5f3c11b90fed1f1f1cd123af8f802285" title="{}" alt="" coords="440,81,632,124"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="352,76,427,88,421,88,352,81"/>
+</map>

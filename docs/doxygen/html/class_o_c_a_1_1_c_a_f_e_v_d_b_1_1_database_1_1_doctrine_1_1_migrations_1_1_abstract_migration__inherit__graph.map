@@ -1,0 +1,35 @@
+<map id="AbstractMigration" name="AbstractMigration">
+<area shape="rect" id="Node000001" title="Abstract base class for migrations in order to make the entity manager available for transactional mi..." alt="" coords="226,385,349,412"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_structural_migration.html" title="Abstract base class for transactional migrations." alt="" coords="408,233,587,260"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="318,374,480,259,476,262,321,378"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_transactional_migration.html" title="Abstract base class for transactional migrations." alt="" coords="397,512,598,539"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="325,418,476,511,471,512,323,423"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,385,178,412"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,396,228,397,223,400,194,401"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000001.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,5,810,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="509,218,530,179,560,132,599,83,645,42,669,31,665,34,648,46,603,87,565,135,535,182,514,221"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000003.html" title="Add functions and routines to the initial database." alt="" coords="646,56,810,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="516,219,569,156,605,122,645,92,672,82,668,85,648,97,608,126,573,160,519,223"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260108084800.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,107,810,133"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="526,221,580,182,645,143,677,133,672,135,648,148,582,186,529,225"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260108115432.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,157,810,184"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="551,225,645,193,684,183,679,186,647,199,554,230"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260130130553.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,208,810,235"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="602,233,649,229,644,231,604,238"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260206193722.html" title="03:14:07 UTC on January 19, 2038 is the time when 32 bits are no longer enough to store the Unix epoc..." alt="" coords="646,259,810,285"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="602,256,649,262,643,264,603,261"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819094146.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,309,810,336"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="553,263,647,295,684,308,679,309,645,300,553,268"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819105948.html" title="Replace the web&#45;browser history entry key by the history stack position." alt="" coords="646,360,810,387"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="528,267,582,307,648,346,677,359,672,360,645,350,580,312,527,273"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20261009150233.html" title="Introduce a dummy column into file&#45;data in order to silence an error emitted by the schema tool of &gt;=..." alt="" coords="646,411,810,437"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="518,270,573,334,608,367,648,396,673,410,668,410,645,401,605,372,569,337,517,275"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000002.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,461,810,488"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="576,505,667,488,661,489,577,511"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260131090857.html" title="Ensure the ProjectEvent entities for registration calendar events are linked to the project." alt="" coords="646,512,810,539"/>
+<area shape="poly" id="edge14_Node000013_Node000015" title=" " alt="" coords="614,523,648,525,643,526,614,528"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260207000624.html" title="Destructive down of the recurrence&#45;id &#45;&gt; bigint migration." alt="" coords="646,563,810,589"/>
+<area shape="poly" id="edge15_Node000013_Node000016" title=" " alt="" coords="577,540,667,562,661,562,577,545"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819094422.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,613,810,640"/>
+<area shape="poly" id="edge16_Node000013_Node000017" title=" " alt="" coords="537,544,589,572,647,599,680,613,675,612,645,604,587,577,536,549"/>
+</map>

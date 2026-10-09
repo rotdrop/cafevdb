@@ -1,5 +1,9 @@
 <map id="response" name="response">
-<area shape="rect" id="Node000001" title="Stuff into a DataResponse." alt="" coords="232,21,306,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_encryption_controller.html#ae9b87abaf4ae6ae56aa5122dd0ca6d9d" title=" " alt="" coords="5,5,184,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,37,184,37,184,32,216,32"/>
+<area shape="rect" id="Node000001" title="Stuff into a DataResponse." alt="" coords="319,96,393,123"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#ad9c56458219c1917c2f3fbe9a02b070a" title=" " alt="" coords="49,5,227,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,90,270,79,228,64,228,59,272,73,310,90"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#aadb9cd4b282a085e94eb61753d68beca" title="The end&#45;point expects the the instrument and voices selection as input and returns selection&#45;options ..." alt="" coords="5,88,271,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="301,110,271,112,271,107,306,109"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_migrations_controller.html#a84a947dcd33fd2c817f6d1c7d2ce82ca" title=" " alt="" coords="49,155,227,197"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="311,128,271,145,228,158,227,153,270,140,306,130"/>
 </map>

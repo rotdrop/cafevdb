@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use InvalidArgumentException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\ConsoleLogger;
@@ -65,7 +65,7 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
   public function __construct(
     ConsoleLogger $logger,
     protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
   ) {
     $this->logger = $logger;

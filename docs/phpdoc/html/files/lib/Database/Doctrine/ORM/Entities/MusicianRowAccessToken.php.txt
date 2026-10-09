@@ -45,7 +45,7 @@ class MusicianRowAccessToken implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
-  const HASH_LENGTH = 512;
+  public const HASH_LENGTH = 512;
 
   #[ORM\OneToOne(targetEntity: Musician::class, inversedBy: 'rowAccessToken', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
@@ -83,7 +83,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return MusicianRowAccessToken
    */
-  public function setMusician(Musician $musician):MusicianRowAccessToken
+  public function setMusician(Musician $musician): MusicianRowAccessToken
   {
     $this->musician = $musician;
 
@@ -95,7 +95,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician():Musician
+  public function getMusician(): Musician
   {
     return $this->musician;
   }
@@ -107,7 +107,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return MusicianRowAccessToken
    */
-  public function setUserId(?string $userId):MusicianRowAccessToken
+  public function setUserId(?string $userId): MusicianRowAccessToken
   {
     $this->userId = $userId;
 
@@ -119,7 +119,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return string
    */
-  public function getUserId():?string
+  public function getUserId(): ?string
   {
     return $this->userId;
   }
@@ -129,7 +129,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return string
    */
-  public static function computeHash(string $value):string
+  public static function computeHash(string $value): string
   {
     return \hash('sha' . self::HASH_LENGTH, $value, binary: false);
   }
@@ -141,7 +141,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return MusicianRowAccessToken
    */
-  public function setAccessToken(string $accessToken):MusicianRowAccessToken
+  public function setAccessToken(string $accessToken): MusicianRowAccessToken
   {
     $this->accessTokenHash = self::computeHash($accessToken);
 
@@ -155,7 +155,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return MusicianRowAccessToken
    */
-  public function setAccessTokenHash(?string $accessTokenHash):MusicianRowAccessToken
+  public function setAccessTokenHash(?string $accessTokenHash): MusicianRowAccessToken
   {
     $this->accessTokenHash = $accessTokenHash;
 
@@ -167,8 +167,14 @@ class MusicianRowAccessToken implements \ArrayAccess
    *
    * @return string
    */
-  public function getAccessTokenHash():?string
+  public function getAccessTokenHash(): ?string
   {
     return $this->accessTokenHash;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString(): string
+  {
+    return 'RAT ' . $this->musician->getPublicName() . ' ' . $this->userId . ' ' . $this->accessTokenHash;
   }
 }

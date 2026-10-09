@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,16 +25,15 @@
 
 namespace OCA\CAFEVDB\Notifications;
 
-use InvalidArgumentException;
-
-use OCP\Notification\INotification;
 use OCP\IURLGenerator;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
+use OCP\Notification\INotification;
+use OCP\Notification\UnknownNotificationException;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 /** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
@@ -51,10 +50,10 @@ class Notifier implements \OCP\Notification\INotifier
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected L10NFactory $l10nFactory,
     protected IURLGenerator $urlGenerator,
-    protected ILogger $logger,
+    protected LoggerInterface $logger,
   ) {
   }
   // phpcs:enable
@@ -76,7 +75,7 @@ class Notifier implements \OCP\Notification\INotifier
   {
     if ($notification->getApp() !== $this->appName) {
       // Not my app => throw
-      throw new InvalidArgumentException();
+      throw new UnknownNotificationException();
     }
 
     // Read the language from the notification
@@ -191,7 +190,7 @@ class Notifier implements \OCP\Notification\INotifier
 
       default:
         // Unknown subject => Unknown notification => throw
-        throw new InvalidArgumentException();
+        throw new UnknownNotificationException();
     }
 
     // Set the plain text subject automatically

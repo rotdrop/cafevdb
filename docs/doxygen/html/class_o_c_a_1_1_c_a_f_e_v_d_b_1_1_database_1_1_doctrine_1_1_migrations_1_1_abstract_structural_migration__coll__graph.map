@@ -1,0 +1,7 @@
+<map id="AbstractStructuralMigration" name="AbstractStructuralMigration">
+<area shape="rect" id="Node000001" title="Abstract base class for transactional migrations." alt="" coords="5,155,185,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_migration.html" title="Abstract base class for migrations in order to make the entity manager available for transactional mi..." alt="" coords="33,80,157,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,121,97,155,93,153,93,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="9,5,181,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,45,98,80,92,79,94,50"/>
+</map>

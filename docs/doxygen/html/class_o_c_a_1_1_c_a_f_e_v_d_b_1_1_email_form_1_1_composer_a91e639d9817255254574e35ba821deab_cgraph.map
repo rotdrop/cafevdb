@@ -1,10 +1,17 @@
 <map id="recordMessageDiagnostics" name="recordMessageDiagnostics">
-<area shape="rect" id="Node000001" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="5,31,185,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="233,5,360,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,30,217,26,218,31,186,35"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="240,56,352,83"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,53,225,58,224,63,185,58"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="408,31,478,57"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,27,393,33,392,38,360,32"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="353,57,392,50,393,55,353,62"/>
+<area shape="rect" id="Node000001" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="5,63,185,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="233,88,360,115"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,85,220,91,215,92,185,90"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="240,37,352,64"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="185,62,227,59,222,60,186,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="453,37,523,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,85,435,64,441,63,350,90"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="408,88,568,131"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="361,101,395,105,390,105,361,107"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="621,5,809,64"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="555,85,607,70,613,69,556,90"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="616,88,814,131"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="569,115,603,118,598,118,569,121"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="613,100,584,103,584,98,618,100"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="353,48,440,50,435,51,353,53"/>
 </map>

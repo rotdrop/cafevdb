@@ -1,0 +1,4 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test =
+[
+    [ "testGetAppInfoAppName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test.html#ae19a29ff6a94423162603b0e44ecc2dc", null ]
+];

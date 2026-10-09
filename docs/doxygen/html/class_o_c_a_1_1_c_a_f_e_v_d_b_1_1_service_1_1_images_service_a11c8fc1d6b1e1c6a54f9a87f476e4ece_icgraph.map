@@ -3,8 +3,8 @@
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a515cd5f88c4e68268985b013cfc8616c" title="Generate a data URI from the given file with caching." alt="" coords="5,5,120,32"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="478,21,120,21,120,16,478,16"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a785550a3227a71309fe9204dedfe6802" title="Return $data unmodified if it is an SVG&#45;image already, otherwise wrap a given image into an SVG eleme..." alt="" coords="309,31,445,57"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="478,32,446,37,445,31,478,27"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="481,29,446,37,445,31,475,30"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#aa2dddac5588be57828916e7e5b65c816" title="Generate SVG image data from a given file." alt="" coords="168,31,261,57"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,47,261,47,261,41,293,41"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="152,36,119,31,120,26,153,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="291,44,261,47,261,41,296,44"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="150,34,120,31,120,26,155,33"/>
 </map>

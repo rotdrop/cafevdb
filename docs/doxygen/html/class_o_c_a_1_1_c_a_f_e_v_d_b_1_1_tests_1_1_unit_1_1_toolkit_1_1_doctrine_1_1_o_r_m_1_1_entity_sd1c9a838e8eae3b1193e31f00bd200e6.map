@@ -1,0 +1,23 @@
+<map id="EntityArrayAdapterTest" name="EntityArrayAdapterTest">
+<area shape="rect" id="Node000001" title="Test aspects of the EntityArrayAdapter." alt="" coords="170,431,326,457"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="82,332,159,359"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,366,234,429,229,431,148,371"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html" title="Convert a database entity &quot;virtually&quot; to a flat array without recursions." alt="" coords="182,332,314,359"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="250,373,250,432,246,429,246,376"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,233,102,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,264,225,330,221,333,92,270"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="126,233,189,260"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="177,270,209,306,235,332,230,332,205,310,176,275"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="183,5,300,32"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="234,44,228,94,228,248,235,294,246,332,241,331,229,295,223,248,223,93,232,49"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="278,81,376,108"/>
+<area shape="poly" id="edge9_Node000009_Node000006" title=" " alt="" coords="267,40,315,81,310,82,268,45"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response.html" title="A collection of entities without duplicates." alt="" coords="266,233,380,260"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="288,267,273,286,260,309,253,333,248,330,255,307,269,282,284,271"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="263,157,420,184"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="336,197,328,234,324,232,333,201"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="333,121,342,158,336,156,331,126"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer.html" title="The goal is to serialize entities (... to JSON ...) such that the JS frontend can reconstruct the ass..." alt="" coords="406,233,515,260"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="456,273,446,307,430,343,408,379,378,409,353,423,327,433,326,427,351,418,375,405,404,376,426,341,441,305,452,277"/>
+<area shape="poly" id="edge10_Node000003_Node000010" title=" " alt="" coords="388,266,343,286,328,297,312,310,273,334,271,329,309,306,324,293,341,282,393,263"/>
+</map>

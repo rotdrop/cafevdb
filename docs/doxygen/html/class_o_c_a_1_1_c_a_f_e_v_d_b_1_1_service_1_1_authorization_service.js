@@ -1,5 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service =
 [
+    [ "EnumAppPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a40c7b1f85228fcdc8a1e9642824947bf", null ],
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#aef32052f5e6b93f15c57b46f181ddc04", null ],
     [ "authorized", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a59a58baa54c7c125ba10520c48d03116", null ],
     [ "getUserPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a014588ae449977376e1485aa7d5428d9", null ],

@@ -1,0 +1,23 @@
+<map id="RecipientsFilter" name="RecipientsFilter">
+<area shape="rect" id="Node000001" title="Wrap the email filter form into a class to make things a little less crowded." alt="" coords="215,300,327,327"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="228,201,290,228"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="270,240,274,252,275,300,270,299,268,252,268,245"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html" title="ProjectEvents." alt="" coords="95,300,191,327"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="228,240,213,254,187,278,160,301,156,298,184,274,210,250,232,236"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html" title="ProjectParticipantFields." alt="" coords="281,399,434,425"/>
+<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="305,228,321,238,334,250,346,268,354,289,363,330,364,369,362,400,357,397,359,369,358,331,349,290,341,271,330,254,318,242,305,234"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="368,5,464,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,45,427,77,426,112,418,148,400,179,376,198,347,210,317,215,292,217,290,212,317,210,345,205,373,194,396,176,413,146,421,111,422,77,421,50"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="351,31,276,51,235,65,196,84,132,119,84,151,64,169,46,191,12,253,8,264,12,274,24,283,44,291,96,303,92,307,43,296,21,288,8,278,3,265,7,251,42,188,60,165,81,147,130,114,194,79,233,60,274,46,355,28"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="443,40,462,65,470,93,470,315,462,344,443,368,417,387,392,401,389,396,415,382,439,364,457,342,464,314,464,94,457,67,442,45"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html" title="ProjectParticipantFieldsDataOptions." alt="" coords="369,497,549,540"/>
+<area shape="poly" id="edge10_Node000006_Node000003" title=" " alt="" coords="473,36,506,59,516,75,520,93,520,414,517,438,507,461,480,499,477,495,502,459,511,437,515,413,515,94,511,77,502,63,473,41"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="207,81,329,108"/>
+<area shape="poly" id="edge14_Node000007_Node000003" title=" " alt="" coords="376,41,295,83,292,79,379,37"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="77,304,49,297,25,286,12,270,13,260,19,250,33,239,55,231,112,220,174,215,230,214,225,217,174,220,112,225,57,236,36,244,23,254,18,262,17,269,28,281,51,292,82,301"/>
+<area shape="poly" id="edge12_Node000005_Node000004" title=" " alt="" coords="198,330,239,348,270,372,322,398,317,398,267,377,236,353,198,335"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="263,407,193,398,163,389,144,376,137,365,134,351,138,329,140,324,140,351,142,363,148,373,165,384,194,393,268,405"/>
+<area shape="poly" id="edge11_Node000006_Node000005" title=" " alt="" coords="409,430,432,448,447,471,457,498,452,496,443,474,428,451,407,435"/>
+<area shape="poly" id="edge9_Node000005_Node000006" title=" " alt="" coords="355,488,341,475,337,462,337,449,347,428,351,424,343,450,342,461,346,472,360,489"/>
+<area shape="poly" id="edge13_Node000002_Node000007" title=" " alt="" coords="230,120,223,133,217,155,223,176,231,189,243,201,237,201,227,192,218,178,212,154,218,131,233,115"/>
+</map>

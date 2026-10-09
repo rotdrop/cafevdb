@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Command\HelloWorld
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -104,9 +108,6 @@
         <h2 class="phpdocumentor-content__title">
     HelloWorld
 
-        <span class="phpdocumentor-element__extends">
-        extends <abbr title="\Symfony\Component\Console\Command\Command">Command</abbr>
-    </span>
     
             <div class="phpdocumentor-element__package">
             in package
@@ -129,9 +130,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Test-command in order to see if the abstract framework is functional.</p>
@@ -141,6 +142,23 @@
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\Console\Attribute\AsCommand">AsCommand</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $name: &#039;cafevdb:hello-world&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $description: &#039;Say &quot;Hello!&quot; to the world!&#039;
+    </dd>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -165,7 +183,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Command-HelloWorld.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -207,22 +225,15 @@
 </dt>
 <dd>{@inheritdoc}</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method___invoke">__invoke()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Console\ExitCode">ExitCode</abbr>    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate">authenticate()</a>
-    <span>
-                                &nbsp;: int    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_configure">configure()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_execute">execute()</a>
     <span>
                                 &nbsp;: int    </span>
 </dt>
@@ -258,16 +269,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -296,9 +307,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
     
@@ -334,9 +345,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
     
@@ -372,9 +383,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
     
@@ -410,9 +421,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
     
@@ -453,16 +464,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -500,7 +511,7 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -512,6 +523,91 @@
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___invoke">
+        __invoke()
+        <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method___invoke" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">60</span>
+
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">__invoke</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$onlyHello</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authenticated</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$failure</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Console\ExitCode">ExitCode</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$input</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$output</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$onlyHello</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$authenticated</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$failure</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$exception</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Console\ExitCode">ExitCode</abbr></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -527,16 +623,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/AuthenticatedCommandTrait.php"><a href="files/lib-command-authenticatedcommandtrait.html"><abbr title="lib/Command/AuthenticatedCommandTrait.php">AuthenticatedCommandTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Command/AuthenticatedCommandTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Command/AuthenticatedCommandTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">authenticate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">authenticate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -546,14 +642,14 @@
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$input</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$output</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -561,114 +657,20 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_authenticate_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Command\execute()">execute()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_configure">
-        configure()
-        <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_configure" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">56</span>
-
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">configure</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_execute">
-        execute()
-        <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_execute" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/HelloWorld.php"><a href="files/lib-command-helloworld.html"><abbr title="lib/Command/HelloWorld.php">HelloWorld.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">83</span>
-
-            <a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Command/HelloWorld.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">execute</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$input</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$output</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
+                        </dl>
 
         
     
@@ -805,9 +807,8 @@
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method___invoke">__invoke()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate">authenticate()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_configure">configure()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-HelloWorld.html#method_execute">execute()</a></li>
                                     </ul>
             </li>
                     </ul>

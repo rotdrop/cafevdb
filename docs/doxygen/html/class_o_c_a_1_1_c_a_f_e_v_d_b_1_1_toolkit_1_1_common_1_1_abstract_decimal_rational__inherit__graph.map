@@ -1,0 +1,19 @@
+<map id="AbstractDecimalRational" name="AbstractDecimalRational">
+<area shape="rect" id="Node000001" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="333,107,499,133"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test_class.html" title="Unit&#45;test class." alt="" coords="547,5,724,32"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="449,96,494,68,546,42,576,34,581,32,548,46,497,73,451,100"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_test_class.html" title="Unit&#45;test class." alt="" coords="547,56,724,83"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="491,100,577,83,572,84,493,105"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="550,107,721,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="514,117,552,120,547,120,515,123"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="561,157,710,184"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="492,135,577,157,572,157,492,140"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="561,208,710,235"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="451,139,497,167,548,194,581,208,576,207,546,198,494,172,449,145"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number.html" title="Rational numbers, exact fractions." alt="" coords="170,107,285,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,117,335,119,330,121,301,123"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="29,81,98,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,100,172,110,167,112,114,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,132,122,159"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="136,131,172,128,167,130,138,136"/>
+</map>

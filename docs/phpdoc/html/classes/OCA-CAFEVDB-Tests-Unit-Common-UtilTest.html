@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Tests\Unit\Common\UtilTest
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -184,35 +188,19 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-UtilTest.html#constant_ARRAY_MERGE_DATA">ARRAY_MERGE_DATA</a>
     <span>
-        &nbsp;= [[
-    // ordinary merge, non-recursive
-    &#039;input&#039; =&gt; [[&#039;a&#039;, &#039;b&#039;, &#039;c&#039;], [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;], [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]],
-    &#039;output&#039; =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;, &#039;a&#039;, &#039;b&#039;, &#039;c&#039;, &#039;a&#039;, &#039;b&#039;, &#039;c&#039;],
-], [
-    // ordinary merge, recursive
-    &#039;input&#039; =&gt; [[&#039;a&#039;, &#039;b&#039;, &#039;c&#039;], [[&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]]],
-    &#039;output&#039; =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;, [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]],
-], [
-    // ordinary merge, recursive
-    &#039;input&#039; =&gt; [[&#039;a&#039; =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]], [&#039;a&#039; =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]]],
-    &#039;output&#039; =&gt; [&#039;a&#039; =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;, &#039;a&#039;, &#039;b&#039;, &#039;c&#039;]],
-], [
-    // non-consecutive numeric keys are also preserverd
-    &#039;input&#039; =&gt; [[1 =&gt; &#039;first array scalar value&#039;, 2 =&gt; [&#039;a&#039;, &#039;b&#039;]], [1 =&gt; &#039;second array Value&#039;, 2 =&gt; [&#039;a&#039;, &#039;b&#039;], 4 =&gt; &#039;key-4 value&#039;]],
-    &#039;output&#039; =&gt; [1 =&gt; &#039;second array Value&#039;, 2 =&gt; [&#039;a&#039;, &#039;b&#039;, &#039;a&#039;, &#039;b&#039;], 4 =&gt; &#039;key-4 value&#039;],
-]]                            </span>
+        &nbsp;: mixed&nbsp;= [[ // ordinary merge, non-recursive &#039;input&#039; =&gt;...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-UtilTest.html#constant_CAMEL_CASE_TO_DASHES_DATA">CAMEL_CASE_TO_DASHES_DATA</a>
     <span>
-        &nbsp;= [&#039;Camel1234Case!&#039; =&gt; &#039;camel_1234_case_!&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;Camel1234Case!&#039; =&gt; &#039;camel_1234_case_!&#039;]                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-UtilTest.html#constant_STRFTIME_DATA">STRFTIME_DATA</a>
     <span>
-        &nbsp;= [&#039;25.01.26 13:00:33&#039; =&gt; [&#039;format&#039; =&gt; &#039;%x %X&#039;, &#039;timestamp&#039; =&gt; 1769342433, &#039;tz&#039; =&gt; &#039;Europe/Berlin&#039;, &#039;locale&#039; =&gt; &#039;de_DE.UTF-8&#039;], &#039;2026/02/08&#039; =&gt; [&#039;format&#039; =&gt; &#039;%Y/%m/%d&#039;, &#039;timestamp&#039; =&gt; 1770508800, &#039;tz&#039; =&gt; &#039;Europe/Berlin&#039;, &#039;locale&#039; =&gt; &#039;de_DE.UTF-8&#039;], &#039;2026/02/01&#039; =&gt; [&#039;format&#039; =&gt; &#039;%Y/%m/%d&#039;, &#039;timestamp&#039; =&gt; 1769904000, &#039;tz&#039; =&gt; &#039;Europe/Berlin&#039;, &#039;locale&#039; =&gt; &#039;de_DE&#039;], &#039;25.01.2026&#039; =&gt; [&#039;format&#039; =&gt; &#039;%d.%m.%Y&#039;, &#039;timestamp&#039; =&gt; 1769299200, &#039;tz&#039; =&gt; &#039;Europe/Berlin&#039;, &#039;locale&#039; =&gt; &#039;de_DE&#039;]]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;25.01.26 13:00:33&#039; =&gt; [&#039;format&#039; =&gt; &#039;%x %X&#039;, &#039;...                            </span>
 </dt>
 
     </dl>
@@ -561,31 +549,26 @@
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_testStringFromTime_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-UtilTest.html#method_testStringFromTime#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-UtilTest.html#method_testStringFromTime_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     

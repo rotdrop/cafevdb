@@ -29,7 +29,7 @@ use Throwable;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Psr\Log\LoggerInterface;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUser;
@@ -63,7 +63,7 @@ class ProblemReportService
   /** {@inheritdoc} */
   public function __construct(
     protected $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected IMailer $mailer,
     protected LoggerInterface $logger,

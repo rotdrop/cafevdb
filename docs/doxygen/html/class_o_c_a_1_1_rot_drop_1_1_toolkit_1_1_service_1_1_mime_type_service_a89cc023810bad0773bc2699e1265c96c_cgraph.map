@@ -1,0 +1,20 @@
+<map id="getSupportedArchiveMimeTypes" name="getSupportedArchiveMimeTypes">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,131,215,157"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a6a9bf5349723727e135b7c13fa320a0d" title=" " alt="" coords="268,5,438,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,128,185,86,261,42,281,36,276,39,264,46,188,90,130,132"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="280,56,426,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,128,267,100,263,103,163,132"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a645a777c9d006c0c43e22fe697793565" title="Log an error." alt="" coords="280,123,426,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="215,141,267,143,262,145,216,147"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="966,181,1111,224"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="163,155,263,175,455,192,645,201,817,204,953,205,947,205,817,209,645,207,454,198,262,180,164,161"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="263,240,443,267"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="136,155,194,186,264,219,298,234,293,234,262,224,192,191,136,161"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="491,240,691,267"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="443,251,478,253,473,253,444,256"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="739,240,918,267"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="692,251,726,253,721,253,692,256"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="887,237,948,224,953,223,887,242"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="966,248,1111,291"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="918,257,953,263,947,263,918,263"/>
+</map>

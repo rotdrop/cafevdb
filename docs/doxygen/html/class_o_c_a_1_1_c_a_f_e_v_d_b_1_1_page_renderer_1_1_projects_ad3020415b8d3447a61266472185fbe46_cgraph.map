@@ -1,0 +1,7 @@
+<map id="navigationItem" name="navigationItem">
+<area shape="rect" id="Node000001" title="{Return the navigation item for this renderer.SidebarNavigationItem}" alt="" coords="5,13,112,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="160,5,340,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,24,147,26,141,27,112,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#ad402d8679325bc514874370f02b5c2ac" title="{}" alt="" coords="388,5,600,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,24,375,27,370,27,341,29"/>
+</map>

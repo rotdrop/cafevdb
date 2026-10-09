@@ -1,3 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html" title="Finance and bank related stuff." alt="" coords="5,5,117,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,173,141,200"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="198,5,398,48"/>
+<area shape="poly" id="edge314_Node000000_Node000001" title=" " alt="" coords="89,159,130,108,157,81,187,58,212,47,209,50,190,62,161,85,134,111,94,162"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception.html" title="Legacy PHPMyEdit exception, no prepared statements, just plain SQL and a line number." alt="" coords="210,72,387,99"/>
+<area shape="poly" id="edge315_Node000000_Node000002" title=" " alt="" coords="101,162,141,134,188,108,224,98,220,101,190,113,144,138,105,165"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="204,123,392,149"/>
+<area shape="poly" id="edge316_Node000000_Node000003" title=" " alt="" coords="149,167,238,148,234,152,152,172"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_not_connected_exception.html" title="Thrown when EntityManager\getConnection() is called when there is no connection." alt="" coords="189,173,408,200"/>
+<area shape="poly" id="edge317_Node000000_Node000004" title=" " alt="" coords="155,184,191,185,186,188,157,189"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="203,224,394,251"/>
+<area shape="poly" id="edge318_Node000000_Node000005" title=" " alt="" coords="150,201,238,222,233,225,151,207"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_rollback_only_exception.html" title="Maybe thrown if &quot;rollback&#45;only&quot; is detected." alt="" coords="192,275,405,301"/>
+<area shape="poly" id="edge319_Node000000_Node000006" title=" " alt="" coords="103,207,144,235,190,260,224,274,219,275,188,265,141,240,103,212"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="197,325,400,368"/>
+<area shape="poly" id="edge320_Node000000_Node000007" title=" " alt="" coords="92,210,134,262,161,289,190,311,213,325,208,325,187,316,157,293,130,266,91,215"/>
 </map>

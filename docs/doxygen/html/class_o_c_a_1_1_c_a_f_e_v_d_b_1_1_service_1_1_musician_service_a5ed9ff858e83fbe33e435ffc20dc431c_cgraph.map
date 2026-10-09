@@ -1,0 +1,19 @@
+<map id="deleteMusician" name="deleteMusician">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,187,114,213"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a02a01849f28e2535e888ae4ec87b20f2" title="Get email." alt="" coords="179,5,357,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,185,103,132,129,101,160,74,169,70,165,74,163,78,133,105,107,135,71,187"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a5b7b4dfcee0ad782be274eae99638e67" title="Get instruments." alt="" coords="179,88,357,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="93,184,161,156,178,151,174,155,163,161,96,188"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#ae8d8c6baf83b3e602ac4fcb4620f2dad" title="Get payments." alt="" coords="179,171,357,229"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="113,198,165,198,161,202,115,202"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a206ac56ddf76cc0787d94fe352410d6c" title="Get projectParticipation." alt="" coords="162,253,374,312"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="94,211,163,239,179,247,174,248,161,244,95,217"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="179,336,357,395"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="69,211,107,265,133,295,163,322,170,328,164,328,160,326,129,299,103,268,68,216"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128" title="Get family." alt="" coords="440,5,627,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="356,87,427,67,423,70,359,92"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="422,88,645,147"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="357,115,409,116,404,118,358,120"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1" title="Get the untranslated family name." alt="" coords="422,171,645,245"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="356,145,411,165,405,166,356,150"/>
+</map>

@@ -59,11 +59,15 @@ use OCA\CAFEVDB\Settings\PersonalSection;
 use OCA\CAFEVDB\AddressBook\Registration as AddressBookRegistration;
 use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
 use OCA\CAFEVDB\Database\Registration as DatabaseRegistration;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
 use OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication;
+use OCA\CAFEVDB\Toolkit\Middleware\ExceptionMiddleware;
+use OCP\AppFramework\Http;
+use OC\AppFramework\Utility\QueryNotFoundException;
 
 /*
  *
@@ -164,20 +168,21 @@ class Application extends AbstractApplication
    */
   public function register(IRegistrationContext $context): void
   {
+    $context->registerService(AbstractApplication::MIDDLEWARE_OPTIONS, fn() => [
+      ExceptionMiddleware::class => [
+        'catchAll' => true,
+        'httpStatusCodeMapping' => [
+          QueryNotFoundException::class => Http::STATUS_NOT_FOUND,
+          Exceptions\NotAuthorizedException::class => Http::STATUS_UNAUTHORIZED,
+        ],
+      ],
+    ]);
     parent::register($context);
-    if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
-      throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
-    }
-
-    $context->registerService(self::APP_ROOT_FOLDER, function($c) {
-      // ok, we are two levels below the top ...
-      return dirname(dirname(__DIR__));
-    });
 
     $context->registerService(self::MEMBERS_APP_NAME, fn($c) => self::getMembersAppName());
 
     // Register Middleware
-    $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
+    // $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
     $context->registerMiddleWare(Middleware\SubAdminMiddleware::class);
     $context->registerMiddleWare(Middleware\GroupMemberMiddleware::class);
     $context->registerMiddleWare(Middleware\DebugModeMiddleware::class);

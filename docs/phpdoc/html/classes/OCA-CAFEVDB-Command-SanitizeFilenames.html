@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Command\SanitizeFilenames
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -104,9 +108,6 @@
         <h2 class="phpdocumentor-content__title">
     SanitizeFilenames
 
-        <span class="phpdocumentor-element__extends">
-        extends <abbr title="\OCA\Files\Command\SanitizeFilenames">SanitizeFilenames</abbr>
-    </span>
     
             <div class="phpdocumentor-element__package">
             in package
@@ -129,9 +130,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Authenticated sanitize-filenames which is thus also able to scan the database-backed mounts</p>
@@ -141,6 +142,23 @@
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\Console\Attribute\AsCommand">AsCommand</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $name: &#039;cafevdb:sanitize-filenames&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $description: &#039;Renames files to match naming constraints&#039;
+    </dd>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -163,7 +181,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#constant_FILE_EXTENSIONS_BY_MIME_TYPE">FILE_EXTENSIONS_BY_MIME_TYPE</a>
     <span>
-        &nbsp;= [&#039;image/png&#039; =&gt; &#039;png&#039;, &#039;image/jpeg&#039; =&gt; &#039;jpg&#039;, &#039;image/gif&#039; =&gt; &#039;gif&#039;, &#039;image/vnd.microsoft.icon&#039; =&gt; &#039;ico&#039;, &#039;image/svg+xml&#039; =&gt; &#039;svg&#039;, &#039;application/pdf&#039; =&gt; &#039;pdf&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;image/png&#039; =&gt; &#039;png&#039;, &#039;image/jpeg&#039; =&gt; &#039;jpg&#039;, &#039;...                            </span>
 </dt>
 
     </dl>
@@ -178,13 +196,19 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appName">$appName</a>
     <span>
                         &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_filesCommand">$filesCommand</a>
+    <span>
+                        &nbsp;: <abbr title="\OCA\Files\Command\SanitizeFilenames">SanitizeFilenames</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -219,22 +243,15 @@
                                 &nbsp;: mixed    </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___invoke">__invoke()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Console\ExitCode">ExitCode</abbr>    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate">authenticate()</a>
-    <span>
-                                &nbsp;: int    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_configure">configure()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_execute">execute()</a>
     <span>
                                 &nbsp;: int    </span>
 </dt>
@@ -322,16 +339,16 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -360,9 +377,9 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
@@ -371,6 +388,44 @@ filename which is also valid on certain strange operating systems.</dd>
         <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$appName</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_filesCommand">
+        $filesCommand
+        <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_filesCommand" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">67</span>
+
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCA\Files\Command\SanitizeFilenames">SanitizeFilenames</abbr></span>
+    <span class="phpdocumentor-signature__name">$filesCommand</span>
     </code>
 
     
@@ -398,9 +453,9 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
@@ -436,9 +491,9 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
@@ -474,9 +529,9 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
@@ -517,15 +572,15 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OC\Files\FilenameValidator">FilenameValidator</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filenameValidator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\Services\IAppConfig">IAppConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\L10N\IFactory">IFactory</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rootFolder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\Files\Service\SettingsService">SettingsService</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settingsService</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\Files\Command\SanitizeFilenames">SanitizeFilenames</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filesCommand</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -542,7 +597,7 @@ filename which is also valid on certain strange operating systems.</dd>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -569,36 +624,8 @@ filename which is also valid on certain strange operating systems.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$filenameValidator</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OC\Files\FilenameValidator">FilenameValidator</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$appConfig</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\Services\IAppConfig">IAppConfig</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$l10nFactory</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\L10N\IFactory">IFactory</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$rootFolder</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$settingsService</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\Files\Service\SettingsService">SettingsService</abbr></span>
+                <span class="phpdocumentor-argument-list__argument__name">$filesCommand</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\Files\Command\SanitizeFilenames">SanitizeFilenames</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -610,6 +637,84 @@ filename which is also valid on certain strange operating systems.</dd>
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___invoke">
+        __invoke()
+        <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___invoke" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">73</span>
+
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">__invoke</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userIds</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dryRun</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$charReplacement</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Console\ExitCode">ExitCode</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$input</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$output</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userIds</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dryRun</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$charReplacement</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Console\ExitCode">ExitCode</abbr></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -625,16 +730,16 @@ filename which is also valid on certain strange operating systems.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/AuthenticatedCommandTrait.php"><a href="files/lib-command-authenticatedcommandtrait.html"><abbr title="lib/Command/AuthenticatedCommandTrait.php">AuthenticatedCommandTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Command/AuthenticatedCommandTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Command/AuthenticatedCommandTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">authenticate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">authenticate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -644,14 +749,14 @@ filename which is also valid on certain strange operating systems.</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$input</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IInput">IInput</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$output</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Console\IOutput">IOutput</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -659,114 +764,20 @@ filename which is also valid on certain strange operating systems.</dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_authenticate_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Command\execute()">execute()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_configure">
-        configure()
-        <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_configure" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">79</span>
-
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">configure</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_execute">
-        execute()
-        <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_execute" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Command/SanitizeFilenames.php"><a href="files/lib-command-sanitizefilenames.html"><abbr title="lib/Command/SanitizeFilenames.php">SanitizeFilenames.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">86</span>
-
-            <a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/lib/Command/SanitizeFilenames.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">execute</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$output</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$input</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Input\InputInterface">InputInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$output</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Console\Output\OutputInterface">OutputInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
+                        </dl>
 
         
     
@@ -874,21 +885,20 @@ filename which is also valid on certain strange operating systems.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_sanitizeFilename_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#method_sanitizeFilename#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#method_sanitizeFilename_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -1022,6 +1032,7 @@ filename which is also valid on certain strange operating systems.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appContainer">$appContainer</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appName">$appName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_filesCommand">$filesCommand</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_l">$l</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_userManager">$userManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_userSession">$userSession</a></li>
@@ -1032,9 +1043,8 @@ filename which is also valid on certain strange operating systems.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___invoke">__invoke()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Command-AuthenticatedCommandTrait.html#method_authenticate">authenticate()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_configure">configure()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_execute">execute()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#method_fileExtensionFromMimeType">fileExtensionFromMimeType()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-SanitizeFilenameTrait.html#method_sanitizeFilename">sanitizeFilename()</a></li>
                                     </ul>

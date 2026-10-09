@@ -1,0 +1,9 @@
+<map id="fromArray" name="fromArray">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="473,51,551,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ae36586dcaa73135896cedb7212de8666" title="Convert the given flat event&#45;list (as returned by self\events()) into a matrix grouped as specified b..." alt="" coords="243,5,425,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,53,425,49,426,43,460,53"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o_1_1_event_matrix_row.html#a03af6452b3ff02618dfef97106d6f30c" title="{}" alt="" coords="251,72,417,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="461,75,418,86,417,81,455,76"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_projects_controller_test.html#afe2388459451e1f7e8292028a63263d2" title=" " alt="" coords="5,72,195,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="232,102,195,104,195,99,238,101"/>
+</map>

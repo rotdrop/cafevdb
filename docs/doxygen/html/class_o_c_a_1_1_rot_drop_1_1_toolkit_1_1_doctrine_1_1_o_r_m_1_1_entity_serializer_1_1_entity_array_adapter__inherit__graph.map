@@ -1,0 +1,9 @@
+<map id="EntityArrayAdapter" name="EntityArrayAdapter">
+<area shape="rect" id="Node000001" title="Convert a database entity &quot;virtually&quot; to a flat array without recursions." alt="" coords="92,80,223,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,102,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,38,142,78,137,80,83,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="126,5,189,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,46,160,81,155,78,156,50"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="213,5,329,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,40,179,82,176,77,236,41"/>
+</map>

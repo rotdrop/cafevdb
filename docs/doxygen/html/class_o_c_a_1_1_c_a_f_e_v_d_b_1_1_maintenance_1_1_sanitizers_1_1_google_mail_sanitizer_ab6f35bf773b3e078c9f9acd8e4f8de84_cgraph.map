@@ -1,10 +1,13 @@
 <map id="sanitizePersist" name="sanitizePersist">
-<area shape="rect" id="Node000001" title="{{Call sanitize(SANITIZE_PERSIST, $flush).void\SanitizerException}}" alt="" coords="5,31,113,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a6cfd3fa108b089d483f43cf4142d9e68" title=" " alt="" coords="324,5,422,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,37,308,21,308,26,113,42"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a184909dab34698899937d810a9f5d393" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="161,56,227,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,52,146,58,145,63,113,57"/>
-<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="227,56,274,41,308,32,310,37,276,47,228,61"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ad60c68165a8e9716714c651edc2dd159" title=" " alt="" coords="275,56,471,115"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="228,70,260,73,259,78,227,75"/>
+<area shape="rect" id="Node000001" title="{{Call sanitize(SANITIZE_PERSIST, $flush).void\SanitizerException}}" alt="" coords="5,104,113,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a9c9e47c6789f8e5d0e1ffd8377e42cf5" title="Get emailAddresses." alt="" coords="276,5,470,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,101,262,62,260,67,114,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a6cfd3fa108b089d483f43cf4142d9e68" title=" " alt="" coords="324,171,422,197"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,129,161,140,311,171,307,174,160,145,113,134"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a184909dab34698899937d810a9f5d393" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="161,104,227,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="113,115,147,116,142,118,114,120"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="220,101,274,74,284,72,289,70,276,78,222,106"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="219,129,276,156,311,170,306,170,274,161,218,134"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ad60c68165a8e9716714c651edc2dd159" title=" " alt="" coords="275,88,471,147"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="227,115,262,117,257,118,228,120"/>
 </map>

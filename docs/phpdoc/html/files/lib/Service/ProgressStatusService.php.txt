@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Common\DatabaseProgressStatus;
@@ -43,7 +43,7 @@ class ProgressStatusService
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {

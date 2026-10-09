@@ -49,7 +49,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter =
     [ "validateHistoryRecord", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f", null ],
     [ "validateHistoryRecords", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850", null ],
     [ "$mailingListInfo", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a071ff96f558424e74d6873497ba48315", null ],
-    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a26a7d69cd5cc291d752925dd312b5d1c", null ],
-    [ "$projectId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abd3456b4e729909d1b123ae303302391", null ],
+    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a764c3fb334534a77aff423b99d0b807b", null ],
+    [ "$projectId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa003eb4d6cb5e88fbb06dfbcb7dcebcb", null ],
+    [ "$projectName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a4085a0fde9b4c47422536c56208399e0", null ],
     [ "$requestParameters", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a31dbf7caaed9e266d8fea4e0fa4cd1be", null ]
 ];

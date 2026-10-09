@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -108,7 +112,7 @@
     EntityReference
 
         <span class="phpdocumentor-element__extends">
-        extends <a href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html"><abbr title="\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO">AbstractDTO</abbr></a>
+        extends <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html"><abbr title="\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceIdentifier">EntityReferenceIdentifier</abbr></a>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -129,12 +133,14 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreference.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php">EntityReference.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
     </aside>
 
-            <p class="phpdocumentor-summary">Simple entity reference with optional class name and flattened identifier.</p>
+            <p class="phpdocumentor-summary">Simple entity reference with optional class name and flattened
+identifier. The difference to the CollectionEntityReference is that the
+entityClassName is not allowed to be null.</p>
 
 
 
@@ -179,11 +185,11 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_entityClassName">$entityClassName</a>
     <span>
-                        &nbsp;: string|null            </span>
+                        &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_flatIdentifier">$flatIdentifier</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#property_flatIdentifier">$flatIdentifier</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
@@ -191,7 +197,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#property_keys">$keys</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;|null            </span>
+                        &nbsp;: array|null            </span>
 </dt>
 
     </dl>
@@ -219,7 +225,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_getKeys">getKeys()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 <dd>Return the name of all public properties.</dd>
 
@@ -233,7 +239,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -273,18 +279,18 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreference.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php">EntityReference.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">string|null</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$entityClassName</span>
-     = <span class="phpdocumentor-signature__default-value">null</span></code>
+    </code>
 
     
     
@@ -292,8 +298,8 @@
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_entityClassName#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_entityClassName_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_entityClassName_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -317,17 +323,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_flatIdentifier">
         $flatIdentifier
-        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_flatIdentifier" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#property_flatIdentifier" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreference.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php">EntityReference.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReferenceIdentifier.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreferenceidentifier.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReferenceIdentifier.php">EntityReferenceIdentifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReferenceIdentifier.php.txt"></a>
     </aside>
 
     
@@ -372,7 +378,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">array|null</span>
     <span class="phpdocumentor-signature__name">$keys</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -406,16 +412,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreference.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php">EntityReference.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flatIdentifier</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flatIdentifier</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -432,8 +438,8 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -459,16 +465,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php"><a href="files/lib-toolkit-doctrine-orm-entityserializer-entityreference.html"><abbr title="lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php">EntityReference.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Toolkit/Doctrine/ORM/EntitySerializer/EntityReference.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create an instance from a data array.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">fromArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">fromArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -478,7 +484,7 @@
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$data</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -486,31 +492,26 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_fromArray_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#method_fromArray#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#method_fromArray_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -543,7 +544,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getKeys</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getKeys</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -556,7 +557,7 @@
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -618,7 +619,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -631,7 +632,7 @@
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -787,7 +788,7 @@
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_entityClassName">$entityClassName</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReference.html#property_flatIdentifier">$flatIdentifier</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Doctrine-ORM-EntitySerializer-EntityReferenceIdentifier.html#property_flatIdentifier">$flatIdentifier</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#property_keys">$keys</a></li>
                                             </ul>
                 </li>

@@ -7,5 +7,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database =
     ] ],
     [ "Connection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_connection.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_connection" ],
     [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_constants.html", null ],
-    [ "EntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager" ]
+    [ "EntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager" ],
+    [ "Registration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_registration.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_registration" ]
 ];

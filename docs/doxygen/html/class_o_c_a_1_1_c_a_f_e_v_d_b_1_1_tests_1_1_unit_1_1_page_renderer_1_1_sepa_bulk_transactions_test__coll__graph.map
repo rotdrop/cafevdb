@@ -1,0 +1,22 @@
+<map id="SepaBulkTransactionsTest" name="SepaBulkTransactionsTest">
+<area shape="rect" id="Node000001" title="Test aspects of the SepaBulkTransactions page renderer." alt="" coords="94,408,271,435"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,309,83,336"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,343,167,406,162,409,74,348"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html" title="TBD." alt="" coords="106,309,259,336"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,350,185,409,180,407,181,353"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="112,233,253,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="184,273,185,310,180,308,181,277"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="106,157,259,184"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="184,197,185,234,180,232,182,202"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="88,81,162,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="144,117,176,156,170,157,144,123"/>
+<area shape="rect" id="Node000007" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="144,5,222,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="163,46,137,82,133,80,165,42"/>
+<area shape="rect" id="Node000008" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="187,81,296,108"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="202,41,234,81,229,81,202,47"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="221,122,195,159,190,155,224,118"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="283,309,373,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="304,345,251,386,209,410,207,405,248,382,299,347"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="285,233,371,260"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="330,273,330,310,326,308,326,277"/>
+</map>

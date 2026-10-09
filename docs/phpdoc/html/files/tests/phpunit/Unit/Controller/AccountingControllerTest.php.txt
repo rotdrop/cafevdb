@@ -77,7 +77,17 @@ class AccountingControllerTest extends TestCase
   public function setup(): void
   {
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+  }
 
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
+  }
+
+  /** @return void */
+  private function generateController(): void
+  {
     // We probably want to mock it in order to control the available toolkits.
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
@@ -92,9 +102,6 @@ class AccountingControllerTest extends TestCase
     $this->gnuCashConnectorService = $this->getMockBuilder(GnuCashConnectorService::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $this->gnuCashConnectorService->method('getAccountsAutocompleteData')
-      ->with(self::PROJECT_ID)
-      ->willReturn(self::FAKE_DATA);
 
     $this->controller = new Controller\AccountingController(
       appName: $this->mockProvider->appName,
@@ -105,15 +112,14 @@ class AccountingControllerTest extends TestCase
   }
 
   /** @return void */
-  public function tearDown(): void
-  {
-    restore_error_handler();
-  }
-
-  /** @return void */
   public function testAutocompleteGnuCashAccounts(): void
   {
-    $this->gnuCashConnectorService->expects($this->exactly(1))->method('getAccountsAutocompleteData');
+    $this->generateController();
+    $this->gnuCashConnectorService
+      ->expects($this->exactly(1))
+      ->method('getAccountsAutocompleteData')
+      ->with(self::PROJECT_ID)
+      ->willReturn(self::FAKE_DATA);
     $result = $this->controller->autocompleteGnuCashAccounts(self::PROJECT_ID);
     $this->assertInstanceOf(Http\JSONResponse::class, $result);
     /** @var Http\JSONResponse $result */

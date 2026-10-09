@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Toolkit\Service\ArchiveService
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -127,9 +131,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Wrapper around the actual archive backend class in order to interface with
@@ -140,6 +144,17 @@ the virtual storage and actual archive extraction controllers.</p>
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\Typescript">Typescript</abbr>]
+    </dt>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -162,73 +177,73 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_BACKEND_DRIVER">ARCHIVE_INFO_BACKEND_DRIVER</a>
     <span>
-        &nbsp;= &#039;backendDriver&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;backendDriver&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_COMMENT">ARCHIVE_INFO_COMMENT</a>
     <span>
-        &nbsp;= &#039;comment&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;comment&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_COMMON_PATH_PREFIX">ARCHIVE_INFO_COMMON_PATH_PREFIX</a>
     <span>
-        &nbsp;= &#039;commonPathPrefix&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;commonPathPrefix&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_COMPRESSED_SIZE">ARCHIVE_INFO_COMPRESSED_SIZE</a>
     <span>
-        &nbsp;= &#039;compressedSize&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;compressedSize&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_DEFAULT_MOUNT_POINT">ARCHIVE_INFO_DEFAULT_MOUNT_POINT</a>
     <span>
-        &nbsp;= &#039;defaultMountPoint&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;defaultMountPoint&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_FORMAT">ARCHIVE_INFO_FORMAT</a>
     <span>
-        &nbsp;= &#039;format&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;format&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_KEYS">ARCHIVE_INFO_KEYS</a>
     <span>
-        &nbsp;= [self::ARCHIVE_INFO_COMMENT, self::ARCHIVE_INFO_COMPRESSED_SIZE, self::ARCHIVE_INFO_FORMAT, self::ARCHIVE_INFO_MIME_TYPE, self::ARCHIVE_INFO_NUMBER_OF_FILES, self::ARCHIVE_INFO_ORIGINAL_SIZE, self::ARCHIVE_INFO_SIZE, self::ARCHIVE_INFO_COMMON_PATH_PREFIX, self::ARCHIVE_INFO_DEFAULT_MOUNT_POINT, self::ARCHIVE_INFO_BACKEND_DRIVER]                            </span>
+        &nbsp;: array&nbsp;= [self::ARCHIVE_INFO_COMMENT, self::ARCHIVE_INFO...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_MIME_TYPE">ARCHIVE_INFO_MIME_TYPE</a>
     <span>
-        &nbsp;= &#039;mimeType&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;mimeType&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_NUMBER_OF_FILES">ARCHIVE_INFO_NUMBER_OF_FILES</a>
     <span>
-        &nbsp;= &#039;numberOfFiles&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;numberOfFiles&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_ORIGINAL_SIZE">ARCHIVE_INFO_ORIGINAL_SIZE</a>
     <span>
-        &nbsp;= &#039;originalSize&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;originalSize&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_ARCHIVE_INFO_SIZE">ARCHIVE_INFO_SIZE</a>
     <span>
-        &nbsp;= &#039;size&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;size&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#constant_OVERRIDE_ENVIRONMENT">OVERRIDE_ENVIRONMENT</a>
     <span>
-        &nbsp;= [&#039;LANG&#039; =&gt; &#039;C.UTF-8&#039;, &#039;LC_ALL&#039; =&gt; &#039;C.UTF-8&#039;]                            </span>
+        &nbsp;: <abbr title="\OCA\CAFEVDB\Toolkit\Service\Enforce">Enforce</abbr>&nbsp;= [&#039;LANG&#039; =&gt; &#039;C.UTF-8&#039;, &#039;LC_ALL&#039; =&gt; &#039;C.UTF-8&#039;]                            </span>
 </dt>
 
     </dl>
@@ -243,7 +258,7 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -261,13 +276,13 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiveFiles">$archiveFiles</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiveInfo">$archiveInfo</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -277,27 +292,33 @@ the virtual storage and actual archive extraction controllers.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_collidingMembers">$collidingMembers</a>
+    <span>
+                        &nbsp;: array&lt;string, string[]&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_fileNode">$fileNode</a>
     <span>
                         &nbsp;: <abbr title="\OCP\Files\File">File</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_memberNameMap">$memberNameMap</a>
+    <span>
+                        &nbsp;: array&lt;string, string&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_savedProcessEnvironment">$savedProcessEnvironment</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_sizeLimit">$sizeLimit</a>
     <span>
-                        &nbsp;: null|int            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_unicodeNormalization">$unicodeNormalization</a>
-    <span>
-                        &nbsp;: int            </span>
+                        &nbsp;: int|null            </span>
 </dt>
 
     </dl>
@@ -354,8 +375,19 @@ strips double extensions like FOO.tag.N -&gt; FOO.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getArchiveInfo">getArchiveInfo()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCollidingMembers">getCollidingMembers()</a>
+    <span>
+                                &nbsp;: array&lt;string, string[]&gt;    </span>
+</dt>
+<dd>Return the groups of archive members which collapse onto the same name
+after Unicode (NFC) normalization. The array is keyed by the colliding
+normalized name, the values are the lists of raw member names. Only one
+member of each group can be extracted as a distinct file; the callers
+should report the others instead of dropping them silently.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCommonDirectoryPrefix">getCommonDirectoryPrefix()</a>
@@ -374,7 +406,7 @@ single folder at folder nesting level 0.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getFiles">getFiles()</a>
     <span>
-                                &nbsp;: array&lt;string, <abbr title="\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;    </span>
+                                &nbsp;: array&lt;string, <abbr title="\OCA\CAFEVDB\Wrapped\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -400,34 +432,34 @@ single folder at folder nesting level 0.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log the given message at the specified level.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a debug message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an error.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logException">logException()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logFatal">logFatal()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a fatal error message.</dd>
 
@@ -441,14 +473,14 @@ single folder at folder nesting level 0.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log an informational message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a>
     <span>
-                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: null|array    </span>
 </dt>
 <dd>Log a warning message.</dd>
 
@@ -476,7 +508,7 @@ with larger uncompressed size will not be handled.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>    </span>
+                                &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>    </span>
 </dt>
 <dd>Return the stored appConmtainer instance.</dd>
 
@@ -530,7 +562,7 @@ setProcessEnvironment().</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_rgbaStringToArray">rgbaStringToArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -569,6 +601,15 @@ helpers do not function correctly.</dd>
 </dt>
 <dd>Return the local operating system path of the given file-node.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_resolveMemberName">resolveMemberName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Resolve a member name as requested by the virtual storage (normalized to
+NFC by Nextcloud) back to the raw member name as actually stored in the
+backend archive.</dd>
+
     </dl>
 
 
@@ -590,9 +631,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -623,9 +664,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -656,9 +697,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">116</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -689,9 +730,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -722,9 +763,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -755,9 +796,9 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -788,16 +829,16 @@ helpers do not function correctly.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">ARCHIVE_INFO_KEYS</span>
     = <span class="phpdocumentor-signature__default-value">[self::ARCHIVE_INFO_COMMENT, self::ARCHIVE_INFO_COMPRESSED_SIZE, self::ARCHIVE_INFO_FORMAT, self::ARCHIVE_INFO_MIME_TYPE, self::ARCHIVE_INFO_NUMBER_OF_FILES, self::ARCHIVE_INFO_ORIGINAL_SIZE, self::ARCHIVE_INFO_SIZE, self::ARCHIVE_INFO_COMMON_PATH_PREFIX, self::ARCHIVE_INFO_DEFAULT_MOUNT_POINT, self::ARCHIVE_INFO_BACKEND_DRIVER]</span>
 </code>
@@ -822,9 +863,9 @@ archiveInfo().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -855,9 +896,9 @@ archiveInfo().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -888,9 +929,9 @@ archiveInfo().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -921,9 +962,9 @@ archiveInfo().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -955,9 +996,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">140</span>
+    <span class="phpdocumentor-element-found-in__line">145</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1013,7 +1054,7 @@ archive members).</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -1042,9 +1083,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">172</span>
+    <span class="phpdocumentor-element-found-in__line">188</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1080,9 +1121,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1118,16 +1159,16 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">155</span>
+    <span class="phpdocumentor-element-found-in__line">156</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$archiveFiles</span>
     </code>
 
@@ -1165,7 +1206,7 @@ archive members).</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$archiveInfo</span>
     </code>
 
@@ -1194,9 +1235,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">149</span>
+    <span class="phpdocumentor-element-found-in__line">152</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1222,6 +1263,50 @@ archive members).</p>
             -private
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_collidingMembers">
+        $collidingMembers
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_collidingMembers" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">183</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;string, string[]&gt;</span>
+    <span class="phpdocumentor-signature__name">$collidingMembers</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+        <section class="phpdocumentor-description"><p>Map from the NFC-normalized member name to the list of distinct raw member
+names which collapse onto it. A non-empty entry means several archive
+members would map to the same file name after Unicode normalization and
+therefore cannot all be extracted as distinct files; without reporting
+this the surplus members would be lost silently.</p>
+</section>
+
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_fileNode">
         $fileNode
         <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_fileNode" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1232,9 +1317,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1260,6 +1345,51 @@ archive members).</p>
             -private
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_memberNameMap">
+        $memberNameMap
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_memberNameMap" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">172</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;string, string&gt;</span>
+    <span class="phpdocumentor-signature__name">$memberNameMap</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+        <section class="phpdocumentor-description"><p>Map from the NFC-normalized member name (as seen by Nextcloud, which
+normalizes all paths to NFC) to the raw member name as actually stored in
+the backend archive. Built in open(). Resolving each member individually
+allows archives which mix Unicode normalization forms (e.g. some names in
+NFC, some in NFD as produced by macOS) to be extracted correctly instead
+of failing or silently losing members.</p>
+</section>
+
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_savedProcessEnvironment">
         $savedProcessEnvironment
         <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_savedProcessEnvironment" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1270,16 +1400,16 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">161</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$savedProcessEnvironment</span>
     </code>
 
@@ -1308,61 +1438,21 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">null|int</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
     <span class="phpdocumentor-signature__name">$sizeLimit</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
-    
-
-        
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_unicodeNormalization">
-        $unicodeNormalization
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_unicodeNormalization" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">167</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$unicodeNormalization</span>
-    </code>
-
-    
-        <section class="phpdocumentor-description"><p>Normalization convention used inside the archive.</p>
-</section>
-
     
 
         
@@ -1391,9 +1481,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1443,9 +1533,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">243</span>
+    <span class="phpdocumentor-element-found-in__line">259</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.259" class="phpdocumentor-element-found-in__source" data-line="259" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the given file can be opened.</p>
@@ -1470,21 +1560,20 @@ archive members).</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_canOpen_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_canOpen#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_canOpen_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Toolkit-Exceptions-ArchiveCannotOpenException.html"><abbr title="\OCA\CAFEVDB\Toolkit\Exceptions\ArchiveCannotOpenException">ArchiveCannotOpenException</abbr></a></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -1508,9 +1597,9 @@ archive members).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">349</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Close, i.e. unconfigure. This method is error agnostic, it simply unsets
@@ -1674,9 +1763,9 @@ the initial state variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">448</span>
+    <span class="phpdocumentor-element-found-in__line">478</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.478" class="phpdocumentor-element-found-in__source" data-line="478" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a proposal for the extraction destination. Currently, this simply
@@ -1725,15 +1814,15 @@ strips double extensions like FOO.tag.N -&gt; FOO.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">399</span>
+    <span class="phpdocumentor-element-found-in__line">429</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.399" class="phpdocumentor-element-found-in__source" data-line="399" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.429" class="phpdocumentor-element-found-in__source" data-line="429" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getArchiveInfo</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getArchiveInfo</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1746,11 +1835,55 @@ strips double extensions like FOO.tag.N -&gt; FOO.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a></span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Archive information, meta-data.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getCollidingMembers">
+        getCollidingMembers()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCollidingMembers" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">603</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.603" class="phpdocumentor-element-found-in__source" data-line="603" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return the groups of archive members which collapse onto the same name
+after Unicode (NFC) normalization. The array is keyed by the colliding
+normalized name, the values are the lists of raw member names. Only one
+member of each group can be extracted as a distinct file; the callers
+should report the others instead of dropping them silently.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getCollidingMembers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, string[]&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, string[]&gt;</span>
             </section>
 
 </article>
@@ -1768,9 +1901,9 @@ strips double extensions like FOO.tag.N -&gt; FOO.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">469</span>
+    <span class="phpdocumentor-element-found-in__line">499</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.469" class="phpdocumentor-element-found-in__source" data-line="469" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.499" class="phpdocumentor-element-found-in__source" data-line="499" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the name of the top-level folder for the case that there is only a
@@ -1809,9 +1942,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">539</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.539" class="phpdocumentor-element-found-in__source" data-line="539" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1858,15 +1991,15 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">477</span>
+    <span class="phpdocumentor-element-found-in__line">507</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.477" class="phpdocumentor-element-found-in__source" data-line="477" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.507" class="phpdocumentor-element-found-in__source" data-line="507" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getFiles</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, <abbr title="\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getFiles</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, <abbr title="\OCA\CAFEVDB\Wrapped\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1879,7 +2012,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string, <abbr title="\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, <abbr title="\OCA\CAFEVDB\Wrapped\wapmorgan\UnifiedArchive\ArchiveEntry">ArchiveEntry</abbr>&gt;</span>
             </section>
 
 </article>
@@ -1897,9 +2030,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">530</span>
+    <span class="phpdocumentor-element-found-in__line">560</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.560" class="phpdocumentor-element-found-in__source" data-line="560" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1946,9 +2079,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currently configured size-limit.</p>
@@ -1986,9 +2119,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">338</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the &quot;opened&quot; status.</p>
@@ -2035,7 +2168,7 @@ single folder at folder nesting level 0.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">log</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2059,7 +2192,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2093,7 +2226,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2111,16 +2244,16 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logDebug</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2137,7 +2270,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2171,7 +2304,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2189,16 +2322,16 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logError</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2215,7 +2348,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2249,7 +2382,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2267,15 +2400,15 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Psr\Log\LogLevel::ERROR">LogLevel::ERROR</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2313,7 +2446,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2333,7 +2466,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2351,16 +2484,16 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logFatal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2377,7 +2510,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2411,7 +2544,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2469,16 +2602,16 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logInfo</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2495,7 +2628,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2529,7 +2662,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2547,16 +2680,16 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">logWarn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$shift</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$showTrace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnLogEntry</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2573,7 +2706,7 @@ single folder at folder nesting level 0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$context</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2607,7 +2740,7 @@ single folder at folder nesting level 0.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">null|array</span>
             </section>
 
 </article>
@@ -2625,9 +2758,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">350</span>
+    <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -2688,9 +2821,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">206</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.206" class="phpdocumentor-element-found-in__source" data-line="206" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the size limit for the uncompressed size of the archives. Archives
@@ -2824,7 +2957,7 @@ returns null.</li>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">appContainer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2837,7 +2970,7 @@ returns null.</li>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
             </section>
 
 </article>
@@ -2910,21 +3043,20 @@ returns null.</li>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_formatStorageValue_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_formatStorageValue#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_formatStorageValue_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\storageValue()">storageValue()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3013,7 +3145,7 @@ returns null.</li>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">getCommonPath</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$paths</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$leadingSlash</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getCommonPath</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$paths</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$leadingSlash</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3023,7 +3155,7 @@ returns null.</li>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$paths</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Array of path names.</p>
@@ -3158,9 +3290,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">570</span>
+    <span class="phpdocumentor-element-found-in__line">636</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.570" class="phpdocumentor-element-found-in__source" data-line="570" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore the environment variables previously overridden by
@@ -3176,22 +3308,21 @@ setProcessEnvironment().</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_restoreProcessEnvironment_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_restoreProcessEnvironment#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_restoreProcessEnvironment_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3219,7 +3350,7 @@ setProcessEnvironment().</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">rgbaArrayToString</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rgbaArray</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">rgbaArrayToString</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rgbaArray</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3229,7 +3360,7 @@ setProcessEnvironment().</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$rgbaArray</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>RGB(A) data with values between 0 and 255 (8-bit
@@ -3277,7 +3408,7 @@ flat number array with 3 or 4 components.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">rgbaStringToArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rgbaString</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">rgbaStringToArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rgbaString</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3303,7 +3434,7 @@ flat number array with 3 or 4 components.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Decoded RGBA color array.</p>
 </section>
@@ -3325,9 +3456,9 @@ flat number array with 3 or 4 components.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">554</span>
+    <span class="phpdocumentor-element-found-in__line">620</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.554" class="phpdocumentor-element-found-in__source" data-line="554" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.620" class="phpdocumentor-element-found-in__source" data-line="620" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enforece UTF-8 locale in the enviroment as otherwise some external
@@ -3343,22 +3474,21 @@ helpers do not function correctly.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_setProcessEnvironment_tags">
         Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_setProcessEnvironment#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_setProcessEnvironment_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -3378,9 +3508,9 @@ helpers do not function correctly.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">206</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.206" class="phpdocumentor-element-found-in__source" data-line="206" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Guard against undefined $this-&gt;l.</p>
@@ -3501,7 +3631,7 @@ helpers do not function correctly.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">unsetValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$hayStack</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">unsetValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$hayStack</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3511,7 +3641,7 @@ helpers do not function correctly.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$hayStack</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The array to modify.</p>
@@ -3559,9 +3689,9 @@ integer.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">229</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the local operating system path of the given file-node.</p>
@@ -3579,6 +3709,58 @@ integer.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$fileNode</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Files\File">File</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_resolveMemberName">
+        resolveMemberName()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_resolveMemberName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">585</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.585" class="phpdocumentor-element-found-in__source" data-line="585" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Resolve a member name as requested by the virtual storage (normalized to
+NFC by Nextcloud) back to the raw member name as actually stored in the
+backend archive.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">resolveMemberName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fileName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fileName</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -3734,10 +3916,11 @@ integer.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiveFiles">$archiveFiles</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiveInfo">$archiveInfo</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiver">$archiver</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_collidingMembers">$collidingMembers</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_fileNode">$fileNode</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_memberNameMap">$memberNameMap</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_savedProcessEnvironment">$savedProcessEnvironment</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_sizeLimit">$sizeLimit</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_unicodeNormalization">$unicodeNormalization</a></li>
                                             </ul>
                 </li>
             
@@ -3751,6 +3934,7 @@ integer.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_formatFloatValue">formatFloatValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getArchiveFolderName">getArchiveFolderName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getArchiveInfo">getArchiveInfo()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCollidingMembers">getCollidingMembers()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getCommonDirectoryPrefix">getCommonDirectoryPrefix()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getFileContent">getFileContent()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getFiles">getFiles()</a></li>
@@ -3782,6 +3966,7 @@ integer.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_transliterate">transliterate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UtilTrait.html#method_unsetValue">unsetValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_getLocalPath">getLocalPath()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#method_resolveMemberName">resolveMemberName()</a></li>
                                     </ul>
             </li>
                     </ul>

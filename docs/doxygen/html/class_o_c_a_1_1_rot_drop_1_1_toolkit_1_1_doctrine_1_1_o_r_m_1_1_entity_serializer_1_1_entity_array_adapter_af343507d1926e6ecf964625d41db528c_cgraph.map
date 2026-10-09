@@ -1,0 +1,6 @@
+<map id="current" name="current">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,29,67,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="14,29,10,20,13,11,22,5,36,3,51,5,60,14,55,14,49,10,36,8,24,10,17,14,16,20,19,28"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#a1c186c51f0ebfeb1d53814c7e9fe4483" title="Ensure the cached data is there up to the configured depth." alt="" coords="115,29,203,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="67,40,101,42,96,43,67,45"/>
+</map>

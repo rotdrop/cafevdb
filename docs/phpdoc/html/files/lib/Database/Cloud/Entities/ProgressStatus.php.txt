@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2022, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,15 +25,13 @@
 
 namespace OCA\CAFEVDB\Database\Cloud\Entities;
 
-
 use OCP\AppFramework\Db\Entity;
-
+use OCP\DB\Types;
 
 /** Cloud progress status entity. */
 class ProgressStatus extends Entity
 {
   public $id;
-  protected $userId;
   protected $current;
   protected $target;
   protected $data;
@@ -42,11 +40,11 @@ class ProgressStatus extends Entity
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    // $this->addType('id', 'int'); this is default
-    $this->addType('current', 'int');
-    $this->addType('target', 'int');
-    $this->addType('data', 'string');
-    $this->addType('lastModified', 'int');
+    // $this->addType('id', Types::BIGINT); this is default
+    $this->addType('current', Types::BIGINT);
+    $this->addType('target', Types::BIGINT);
+    $this->addType('data', Types::JSON);
+    $this->addType('lastModified', Types::BIGINT);
     $this->lastModified = time();
     $this->markFieldUpdated('lastModified');
   }

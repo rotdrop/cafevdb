@@ -1,5 +1,8 @@
 <map id="addOwner" name="addOwner">
-<area shape="rect" id="Node000001" title="Add the given musician to the list of owners." alt="" coords="143,5,223,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a794664bfbdc32d87dd8e6a5741fb4eaf" title="{}" alt="" coords="5,5,95,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
+<area shape="rect" id="Node000001" title="Add the given musician to the list of owners." alt="" coords="236,72,316,99"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a794664bfbdc32d87dd8e6a5741fb4eaf" title="{}" alt="" coords="52,5,141,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,65,187,46,142,32,142,27,189,42,237,64"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a392b07f87396a8c4fd915e28366229eb" title=" " alt="" coords="5,56,188,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,94,188,97,188,92,223,94"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="203,74,238,77,233,78,203,79"/>
 </map>

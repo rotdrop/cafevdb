@@ -7,5 +7,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service =
     [ "importVCard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#ab0542a315d1c61500f4204117d9c22d3", null ],
     [ "mergeMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#a56e6ef69f101590ed68f16667e9fbc15", null ],
     [ "phoneNumberService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#a89c89f1a99c6c830f9a4b2c51a27dd9f", null ],
-    [ "$contactSynchronizations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#ab796b820dce48200b5365278daf42a0b", null ]
+    [ "$contactSynchronizations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#ab796b820dce48200b5365278daf42a0b", null ],
+    [ "ASSOCIATES_SUFFIX", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#afc784e2c92ff07a25014c13185d04f41", null ]
 ];

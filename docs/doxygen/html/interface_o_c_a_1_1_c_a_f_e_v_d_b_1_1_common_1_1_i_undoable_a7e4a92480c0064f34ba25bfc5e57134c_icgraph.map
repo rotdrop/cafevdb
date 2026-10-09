@@ -1,0 +1,11 @@
+<map id="initialize" name="initialize">
+<area shape="rect" id="Node000001" title="Lazy initialization in order to have a more lightweight constructor for the actions and to inject the..." alt="" coords="513,104,581,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_run_queue.html#a8f2fab6f7f3b6f99c2b8d4d801a7b971" title="Register the given action in the run&#45;queue." alt="" coords="276,96,465,139"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="495,118,466,120,465,115,500,117"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a90b7302f64cf763a99db8914d2f2b7ab" title="Register a post&#45;commit action to be executed after the final data&#45;base commit succeeded,..." alt="" coords="25,5,208,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="285,91,208,67,208,62,290,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad7721cdc28e9f5c47447a875fdf155a8" title="Register a pre&#45;commit action and optionally an associated undo&#45;action." alt="" coords="5,88,228,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="257,118,229,120,228,115,262,117"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ab4135e336795afa5ab7f539ed77aceb3" title=" " alt="" coords="12,171,221,229"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="290,143,210,173,208,167,285,145"/>
+</map>

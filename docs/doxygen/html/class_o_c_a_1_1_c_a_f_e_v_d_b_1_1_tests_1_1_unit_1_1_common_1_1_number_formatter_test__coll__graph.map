@@ -1,0 +1,8 @@
+<map id="NumberFormatterTest" name="NumberFormatterTest">
+<area shape="rect" id="Node000001" title="Test aspects of the NumberFormatter class." alt="" coords="11,144,160,171"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,25,83,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,65,84,143,78,144,52,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html" title="A wrapper around https://github.com/kwn/number&#45;to&#45;words to make it even more convenient." alt="" coords="106,25,230,52"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,65,96,145,92,142,148,65"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="245,26,253,31,256,39,248,50,231,54,229,49,246,45,251,38,249,35,245,32"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="AbstractTransactionalMigration" name="AbstractTransactionalMigration">
+<area shape="rect" id="Node000001" title="Abstract base class for transactional migrations." alt="" coords="397,81,598,108"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000002.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,5,810,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="552,73,645,41,679,33,684,32,647,47,553,78"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260131090857.html" title="Ensure the ProjectEvent entities for registration calendar events are linked to the project." alt="" coords="646,56,810,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="614,79,648,78,643,79,614,85"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260207000624.html" title="Destructive down of the recurrence&#45;id &#45;&gt; bigint migration." alt="" coords="646,107,810,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="614,105,648,111,643,111,614,110"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819094422.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="646,157,810,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="553,111,647,143,684,157,679,156,645,148,552,116"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_migration.html" title="Abstract base class for migrations in order to make the entity manager available for transactional mi..." alt="" coords="226,81,349,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,92,399,94,394,95,365,97"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,81,178,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="193,92,228,94,223,95,194,97"/>
+</map>

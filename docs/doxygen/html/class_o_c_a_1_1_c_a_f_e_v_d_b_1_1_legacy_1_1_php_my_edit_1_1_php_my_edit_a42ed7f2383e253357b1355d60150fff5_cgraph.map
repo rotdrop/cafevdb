@@ -1,0 +1,8 @@
+<map id="field_description_sql" name="field_description_sql">
+<area shape="rect" id="Node000001" title="Generate the field&#45;description SQL part." alt="" coords="5,43,145,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#afee348ff426567672d33af240df2b66a" title="Normalize field description to have the form." alt="" coords="193,5,371,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,41,192,34,187,36,146,46"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#adc3f1c2ed5d89f6fbc7c1430834f92df" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="230,80,334,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,66,217,81,212,82,145,71"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="247,79,240,71,245,62,259,55,282,53,306,56,321,65,316,64,305,61,282,59,260,61,248,65,246,71,251,81"/>
+</map>

@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Service;
 use Throwable;
 
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Config\IUserConfig;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -105,11 +106,12 @@ class EncryptionService
   /** {@inheritdoc} */
   public function __construct(
     protected string $appName,
-    private IConfig $cloudConfig,
     private Crypto\AsymmetricKeyService $asymKeyService,
-    private IHasher $hasher,
+    private IConfig $cloudConfig,
     private IEventDispatcher $eventDispatcher,
+    private IHasher $hasher,
     protected ILogger $logger,
+    protected IUserConfig $cloudUserConfig,
     AuthorizationService $authorization,
     IUserSession $userSession,
     Crypto\CryptoFactoryInterface $cryptoFactory,
@@ -125,7 +127,9 @@ class EncryptionService
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     $this->l = new class {
-      /** {@inheritdoc} */
+      /**
+       * {@inheritdoc}
+       */
       public function t($text, $parameters = [])
       {
         if (!is_array($parameters)) {

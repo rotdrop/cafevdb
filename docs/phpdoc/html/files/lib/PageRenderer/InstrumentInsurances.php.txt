@@ -166,7 +166,7 @@ class InstrumentInsurances extends PMETableViewBase
 
     $opts['css']['postfix'] = [
       'direct-change',
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
       $this->cssClass(),
     ];
 
@@ -316,7 +316,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['fdd']['bill_to_party_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Bill-to Party'),
-      'css'      => [ 'postfix' => [ 'bill-to-party', 'allow-empty' ], ],
+      'css'      => [ 'postfix' => [ 'bill-to-party', CssClasses::ALLOW_EMPTY ], ],
       'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
@@ -359,7 +359,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['fdd']['instrument_owner_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Owner'),
-      'css'      => [ 'postfix' => [ 'instrument-owner', 'allow-empty' ], ],
+      'css'      => [ 'postfix' => [ 'instrument-owner', CssClasses::ALLOW_EMPTY ], ],
       'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
@@ -426,7 +426,7 @@ class InstrumentInsurances extends PMETableViewBase
       $opts['fdd']['broker_id'] = [
         'tab'      => [ 'id' => 'overview'],
         'name'     => $this->l->t('Insurance Broker'),
-        'css'      => [ 'postfix' => [ 'broker-select', 'squeeze-subsequent-lines', ], ],
+        'css'      => [ 'postfix' => [ 'broker-select', CssClasses::SQUEEZE_SUBSEQUENT_LINES, ], ],
         'select'   => 'D',
         'maxlen'   => 384,
         'sort'     => true,
@@ -458,7 +458,7 @@ GROUP BY b.short_name',
         ],
         'display|LFVD' => [
           'popup' => 'data',
-          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
           'postfix' => '</div></div>',
         ],
       ];

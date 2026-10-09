@@ -1,8 +1,8 @@
 <map id="setUser" name="setUser">
 <area shape="rect" id="Node000001" title="Install a new user." alt="" coords="229,31,296,57"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="103,5,181,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,36,181,29,182,24,214,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,34,181,30,182,24,216,34"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53fe11e3dd3059d6379dfabaf2fce346" title="Fake execution with other user&#45;id." alt="" coords="5,31,55,57"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="214,47,55,47,55,41,214,41"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,34,56,41,54,36,87,28"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="213,47,55,47,55,41,214,41"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,32,56,41,54,36,90,30"/>
 </map>

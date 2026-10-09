@@ -1,9 +1,10 @@
 <map id="catchAllEmail" name="catchAllEmail">
 <area shape="rect" id="Node000001" title=" " alt="" coords="286,31,387,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a4f11c04f74936507520d5ecf19ce2604" title=" " alt="" coords="143,5,238,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="270,35,238,30,239,24,271,30"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="360,15,353,12,337,9,322,11,314,16,312,22,316,31,311,29,307,22,310,12,320,6,337,4,355,7,365,16"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a80959c344dc74db4311fc8d62bf56cd5" title=" " alt="" coords="143,5,238,32"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="268,33,238,30,239,24,273,32"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a24e7fbb14ed9dce86eee44d9f81c2e06" title="Set the catch&#45;all email address." alt="" coords="146,56,235,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="271,58,236,64,235,59,270,53"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="273,55,236,64,235,59,268,56"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#af17e2f25baabbd278a7aa90a66a4879f" title="{}" alt="" coords="5,56,95,83"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="130,72,95,72,95,67,130,67"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="127,70,95,72,95,67,133,69"/>
 </map>

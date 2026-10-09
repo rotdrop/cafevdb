@@ -1,21 +1,21 @@
 <map id="getSubscription" name="getSubscription">
 <area shape="rect" id="Node000001" title="Find the basic information about a subscription for the given email." alt="" coords="574,132,686,159"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae62eae7d1bae43dae28edc191f40da81" title="Fetch the subscription preferences." alt="" coords="345,5,526,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="605,122,569,87,525,53,486,35,488,30,528,48,573,83,609,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="604,120,569,87,525,53,487,35,487,30,528,48,573,83,610,121"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participants_controller.html#a51746b27963d94b96e7519f4c78a571c" title="Fetch the delivery states for the given email." alt="" coords="106,40,297,99"/>
-<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="593,126,561,110,526,97,468,84,408,76,297,70,298,65,408,71,469,79,527,92,563,105,595,122"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="591,124,561,110,526,97,468,84,408,76,298,70,297,65,408,71,469,79,527,92,563,105,597,124"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="361,107,510,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="558,139,511,132,511,127,559,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="556,136,511,132,511,127,561,136"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339" title="Patch the membership config for the given email address." alt="" coords="386,157,486,184"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="559,157,486,167,486,162,558,152"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="556,155,487,167,486,162,561,154"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="345,208,526,235"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="592,169,527,198,493,210,491,205,525,194,589,164"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="593,166,527,198,493,210,492,205,525,194,588,167"/>
 <area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="390,259,481,285"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="611,172,575,212,528,249,483,266,481,261,525,244,572,208,608,169"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,38,298,51,297,46,355,33"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="355,105,297,93,298,87,356,100"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="612,169,575,212,528,249,483,267,481,261,525,244,572,208,607,172"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="353,37,299,51,297,46,358,35"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="353,103,298,93,297,87,358,102"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="163,208,240,235"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="330,224,241,224,241,219,330,219"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="327,222,241,224,240,219,332,221"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="5,208,58,235"/>
-<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="147,224,58,224,58,219,147,219"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="145,224,59,224,58,219,148,219"/>
 </map>

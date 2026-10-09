@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Tests\Unit\Controller\ProjectsControllerTest
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -120,7 +124,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait">SetupEventsServiceTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-TestRoutesAreDefinedTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Controller\TestRoutesAreDefinedTrait">TestRoutesAreDefinedTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait">GetPMEStubTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait">MockUserStorageTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait">SetupEventsServiceTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-TestRoutesAreDefinedTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Controller\TestRoutesAreDefinedTrait">TestRoutesAreDefinedTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -131,9 +135,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Test the ProjectsController class.</p>
@@ -217,7 +221,39 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\Util::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Common\Uuid::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Controller\DTO\DownloadsShareResponse::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Controller\DTO\MessagesResponse::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Controller\DTO\ProjectValidationResponse::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -297,7 +333,31 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Events\EncryptionServiceBound::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Exceptions\EnduserNotificationException::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -361,6 +421,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\L10N\AppL10N::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Service\L10N\L10NFactory::class
     </dd>
     </dl>
@@ -398,10 +466,10 @@
     </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class
+        \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -465,6 +533,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Traits\AppConfigTrait::class
     </dd>
     </dl>
@@ -491,13 +567,31 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_CONTROLLER_CLASS">CONTROLLER_CLASS</a>
     <span>
-        &nbsp;= \OCA\CAFEVDB\Controller\ProjectsController::class                            </span>
+        &nbsp;: mixed&nbsp;= \OCA\CAFEVDB\Controller\ProjectsController::class                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_EXPECTED_ROUTES">EXPECTED_ROUTES</a>
     <span>
-        &nbsp;= [&#039;validate&#039;, &#039;changeinstrumentation&#039;, &#039;mailinglists&#039;, &#039;get&#039;, &#039;post&#039;, &#039;delete&#039;, &#039;patch&#039;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;validate&#039;, &#039;changeinstrumentation&#039;, &#039;mailingl...                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_NAME_VALIDATION">NAME_VALIDATION</a>
+    <span>
+        &nbsp;: mixed&nbsp;= [[&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; se...                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_NAME">PROJECT_NAME</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;ProjectName&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_YEAR">PROJECT_YEAR</a>
+    <span>
+        &nbsp;: mixed&nbsp;= 1984                            </span>
 </dt>
 
     </dl>
@@ -510,15 +604,15 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_appContainer">$appContainer</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entities">$entities</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -530,7 +624,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entityRepositories">$entityRepositories</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -540,9 +634,45 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_mockProvider">$mockProvider</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes">$fileNodes</a>
+    <span>
+                        &nbsp;: array            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkShares">$linkShares</a>
+    <span>
+                        &nbsp;: array            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkSharesByPath">$linkSharesByPath</a>
+    <span>
+                        &nbsp;: array            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider">$mockProvider</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Tests-MockProvider.html"><abbr title="\OCA\CAFEVDB\Tests\MockProvider">MockProvider</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#property_pme">$pme</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_postData">$postData</a>
+    <span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -555,6 +685,30 @@
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_projectService">$projectService</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_shareId">$shareId</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_simpleSharingService">$simpleSharingService</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Service-SimpleSharingService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\SimpleSharingService">SimpleSharingService</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_urlGenerator">$urlGenerator</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage">$userStorage</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a>            </span>
 </dt>
 
     </dl>
@@ -586,7 +740,31 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostFailures">testPostFailures()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostProjectShare">testPostProjectShare()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-TestRoutesAreDefinedTrait.html#method_testRoutesAreDefined">testRoutesAreDefined()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateProjectName">testValidateProjectName()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateUnknownRequest">testValidateUnknownRequest()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -597,6 +775,19 @@
                                 &nbsp;: void    </span>
 </dt>
 <dd>Perform basic tests with the event-matrix output.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#method_getPHPMyEditStub">getPHPMyEditStub()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub">getUserStorageStub()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>Generate a stub or mock for the UserStorage class.</dd>
 
     </dl>
 
@@ -619,9 +810,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
     
@@ -650,9 +841,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
     
@@ -662,6 +853,99 @@
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">EXPECTED_ROUTES</span>
     = <span class="phpdocumentor-signature__default-value">[&#039;validate&#039;, &#039;changeinstrumentation&#039;, &#039;mailinglists&#039;, &#039;get&#039;, &#039;post&#039;, &#039;delete&#039;, &#039;patch&#039;]</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_NAME_VALIDATION">
+        NAME_VALIDATION
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_NAME_VALIDATION" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">246</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">NAME_VALIDATION</span>
+    = <span class="phpdocumentor-signature__default-value">[[&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;year&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; &#039;project name &#039; . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;exception&#039; =&gt; \OCA\CAFEVDB\Exceptions\EnduserNotificationException::class]]]</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_PROJECT_NAME">
+        PROJECT_NAME
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_NAME" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">244</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PROJECT_NAME</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;ProjectName&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_PROJECT_YEAR">
+        PROJECT_YEAR
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_YEAR" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">243</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PROJECT_YEAR</span>
+    = <span class="phpdocumentor-signature__default-value">1984</span>
 </code>
 
 
@@ -689,24 +973,24 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_appContainer">
         $appContainer
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_appContainer" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_appContainer" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php"><a href="files/tests-phpunit-unit-service-setupeventsservicetrait.html"><abbr title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php">SetupEventsServiceTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/SetupEventsServiceTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -744,7 +1028,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$entities</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -820,7 +1104,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$entityRepositories</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -877,19 +1161,133 @@
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_mockProvider">
-        $mockProvider
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_mockProvider" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_fileNodes">
+        $fileNodes
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php"><a href="files/tests-phpunit-unit-service-setupeventsservicetrait.html"><abbr title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php">SetupEventsServiceTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/SetupEventsServiceTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$fileNodes</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_linkShares">
+        $linkShares
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkShares" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">136</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$linkShares</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_linkSharesByPath">
+        $linkSharesByPath
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkSharesByPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">138</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$linkSharesByPath</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_mockProvider">
+        $mockProvider
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">44</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -899,6 +1297,120 @@
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Tests-MockProvider.html"><abbr title="\OCA\CAFEVDB\Tests\MockProvider">MockProvider</abbr></a></span>
     <span class="phpdocumentor-signature__name">$mockProvider</span>
     </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_nodeId">
+        $nodeId
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">52</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$nodeId</span>
+     = <span class="phpdocumentor-signature__default-value">1</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_pme">
+        $pme
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#property_pme" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php"><a href="files/tests-phpunit-unit-database-legacy-pme-getpmestubtrait.html"><abbr title="tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php">GetPMEStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">33</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$pme</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_postData">
+        $postData
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_postData" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">134</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$postData</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
     
     
@@ -925,9 +1437,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">128</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
     
@@ -974,6 +1486,158 @@
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a></span>
     <span class="phpdocumentor-signature__name">$projectService</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_shareId">
+        $shareId
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_shareId" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">140</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$shareId</span>
+     = <span class="phpdocumentor-signature__default-value">1</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_simpleSharingService">
+        $simpleSharingService
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_simpleSharingService" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">132</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-SimpleSharingService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\SimpleSharingService">SimpleSharingService</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$simpleSharingService</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_urlGenerator">
+        $urlGenerator
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_urlGenerator" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">130</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr></span>
+    <span class="phpdocumentor-signature__name">$urlGenerator</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_userStorage">
+        $userStorage
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$userStorage</span>
     </code>
 
     
@@ -1042,9 +1706,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1078,15 +1742,85 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">149</span>
+    <span class="phpdocumentor-element-found-in__line">423</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.423" class="phpdocumentor-element-found-in__source" data-line="423" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">testGetEventMatrix</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testPostFailures">
+        testPostFailures()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostFailures" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">379</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.379" class="phpdocumentor-element-found-in__source" data-line="379" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testPostFailures</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testPostProjectShare">
+        testPostProjectShare()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostProjectShare" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">412</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.412" class="phpdocumentor-element-found-in__source" data-line="412" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testPostProjectShare</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1137,6 +1871,76 @@
                     <article
         class="phpdocumentor-element
             -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testValidateProjectName">
+        testValidateProjectName()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateProjectName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">341</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.341" class="phpdocumentor-element-found-in__source" data-line="341" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testValidateProjectName</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testValidateUnknownRequest">
+        testValidateUnknownRequest()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateUnknownRequest" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php"><a href="files/tests-phpunit-unit-controller-projectscontrollertest.html"><abbr title="tests/phpunit/Unit/Controller/ProjectsControllerTest.php">ProjectsControllerTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">236</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/tests/phpunit/Unit/Controller/ProjectsControllerTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testValidateUnknownRequest</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -private
                                                         "
 >
@@ -1148,16 +1952,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php"><a href="files/tests-phpunit-unit-service-setupeventsservicetrait.html"><abbr title="tests/phpunit/Unit/Service/SetupEventsServiceTrait.php">SetupEventsServiceTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">180</span>
+    <span class="phpdocumentor-element-found-in__line">188</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.180" class="phpdocumentor-element-found-in__source" data-line="180" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/SetupEventsServiceTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/SetupEventsServiceTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Perform basic tests with the event-matrix output.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">eventMatrixTest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$matrix</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">eventMatrixTest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$matrix</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1167,10 +1971,93 @@
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$matrix</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getPHPMyEditStub">
+        getPHPMyEditStub()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#method_getPHPMyEditStub" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php"><a href="files/tests-phpunit-unit-database-legacy-pme-getpmestubtrait.html"><abbr title="tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php">GetPMEStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">36</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Legacy/PME/GetPMEStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">getPHPMyEditStub</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserStorageStub">
+        getUserStorageStub()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate a stub or mock for the UserStorage class.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">getUserStorageStub</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mock</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$mock</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If \true generate a mock, else a stub</p>
+</section>
+
             </dd>
             </dl>
 
@@ -1297,20 +2184,33 @@
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_CONTROLLER_CLASS">CONTROLLER_CLASS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_EXPECTED_ROUTES">EXPECTED_ROUTES</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_NAME_VALIDATION">NAME_VALIDATION</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_NAME">PROJECT_NAME</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#constant_PROJECT_YEAR">PROJECT_YEAR</a></li>
                                             </ul>
                 </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_appContainer">$appContainer</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_appContainer">$appContainer</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entities">$entities</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entityManager">$entityManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entityRepositories">$entityRepositories</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_eventsService">$eventsService</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_mockProvider">$mockProvider</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes">$fileNodes</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkShares">$linkShares</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkSharesByPath">$linkSharesByPath</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider">$mockProvider</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#property_pme">$pme</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_postData">$postData</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_projectsController">$projectsController</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_projectService">$projectService</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_shareId">$shareId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_simpleSharingService">$simpleSharingService</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_urlGenerator">$urlGenerator</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage">$userStorage</a></li>
                                             </ul>
                 </li>
             
@@ -1320,8 +2220,14 @@
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_generateEventsService">generateEventsService()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_setup">setup()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testGetEventMatrix">testGetEventMatrix()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostFailures">testPostFailures()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testPostProjectShare">testPostProjectShare()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-TestRoutesAreDefinedTrait.html#method_testRoutesAreDefined">testRoutesAreDefined()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateProjectName">testValidateProjectName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#method_testValidateUnknownRequest">testValidateUnknownRequest()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_eventMatrixTest">eventMatrixTest()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#method_getPHPMyEditStub">getPHPMyEditStub()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub">getUserStorageStub()</a></li>
                                     </ul>
             </li>
                     </ul>

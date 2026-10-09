@@ -1,10 +1,10 @@
 <map id="setDefaultHistory" name="setDefaultHistory">
 <area shape="rect" id="Node000001" title="Compose a default history record for the initial state." alt="" coords="349,5,473,32"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="99,5,166,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="334,21,166,21,166,16,334,16"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,21,167,21,166,16,335,17"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="214,31,301,57"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="334,34,302,39,301,34,333,29"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="336,31,302,39,301,34,331,32"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa9fbb471eda80cea3b104b21bbdb3b66" title=" " alt="" coords="5,5,51,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,21,51,21,51,16,83,16"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="198,35,166,28,167,23,199,29"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,20,51,21,50,16,85,17"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="196,32,166,28,166,23,201,32"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="getCGIRecordId" name="getCGIRecordId">
+<area shape="rect" id="Node000001" title="Decode the record idea from the CGI data, return &#45;1 if none found." alt="" coords="5,21,122,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aa3d3fa56ba083f5cd0dd343f1d0b6d26" title="Parse the request variables and extract operation and record id." alt="" coords="170,5,334,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,32,157,34,152,35,122,37"/>
+</map>

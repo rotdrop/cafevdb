@@ -1,0 +1,15 @@
+<map id="VueAppControllerTest" name="VueAppControllerTest">
+<area shape="rect" id="Node000001" title="Test aspects of the VueAppController." alt="" coords="94,180,242,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,115,154,178,149,181,71,120"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_vue_app_controller.html" title="AJAX endpoint for generating the main page of the app." alt="" coords="106,81,230,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,122,170,181,166,179,166,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="129,5,207,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="169,45,171,82,165,80,167,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html" title="Tool&#45;tips management with translations." alt="" coords="254,81,368,108"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="290,118,243,158,199,182,197,177,240,154,285,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="246,5,343,32"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="302,45,310,82,305,80,299,49"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="366,5,447,32"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="381,40,328,83,325,79,376,43"/>
+</map>

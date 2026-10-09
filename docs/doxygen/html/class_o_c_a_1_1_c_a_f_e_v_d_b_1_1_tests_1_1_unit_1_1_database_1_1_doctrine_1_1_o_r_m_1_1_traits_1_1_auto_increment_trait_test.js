@@ -1,0 +1,7 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test =
+[
+    [ "setup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html#a1d04139db3a5ad5713ecbd14d97da879", null ],
+    [ "testStoreInvalidIntAsNull", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html#a346dfa2cccd4c9954abc4e049ca0f8f1", null ],
+    [ "testStoreNullAsNull", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html#a1be52651c958068572b20e1757701d31", null ],
+    [ "testStoreValidIntAsIs", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html#a871a04d458587aca26ad30b6a07246ec", null ]
+];

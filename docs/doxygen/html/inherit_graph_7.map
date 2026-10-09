@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html" title="A class which can convert &quot;any&quot; (read: some) file&#45;data to PDF format." alt="" coords="5,5,84,32"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="5,5,156,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="204,5,305,32"/>
+<area shape="poly" id="edge33_Node000000_Node000001" title=" " alt="" coords="171,16,206,19,201,19,171,21"/>
 </map>

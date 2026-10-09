@@ -1,0 +1,11 @@
+<map id="DuplicateMusiciansResponse" name="DuplicateMusiciansResponse">
+<area shape="rect" id="Node000001" title="Duplicate musicians response DTO." alt="" coords="5,304,200,331"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html" title="Base DTO containing messages." alt="" coords="32,229,173,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,270,105,305,100,303,101,274"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="24,155,181,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,195,105,230,100,228,101,200"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="53,80,152,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,120,105,155,100,154,102,125"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="44,5,161,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="103,45,105,80,100,79,102,50"/>
+</map>

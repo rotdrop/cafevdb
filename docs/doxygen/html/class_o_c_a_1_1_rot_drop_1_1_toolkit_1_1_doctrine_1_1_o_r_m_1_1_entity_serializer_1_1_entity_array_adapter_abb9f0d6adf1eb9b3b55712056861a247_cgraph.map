@@ -1,0 +1,9 @@
+<map id="valid" name="valid">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,55,54,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#af343507d1926e6ecf964625d41db528c" title="{}" alt="" coords="102,29,163,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,60,89,53,84,55,55,65"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#a1c186c51f0ebfeb1d53814c7e9fe4483" title="Ensure the cached data is there up to the configured depth." alt="" coords="211,55,299,81"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="54,65,196,65,195,71,54,71"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="113,28,110,20,113,11,120,5,132,3,145,5,153,14,148,13,143,10,132,8,122,10,117,14,116,20,119,30"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="164,46,198,56,193,56,163,52"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="createFolder" name="createFolder">
+<area shape="rect" id="Node000001" title="Create a shared folder and set appropriate permissions." alt="" coords="5,31,99,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="147,5,289,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,34,134,31,129,33,100,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="180,56,256,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,48,167,60,163,63,99,54"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="358,27,461,53"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="256,61,345,50,340,51,257,66"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="337,77,482,120"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="256,72,324,85,319,85,256,78"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="530,27,624,53"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="462,37,518,40,512,40,462,43"/>
+</map>

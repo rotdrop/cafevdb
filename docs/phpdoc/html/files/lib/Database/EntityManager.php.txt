@@ -30,13 +30,14 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use OCP\Config\IUserConfig;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
@@ -97,6 +98,7 @@ use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 class EntityManager extends AbstractEntityManager
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . '/Doctrine/ORM/Entities',
@@ -229,10 +231,11 @@ class EntityManager extends AbstractEntityManager
     private EncryptionService $encryptionService,
     private IL10N $l,
     private IRequest $request,
-    protected IAppContainer $appContainer,
-    protected ILogger $logger,
+    protected ContainerInterface $appContainer,
+    protected LoggerInterface $logger,
     protected string $appName,
     protected IConfig $cloudConfig,
+    protected IUserConfig $cloudUserConfig,
   ) {
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = [];
@@ -294,11 +297,11 @@ class EntityManager extends AbstractEntityManager
     $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
-      $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
+      $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
       $this->devMode = 0 != ($debugMode & ConfigConstants::DEBUG_ORM);
-      $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';
+      $this->showSoftDeleted = $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED) === 'on';
       $this->decorateClassMetadata = true;
     }
     parent::__construct($this->getEntityManager());
@@ -461,38 +464,20 @@ class EntityManager extends AbstractEntityManager
     return true;
   }
 
-  private const DBAL_TYPES = [
-    Types\UuidType::class => 'uuid_binary',
-    Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
-    Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
-    Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
-    Types\ArrayType::class => 'array',
-  ];
-
   /**
    * Register the needed additional DBAL types.
    *
    * @return void
    */
-  private function registerTypes():void
+  protected function registerTypes(): void
   {
     if ($this->typesBound) {
       return;
     }
 
-    $connection = $this->entityManager->getConnection();
+    parent::registerTypes();
+
     try {
-      $platform = $connection->getDatabasePlatform();
-      foreach (self::DBAL_TYPES as $phpType => $sqlType) {
-        $instance = new $phpType;
-        $typeName = $instance->getName();
-        if (!Type::hasType($typeName)) {
-          Type::addType($typeName, $phpType);
-        }
-        if (!empty($sqlType)) {
-          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
-        }
-      }
       // Override datetime stuff
       Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
@@ -645,7 +630,7 @@ class EntityManager extends AbstractEntityManager
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
       public function __construct(
-        private IAppContainer $appContainer,
+        private ContainerInterface $appContainer,
       ) {
       }
 
@@ -771,17 +756,10 @@ class EntityManager extends AbstractEntityManager
     $translatableListener->setDefaultTranslationValue(null);
     $evm->addEventSubscriber($translatableListener);
 
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
-    );
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-      $localeCode
-    );
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
-      1 // fallback to default values in case if record is not translated
+    Gedmo\Translatable\Query\TreeWalker\TranslationWalker::configure(
+      configuration: $config,
+      translatableLocale: $localeCode,
+      translationFallback: true,
     );
 
     // handle extra foreign key constraints

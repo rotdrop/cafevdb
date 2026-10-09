@@ -1,0 +1,5 @@
+<map id="getEntityManagerMock" name="getEntityManagerMock">
+<area shape="rect" id="Node000001" title="Generate a mock for the EntityManager class with limited support for persist, flush,..." alt="" coords="5,13,161,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="209,5,401,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,24,195,26,190,27,161,29"/>
+</map>

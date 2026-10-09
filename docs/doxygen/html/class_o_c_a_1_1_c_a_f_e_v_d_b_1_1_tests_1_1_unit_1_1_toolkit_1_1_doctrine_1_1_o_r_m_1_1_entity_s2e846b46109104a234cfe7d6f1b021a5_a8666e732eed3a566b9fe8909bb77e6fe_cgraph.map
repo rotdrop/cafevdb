@@ -1,0 +1,10 @@
+<map id="testDeepen" name="testDeepen">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,94,123"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="142,88,302,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,107,128,109,123,110,94,112"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="354,5,543,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="289,85,341,70,346,69,290,90"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="350,88,547,131"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="302,115,337,118,331,118,302,121"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="347,101,318,103,317,98,352,100"/>
+</map>

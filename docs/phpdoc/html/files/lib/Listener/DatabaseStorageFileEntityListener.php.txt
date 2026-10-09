@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -45,6 +46,10 @@ class DatabaseStorageFileEntityListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait
+  {
+    sanitizeFilename as private systemSanitizeFilename;
+  }
 
   /** @var array */
   protected $lock = [];
@@ -54,9 +59,10 @@ class DatabaseStorageFileEntityListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ILogger $logger,
-    protected IL10N $l,
+    protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
   }
   // phpcs:enable
@@ -68,10 +74,12 @@ class DatabaseStorageFileEntityListener
    *
    * @return void
    */
-  private static function sanitizeFileName(Entities\DatabaseStorageFile $dirEntry): void
+  private function sanitizeFileName(Entities\DatabaseStorageFile $dirEntry): void
   {
     $pathInfo = pathinfo($dirEntry->getName());
-    $dirEntry->setName($pathInfo['filename'] . '.' . strtolower($pathInfo['extension']));
+    $name = $pathInfo['filename'] . '.' . strtolower($pathInfo['extension']);
+    $name = $this->systemSanitizeFilename($name);
+    $dirEntry->setName($name);
   }
 
   /**
@@ -79,7 +87,7 @@ class DatabaseStorageFileEntityListener
    */
   public function prePersist(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PrePersistEventArgs $eventArgs)
   {
-    self::sanitizeFileName($dirEntry);
+    $this->sanitizeFileName($dirEntry);
   }
 
   /**
@@ -88,7 +96,7 @@ class DatabaseStorageFileEntityListener
   public function preUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PreUpdateEventArgs $eventArgs)
   {
     if ($eventArgs->hasChangedField('name')) {
-      self::sanitizeFileName($dirEntry);
+      $this->sanitizeFileName($dirEntry);
     }
   }
 

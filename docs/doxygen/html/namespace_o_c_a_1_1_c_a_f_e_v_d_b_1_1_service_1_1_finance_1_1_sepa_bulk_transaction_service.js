@@ -1,0 +1,4 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service =
+[
+    [ "EventDataDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_1_1_event_data_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_1_1_event_data_d_t_o" ]
+];

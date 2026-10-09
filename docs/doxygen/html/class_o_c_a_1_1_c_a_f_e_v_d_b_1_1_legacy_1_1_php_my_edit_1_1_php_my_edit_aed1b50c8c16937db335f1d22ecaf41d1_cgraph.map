@@ -1,0 +1,20 @@
+<map id="fqn" name="fqn">
+<area shape="rect" id="Node000001" title="Generate the query code for one field." alt="" coords="5,80,45,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a42ed7f2383e253357b1355d60150fff5" title="Generate the field&#45;description SQL part." alt="" coords="212,80,351,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,91,197,91,195,96,45,96"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#adc3f1c2ed5d89f6fbc7c1430834f92df" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="438,29,543,56"/>
+<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="37,78,61,57,92,40,135,28,179,19,269,14,353,18,426,29,420,30,353,23,269,19,180,25,136,33,94,45,64,62,41,81"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a988a51bf88f195f4c5dc158fb1f9e2b9" title="Compute $join_table name (maybe main&#45;table if no info)." alt="" coords="435,156,546,183"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="45,101,117,136,163,154,211,167,265,174,320,177,417,177,423,177,320,183,264,180,209,172,161,159,115,141,44,107"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ad7818a8e551fddf2b45ccabf9536f070" title="Substitute placeholders in sql field:" alt="" coords="93,55,162,81"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="44,86,79,78,75,82,46,91"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#afee348ff426567672d33af240df2b66a" title="Normalize field description to have the form." alt="" coords="401,80,580,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="351,91,388,93,383,94,352,96"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,77,425,58,420,60,341,82"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="455,28,449,21,453,11,467,5,491,3,515,5,530,14,525,14,514,10,490,8,469,10,457,15,454,20,460,30"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="162,71,199,79,194,80,163,76"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="162,63,424,45,422,50,163,68"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ab1c89b9812f120dc7ad1889bc4f1886e" title="Add some defaults for missing &#39;values&#39; fields." alt="" coords="210,131,353,157"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="149,79,211,116,226,125,220,124,209,121,147,84"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="354,150,423,161,417,161,354,155"/>
+</map>

@@ -1,7 +1,7 @@
 <map id="getProjectParticipantsStorage" name="getProjectParticipantsStorage">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,200,40"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a12251d0c022e9e21c137a105ff683f13" title="{}" alt="" coords="248,5,415,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,24,232,24,232,29,200,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a96abf97b83ba8a930f5859018629aebd" title=" " alt="" coords="463,5,657,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="416,24,447,24,447,29,416,29"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,63,200,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="248,5,450,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,59,235,53,230,55,187,65"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="253,88,444,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,87,240,98,235,99,186,93"/>
 </map>

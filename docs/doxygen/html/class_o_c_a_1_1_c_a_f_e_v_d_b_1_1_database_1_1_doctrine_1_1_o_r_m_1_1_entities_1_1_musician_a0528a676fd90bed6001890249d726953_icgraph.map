@@ -1,0 +1,5 @@
+<map id="getInstrumentInsurances" name="getInstrumentInsurances">
+<area shape="rect" id="Node000001" title="Get instrumentInsurances." alt="" coords="300,29,465,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a4b7ac5aedc3c0a057b197f7590b0133b" title="Try to generate a balancing account for a legacy item without broker information." alt="" coords="5,5,252,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="281,43,252,45,252,40,287,42"/>
+</map>

@@ -724,7 +724,6 @@ class FinanceService
   {
     $treasurer = $this->rolesService->treasurerContact();
     $user = $this->user();
-
     if ($this->rolesService->isTreasurer()) {
       $participants = [
         'organizer'=> [
@@ -820,7 +819,7 @@ class FinanceService
     $eventData = [
       'summary' => $title,
       'from' => $start->format('d-m-Y'),
-      'to' => ($start ?? $end)->format('d-m-Y'),
+      'to' => ($end ?? $start)->format('d-m-Y'),
       'allDay' => true,
       'location' => 'Cyber-Space',
       'categories' => $categories,

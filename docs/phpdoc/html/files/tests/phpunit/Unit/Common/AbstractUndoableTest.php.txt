@@ -29,7 +29,7 @@ use ReflectionProperty;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common\AbstractUndoable;
 
@@ -69,7 +69,7 @@ class AbstractUndoableTest extends TestCase
   /** @return void */
   public function testInitialize(): void
   {
-    $appContainer = $this->createStub(IAppContainer::class);
+    $appContainer = $this->createStub(ContainerInterface::class);
     $this->instance->initialize($appContainer);
     $instanceAppContainer = new ReflectionProperty($this->instance, 'appContainer');
     $this->assertEquals($appContainer, $instanceAppContainer->getValue($this->instance));
@@ -78,7 +78,7 @@ class AbstractUndoableTest extends TestCase
   /** @return void */
   public function testGetSortOrder(): void
   {
-    $appContainer = $this->createStub(IAppContainer::class);
+    $appContainer = $this->createStub(ContainerInterface::class);
     $this->assertEquals(self::SORT_ORDER, $this->instance->getSortOrder());
   }
 }

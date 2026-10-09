@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\CoversClass(Controller\ProgressStatusController::class)]
 #[Attributes\CoversClass(Service\ProgressStatusService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]

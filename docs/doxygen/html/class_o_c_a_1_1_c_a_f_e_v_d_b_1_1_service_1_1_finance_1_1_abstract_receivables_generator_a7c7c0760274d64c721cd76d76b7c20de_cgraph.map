@@ -1,6 +1,12 @@
 <map id="updateParticipant" name="updateParticipant">
-<area shape="rect" id="Node000001" title="{Update the amount to invoice for the bound service&#45;fee field.array&lt;string, int&gt; [ &#160;&#39;added&#39; =&gt; #ADDED..." alt="" coords="5,29,128,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html#ae1e12fb52aa27bf77c5e6ef753f99782" title="Update just the given receivable and participant." alt="" coords="176,29,260,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,40,160,40,160,45,128,45"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="191,30,187,21,190,11,201,5,218,3,236,5,246,12,243,16,234,10,218,8,202,10,194,14,192,20,196,28"/>
+<area shape="rect" id="Node000001" title="{Update the amount to invoice for the bound service&#45;fee field.array&lt;string, int&gt; [ &#160;&#39;added&#39; =&gt; #ADDED..." alt="" coords="5,104,128,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html#ae1e12fb52aa27bf77c5e6ef753f99782" title="Update just the given receivable and participant." alt="" coords="176,104,260,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,115,162,116,158,118,129,120"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="191,103,187,95,190,86,201,80,218,77,236,80,247,89,242,89,234,85,218,83,202,85,194,89,192,95,196,104"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="318,5,520,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="247,101,307,74,325,69,320,71,309,78,249,106"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="330,88,508,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="260,115,316,117,311,118,261,120"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="308,171,529,229"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="248,129,309,156,325,165,320,164,307,161,247,134"/>
 </map>

@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -133,9 +137,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">34</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Abstract base class with functionality needed by the classes in
@@ -176,13 +180,19 @@ this class.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_BASE_FILTER_SET">BASE_FILTER_SET</a>
     <span>
-        &nbsp;= [self::SOFT_DELETEABLE_FILTER =&gt; \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class]                            </span>
+        &nbsp;: mixed&nbsp;= [self::SOFT_DELETEABLE_FILTER =&gt; \Gedmo\SoftDel...                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_SOFT_DELETEABLE_FILTER">SOFT_DELETEABLE_FILTER</a>
     <span>
-        &nbsp;= &#039;soft-deleteable&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;soft-deleteable&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
+    <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_DBAL_TYPES">DBAL_TYPES</a>
+    <span>
+        &nbsp;: mixed&nbsp;= [\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\UuidT...                            </span>
 </dt>
 
     </dl>
@@ -195,6 +205,12 @@ this class.</p>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_getWrappedObject">getWrappedObject()</a>
+    <span>
+                                &nbsp;: <abbr title="\Doctrine\ORM\EntityManagerInterface">EntityManagerInterface</abbr>    </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled">setFilterEnabled()</a>
     <span>
@@ -209,6 +225,13 @@ if the filter does not exist.</dd>
                                 &nbsp;: array&lt;string, string&gt;    </span>
 </dt>
 <dd>Add a basic set of filters to ensure consistent naming.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_registerTypes">registerTypes()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Register the needed additional DBAL types.</dd>
 
     </dl>
 
@@ -231,9 +254,9 @@ if the filter does not exist.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
     </aside>
 
     
@@ -262,9 +285,9 @@ if the filter does not exist.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
     </aside>
 
     
@@ -285,6 +308,37 @@ if the filter does not exist.</dd>
 
         
     </article>
+                    <article class="phpdocumentor-element -constant -protected ">
+    <h4 class="phpdocumentor-element__name" id="constant_DBAL_TYPES">
+        DBAL_TYPES
+        <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_DBAL_TYPES" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">50</span>
+
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">DBAL_TYPES</span>
+    = <span class="phpdocumentor-signature__default-value">[\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\UuidType::class =&gt; null, \OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalP2S2Type::class =&gt; null, \OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type::class =&gt; null, \OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class =&gt; null, \OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\ArrayType::class =&gt; null]</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
             </section>
 
         
@@ -301,6 +355,49 @@ if the filter does not exist.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getWrappedObject">
+        getWrappedObject()
+        <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_getWrappedObject" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">106</span>
+
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getWrappedObject</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Doctrine\ORM\EntityManagerInterface">EntityManagerInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Doctrine\ORM\EntityManagerInterface">EntityManagerInterface</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The wrapped entity manager.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setFilterEnabled">
         setFilterEnabled()
         <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled" class="headerlink"><i class="fas fa-link"></i></a>
@@ -309,9 +406,9 @@ if the filter does not exist.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Toggle a filter without triggering an exception from the FilterCollection
@@ -348,31 +445,26 @@ if the filter does not exist.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_setFilterEnabled_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">example</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>&quot;EntitySerializer/EnititySerializer.php&quot; 174 4 Enable the filter and remember its state.</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">example</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>&quot;EntitySerializer/EnititySerializer.php&quot; 174 4 Enable the filter and remember its state.</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">example</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>&quot;EntitySerializer/EnititySerializer.php&quot; 331 3 Reset the filter to its remembered state.</p>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>&quot;EntitySerializer/EnititySerializer.php&quot; 331 3 Reset the filter to its remembered state.</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -400,9 +492,9 @@ if the filter does not exist.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add a basic set of filters to ensure consistent naming.</p>
@@ -440,6 +532,42 @@ by the chosen filter name.</p>
 
             </section>
 
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_registerTypes">
+        registerTypes()
+        <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_registerTypes" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php"><a href="files/php-toolkit-doctrine-orm-abstractentitymanager.html"><abbr title="php-toolkit/Doctrine/ORM/AbstractEntityManager.php">AbstractEntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">116</span>
+
+            <a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/php-toolkit/Doctrine/ORM/AbstractEntityManager.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Register the needed additional DBAL types.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">registerTypes</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
 </article>
             </section>
 
@@ -557,6 +685,7 @@ by the chosen filter name.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_BASE_FILTER_SET">BASE_FILTER_SET</a></li>
                                                     <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_SOFT_DELETEABLE_FILTER">SOFT_DELETEABLE_FILTER</a></li>
+                                                    <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#constant_DBAL_TYPES">DBAL_TYPES</a></li>
                                             </ul>
                 </li>
             
@@ -564,8 +693,10 @@ by the chosen filter name.</p>
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_getWrappedObject">getWrappedObject()</a></li>
                                             <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_setFilterEnabled">setFilterEnabled()</a></li>
                                             <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_filterConfiguration">filterConfiguration()</a></li>
+                                            <li class=""><a href="classes/OCA-RotDrop-Toolkit-Doctrine-ORM-AbstractEntityManager.html#method_registerTypes">registerTypes()</a></li>
                                     </ul>
             </li>
                     </ul>

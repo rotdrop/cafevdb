@@ -1,0 +1,28 @@
+var class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider =
+[
+    [ "__construct", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aa3e1104912f42060e2134e04e71d1b57", null ],
+    [ "atMost", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a969de138644d7a7d78786ba0ea1e6bc2", null ],
+    [ "cloudConfigGet", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ac939b88db4bcc874760a03947ce54a9a", null ],
+    [ "create", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6", null ],
+    [ "createStub", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5", null ],
+    [ "doDeleteUserValue", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4ec4e3a55ac1b405ed75bdd1e97d686c", null ],
+    [ "doGetUserKeys", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ab535adb809a7921f88122e4b9f2d7d8f", null ],
+    [ "doGetUserValue", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0c3ebddc73a4b940a6ff5d70aac4af66", null ],
+    [ "doSetUserValue", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2e2840dd5076d13ba1514f1e95ebf656", null ],
+    [ "getAppContainer", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6", null ],
+    [ "getCloudConfig", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8", null ],
+    [ "getCloudUserConfig", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a65f835eff19c744118054eb15caddcfc", null ],
+    [ "getCredentialsStore", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#addd04f3fc8eb70ae817407b6fc5a6d4d", null ],
+    [ "getLoggerInterface", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#af3eb844578a5afcee8733bd2c40bf18d", null ],
+    [ "getMockBuilder", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aaced7a70d8c7067b23ae830fdaf53e31", null ],
+    [ "getMockedServices", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a08aec20aab75823aa9fe4bd70fb1e9d1", null ],
+    [ "getRequest", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#adf1a35ad20e475c59cc0967d5764aa22", null ],
+    [ "getSession", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aefa4c5bd150e2a7d525576d7959c6911", null ],
+    [ "getUser", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ae81b7186fb97a7c6457edcc68c9aa2ef", null ],
+    [ "getUserSession", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a8e80f766c9aa0f817b358aa67422985a", null ],
+    [ "isServiceMocked", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aab7cec7e9237ebd81bdec386355f15f1", null ],
+    [ "never", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a5f3c11b90fed1f1f1cd123af8f802285", null ],
+    [ "registerClassInstance", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#af1591c93ce4aabee288af5462640e139", null ],
+    [ "registerService", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c", null ],
+    [ "registerServices", "class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a68257d7bf27c2c66a2475ec9cd5f5a0a", null ]
+];

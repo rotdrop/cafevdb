@@ -1,0 +1,10 @@
+<map id="__doGetUserValue" name="__doGetUserValue">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,136,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="204,5,282,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,32,192,26,187,27,137,37"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafb7ca562b90572adc1fbd5bef8d8c3f" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="184,56,302,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,51,171,58,166,59,136,56"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="350,31,450,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="282,22,338,33,332,34,282,28"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="302,57,332,55,337,54,303,62"/>
+</map>

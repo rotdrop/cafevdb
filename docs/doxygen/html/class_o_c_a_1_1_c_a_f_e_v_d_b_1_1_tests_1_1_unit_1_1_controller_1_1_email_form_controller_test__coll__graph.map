@@ -1,0 +1,11 @@
+<map id="EmailFormControllerTest" name="EmailFormControllerTest">
+<area shape="rect" id="Node000001" title="Test the EmailFormController class." alt="" coords="69,180,235,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,116,140,178,135,181,68,121"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="107,81,197,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,122,154,181,150,179,150,125"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="109,5,195,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="153,45,155,82,149,80,151,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html" title="General support service, kind of inconsequent glue between Doctrine\ORM and CAFEVDB\PageRenderer." alt="" coords="222,81,328,108"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="249,118,169,182,167,177,244,118"/>
+</map>

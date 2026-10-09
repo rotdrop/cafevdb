@@ -1,5 +1,11 @@
 <map id="getUserIdSlug" name="getUserIdSlug">
-<area shape="rect" id="Node000001" title="Get userIdSlug." alt="" coords="232,21,336,48"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a4e07b4cc97e0f2d0fcf7a543a86c2dc6" title="Ensure that the encryptionContext contains the user&#45;id of the given musician." alt="" coords="5,5,184,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,37,184,37,184,32,216,32"/>
+<area shape="rect" id="Node000001" title="Get userIdSlug." alt="" coords="280,145,384,172"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#a3acb73a4dc53e0791bc7267bd0707ce7" title="Ensure that the musicain indeed has a user&#45;id&#45;slug." alt="" coords="22,5,215,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,135,271,107,230,78,209,67,209,62,233,74,274,103,310,135"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#aa49aa3e75ce083758ad6632d79473e2c" title="As a last resort generate a &quot;disabled&quot; email address pointing back to the orchestra from the user&#45;id ..." alt="" coords="5,88,232,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="262,146,232,142,232,137,267,145"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a15130674a8f4af5d90b7befb0d9e3084" title="More leight&#45;weight construction of the participant folder, assuming everything else is just is ok." alt="" coords="21,171,216,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,173,217,184,215,179,267,171"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a602722ca61e5d183420edd5d3cda37a5" title="Ensure that the encryptionContext contains the user&#45;id of the given musician." alt="" coords="29,253,208,312"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="309,181,274,215,233,244,209,256,207,251,230,239,271,210,305,184"/>
 </map>

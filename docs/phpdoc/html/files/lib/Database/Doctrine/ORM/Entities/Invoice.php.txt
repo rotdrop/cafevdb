@@ -28,8 +28,10 @@ use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
@@ -101,8 +103,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
-  private RationalNumber $amount;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: false, options: ['default' => '0.00'])]
+  private MonetaryNumberType $amount;
 
   /**
    * This should be set to the date of the actual sending out of the invoice.
@@ -140,7 +142,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * There may be an associated debit-note. If so: this it is.
    */
-  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, fetch: 'EXTRA_LAZY')]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private ?SepaBulkTransaction $sepaTransaction = null;
 
@@ -149,7 +151,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, fetch: 'EXTRA_LAZY')]
   private ?SepaBankAccount $sepaBankAccount = null;
 
   /**
@@ -157,7 +159,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, fetch: 'EXTRA_LAZY')]
   private ?SepaDebitMandate $sepaDebitMandate = null;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
@@ -226,11 +228,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @param int|float|string|RationalNumber $amount
    *
-   * @return ProjectPayment
+   * @return self
    */
-  public function setAmount(int|float|string|RationalNumber $amount):Invoice
+  public function setAmount(int|float|string|RationalNumber $amount): self
   {
-    $this->amount = RationalNumber::create($amount);
+    $this->amount = MonetaryNumberType::create($amount);
 
     return $this;
   }
@@ -238,9 +240,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function getAmount():RationalNumber
+  public function getAmount(): MonetaryNumberType
   {
     return $this->amount;
   }
@@ -249,13 +251,13 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function sumInvoiceItemsAmount():RationalNumber
+  public function sumInvoiceItemsAmount(): MonetaryNumberType
   {
     return $this->invoiceItems->reduce(
-      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 

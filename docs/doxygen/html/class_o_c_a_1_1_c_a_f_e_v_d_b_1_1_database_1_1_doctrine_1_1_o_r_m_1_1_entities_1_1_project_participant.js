@@ -1,6 +1,7 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant =
 [
     [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "addParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a9f463f9fad9b1264ecb49d1a247b2e2b", null ],
     [ "addProjectInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81", null ],
     [ "getDatabaseDocuments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0b1419c6b65bf1de5c4443e07ecd22c5", null ],
     [ "getInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a4a18c0abbf6628848d2c3b8c48fbca19", null ],
@@ -19,6 +20,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "inUse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432", null ],
     [ "isOnlyAssociated", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e", null ],
     [ "isOnlyMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348", null ],
+    [ "removeParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a3729b7b43dc906c8eb18910937134e06", null ],
     [ "removeProjectInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#afb93799095b3938fd9a48bbc6ad10916", null ],
     [ "setDatabaseDocuments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aa3dc79bf58096d6a89838bbb60637342", null ],
     [ "setInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acc6484678c39494291ceb717748a5fea", null ],

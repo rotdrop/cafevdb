@@ -348,7 +348,7 @@ class DonationReceipts extends PMETableViewBase
       [
         'name' => $this->l->t('Musician'),
         'tab'  => [ 'id' => 'tab-all' ],
-        'css' => [ 'postfix' => [ 'musician-id', 'allow-empty', ], ],
+        'css' => [ 'postfix' => [ 'musician-id', CssClasses::ALLOW_EMPTY, ], ],
         'sql' => static::musicianPublicNameSql(),
         'select|AFL' => 'D',
         'select|CVD' => 'T',
@@ -416,7 +416,7 @@ class DonationReceipts extends PMETableViewBase
         'name'         => $this->l->t('Payment Id'),
         'name|ACFLP'   => $this->l->t('Payment'),
         'tab'          => [ 'id' => 'payment', ],
-        'css'          => [ 'postfix' => [ 'composite-payment-id', 'allow-empty', ], ],
+        'css'          => [ 'postfix' => [ 'composite-payment-id', CssClasses::ALLOW_EMPTY, ], ],
         'select|FL'       => 'T',
         'select|ACP' => 'D',
         'align'        => 'right',
@@ -470,7 +470,7 @@ class DonationReceipts extends PMETableViewBase
       [
         'tab' => [ 'id' => 'payment', ],
         'name' => $this->l->t('Subject'),
-        'css'  => [ 'postfix' => [ 'composite-payment-subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+        'css'  => [ 'postfix' => [ 'composite-payment-subject', CssClasses::SQUEEZE_SUBSEQUENT_LINES, CssClasses::CLIP_LONG_TEXT, ], ],
         'sql|LFVD' => 'REPLACE($join_col_fqn, \'; \', \'<br/>\')',
         'select' => 'T',
         'input' => 'R',
@@ -480,7 +480,7 @@ class DonationReceipts extends PMETableViewBase
         'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
         'size' => FinanceService::SEPA_PURPOSE_LENGTH,
         'textarea|ACP' => [
-          'css' => 'constrained',
+          'css' => CssClasses::CONSTRAINED,
           'rows' => 4,
           'cols' => 35,
         ],
@@ -572,7 +572,7 @@ class DonationReceipts extends PMETableViewBase
       [
         'name' => $this->l->t('Project'),
         'tab'  => [ 'id' => 'payment' ],
-        'css' => [ 'postfix' => [ 'project-id', 'allow-empty', ], ],
+        'css' => [ 'postfix' => [ 'project-id', CssClasses::ALLOW_EMPTY, ], ],
         'sql' => '$join_table.name',
         'select|AFL' => 'D',
         'select|CVD' => 'T',
@@ -684,7 +684,7 @@ class DonationReceipts extends PMETableViewBase
         return '<div class="flex-container">
 '
           . $filesAppLink
-          . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
+          . '<a class="download-link ajax-download tooltip-auto inline-block ' . CssClasses::CLIP_LONG_TEXT. '"
    title="' . $this->toolTipsService['page-renderer:donation-receipts:written-notice'] . '"
    href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';

@@ -1,11 +1,11 @@
 <map id="ProjectEvent" name="ProjectEvent">
 <area shape="rect" id="Node000001" title="ProjectEvents." alt="" coords="240,80,337,107"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html" title="Event fired after project deletion." alt="" coords="5,155,175,181"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,115,126,157,124,152,239,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,113,126,157,124,152,238,111"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html" title="Fired before the project is actually deleted or soft&#45;deleted." alt="" coords="199,155,378,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="291,122,291,154,286,154,286,122"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="291,121,291,156,287,153,287,124"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_created_event.html" title="Event fired after project creation." alt="" coords="403,155,545,181"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="336,110,442,152,440,157,334,115"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="335,110,444,154,439,154,334,115"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="240,5,337,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,48,291,80,286,80,286,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="290,46,291,81,286,78,287,50"/>
 </map>

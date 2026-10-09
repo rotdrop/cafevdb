@@ -1,0 +1,7 @@
+<map id="EventsServicePersistenceTest" name="EventsServicePersistenceTest">
+<area shape="rect" id="Node000001" title="Test aspects of the EventsService which need a real database in the background." alt="" coords="5,104,206,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="10,5,87,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,43,101,103,96,104,62,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html" title="Events and tasks handling." alt="" coords="111,5,217,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,45,115,106,111,102,146,46"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="subscribeParticipant" name="subscribeParticipant">
+<area shape="rect" id="Node000001" title="Subscribe the given participant to the given option, that is, generate an empty data&#45;item for this op..." alt="" coords="5,112,145,139"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="198,5,400,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,109,192,74,210,69,205,72,194,78,110,114"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ae1c802a41e9a90cf2b9bb1c4fcb84566" title="Get participantFieldsData." alt="" coords="193,88,405,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,123,180,124,175,126,146,128"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="203,187,394,245"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,137,194,172,210,181,205,181,192,177,108,142"/>
+</map>

@@ -31,6 +31,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database =
     [ "getLegacyInvoiceFolderName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a168ecff4ad5c627696fa6ef67d6dd1b7", null ],
     [ "getLegacyPaymentRecordFileName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#abc612d1aeaa6d7c79657d9779a4e4d79", null ],
     [ "getLegacyTaxExemptionNoticeFileName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ae658a69cbfa4630cc5afaf1e6922773c", null ],
+    [ "getLiabilitiesFolderName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#adde69a9f6d06f0821d6285501fa44115", null ],
     [ "getPaymentRecordFileName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a02900d93ebdfb87033beec6a4062100f", null ],
     [ "getReceivablesFolderName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a3705793e74052e05461d75092eaf5cc3", null ],
     [ "getSupportingDocumentsFolderName", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76", null ],

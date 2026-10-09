@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -163,19 +167,19 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html#constant_TRANSACTIONAL">TRANSACTIONAL</a>
     <span>
-        &nbsp;= false                            </span>
+        &nbsp;: mixed&nbsp;= false                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version19700101000003.html#constant_CREATE_FUNCTION_PREFIX">CREATE_FUNCTION_PREFIX</a>
     <span>
-        &nbsp;= &#039;CREATE OR REPLACE FUNCTION&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;CREATE OR REPLACE FUNCTION&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version19700101000003.html#constant_FUNCTIONS">FUNCTIONS</a>
     <span>
-        &nbsp;= [&#039;BIN_TO_UUID&#039; =&gt; &quot;(`b` BINARY(16), `f` BOOLEAN) RETURNS char(36) CHARSET ascii COLLATE ascii_general_ci\n    NO SQL\n    DETERMINISTIC\nBEGIN\n  DECLARE hexStr CHAR(32);\n  SET hexStr = HEX(b);\n  RETURN LOWER(CONCAT(\n           IF(f,SUBSTR(hexStr, 9, 8),SUBSTR(hexStr, 1, 8)), &#039;-&#039;,\n           IF(f,SUBSTR(hexStr, 5, 4),SUBSTR(hexStr, 9, 4)), &#039;-&#039;,\n           IF(f,SUBSTR(hexStr, 1, 4),SUBSTR(hexStr, 13, 4)), &#039;-&#039;,\n           SUBSTR(hexStr, 17, 4), &#039;-&#039;,\n           SUBSTR(hexStr, 21)\n        ));\nEND&quot;, &#039;BIN2UUID&#039; =&gt; &quot;(`b` BINARY(16)) RETURNS char(36) CHARSET ascii COLLATE ascii_general_ci\n    NO SQL\n    DETERMINISTIC\nBEGIN\n  RETURN BIN_TO_UUID(b, 0);\nEND&quot;, &#039;UUID_TO_BIN&#039; =&gt; &quot;(`uuid` CHAR(36), `f` BOOLEAN) RETURNS binary(16)\n    NO SQL\n    DETERMINISTIC\nBEGIN\n  RETURN UNHEX(CONCAT(\n  IF(f,SUBSTRING(uuid, 15, 4),SUBSTRING(uuid, 1, 8)),\n  SUBSTRING(uuid, 10, 4),\n  IF(f,SUBSTRING(uuid, 1, 8),SUBSTRING(uuid, 15, 4)),\n  SUBSTRING(uuid, 20, 4),\n  SUBSTRING(uuid, 25))\n  );\nEND&quot;, &#039;UUID2BIN&#039; =&gt; &quot;(`uuid` CHAR(36)) RETURNS binary(16)\n    NO SQL\n    DETERMINISTIC\nBEGIN\n  RETURN UUID_TO_BIN(uuid, 0);\nEND&quot;, &#039;EXPLODE&#039; =&gt; &quot;(`delimiters` VARCHAR(12), `inputString` TEXT, `position` INT) RETURNS text CHARSET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci\n    NO SQL\n    DETERMINISTIC\nRETURN\n    REPLACE(\n      SUBSTRING(\n        SUBSTRING_INDEX(`inputString`, `delimiters`, `position`),\n        LENGTH(SUBSTRING_INDEX(`inputString`, `delimiters`, `position` - 1)) + 1\n      ),\n      `delimiters`,\n      &#039;&#039;\n    )&quot;]                            </span>
+        &nbsp;: mixed&nbsp;= [&#039;BIN_TO_UUID&#039; =&gt; &quot;(`b` BINARY(16), `f` BOOLEAN...                            </span>
 </dt>
 
     </dl>
@@ -190,7 +194,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_appContainer">$appContainer</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+                        &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -386,7 +390,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
 
@@ -504,7 +508,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -521,7 +525,7 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

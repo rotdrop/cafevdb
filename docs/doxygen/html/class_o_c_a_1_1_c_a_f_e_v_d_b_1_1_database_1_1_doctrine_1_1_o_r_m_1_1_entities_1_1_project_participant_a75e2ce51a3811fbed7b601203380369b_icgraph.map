@@ -1,7 +1,9 @@
 <map id="getParticipationContext" name="getParticipationContext">
-<area shape="rect" id="Node000001" title="Return the participation context of the participant." alt="" coords="249,75,406,101"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="5,5,201,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,74,200,65,201,60,244,68"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="14,104,192,163"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,108,193,118,192,113,242,102"/>
+<area shape="rect" id="Node000001" title="Return the participation context of the participant." alt="" coords="629,75,786,101"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="386,5,581,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="621,71,581,65,581,60,626,71"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="394,104,572,163"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="626,105,573,118,572,113,621,105"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entitiedcb14ed77267e2e196739be35c28a3b1.html#a9e28985ed9c16b1c110872794f31d288" title=" " alt="" coords="5,5,338,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="367,43,338,45,338,40,373,42"/>
 </map>

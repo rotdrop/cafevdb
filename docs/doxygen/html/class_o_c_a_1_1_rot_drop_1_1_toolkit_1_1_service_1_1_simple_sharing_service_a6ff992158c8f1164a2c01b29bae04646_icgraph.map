@@ -1,0 +1,9 @@
+<map id="getShareFromUrl" name="getShareFromUrl">
+<area shape="rect" id="Node000001" title=" " alt="" coords="203,56,323,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html#a4ea852c7ae1a03ec58ca838c2742cc96" title="Delete the given share." alt="" coords="23,5,137,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,52,131,35,131,30,200,50"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html#a773c8f077136b3f2aaa7821a3591292f" title="Expire just the given share." alt="" coords="23,56,137,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,70,138,72,137,67,190,68"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html#a54210d9814eb8b2a8a0c12b5ff0cf438" title=" " alt="" coords="5,107,155,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="200,87,132,109,130,103,195,88"/>
+</map>

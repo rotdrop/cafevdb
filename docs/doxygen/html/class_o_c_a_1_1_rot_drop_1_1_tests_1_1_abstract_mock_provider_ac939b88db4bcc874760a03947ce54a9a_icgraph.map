@@ -1,0 +1,14 @@
+<map id="cloudConfigGet" name="cloudConfigGet">
+<area shape="rect" id="Node000001" title="Callback hook for the mocked cloud&#45;config class." alt="" coords="357,22,468,49"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ab535adb809a7921f88122e4b9f2d7d8f" title="Return the available user preferences keys for the given user." alt="" coords="194,73,308,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="356,53,297,75,295,69,351,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title="Mock the cloud config provider." alt="" coords="19,22,131,49"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="348,18,309,12,251,8,193,12,129,24,128,19,192,7,251,3,309,7,353,17"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0c3ebddc73a4b940a6ff5d70aac4af66" title="Get faked user preferences." alt="" coords="193,22,309,49"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="339,35,309,38,309,33,344,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="184,68,124,52,124,46,190,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a65f835eff19c744118054eb15caddcfc" title="Mock the cloud user config provider." alt="" coords="5,73,145,99"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="175,86,145,89,145,83,181,86"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="175,36,131,38,131,33,180,34"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="190,53,125,74,123,69,184,54"/>
+</map>

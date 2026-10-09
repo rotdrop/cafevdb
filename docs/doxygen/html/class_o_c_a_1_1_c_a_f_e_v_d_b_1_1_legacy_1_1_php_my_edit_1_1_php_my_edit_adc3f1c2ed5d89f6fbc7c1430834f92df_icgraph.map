@@ -1,0 +1,17 @@
+<map id="substituteVars" name="substituteVars">
+<area shape="rect" id="Node000001" title="Substitutes variables in string (this is very simple but secure eval() replacement)." alt="" coords="574,81,678,108"/>
+<area shape="poly" id="edge8_Node000001_Node000001" title=" " alt="" coords="653,66,645,62,626,60,608,62,599,67,597,72,601,82,596,80,591,73,595,63,607,57,626,55,646,57,658,67"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a42ed7f2383e253357b1355d60150fff5" title="Generate the field&#45;description SQL part." alt="" coords="386,5,526,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="577,74,487,35,488,30,583,74"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#aed1b50c8c16937db335f1d22ecaf41d1" title="Generate the query code for one field." alt="" coords="182,56,221,83"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="556,102,424,110,346,107,268,97,221,81,221,76,270,92,346,102,424,105,561,101"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#ad7818a8e551fddf2b45ccabf9536f070" title="Substitute placeholders in sql field:" alt="" coords="269,56,338,83"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="556,90,339,75,339,69,561,88"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a482a819ad3cc5aba496757b33cf3c574" title="Print URL." alt="" coords="416,157,496,184"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="582,114,489,159,487,154,577,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="369,27,270,47,222,63,220,58,268,41,374,25"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="397,38,339,60,338,55,402,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a2175ab9fcaf0327806ba3eeee525b695" title=" " alt="" coords="5,56,134,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="164,70,135,72,134,67,169,68"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="251,70,222,72,221,67,256,69"/>
+</map>

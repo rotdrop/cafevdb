@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,34 +42,44 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Id]
   protected WebBrowserHistoryState $state;
 
-  #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false, options: ['unsigned' => true])]
+  #[ORM\Column(type: 'integer', length: 20, nullable: false, options: ['unsigned' => true])]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
-  protected string $key;
+  protected int $position;
 
   #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
   protected string $path;
 
-  /** @var Collection<WebBrowserHistoryData> */
+  /**
+   * @var array<string, mixed>
+   *
+   * Opaque window history state.
+   */
+  #[ORM\Column(type: 'json', nullable: false, options: ['default' => '{}'])]
+  protected array $windowHistoryState;
+
+  /** @var WebBrowserHistoryData */
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
   #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries', fetch: 'EXTRA_LAZY')]
   protected WebBrowserHistoryData $data;
 
   /** {@inheritdoc} */
   public function __construct(
-    ?string $key = null,
+    ?int $position = null,
     ?WebBrowserHistoryState $state = null,
     ?string $path = null,
     ?WebBrowserHistoryData $data = null,
+    ?array $windowHistoryState = null,
   ) {
-    $key && $this->key = $key;
+    $position && $this->position = $position;
     $state && $this->state = $state;
     $path && $this->path = $path;
     $data && $this->setData($data);
+    $windowHistoryState && $this->windowHistoryState = $windowHistoryState;
   }
 
   /** @return WebBrowserHistoryState */
-  public function getState():WebBrowserHistoryState
+  public function getState(): WebBrowserHistoryState
   {
     return $this->state;
   }
@@ -79,33 +89,33 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setState(WebBrowserHistoryState $state):WebBrowserHistoryEntry
+  public function setState(WebBrowserHistoryState $state): WebBrowserHistoryEntry
   {
     $this->state = $state;
 
     return $this;
   }
 
-  /** @return null|string */
-  public function getKey():?string
+  /** @return ?int */
+  public function getPosition(): ?int
   {
-    return $this->key ?? null;
+    return $this->position ?? null;
   }
 
   /**
-   * @param string $key
+   * @param ?int $position
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setKey(string $key):WebBrowserHistoryEntry
+  public function setPosition(?int $position): WebBrowserHistoryEntry
   {
-    $this->key = $key;
+    $this->position = $position;
 
     return $this;
   }
 
   /** @return string */
-  public function getPath():string
+  public function getPath(): string
   {
     return $this->path;
   }
@@ -115,7 +125,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setPath(string $path):WebBrowserHistoryEntry
+  public function setPath(string $path): WebBrowserHistoryEntry
   {
     $this->path = $path;
 
@@ -123,7 +133,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return WebBrowserHistoryData */
-  public function getData():WebBrowserHistoryData
+  public function getData(): WebBrowserHistoryData
   {
     return $this->data;
   }
@@ -133,7 +143,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setData(WebBrowserHistoryData $data):WebBrowserHistoryEntry
+  public function setData(WebBrowserHistoryData $data): WebBrowserHistoryEntry
   {
     $this->data = $data;
     $data->addToEntry($this);
@@ -142,9 +152,27 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return string */
-  public function getDataHash():string
+  public function getDataHash(): string
   {
     return $this->data->getHash();
+  }
+
+  /** @return array */
+  public function getWindowHistoryState(): array
+  {
+    return $this->windowHistoryState;
+  }
+
+  /**
+   * @param array $windowHistoryState
+   *
+   * @return WebBrowserHistoryEntry
+   */
+  public function setWindowHistoryState(array $windowHistoryState): WebBrowserHistoryEntry
+  {
+    $this->windowHistoryState = $windowHistoryState;
+
+    return $this;
   }
 
   /**

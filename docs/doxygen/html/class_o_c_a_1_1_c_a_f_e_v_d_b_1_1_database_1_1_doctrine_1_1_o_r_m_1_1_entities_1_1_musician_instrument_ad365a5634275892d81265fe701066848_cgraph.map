@@ -1,0 +1,9 @@
+<map id="setInstrument" name="setInstrument">
+<area shape="rect" id="Node000001" title="Set instrument." alt="" coords="5,31,107,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a4bd64e7e15548294c0162046ca408172" title="Update indexed associations." alt="" coords="155,31,291,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,41,142,43,137,45,107,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="339,5,440,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,31,326,28,321,29,292,36"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="344,56,435,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="292,52,331,60,326,60,291,57"/>
+</map>

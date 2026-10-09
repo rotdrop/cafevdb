@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine  <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2024, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -111,6 +111,10 @@ class BankTransactionsStorage extends Storage
       $this->entityManager->beginTransaction();
     }
     try {
+      $rootFolder = $this->getRootFolder(create: true);
+      if (empty($rootFolder)) {
+        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
+      }
       $year = $transaction->getCreated()->format('Y');
       $yearFolder = $this->rootFolder->getFolderByName($year);
       if (empty($yearFolder)) {

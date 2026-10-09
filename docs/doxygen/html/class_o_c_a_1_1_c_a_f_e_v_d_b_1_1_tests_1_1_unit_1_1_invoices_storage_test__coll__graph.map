@@ -1,0 +1,9 @@
+<map id="InvoicesStorageTest" name="InvoicesStorageTest">
+<area shape="rect" id="Node000001" title="Test aspects of the invoices storage." alt="" coords="5,180,146,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="16,81,93,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,121,75,180,70,180,58,125"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="117,81,239,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,119,90,182,87,178,151,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="130,5,226,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,45,181,82,176,80,177,49"/>
+</map>

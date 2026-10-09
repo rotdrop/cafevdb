@@ -1,0 +1,7 @@
+<map id="TransliteratorTest" name="TransliteratorTest">
+<area shape="rect" id="Node000001" title="Test the LoginNameSlug\generate() function." alt="" coords="39,104,161,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,43,95,103,90,104,57,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator.html" title="Transliterate any given name into an ASCII login name." alt="" coords="107,5,205,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,45,109,105,105,102,139,46"/>
+</map>

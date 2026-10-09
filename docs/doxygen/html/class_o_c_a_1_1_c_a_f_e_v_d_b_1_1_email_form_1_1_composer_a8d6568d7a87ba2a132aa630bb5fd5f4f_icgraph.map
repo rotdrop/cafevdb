@@ -1,25 +1,25 @@
 <map id="executionStatus" name="executionStatus">
 <area shape="rect" id="Node000001" title=" " alt="" coords="402,208,517,235"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#add8504b52466d3419381680a483a652f" title="Take the supplied message and copy it to the &quot;Sent&quot; folder." alt="" coords="199,5,325,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="446,195,411,124,385,86,352,53,320,35,323,30,356,49,389,82,416,121,451,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="446,193,411,124,385,86,352,53,322,35,321,30,356,49,389,82,416,121,451,194"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a4dfa28837b25f75555b35e1fb69d6fc2" title="Delete the given or current message draft." alt="" coords="21,81,106,108"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="443,196,408,142,383,117,353,97,322,85,289,78,222,73,159,78,107,87,106,81,158,72,222,68,290,73,323,80,355,92,386,112,412,139,448,193"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="443,194,408,142,383,117,353,97,322,85,289,78,222,73,159,78,108,86,105,82,158,72,222,68,290,73,323,80,355,92,386,112,412,139,448,195"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ab1086dcea02fd293a5b40f89c685f1af" title="Detach temporaries from a draft, i.e." alt="" coords="187,107,336,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="430,200,395,173,353,148,324,136,326,131,355,143,398,168,434,196"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="429,198,395,173,353,148,325,137,325,131,355,143,398,168,435,198"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a09b451e02c3719a4a66cc56ac4c2edea" title=" " alt="" coords="219,157,304,184"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="389,206,304,184,306,179,390,201"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="387,204,305,184,305,179,392,203"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a6dfede44ffd8068052baa8a06ad05260" title="Forget a temporary file, i.e." alt="" coords="194,208,330,235"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="386,224,331,224,331,219,386,219"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="384,222,331,224,330,219,389,220"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a82ee6dc3fe4830272788180d197340fd" title=" " alt="" coords="213,259,311,285"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="390,242,312,262,311,257,389,237"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a5764bbb364eac41ce21eeeec75f64e1b" title="Remember a temporary file." alt="" coords="181,309,342,336"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="434,247,398,274,355,300,326,311,324,306,353,295,395,270,430,243"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="387,240,312,262,311,257,392,238"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aff3752314b3d46511ec4a1df2e4f41c0" title="Remember a temporary file." alt="" coords="181,309,342,336"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="434,243,398,274,355,300,326,311,324,306,353,295,395,270,430,246"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3985e2723a7cdac4576e7163d9bfc943" title="Validate a comma separated list of email address from the Cc: or Bcc: input." alt="" coords="170,360,354,387"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="445,250,409,301,384,328,355,350,332,362,330,357,353,346,380,324,405,298,441,247"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="445,247,409,301,384,328,355,350,332,362,330,357,353,346,380,324,405,298,441,250"/>
 <area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a467acba2036c37acd425db67c68abcfa" title="Validates the given template, i.e." alt="" coords="202,411,322,437"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="452,251,438,285,418,326,390,366,356,401,323,417,321,412,352,397,386,363,413,323,433,283,447,249"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="171,111,106,103,107,97,172,106"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="451,248,438,285,418,326,390,366,356,401,323,417,321,412,352,397,386,363,413,323,433,283,447,251"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="170,110,108,103,106,98,174,107"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a9e1ded8474fe53124cbc5887bc2705cc" title="Handle file uploads." alt="" coords="5,259,122,285"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="193,242,119,261,118,255,191,237"/>
-<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="191,307,118,289,119,283,193,302"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="190,241,120,260,117,256,194,237"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="190,306,119,289,118,283,194,304"/>
 </map>

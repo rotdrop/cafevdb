@@ -41,6 +41,7 @@ var dir_8732a88a49b83212234194eaa7a5b67b =
     [ "SepaBulkTransactionAnnouncedListener.php", "_sepa_bulk_transaction_announced_listener_8php_source.html", null ],
     [ "SepaBulkTransactionEntityListener.php", "_sepa_bulk_transaction_entity_listener_8php_source.html", null ],
     [ "SepaBulkTransactionSubmittedListener.php", "_sepa_bulk_transaction_submitted_listener_8php_source.html", null ],
+    [ "ShareDeletedEventListener.php", "_share_deleted_event_listener_8php_source.html", null ],
     [ "SubAdminEventListener.php", "_sub_admin_event_listener_8php_source.html", null ],
     [ "TranslationNotFoundListener.php", "_translation_not_found_listener_8php_source.html", null ],
     [ "UserLoggedInEventListener.php", "_user_logged_in_event_listener_8php_source.html", null ],

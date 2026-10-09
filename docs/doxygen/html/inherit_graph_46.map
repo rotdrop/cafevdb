@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html" title="Handle some encryption tasks:" alt="" coords="5,5,133,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,114,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_console_1_1_console_output.html" title="Just kind of a wrapper for a singleton console output through the app&#45;container." alt="" coords="162,5,270,32"/>
+<area shape="poly" id="edge272_Node000000_Node000001" title=" " alt="" coords="129,30,164,27,159,28,130,35"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_console_1_1_console_output.html" title="Just kind of a wrapper for a singleton console output through the app&#45;container." alt="" coords="162,56,270,83"/>
+<area shape="poly" id="edge273_Node000000_Node000002" title=" " alt="" coords="129,53,164,60,159,61,129,58"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="RationalNumber" name="RationalNumber">
+<area shape="rect" id="Node000001" title="Rational numbers, exact fractions." alt="" coords="41,80,156,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,75,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,42,91,79,86,80,59,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,5,216,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,43,111,82,107,78,135,45"/>
+</map>

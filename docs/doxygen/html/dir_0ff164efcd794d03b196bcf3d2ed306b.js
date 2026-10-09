@@ -1,13 +1,12 @@
 var dir_0ff164efcd794d03b196bcf3d2ed306b =
 [
-    [ "AuthenticatedCommandTrait.php", "_command_2_authenticated_command_trait_8php_source.html", null ],
+    [ "AuthenticatedCommandTrait.php", "lib_2_command_2_authenticated_command_trait_8php_source.html", null ],
     [ "DatabaseSanitizers.php", "_database_sanitizers_8php_source.html", null ],
     [ "DatabaseStorage.php", "_command_2_database_storage_8php_source.html", null ],
     [ "ExecutiveBoard.php", "_executive_board_8php_source.html", null ],
     [ "FilesScan.php", "_files_scan_8php_source.html", null ],
     [ "GnuCashSetup.php", "_gnu_cash_setup_8php_source.html", null ],
     [ "HelloWorld.php", "_hello_world_8php_source.html", null ],
-    [ "Migrations.php", "_migrations_8php_source.html", null ],
     [ "ParticipantFolders.php", "_participant_folders_8php_source.html", null ],
     [ "ProjectEvents.php", "_project_events_8php_source.html", null ],
     [ "ProjectFolders.php", "_project_folders_8php_source.html", null ],

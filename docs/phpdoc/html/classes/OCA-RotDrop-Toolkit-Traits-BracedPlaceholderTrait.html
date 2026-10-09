@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\RotDrop\Toolkit\Traits\BracedPlaceholderTrait
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -109,9 +113,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/php-toolkit-traits-bracedplaceholdertrait.html"><abbr title="php-toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">35</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Trait implementing some braced placeholder substitutions.</p>
@@ -199,16 +203,16 @@ $template will be replaced by their respective array key.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/php-toolkit-traits-bracedplaceholdertrait.html"><abbr title="php-toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Replace braced placeholders in a template string.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">replaceBracedPlaceholders</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateValues</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">replaceBracedPlaceholders</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateValues</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -255,7 +259,7 @@ the value &quot;foo/bar/foobar&quot; would result in &quot;bar/foobar&quot;.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$templateValues</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>An array of replacement values:</p>
@@ -271,7 +275,7 @@ FILTER as format string with default 'c'.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$l10nTemplateKeys</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional translated keys as</p>
@@ -287,21 +291,20 @@ replacement array must not contain translated keys.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_replaceBracedPlaceholders_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                                     <span class="phpdocumentor-tag-link"><abbr title="\DateTimeInterface::format()">DateTimeInterface::format()</abbr></span>
-                                        
-                                             
+                                                                
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -325,9 +328,9 @@ replacement array must not contain translated keys.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/php-toolkit-traits-bracedplaceholdertrait.html"><abbr title="php-toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Translate the braced placeholders contained in the given $template to the
@@ -337,7 +340,7 @@ will be replaced by their respective array value.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">translateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">translateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -354,7 +357,7 @@ will be replaced by their respective array value.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$l10nTemplateKeys</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>If null, no replacement is performed
@@ -388,9 +391,9 @@ and the $template argument is return unchanged.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="php-toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/php-toolkit-traits-bracedplaceholdertrait.html"><abbr title="php-toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">179</span>
+    <span class="phpdocumentor-element-found-in__line">181</span>
 
-            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+            <a href="classes/OCA-RotDrop-Toolkit-Traits-BracedPlaceholderTrait.html#source-view.181" class="phpdocumentor-element-found-in__source" data-line="181" data-modal="source-view" data-src="files/php-toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Translate the braced placeholders contained in the given $template to the
@@ -400,7 +403,7 @@ $template will be replaced by their respective array key.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">untranslateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">untranslateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -417,7 +420,7 @@ $template will be replaced by their respective array key.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$l10nTemplateKeys</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>If null, no replacement is performed

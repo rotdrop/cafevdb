@@ -1,0 +1,15 @@
+<map id="enc" name="enc">
+<area shape="rect" id="Node000001" title="Wrapper around core htmlspecialchars; avoid double encoding, standard options." alt="" coords="178,132,220,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a810a1976ff6941d45de0361e05226aeb" title="Returns original variables HTML code for use in forms or links." alt="" coords="5,5,130,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,118,160,82,128,46,112,35,111,30,131,42,164,79,188,118"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a500b7151343b7cdeb648e2ae03be427c" title="Returns field cell HTML attributes." alt="" coords="10,56,125,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,123,128,97,107,86,106,81,131,92,172,121"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a2d6661583884bebf7ba6a945e2696775" title="Generate HTML attributes from the fdd values." alt="" coords="16,107,119,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,140,120,133,119,127,165,137"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a931e005341fe286825b41613fe2ab027" title="Creates HTML checkboxes or radio buttons." alt="" coords="8,157,127,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="160,154,128,162,126,157,165,151"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a231356ddc868145bc658a46b750402f5" title="Creates HTML select element (tag)." alt="" coords="26,208,109,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="168,170,131,198,108,210,105,205,128,194,172,167"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html#a482a819ad3cc5aba496757b33cf3c574" title="Print URL." alt="" coords="28,259,107,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="187,171,164,212,131,249,109,262,106,258,128,245,160,209,183,174"/>
+</map>

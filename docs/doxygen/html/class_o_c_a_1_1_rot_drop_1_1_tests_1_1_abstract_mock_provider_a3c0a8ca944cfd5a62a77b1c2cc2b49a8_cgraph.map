@@ -1,0 +1,19 @@
+<map id="getCloudConfig" name="getCloudConfig">
+<area shape="rect" id="Node000001" title="Mock the cloud config provider." alt="" coords="5,136,117,162"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ac939b88db4bcc874760a03947ce54a9a" title="Callback hook for the mocked cloud&#45;config class." alt="" coords="346,85,457,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,134,79,108,100,76,129,44,163,20,200,6,230,3,262,8,299,20,344,43,380,74,375,75,341,48,297,25,260,13,230,8,201,12,166,25,132,48,105,79,84,111,71,136"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4ec4e3a55ac1b405ed75bdd1e97d686c" title=" " alt="" coords="165,34,298,61"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="76,133,115,103,163,71,177,66,173,69,166,75,118,107,80,137"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#ab535adb809a7921f88122e4b9f2d7d8f" title="Return the available user preferences keys for the given user." alt="" coords="174,85,288,112"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="107,133,172,115,168,118,110,137"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0c3ebddc73a4b940a6ff5d70aac4af66" title="Get faked user preferences." alt="" coords="173,136,290,162"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="116,146,160,148,155,150,118,151"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2e2840dd5076d13ba1514f1e95ebf656" title="Set faked user preferences." alt="" coords="174,186,289,213"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="108,160,172,180,167,183,109,166"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#aaced7a70d8c7067b23ae830fdaf53e31" title=" " alt="" coords="176,237,287,264"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="78,160,118,191,166,223,178,230,172,230,163,227,115,195,78,165"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a5f3c11b90fed1f1f1cd123af8f802285" title="{}" alt="" coords="205,288,258,314"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="71,160,109,215,135,246,166,273,193,289,187,289,163,278,132,250,104,218,69,165"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="288,96,333,97,328,99,290,101"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="278,133,342,115,338,118,280,137"/>
+</map>

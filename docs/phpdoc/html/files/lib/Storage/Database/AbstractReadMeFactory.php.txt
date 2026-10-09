@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\L10N\AppL10N;
@@ -49,14 +49,14 @@ abstract class AbstractReadMeFactory implements ReadMeFactoryInterface
   protected ?array $readMeFileNames = null;
 
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param IL10N $l
    *
    * @param AppL10N $appL10n
    */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected AppL10N $appL10n,
   ) {

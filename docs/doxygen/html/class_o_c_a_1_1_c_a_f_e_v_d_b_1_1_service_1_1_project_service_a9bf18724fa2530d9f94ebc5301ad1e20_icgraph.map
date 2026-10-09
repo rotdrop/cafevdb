@@ -1,0 +1,5 @@
+<map id="replaceProjectNames" name="replaceProjectNames">
+<area shape="rect" id="Node000001" title="Replace occurrences of strings which look like a project&#45;name by the given new name." alt="" coords="248,21,394,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,200,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,35,200,37,200,32,235,34"/>
+</map>

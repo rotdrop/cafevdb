@@ -1,21 +1,28 @@
 <map id="substituteAnnouncementsMailingList" name="substituteAnnouncementsMailingList">
-<area shape="rect" id="Node000001" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="5,132,240,159"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="293,5,468,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,129,203,87,287,42,304,35,306,40,289,46,206,91,144,134"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="288,56,474,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,129,287,92,313,85,314,90,288,97,168,134"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a87e968763c59bd64b366af7d5a17598f" title=" " alt="" coords="300,107,462,133"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="240,131,284,127,284,132,240,136"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="322,157,440,184"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="240,154,306,161,306,166,240,160"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa04f6ab873de060b1658e33fefc6ece4" title=" " alt="" coords="302,208,460,235"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="168,157,288,193,314,201,313,206,287,199,167,162"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a85f86aca4c8ab5404203209c76241c7e" title=" " alt="" coords="315,259,447,285"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="144,157,206,199,289,244,306,251,304,256,287,249,203,204,141,161"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="522,56,681,83"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="474,67,506,67,506,72,474,72"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="566,157,637,184"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="443,131,552,157,551,162,442,137"/>
-<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="441,168,551,168,551,173,441,173"/>
-<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="441,256,473,244,523,218,567,191,570,195,526,223,475,249,443,261"/>
+<area shape="rect" id="Node000001" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="5,205,240,232"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="293,37,468,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,203,195,141,238,105,286,74,303,68,298,72,289,78,241,109,198,145,137,207"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="301,88,461,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,202,287,140,305,135,301,138,289,145,153,207"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="288,155,474,181"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="193,202,296,183,292,186,195,207"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a87e968763c59bd64b366af7d5a17598f" title=" " alt="" coords="300,205,462,232"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="239,216,286,218,281,220,241,221"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="322,256,440,283"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="194,230,309,254,304,256,194,235"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa04f6ab873de060b1658e33fefc6ece4" title=" " alt="" coords="302,307,460,333"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="150,230,213,260,289,292,311,302,306,302,287,297,211,265,150,235"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a85f86aca4c8ab5404203209c76241c7e" title=" " alt="" coords="315,357,447,384"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="138,230,201,285,243,316,289,343,305,352,300,351,286,348,240,320,198,289,137,235"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="526,5,715,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="451,85,514,67,509,70,453,90"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="522,88,719,131"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="461,115,509,118,504,119,462,120"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="519,101,477,103,476,98,524,100"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="541,155,700,181"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="474,165,528,167,523,169,475,171"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="586,256,656,283"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="448,230,573,258,567,259,448,235"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="440,267,572,269,567,270,440,272"/>
+<area shape="poly" id="edge14_Node000012_Node000009" title=" " alt="" coords="440,354,473,343,531,316,581,292,586,290,534,321,475,348,441,359"/>
 </map>

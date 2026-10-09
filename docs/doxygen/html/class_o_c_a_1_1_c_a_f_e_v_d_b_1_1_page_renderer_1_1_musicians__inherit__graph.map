@@ -1,18 +1,18 @@
 <map id="Musicians" name="Musicians">
 <area shape="rect" id="Node000001" title="Abstract table generator for Musicians table." alt="" coords="78,304,158,331"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html" title="Table generator for Musicians table." alt="" coords="5,379,109,405"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="100,344,70,380,66,377,96,341"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="100,342,69,380,66,376,95,343"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html" title="Table generator for Musicians table." alt="" coords="133,379,229,405"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="141,341,172,377,168,380,137,344"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="140,340,173,378,168,378,138,345"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="48,229,188,256"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,272,121,304,116,304,116,272"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,269,121,304,116,303,117,274"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="42,155,195,181"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,197,121,229,116,229,116,197"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,195,121,230,116,228,117,200"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="24,80,98,107"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="82,117,111,153,106,156,78,121"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,116,111,154,106,155,81,122"/>
 <area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="79,5,158,32"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="101,46,73,81,69,78,97,43"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="98,47,73,81,69,78,100,42"/>
 <area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="123,80,231,107"/>
-<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="140,43,169,78,165,81,136,46"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="159,121,131,156,126,153,155,117"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="138,42,170,79,164,80,138,47"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="156,121,131,156,126,153,159,117"/>
 </map>

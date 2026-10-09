@@ -1,18 +1,13 @@
 <map id="getArchiveInfo" name="getArchiveInfo">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,107,111,133"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a841a7efc4a56f2bc0e0175bb56411be2" title="Return a proposal for the extraction destination." alt="" coords="171,5,326,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,104,112,76,157,48,186,35,188,40,160,53,115,81,78,108"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="159,107,338,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,117,143,117,143,123,111,123"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="501,69,684,96"/>
-<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="104,104,158,92,244,83,331,78,486,76,486,82,331,83,244,88,159,97,105,109"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="512,132,673,159"/>
-<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="104,131,159,143,248,151,338,153,496,149,497,155,338,159,248,156,158,148,103,136"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="573,183,612,209"/>
-<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="87,132,121,146,159,159,272,179,385,190,485,194,558,194,558,200,485,199,385,195,272,185,158,164,119,151,85,136"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="386,107,453,133"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="338,117,371,117,371,123,338,123"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="453,110,512,97,513,103,454,115"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="454,122,497,129,497,134,453,128"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="441,131,469,150,502,168,559,187,557,192,500,173,466,155,438,136"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,113,111,140"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info.html#a03af6452b3ff02618dfef97106d6f30c" title="{}" alt="" coords="169,5,330,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,111,157,74,171,69,167,73,160,78,87,115"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="159,88,341,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,117,145,114,141,117,112,122"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="170,139,330,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="111,131,157,138,152,141,111,136"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a94aa2c3daa007c75e01ffa124a2d40dd" title=" " alt="" coords="170,189,330,232"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="85,138,160,175,175,183,170,183,158,180,84,143"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#adf6a2bd71ead887865ba3c5a1e6be731" title=" " alt="" coords="389,189,549,232"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="331,208,376,211,370,211,331,213"/>
 </map>

@@ -70,7 +70,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -78,12 +79,9 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration::class)]
@@ -119,6 +117,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Documents\OpenDocumentFiller::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Documents\TemplateService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
@@ -131,6 +131,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -141,21 +142,32 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260207000624::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094146::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094422::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819105948::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20261009150233::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\FilesCacheService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ImagesService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\OrganizationalRolesService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
@@ -164,9 +176,19 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AnyToPdf::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesFunction(\OCA\CAFEVDB\Common\Functions\strCmpEmptyLast::class)]
 #[Attributes\UsesFunction(\OCA\CAFEVDB\Common\Functions\strcat::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -183,6 +205,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 class ProjectAssociatesTest extends TestCase
 {
   use GetFormValuesTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
@@ -211,8 +234,7 @@ class ProjectAssociatesTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
-    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
+    self::enableDeprecations();
 
     $countInstruments = count(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::INSTRUMENTS);
     foreach (Entities\ProjectInstrument::NON_INSTRUMENTS as $nonInstrumentName) {
@@ -241,7 +263,7 @@ class ProjectAssociatesTest extends TestCase
         instrumentNames: Entities\ProjectInstrument::NON_INSTRUMENTS,
         voices: 0,
       );
-      $this->generateReceivable(persist: true, generator: DoNothingReceivablesGenerator::class);
+      $this->generateReceivable(persist: true, generatorClass: DoNothingReceivablesGenerator::class);
       $projectInstrument = $this->participant->getProjectInstruments()->first();
       self::$projectInstrumentId = $projectInstrument->getInstrument()->getId();
 
@@ -275,6 +297,7 @@ class ProjectAssociatesTest extends TestCase
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
     $userStorage = $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
 
     $projectService = new ProjectService(
       configService: $configService,
@@ -476,23 +499,19 @@ class ProjectAssociatesTest extends TestCase
     'PME_data_Musicians:cloud_account_disabled' => ['1'],
     'PME_data_ProjectParticipantFieldsDataOptions@1:label' => [
       'ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
-      '__generator__',
+      'Voreinstellung',
     ],
     'PME_data_ProjectParticipantFieldsData@1:option_value' => [
       '12.23',
-      '',
+      '1234',
     ],
-    'PME_data_ProjectParticipantFieldsData@1:option_key' =>
-    array (
-      0 => '2b826186-ef29-11f0-a81f-27218343fe72',
-      1 => '00000000-0000-0000-0000-000000000000',
-    ),
-    'recurringReceivablesUpdateStrategy' =>
-    array (
-      1 => 'exception',
-    ),
+    'PME_data_ProjectParticipantFieldsData@1:option_key' => [
+      '0c1eca68-bc3b-4d65-b80e-588ffbe0ca86',
+      '027db41d-4f5b-45be-a956-c70095dab48d',
+    ],
+    'recurringReceivablesUpdateStrategy' => [ 1 => 'exception' ],
     'PME_data_ProjectParticipantFieldsData@1:deleted' => '',
-    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '00000000-0000-0000-0000-000000000000:,2b826186-ef29-11f0-a81f-27218343fe72:',
+    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '027db41d-4f5b-45be-a956-c70095dab48d:,0c1eca68-bc3b-4d65-b80e-588ffbe0ca86:',
     'PME_data_MusicianEmailAddresses@all:address' => ['john.doe@nowhere.tld'],
     'PME_data_Musicians:email' => 'john.doe@nowhere.tld',
     'PME_data_Musicians:mobile_phone' => '0815',
@@ -518,6 +537,7 @@ class ProjectAssociatesTest extends TestCase
       '1-1-0',
     ],
     'PME_sys_reloadOuterForm' => '',
+    'PME_data_Musicians:cloud_account_deactivated' => [ '1' ],
   ];
 
   /** {@inheritdoc} */

@@ -24,21 +24,21 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /** Sluggable listener wrapper giving access to the app-container. */
 class GedmoSluggableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener
 {
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private IAppContainer $appContainer,
+    private ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }
   // phpcs:enable
 
-  /** @return IAppContainer */
-  public function getAppContainer():IAppContainer
+  /** @return ContainerInterface */
+  public function getAppContainer():ContainerInterface
   {
     return $this->appContainer;
   }

@@ -28,8 +28,10 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
+use OCA\CAFEVDB\Toolkit\Exceptions;
+use OCA\CAFEVDB\Toolkit\Middleware\ExceptionMiddleware;
 use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -41,7 +43,10 @@ require_once __DIR__ . '/../Service/AppInfoService.php';
  */
 abstract class AbstractApplication extends App implements IBootstrap
 {
-  protected static ?IAppContainer $appContainer = null;
+  public const APP_ROOT_FOLDER = 'appRootFolder';
+  public const MIDDLEWARE_OPTIONS = 'middelwareOptions';
+
+  protected static ?ContainerInterface $appContainer = null;
 
   protected static ?string $appName;
 
@@ -67,9 +72,9 @@ abstract class AbstractApplication extends App implements IBootstrap
   /**
    * Static query of a service through the app container.
    *
-   * @return ?IAppContainer
+   * @return ?ContainerInterface
    */
-  public static function getAppContainer(): ?IAppContainer
+  public static function getAppContainer(): ?ContainerInterface
   {
     return self::$appContainer ?? null;
   }
@@ -83,10 +88,22 @@ abstract class AbstractApplication extends App implements IBootstrap
    */
   public static function get(string $service): mixed
   {
-    if (!(self::$appContainer instanceof IAppContainer)) {
+    if (!(self::$appContainer instanceof ContainerInterface)) {
       throw new Exception('Dependency injection not possible, app-container is empty.');
     }
     return self::$appContainer->get($service);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Dummy boot() method.
+   *
+   * @param IBootContext $context
+   */
+  public function boot(IBootContext $context): void
+  {
+    // nothing, override as needed
   }
 
   /**
@@ -97,9 +114,24 @@ abstract class AbstractApplication extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context): void
   {
+    $context->registerMiddleware(ExceptionMiddleware::class);
+
     $appFolderPath = AppInfoService::getAppFolderPath();
     if ((include_once $appFolderPath . '/vendor/autoload.php') === false) {
-      throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
+      throw new Exceptions\EnduserNotificationException(
+        'Cannot include "vendor/autoload.php". The app has not been installed properly.',
+      );
     }
+    $infoXML = AppInfoService::getAppInfoXML();
+    if (!empty($infoXML->scopednamespace)) {
+      $scopedAutoload = 'vendor-' . strtolower((string)$infoXML->scopednamespace) . '/autoload.php';
+      if ((include_once $appFolderPath . '/' . $scopedAutoload) === false) {
+        throw new Exceptions\EnduserNotificationException(
+          'Cannot include "' . $scopedAutoload. '". The app has not been installed properly.',
+        );
+      }
+    }
+
+    $context->registerService(self::APP_ROOT_FOLDER, fn($context) => $appFolderPath);
   }
 }

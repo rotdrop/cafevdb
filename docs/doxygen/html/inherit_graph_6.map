@@ -1,3 +1,35 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_allow_i_frame_self.html" title="Indicate that IFrame elements from self should not be hindered by the CSP." alt="" coords="5,5,123,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,385,129,412"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_migration.html" title="Abstract base class for migrations in order to make the entity manager available for transactional mi..." alt="" coords="177,385,300,412"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="143,396,178,397,174,400,146,401"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_structural_migration.html" title="Abstract base class for transactional migrations." alt="" coords="359,233,538,260"/>
+<area shape="poly" id="edge18_Node000001_Node000002" title=" " alt="" coords="269,374,431,258,427,262,272,378"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_migrations_1_1_abstract_transactional_migration.html" title="Abstract base class for transactional migrations." alt="" coords="348,512,549,539"/>
+<area shape="poly" id="edge28_Node000001_Node000012" title=" " alt="" coords="276,418,427,511,422,512,274,423"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000001.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,5,761,32"/>
+<area shape="poly" id="edge19_Node000002_Node000003" title=" " alt="" coords="460,218,481,179,511,132,550,83,596,42,620,31,616,34,599,46,554,87,516,135,486,182,465,221"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000003.html" title="Add functions and routines to the initial database." alt="" coords="597,56,761,83"/>
+<area shape="poly" id="edge20_Node000002_Node000004" title=" " alt="" coords="467,219,520,156,556,122,596,92,623,82,619,85,599,97,559,126,524,160,471,223"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260108084800.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,107,761,133"/>
+<area shape="poly" id="edge21_Node000002_Node000005" title=" " alt="" coords="477,221,531,182,596,143,628,132,624,135,599,148,533,186,480,225"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260108115432.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,157,761,184"/>
+<area shape="poly" id="edge22_Node000002_Node000006" title=" " alt="" coords="502,225,596,193,635,183,630,186,598,199,505,230"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260130130553.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,208,761,235"/>
+<area shape="poly" id="edge23_Node000002_Node000007" title=" " alt="" coords="553,233,600,229,595,231,555,238"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260206193722.html" title="03:14:07 UTC on January 19, 2038 is the time when 32 bits are no longer enough to store the Unix epoc..." alt="" coords="597,259,761,285"/>
+<area shape="poly" id="edge24_Node000002_Node000008" title=" " alt="" coords="553,256,600,262,594,264,554,261"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819094146.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,309,761,336"/>
+<area shape="poly" id="edge25_Node000002_Node000009" title=" " alt="" coords="503,263,598,295,635,308,630,309,596,300,504,268"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819105948.html" title="Replace the web&#45;browser history entry key by the history stack position." alt="" coords="597,360,761,387"/>
+<area shape="poly" id="edge26_Node000002_Node000010" title=" " alt="" coords="479,267,533,307,599,346,628,359,623,360,596,350,531,312,478,273"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20261009150233.html" title="Introduce a dummy column into file&#45;data in order to silence an error emitted by the schema tool of &gt;=..." alt="" coords="597,411,761,437"/>
+<area shape="poly" id="edge27_Node000002_Node000011" title=" " alt="" coords="469,270,524,334,559,367,599,396,624,410,619,410,596,401,556,372,520,337,468,275"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version19700101000002.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,461,761,488"/>
+<area shape="poly" id="edge29_Node000012_Node000013" title=" " alt="" coords="527,505,618,488,612,489,528,511"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260131090857.html" title="Ensure the ProjectEvent entities for registration calendar events are linked to the project." alt="" coords="597,512,761,539"/>
+<area shape="poly" id="edge30_Node000012_Node000014" title=" " alt="" coords="565,523,599,525,594,526,565,528"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260207000624.html" title="Destructive down of the recurrence&#45;id &#45;&gt; bigint migration." alt="" coords="597,563,761,589"/>
+<area shape="poly" id="edge31_Node000012_Node000015" title=" " alt="" coords="528,540,618,562,612,562,528,545"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20260819094422.html" title="Auto&#45;generated Migration: Please modify to your needs!" alt="" coords="597,613,761,640"/>
+<area shape="poly" id="edge32_Node000012_Node000016" title=" " alt="" coords="488,544,540,572,598,599,631,613,626,612,596,604,538,577,487,549"/>
 </map>

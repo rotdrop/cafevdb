@@ -1,0 +1,7 @@
+<map id="ensureUserIdSlug" name="ensureUserIdSlug">
+<area shape="rect" id="Node000001" title="Ensure that the musicain indeed has a user&#45;id&#45;slug." alt="" coords="5,63,131,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#aacf441eceead4b81407f3a2f48195ff4" title="Get userIdSlug." alt="" coords="179,5,357,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,61,166,55,161,57,132,66"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a02237e86a62e44fee08f3e5e2e8d5546" title="Set userIdSlug." alt="" coords="179,88,357,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,86,166,95,161,96,131,92"/>
+</map>

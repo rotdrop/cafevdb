@@ -1,7 +1,7 @@
 <map id="addRelations" name="addRelations">
 <area shape="rect" id="Node000001" title="Add one or multiple relations to the given VTodo or VEvent." alt="" coords="484,5,581,32"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af4064e41fe3647594fa8fd8166fb42d2" title=" " alt="" coords="254,5,436,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,21,436,21,436,16,468,16"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#abed0a7f84ce98b1f4ffb17422f83072a" title=" " alt="" coords="5,5,206,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="238,21,206,21,206,16,238,16"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="466,19,437,21,436,16,471,19"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ac2569d679578adca45031aec1cf0e282" title=" " alt="" coords="5,5,206,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="235,19,206,21,206,16,240,19"/>
 </map>

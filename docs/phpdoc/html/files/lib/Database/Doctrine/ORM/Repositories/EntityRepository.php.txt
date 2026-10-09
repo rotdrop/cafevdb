@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Database\EntityManager as EntityManagerDecorator;
@@ -40,7 +40,7 @@ class EntityRepository extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntityRepositor
   public function __construct(
     protected EntityManagerDecorator $entityManagerDecorator,
     protected ClassMetadataInterface $classMetaData,
-    protected ?IAppContainer $appContainer = null,
+    protected ?ContainerInterface $appContainer = null,
   ) {
     if (!($classMetaData instanceof ClassMetadataDecorator)) {
       throw new UnexpectedValueException('Class-meta-data should be an instance of "' . ClassMetadataDecorator::class . '", but is an instance of "' . get_class($classMetaData) . '".');

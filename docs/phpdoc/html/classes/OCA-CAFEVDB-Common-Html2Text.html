@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Common\Html2Text
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -158,12 +162,7 @@ html-to-text tool which has sort-of support for HTML tables.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#constant_HTML_CONVERTERS">HTML_CONVERTERS</a>
     <span>
-        &nbsp;= [
-    &#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-8&#039;, &#039;-T&#039;, &#039;text/html&#039;],
-    &#039;lynx&#039; =&gt; [&#039;-force_html&#039;, &#039;-noreferer&#039;, &#039;-nomargins&#039;, &#039;-dont_wrap_pre&#039;, &#039;-nolist&#039;, &#039;-display_charset=utf-8&#039;, &#039;-width=80&#039;, &#039;-dump&#039;, &#039;-stdin&#039;],
-    // elinks is really SSSSLLLLOOOOWWWW
-    &#039;elinks&#039; =&gt; [&#039;-dump&#039;, &#039;-force-html&#039;],
-]                            </span>
+        &nbsp;: array&nbsp;= [ &#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-...                            </span>
 </dt>
 
     </dl>
@@ -218,7 +217,7 @@ html-to-text tool which has sort-of support for HTML tables.</p>
     
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">HTML_CONVERTERS</span>
     = <span class="phpdocumentor-signature__default-value">[
     &#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-8&#039;, &#039;-T&#039;, &#039;text/html&#039;],
@@ -322,7 +321,7 @@ tables.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">callConverter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$converter</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arguments</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$html</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">callConverter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$converter</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arguments</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$html</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -339,7 +338,7 @@ tables.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$arguments</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

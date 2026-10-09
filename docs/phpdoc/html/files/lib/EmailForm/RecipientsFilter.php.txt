@@ -262,7 +262,7 @@ class RecipientsFilter
     }
 
     // See wether we were passed specific variables ...
-    $this->emailKey  = $this->pme->cgiSysName('mrecs');
+    $this->emailKey  = $this->pme->cgiSysName(PHPMyEdit::MRECS_KEY);
     $this->mkeyKey   = $this->pme->cgiSysName('mkey');
     $this->mtabKey   = $this->pme->cgiSysName('mtable');
     $this->emailRecs = []; // avoid null
@@ -660,14 +660,22 @@ class RecipientsFilter
     }
     if ($this->projectId <= 0) {
       $criteria[] = [ '!defaultParticipationStatus' => $this->participationStatusBlackList() ];
-    } elseif (($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) == 0) {
-      $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
+    } else {
+      $criteria[] = [ '(|' => true ];
+      $criteria[] = [ '(&projectParticipation.project' => $this->projectId ];
       $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
+      $criteria[] = [ ')' => true ];
+      $criteria[] = [ '(&!projectParticipation.project' => $this->projectId ];
+      $criteria[] = [ '!defaultParticipationStatus' => $this->participationStatusBlackList() ];
+      $criteria[] = [ ')' => true ];
+      $criteria[] = [ ')' => true ];
     }
-    $criteria[] = [ '(|deleted' => null ];
-    $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
+    // $criteria[] = [ '(|deleted' => null ];
+    // $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
 
+    $softDeleteableState = $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
     // $this->logInfo('MUSICIANS FOUND ' . count($musicians) . ' CRITERIA ' . print_r($criteria, true));
 
@@ -1477,7 +1485,7 @@ class RecipientsFilter
 
     $remainingListMembers = array_diff($listMembers, array_keys($recipientsByEmail));
     if (!empty($remainingListMembers)) {
-      $this->logInfo('EXCESS MEMBERS ' . print_r($remainingListMembers, true));
+      $this->logInfo('EXCESS MEMBERS ON THE MAILING LIST ' . print_r($remainingListMembers, true));
       // It is ok if there are more members on the list, as intentionally this
       // should be mailing list traffic.  return false;
     }

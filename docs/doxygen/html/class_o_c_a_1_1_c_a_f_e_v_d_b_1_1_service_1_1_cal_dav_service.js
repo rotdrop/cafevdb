@@ -7,6 +7,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service =
     [ "calendarPrincipalUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907", null ],
     [ "calendarUris", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a32d1974e4e7967a85b3b3c63ff515f97", null ],
     [ "calendarWritable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a5270ea266daa5e257b69e0fb3804b3c8", null ],
+    [ "clearCalendarObjectCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#affe6b1b5b4180376d27cffb6915b3f52", null ],
     [ "createCalendar", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a557a43cc765f714a460217554dd0e5e8", null ],
     [ "createCalendarObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a9b169b15131bc9f1cde755cc5ea43500", null ],
     [ "deleteCalendar", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a6c29152da7a89faab2c2a883c89b717b", null ],

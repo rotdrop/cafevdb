@@ -1,0 +1,9 @@
+<map id="EmailFormComposerResponse" name="EmailFormComposerResponse">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,209,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="28,155,186,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,195,109,230,105,228,105,199"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="58,80,156,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,120,110,155,104,154,106,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="49,5,165,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="108,45,110,80,104,79,106,50"/>
+</map>

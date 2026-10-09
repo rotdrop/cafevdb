@@ -1,0 +1,9 @@
+<map id="AbstractEntityManager" name="AbstractEntityManager">
+<area shape="rect" id="Node000001" title="Abstract base class with functionality needed by the classes in this namespace." alt="" coords="115,80,269,107"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="139,155,244,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,121,194,156,190,153,190,124"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,168,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,38,176,78,171,80,117,44"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html" title="Simplify acces to a single entity namespace is nothing more is managed." alt="" coords="192,5,403,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,40,212,82,209,77,264,42"/>
+</map>

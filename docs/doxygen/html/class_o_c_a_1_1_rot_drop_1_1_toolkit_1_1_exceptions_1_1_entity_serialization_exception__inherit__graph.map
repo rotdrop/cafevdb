@@ -1,0 +1,9 @@
+<map id="EntitySerializationException" name="EntitySerializationException">
+<area shape="rect" id="Node000001" title="Exception thrown by OCA\RotDrop\Toolkit\Doctrine\ORMntitySerializerntitySerializer." alt="" coords="5,229,190,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="30,155,165,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,195,100,230,95,228,96,199"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="58,80,137,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,120,100,155,95,154,96,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="58,5,137,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="98,45,100,80,95,79,97,50"/>
+</map>

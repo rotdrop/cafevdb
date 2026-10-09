@@ -1,0 +1,25 @@
+<map id="FilesInitialState" name="FilesInitialState">
+<area shape="rect" id="Node000001" title="Intial state emitted for key &quot;files&quot;." alt="" coords="219,459,330,485"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="163,81,261,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,108,100,119,55,133,21,150,11,160,8,170,8,374,13,389,29,403,53,416,83,428,153,447,221,462,216,463,152,452,82,433,51,421,26,408,9,392,3,375,3,169,7,157,17,146,53,128,99,114,149,104"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing.html" title=" " alt="" coords="179,360,245,387"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="169,118,147,134,134,145,125,158,123,170,125,184,136,235,156,284,180,326,205,360,199,360,176,329,151,287,130,237,120,184,118,170,120,156,130,141,144,130,172,113"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing_files.html" title=" " alt="" coords="165,259,259,285"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="170,119,151,136,134,159,131,171,134,183,146,205,162,226,197,257,192,259,159,229,142,208,130,185,126,171,130,156,147,132,173,114"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing_files_folders.html" title=" " alt="" coords="144,157,280,184"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="213,121,215,158,209,156,211,126"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_sharing_files_sub_folders.html" title=" " alt="" coords="304,157,464,184"/>
+<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="255,112,357,156,352,158,256,117"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_personal.html" title=" " alt="" coords="441,208,514,235"/>
+<area shape="poly" id="edge12_Node000008_Node000002" title=" " alt="" coords="276,100,334,107,394,119,445,134,465,144,478,156,485,168,487,182,483,209,479,206,481,182,480,170,474,159,462,149,443,139,393,124,333,112,278,105"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_files_initial_state_1_1_contacts.html" title=" " alt="" coords="478,309,552,336"/>
+<area shape="poly" id="edge14_Node000009_Node000002" title=" " alt="" coords="276,97,362,108,453,129,479,139,501,155,519,179,528,207,532,236,530,264,521,311,516,307,525,264,526,236,523,209,514,181,497,159,476,144,451,135,361,113,277,102"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="154,5,270,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,45,215,82,209,80,211,50"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="230,397,269,459,264,458,227,402"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="214,299,215,361,209,359,210,303"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="213,197,215,259,209,258,211,202"/>
+<area shape="poly" id="edge9_Node000005_Node000007" title=" " alt="" coords="347,194,235,260,232,256,351,190"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="458,245,403,311,361,374,342,403,315,436,291,460,288,456,311,433,338,399,356,371,399,308,453,248"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="488,345,427,391,353,437,305,461,304,456,351,432,424,386,483,347"/>
+</map>

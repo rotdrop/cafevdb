@@ -2,7 +2,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
 [
     [ "getCountry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#ad92da151b159c2bdbb64cbe7a4790d1a", null ],
     [ "getHint", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a196e505e5d35b4de917f22ebfed96b9a", null ],
-    [ "getId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a12251d0c022e9e21c137a105ff683f13", null ],
     [ "getInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a4a18c0abbf6628848d2c3b8c48fbca19", null ],
     [ "getLaw", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a0cc5177ce0cb84c004abc2ec7ecf23f7", null ],
     [ "getRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a0fce9d4f0648053551fdec4b3ee35c9c", null ],
@@ -20,5 +19,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a40ac1973a558490bc2a8b8669c8abffc", null ],
     [ "$hint", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a341bb072d7151677382b3ae8d3193afb", null ],
     [ "$law", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a77c0ffac013fbbd2f9bf5630987c8100", null ],
-    [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a9e90bbe291813c4e9dbdb58db928a814", null ]
+    [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#aeecc411fd97996c446995613525070d6", null ]
 ];

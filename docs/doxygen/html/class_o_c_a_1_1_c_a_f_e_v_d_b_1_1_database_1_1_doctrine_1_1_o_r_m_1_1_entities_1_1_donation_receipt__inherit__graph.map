@@ -1,7 +1,7 @@
 <map id="DonationReceipt" name="DonationReceipt">
 <area shape="rect" id="Node000001" title="Although a donation in principle is just a payment there is some meta&#45;data to take care of." alt="" coords="70,80,188,107"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,122,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,42,120,78,116,81,83,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,41,120,79,115,80,84,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="146,5,242,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,45,142,81,138,78,171,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,43,142,82,138,77,170,45"/>
 </map>

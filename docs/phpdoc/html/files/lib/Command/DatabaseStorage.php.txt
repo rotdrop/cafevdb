@@ -29,7 +29,7 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IDateTimeFormatter;
 
 use Symfony\Component\Console\Command\Command;
@@ -51,7 +51,7 @@ class DatabaseStorage extends Command
     protected ILogger $logger,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }

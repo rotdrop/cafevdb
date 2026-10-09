@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queryfieldtrait_0',['QueryFieldTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a8791ac8fbf0901b7aa2c63bc50609dfd',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]]
+  ['responsetrait_0',['ResponseTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a2c30a88dbd815928f293d3cd544e9a63',1,'OCA\\CAFEVDB\\Toolkit\\Traits\\ResponseTrait'],['../namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a2c30a88dbd815928f293d3cd544e9a63',1,'OCA\\RotDrop\\Toolkit\\Traits\\ResponseTrait']]]
 ];

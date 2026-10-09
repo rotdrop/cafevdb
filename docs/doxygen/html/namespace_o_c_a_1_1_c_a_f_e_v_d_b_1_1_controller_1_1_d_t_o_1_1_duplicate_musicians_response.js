@@ -1,0 +1,4 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_duplicate_musicians_response =
+[
+    [ "DuplicateMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_duplicate_musicians_response_1_1_duplicate_musician.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_duplicate_musicians_response_1_1_duplicate_musician" ]
+];

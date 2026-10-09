@@ -1,0 +1,10 @@
+<map id="testEnumMemberSubstitutionKeyConsistency" name="testEnumMemberSubstitutionKeyConsistency">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,88,199,131"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="247,88,407,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,107,233,109,228,110,199,112"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="460,5,648,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,85,446,70,451,69,395,90"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="455,88,652,131"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="407,115,442,118,436,118,407,121"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="452,101,423,103,422,98,457,100"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="generateDatabasFileNodes" name="generateDatabasFileNodes">
+<area shape="rect" id="Node000001" title="Generate a couple of Entities\DatabaseStorageFile instances for testing." alt="" coords="5,21,185,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html#abe574e3916177fc607b53654ae6f9832" title="Install a file entity." alt="" coords="233,5,423,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,32,219,34,214,35,185,37"/>
+</map>

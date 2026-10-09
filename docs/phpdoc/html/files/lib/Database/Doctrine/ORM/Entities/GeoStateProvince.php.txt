@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -196,5 +196,17 @@ class GeoStateProvince implements \ArrayAccess
   public function getIso3166_2():string
   {
     return $this->countryIso . '-' . $this->code;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $parts = [
+      $this->countryIso,
+      $this->code,
+      $this->target,
+      $this->l10nName,
+    ];
+    return 'GeoStateProvince(' . implode(' ', $parts) . ')';
   }
 }

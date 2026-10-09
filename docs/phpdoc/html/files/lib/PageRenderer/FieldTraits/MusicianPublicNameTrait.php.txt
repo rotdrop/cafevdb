@@ -45,17 +45,17 @@ trait MusicianPublicNameTrait
     if ($firstNameFirst) {
       return "CONCAT_WS(
   ' ',
-  IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
+  IF(COALESCE($tableAlias.nick_name, '') = '',
     $tableAlias.first_name,
     $tableAlias.nick_name
   ),
   $tableAlias.sur_name)";
     } else {
-      return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
+      return "IF(COALESCE($tableAlias.display_name, '') = '',
       CONCAT(
         $tableAlias.sur_name,
         ', ',
-        IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
+        IF(COALESCE($tableAlias.nick_name, '') = '',
           $tableAlias.first_name,
           $tableAlias.nick_name
         )
@@ -63,5 +63,26 @@ trait MusicianPublicNameTrait
       $tableAlias.display_name
     )";
     }
+  }
+
+  /**
+   * Generate an SQL fragment which composes a "functional name" including organization and role if the person
+   * represents an organization (company, job-title).
+   *
+   * @param string $tableAlias Table to refer to, defaults to placeholder
+   * '$table'.
+   *
+   * @param bool $firstNameFirst
+   *
+   * @return string SQL fragment.
+   */
+  public static function musicianFunctionalNameSql(string $tableAlias = '$table', bool $firstNameFirst = false): string
+  {
+    $publicNameSql = static::musicianPublicNameSql($tableAlias, $firstNameFirst);
+    $sql = "IF(COALESCE({$tableAlias}.organization, '') = '',
+  {$publicNameSql},
+  CONCAT({$tableAlias}.organization, ' (', IF(COALESCE({$tableAlias}.job_title, '') = '', '', CONCAT({$tableAlias}.job_title, ', ')), {$publicNameSql}, ')')
+)";
+    return $sql;
   }
 }

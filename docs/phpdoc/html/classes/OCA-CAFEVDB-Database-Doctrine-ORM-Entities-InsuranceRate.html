@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -132,9 +136,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">InsuranceRate</p>
@@ -188,25 +192,6 @@
 
 
 
-<h4 id="toc-constants">
-    Constants
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
-
-</h4>
-<dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_PRECISION">RATE_PRECISION</a>
-    <span>
-        &nbsp;= 4                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_SCALE">RATE_SCALE</a>
-    <span>
-        &nbsp;= self::RATE_PRECISION                            </span>
-</dt>
-
-    </dl>
 
 
 <h4 id="toc-properties">
@@ -224,7 +209,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_dueDate">$dueDate</a>
     <span>
-                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>            </span>
+                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -254,7 +239,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_rate">$rate</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>            </span>
 </dt>
 
     </dl>
@@ -293,7 +278,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_getBroker">getBroker()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a>    </span>
 </dt>
 <dd>Get broker.</dd>
 
@@ -307,14 +292,14 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_getGeographicalScope">getGeographicalScope()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumGeographicalScope.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope">EnumGeographicalScope</abbr></a>    </span>
 </dt>
 <dd>Get geographicalScope.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_getInstrumentInsurances">getInstrumentInsurances()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>    </span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
 </dt>
 <dd>Get instrumentInsurances.</dd>
 
@@ -328,7 +313,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_getRate">getRate()</a>
     <span>
-                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>|null    </span>
 </dt>
 <dd>Get rate.</dd>
 
@@ -363,49 +348,49 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setBroker">setBroker()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set broker.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setDueDate">setDueDate()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set dueDate.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setGeographicalScope">setGeographicalScope()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set geographicalScope.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setInstrumentInsurances">setInstrumentInsurances()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set instrumentInsurances.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setPolicyNumber">setPolicyNumber()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set policyNumber.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#method_setRate">setRate()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
 <dd>Set rate.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -433,75 +418,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
 
         
-    <section class="phpdocumentor-constants">
-        <h3 class="phpdocumentor-elements__header" id="constants">
-            Constants
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
-
-        </h3>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_RATE_PRECISION">
-        RATE_PRECISION
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_PRECISION" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">52</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RATE_PRECISION</span>
-    = <span class="phpdocumentor-signature__default-value">4</span>
-</code>
-
-
-    
-    
-    
-
-        
-    </article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_RATE_SCALE">
-        RATE_SCALE
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_SCALE" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">53</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RATE_SCALE</span>
-    = <span class="phpdocumentor-signature__default-value">self::RATE_PRECISION</span>
-</code>
-
-
-    
-    
-    
-
-        
-    </article>
-            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -527,9 +443,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
@@ -546,8 +462,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_broker#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_broker_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_broker_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -615,18 +531,18 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$dueDate</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -634,8 +550,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_dueDate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_dueDate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_dueDate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -673,9 +589,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
@@ -692,8 +608,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_geographicalScope#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_geographicalScope_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_geographicalScope_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -707,7 +623,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         $nullable: false
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $options: [&#039;default&#039; =&gt; &#039;Germany&#039;]
+        $options: [&#039;default&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::GERMANY]
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -736,9 +652,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
@@ -755,8 +671,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_instrumentInsurances#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_instrumentInsurances_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_instrumentInsurances_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -813,8 +729,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_keys_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -843,9 +759,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
@@ -854,7 +770,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$policyNumber</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -862,8 +778,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_policyNumber#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_policyNumber_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_policyNumber_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -901,16 +817,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a></span>
     <span class="phpdocumentor-signature__name">$rate</span>
     </code>
 
@@ -920,8 +836,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_rate#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="property_rate_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#property_rate_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -929,7 +845,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;decimal_rational_&#039; . self::RATE_PRECISION . &#039;_&#039; . self::RATE_SCALE
+        $type: \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type::NAME_BASE . &#039;_&#039; . \OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4::PRECISION . &#039;_&#039; . \OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4::SCALE
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: false
@@ -964,9 +880,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
     
@@ -1123,16 +1039,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get broker.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getBroker</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getBroker</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1145,7 +1061,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a></span>
             </section>
 
 </article>
@@ -1163,9 +1079,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">181</span>
+    <span class="phpdocumentor-element-found-in__line">180</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.181" class="phpdocumentor-element-found-in__source" data-line="181" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.180" class="phpdocumentor-element-found-in__source" data-line="180" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dueDate.</p>
@@ -1203,16 +1119,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">133</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get geographicalScope.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getGeographicalScope</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getGeographicalScope</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumGeographicalScope.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope">EnumGeographicalScope</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1225,7 +1141,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumGeographicalScope.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope">EnumGeographicalScope</abbr></a></span>
             </section>
 
 </article>
@@ -1243,16 +1159,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">229</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentInsurances.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getInstrumentInsurances</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">getInstrumentInsurances</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1265,7 +1181,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
             </section>
 
 </article>
@@ -1283,9 +1199,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">205</span>
+    <span class="phpdocumentor-element-found-in__line">204</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.205" class="phpdocumentor-element-found-in__source" data-line="205" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get policyNumber.</p>
@@ -1323,16 +1239,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get rate.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getRate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">getRate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1345,7 +1261,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Common-DecimalRationalP4S4.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4">DecimalRationalP4S4</abbr></a>|null</span>
             </section>
 
 </article>
@@ -1558,16 +1474,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set broker.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setBroker</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$broker</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setBroker</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$broker</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1590,7 +1506,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1608,16 +1524,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">169</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dueDate.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setDueDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dueDate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setDueDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dueDate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1640,7 +1556,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1658,16 +1574,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">121</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set geographicalScope.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setGeographicalScope</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumGeographicalScope.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope">EnumGeographicalScope</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$geographicalScope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setGeographicalScope</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumGeographicalScope.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope">EnumGeographicalScope</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$geographicalScope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1690,7 +1606,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1708,16 +1624,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">216</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.216" class="phpdocumentor-element-found-in__source" data-line="216" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentInsurances.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setInstrumentInsurances</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$instrumentInsurances</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setInstrumentInsurances</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$instrumentInsurances</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1740,7 +1656,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceBroker.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceBroker">InsuranceBroker</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1758,16 +1674,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">193</span>
+    <span class="phpdocumentor-element-found-in__line">192</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set policyNumber.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setPolicyNumber</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$policyNumber</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setPolicyNumber</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$policyNumber</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1790,7 +1706,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1808,16 +1724,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php"><a href="files/lib-database-doctrine-orm-entities-insurancerate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/InsuranceRate.php">InsuranceRate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">145</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/InsuranceRate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set rate.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setRate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setRate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1827,7 +1743,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$rate</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|float|string|<a href="classes/OCA-CAFEVDB-Toolkit-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Toolkit\Common\RationalNumber">RationalNumber</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1840,7 +1756,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InsuranceRate">InsuranceRate</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1866,7 +1782,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">toArray</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1879,7 +1795,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
             </section>
 
 </article>
@@ -1918,8 +1834,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
         
             <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+            <h5 class="phpdocumentor-elements__header" id="method_arrayCTOR_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR_attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -2143,18 +2059,10 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                        <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
-                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
-                <li>
-                    <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_PRECISION">RATE_PRECISION</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_RATE_SCALE">RATE_SCALE</a></li>
-                                            </ul>
-                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>

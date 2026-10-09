@@ -31,7 +31,7 @@ use Psr\Log\LoggerInterface;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\Files\File;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Constants;
@@ -48,7 +48,7 @@ class SkeletonReadMeFactory extends ReadMeFactory
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param IL10N $l
    *
@@ -67,7 +67,7 @@ class SkeletonReadMeFactory extends ReadMeFactory
    * @param null|string $skeletonPath The starting point for the search.
    */
   public function __construct(
-    IAppContainer $appContainer,
+    ContainerInterface $appContainer,
     IL10N $l,
     AppL10N $appL10n,
     string $appName,

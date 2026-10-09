@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,139,32"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html" title="A template response which optionally pre&#45;renders its content." alt="" coords="187,5,396,32"/>
-<area shape="poly" id="edge590_Node000000_Node000001" title=" " alt="" coords="154,16,186,16,186,21,154,21"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="5,5,91,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="139,5,229,32"/>
+<area shape="poly" id="edge569_Node000000_Node000001" title=" " alt="" coords="106,16,141,18,135,19,106,21"/>
 </map>

@@ -1,7 +1,11 @@
 <map id="navigationItems" name="navigationItems">
 <area shape="rect" id="Node000001" title="{}" alt="" coords="5,47,119,73"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#ad3020415b8d3447a61266472185fbe46" title="Return the navigation item for this renderer." alt="" coords="167,5,413,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,49,151,44,152,50,119,54"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.[ &#39;template&#39; =&gt; TEMPLATE, &#39;tooltip&#39; =&gt; TOOLTIP,..." alt="" coords="187,72,392,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,66,172,73,171,79,119,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,49,154,46,149,48,120,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.SidebarNavigationItem}" alt="" coords="187,72,392,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,66,174,75,169,77,119,71"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="461,72,641,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="393,91,448,93,443,93,393,96"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html#ad402d8679325bc514874370f02b5c2ac" title="{}" alt="" coords="689,72,902,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="642,91,676,93,671,93,642,96"/>
 </map>

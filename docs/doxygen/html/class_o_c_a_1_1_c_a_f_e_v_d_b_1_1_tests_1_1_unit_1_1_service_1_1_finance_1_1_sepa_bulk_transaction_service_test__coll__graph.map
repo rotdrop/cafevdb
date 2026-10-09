@@ -1,0 +1,9 @@
+<map id="SepaBulkTransactionServiceTest" name="SepaBulkTransactionServiceTest">
+<area shape="rect" id="Node000001" title="Test the SepaBulkTransactionsService." alt="" coords="56,104,270,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,40,150,102,145,105,70,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html" title="Finance and bank related stuff." alt="" coords="107,5,218,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,46,165,105,160,103,161,49"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html" title="Service class for generating bulk&#45;transactions for submittance to the respective bank." alt="" coords="243,5,432,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="318,42,296,65,271,82,214,106,212,101,268,78,293,60,313,44"/>
+</map>

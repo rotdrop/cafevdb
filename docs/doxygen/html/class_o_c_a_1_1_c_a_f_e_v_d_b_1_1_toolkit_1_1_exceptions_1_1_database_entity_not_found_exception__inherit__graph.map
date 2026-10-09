@@ -1,0 +1,11 @@
+<map id="DatabaseEntityNotFoundException" name="DatabaseEntityNotFoundException">
+<area shape="rect" id="Node000001" title="Thrown if an entity could not be found." alt="" coords="5,304,232,331"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception.html" title="Base class for database exceptions providing an entity&#45;class." alt="" coords="34,229,203,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,270,121,305,116,302,117,274"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="51,155,186,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,195,121,230,116,228,117,199"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="79,80,158,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="119,120,121,155,116,154,118,125"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="79,5,158,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="119,45,121,80,116,79,118,50"/>
+</map>

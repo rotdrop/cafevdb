@@ -549,7 +549,7 @@ class SepaBankAccounts extends PMETableViewBase
       [
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('Musician'),
-        'css'      => [ 'postfix' => [ 'allow-empty', 'project-participant', ], ],
+        'css'      => [ 'postfix' => [ CssClasses::ALLOW_EMPTY, 'project-participant', ], ],
         'input'    => 'R',
         'input|A'  => null,
         'select'   => 'D',
@@ -576,7 +576,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['bank_account_owner'] = [
       'tab' => [ 'id' => [ 'account', 'mandate', ], ],
       'name' => $this->l->t('Bank Account Owner'),
-      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', DataConstants::CLASS_LAZY_DECRYPTION, ], ],
+      'css' => [ 'postfix' => [ CssClasses::ALLOW_EMPTY, 'bank-account-owner', DataConstants::CLASS_LAZY_DECRYPTION, ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
@@ -745,7 +745,7 @@ class SepaBankAccounts extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 11,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'mandate-project', 'allow-empty', 'chosen-width-auto', ], ],
+        'css'      => [ 'postfix' => [ 'mandate-project', CssClasses::ALLOW_EMPTY, 'chosen-width-auto', ], ],
         'values' => [
           'description' => [
             'columns' => [ 'year' => "CONCAT(\$table.year, IF(\$table.year IS NULL, '', ': '))", 'name' => 'name' ],

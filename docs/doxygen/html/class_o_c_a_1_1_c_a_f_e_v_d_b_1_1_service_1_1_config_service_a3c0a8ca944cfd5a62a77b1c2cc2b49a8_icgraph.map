@@ -1,5 +1,12 @@
 <map id="getCloudConfig" name="getCloudConfig">
-<area shape="rect" id="Node000001" title=" " alt="" coords="154,5,265,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaa19b71fc606d80d93ed6fe8af77e82f" title=" " alt="" coords="5,5,106,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,21,106,21,106,16,138,16"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="343,43,454,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaa19b71fc606d80d93ed6fe8af77e82f" title=" " alt="" coords="195,5,295,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="325,39,296,34,296,28,331,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaad6d13926282013d0965a2f6ab3df85" title=" " alt="" coords="199,80,291,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="331,73,292,85,291,80,326,74"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="269,64,262,61,245,59,229,61,221,65,219,71,223,81,218,79,213,71,217,62,227,56,245,53,264,56,275,65"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#acfd177d26300298d7c2758fe04ee615b" title="Fetch all config values and decrypt them." alt="" coords="5,55,147,81"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="181,85,147,81,147,76,186,84"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a241ca6802fbc0627ec7c9baee0d3fc35" title="Flush all configuration values to the database, possibly encrypting them.T his is only meant for use ..." alt="" coords="5,105,147,132"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="181,103,147,111,147,105,186,102"/>
 </map>

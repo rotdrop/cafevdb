@@ -1,0 +1,5 @@
+<map id="getAppFolderPath" name="getAppFolderPath">
+<area shape="rect" id="Node000001" title="Determine the path of the application folder." alt="" coords="165,5,290,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service.html#a4289f82b93a91499a547174099dbbb7c" title="Determine the path to the app&#39;s info.xml file assuming that the app PHP files start at lib/ from the ..." alt="" coords="5,5,117,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,19,117,21,117,16,152,18"/>
+</map>

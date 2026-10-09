@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -146,7 +150,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#constant_L10N_TAG">L10N_TAG</a>
     <span>
-        &nbsp;= &#039;ENUM_VALUE&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;ENUM_VALUE&#039;                            </span>
 </dt>
 
     </dl>
@@ -176,7 +180,7 @@ the enum instance. If an enum instance is passed, it is just returned.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#method_getL10NValues">getL10NValues()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -188,7 +192,7 @@ the enum instance. If an enum instance is passed, it is just returned.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-BackedEnumTrait.html#method_names">names()</a>
     <span>
-                                &nbsp;: array&lt;string|int, string&gt;    </span>
+                                &nbsp;: string[]    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -206,7 +210,7 @@ the enum instance. If an enum instance is passed, it is just returned.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-RotDrop-Toolkit-Traits-BackedEnumTrait.html#method_values">values()</a>
     <span>
-                                &nbsp;: array&lt;string|int, string&gt;    </span>
+                                &nbsp;: string[]    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -303,7 +307,7 @@ camel-case.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">__callstatic</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arguments</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">__callstatic</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string[]&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arguments</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -322,7 +326,7 @@ camel-case.</dd>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$arguments</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, string&gt;</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string[]</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Method arguments. Must either be empty or
@@ -333,21 +337,20 @@ contain an IL10N object.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method___callstatic_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#method___callstatic#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#method___callstatic_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\BadMethodCallException">BadMethodCallException</abbr></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -399,29 +402,24 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_get_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Traits-BackedEnumTrait.html#method_get#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Traits-BackedEnumTrait.html#method_get_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\InvalidArgumentException">InvalidArgumentException</abbr></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\TypeError">TypeError</abbr></span>
-                                                            
-                                             
+                                                                                    
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -453,7 +451,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getL10NValues</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">getL10NValues</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -476,7 +474,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>translated value array.</p>
 </section>
@@ -545,7 +543,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">names</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">names</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string[]</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -558,7 +556,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
+        <span class="phpdocumentor-signature__response_type">string[]</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The names of the enum cases as flat array.</p>
 </section>
@@ -606,22 +604,21 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_t_tags">
         Tags
-        <a href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#method_t#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-RotDrop-Toolkit-Traits-TranslatableEnumTrait.html#method_t_tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(PHPMD.ShortMethodName)</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>(PHPMD.ShortMethodName)</p>
 </section>
 
                                     </dd>
-                                            </dl>
+                        </dl>
 
         
     
@@ -702,7 +699,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">values</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">values</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string[]</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -715,7 +712,7 @@ the enum instance. If an enum instance is passed, it is just returned.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
+        <span class="phpdocumentor-signature__response_type">string[]</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The values of the enum cases as flat array.</p>
 </section>

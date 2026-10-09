@@ -1,8 +1,8 @@
 <map id="findThreadDisplay" name="findThreadDisplay">
 <area shape="rect" id="Node000001" title="Generate a complex tree structure reflecting the message threads." alt="" coords="5,29,132,56"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a8141b43e7efef89313e5358478647548" title="Generate a complex tree structure reflecting the message threads." alt="" coords="180,29,288,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,40,164,40,164,45,132,45"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="209,30,204,21,207,11,218,5,234,3,251,5,261,12,258,16,249,10,234,8,219,10,212,14,210,20,213,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,40,167,42,162,43,132,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="209,28,204,21,207,11,218,5,234,3,251,5,262,15,257,14,249,10,234,8,219,10,212,14,210,20,213,30"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a9b778ffc31cbf2df2c2d277cad3af26b" title="Fetch the array of messages referring to $id via inReplyTo." alt="" coords="336,29,418,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,40,321,40,321,45,288,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,40,323,43,318,43,288,45"/>
 </map>

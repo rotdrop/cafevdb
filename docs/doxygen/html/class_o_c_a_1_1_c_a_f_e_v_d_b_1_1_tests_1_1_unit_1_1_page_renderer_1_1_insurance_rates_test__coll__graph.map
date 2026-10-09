@@ -1,0 +1,42 @@
+<map id="InsuranceRatesTest" name="InsuranceRatesTest">
+<area shape="rect" id="Node000001" title="Test aspects of the InsuranceRates page renderer." alt="" coords="83,475,221,501"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,376,83,403"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,411,140,473,135,475,69,416"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html" title="Table generator for Instruments table." alt="" coords="226,376,339,403"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,414,254,436,236,453,193,476,190,472,233,449,250,432,265,418"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="212,277,353,304"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="284,317,285,377,280,375,281,322"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="202,157,355,184"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="281,197,285,277,280,276,279,202"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="216,81,290,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="263,120,277,157,272,157,262,125"/>
+<area shape="rect" id="Node000007" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="272,5,350,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="291,46,265,82,261,80,293,42"/>
+<area shape="rect" id="Node000008" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="315,81,424,108"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="330,41,362,81,357,81,330,47"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="340,120,296,159,292,155,344,116"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="585,277,647,304"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="568,307,327,378,325,373,572,303"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html" title="ProjectEvents." alt="" coords="545,376,642,403"/>
+<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="582,312,572,329,570,341,572,352,585,377,580,375,567,354,565,341,568,327,578,316"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html" title="ProjectParticipantFields." alt="" coords="636,475,788,501"/>
+<area shape="poly" id="edge16_Node000012_Node000009" title=" " alt="" coords="663,292,745,302,781,312,804,326,820,342,832,364,833,379,829,398,818,423,799,452,785,467,768,477,766,472,782,462,795,449,813,420,824,397,828,379,827,365,815,345,801,330,779,317,744,307,663,297"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="494,81,591,108"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="588,112,618,129,648,150,676,176,697,207,705,231,697,255,675,275,649,286,646,281,672,270,692,252,699,231,692,209,672,179,645,154,615,133,588,118"/>
+<area shape="poly" id="edge12_Node000011_Node000010" title=" " alt="" coords="504,119,487,137,472,159,447,212,435,258,434,280,439,303,449,326,465,350,481,366,501,376,548,388,542,389,499,381,478,370,461,354,444,328,434,304,429,281,429,258,442,210,467,156,484,133,508,115"/>
+<area shape="poly" id="edge15_Node000012_Node000010" title=" " alt="" coords="477,104,450,113,423,126,403,144,398,156,396,170,396,390,402,407,419,422,446,435,480,447,558,465,638,479,633,479,557,470,478,452,444,440,416,426,398,410,391,391,391,169,393,154,399,141,420,121,448,108,482,101"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html" title="ProjectParticipantFieldsDataOptions." alt="" coords="739,573,920,616"/>
+<area shape="poly" id="edge18_Node000013_Node000010" title=" " alt="" coords="606,92,705,95,813,105,862,114,901,127,928,145,936,157,939,169,939,490,933,517,917,540,896,560,873,575,871,570,893,556,913,537,928,515,933,489,933,170,931,159,925,149,899,132,860,119,813,110,705,100,607,98"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="482,157,604,184"/>
+<area shape="poly" id="edge22_Node000014_Node000010" title=" " alt="" coords="544,121,545,158,540,156,542,125"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="620,363,627,351,629,339,628,327,622,307,624,302,633,326,635,340,632,353,623,367"/>
+<area shape="poly" id="edge20_Node000012_Node000011" title=" " alt="" coords="586,415,586,434,592,449,611,467,638,480,633,480,608,471,587,452,581,435,583,420"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="701,459,693,444,681,429,662,415,642,406,642,400,665,411,685,425,697,441,706,461"/>
+<area shape="poly" id="edge19_Node000013_Node000012" title=" " alt="" coords="776,505,802,523,818,547,827,575,823,572,814,550,798,527,774,511"/>
+<area shape="poly" id="edge17_Node000012_Node000013" title=" " alt="" coords="727,564,712,551,706,539,704,525,707,504,711,500,709,525,711,537,716,548,732,566"/>
+<area shape="poly" id="edge21_Node000009_Node000014" title=" " alt="" coords="524,195,520,209,514,232,515,241,520,252,533,265,549,274,587,287,582,287,547,279,530,269,515,255,509,243,508,231,515,207,521,199"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;." alt="" coords="107,376,197,403"/>
+<area shape="poly" id="edge23_Node000001_Node000015" title=" " alt="" coords="153,416,155,475,149,474,151,421"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_php_my_edit_1_1_php_my_edit.html" title="@SuppressWarnings(PHPMD.ErrorControlOperator) @SuppressWarnings(PHPMD.Superglobals) @SuppressWarnings..." alt="" coords="103,277,188,304"/>
+<area shape="poly" id="edge24_Node000015_Node000016" title=" " alt="" coords="148,317,154,376,149,375,146,322"/>
+</map>

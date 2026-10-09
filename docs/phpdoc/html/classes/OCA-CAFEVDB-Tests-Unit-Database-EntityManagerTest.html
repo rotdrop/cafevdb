@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-            <title>Documentation</title>
+            <title>    Documentation &raquo; \OCA\CAFEVDB\Tests\Unit\Database\EntityManagerTest
+</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -161,7 +165,7 @@
         \OCA\CAFEVDB\Database\EntityManager::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        &#039;connectionParameters&#039;
+        &#039;bound&#039;
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -183,7 +187,7 @@
         \OCA\CAFEVDB\Database\EntityManager::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        &#039;bound&#039;
+        &#039;connectionParameters&#039;
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -192,6 +196,14 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\AppInfo\Application::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\TimeFactory::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -223,6 +235,22 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Crypto\SealCryptor::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Crypto\SealService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Connection::class
     </dd>
     </dl>
@@ -232,30 +260,6 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -303,6 +307,22 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Events\EncryptionServiceBound::class
     </dd>
     </dl>
@@ -335,7 +355,7 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class
+        \OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -343,7 +363,47 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class
+        \OCA\CAFEVDB\Service\Registration::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -377,7 +437,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#constant_EXPECTED_CONNECTION_PARAMETERS">EXPECTED_CONNECTION_PARAMETERS</a>
     <span>
-        &nbsp;= &#039;{&quot;wrapperClass&quot;:&quot;OCA\\\\CAFEVDB\\\\Database\\\\Connection&quot;,&quot;dbname&quot;:&quot;cafevdb&quot;,&quot;row_format&quot;:&quot;compressed&quot;,&quot;host&quot;:&quot;localhost&quot;,&quot;password&quot;:&quot;nothing&quot;,&quot;driver&quot;:&quot;pdo_mysql&quot;,&quot;user&quot;:&quot;phpunit&quot;,&quot;charset&quot;:&quot;utf8mb4&quot;,&quot;collate&quot;:&quot;utf8mb4_uca1400_ai_ci&quot;}&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;{&quot;wrapperClass&quot;:&quot;OCA\\\\CAFEVDB\\\\Database\\\...                            </span>
 </dt>
 
     </dl>
@@ -455,9 +515,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">87</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     
@@ -502,9 +562,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     
@@ -545,9 +605,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -581,9 +641,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     
@@ -616,9 +676,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     
@@ -651,9 +711,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     
@@ -686,9 +746,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/EntityManagerTest.php"><a href="files/tests-phpunit-unit-database-entitymanagertest.html"><abbr title="tests/phpunit/Unit/Database/EntityManagerTest.php">EntityManagerTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-EntityManagerTest.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/EntityManagerTest.php.txt"></a>
     </aside>
 
     

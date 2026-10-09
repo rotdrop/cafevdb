@@ -1,0 +1,7 @@
+<map id="FinanceServiceTest" name="FinanceServiceTest">
+<area shape="rect" id="Node000001" title="Test the SepaBulkTransactionsService." alt="" coords="34,104,171,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,83,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,43,98,103,93,104,58,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html" title="Finance and bank related stuff." alt="" coords="107,5,218,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,45,112,106,108,102,144,46"/>
+</map>

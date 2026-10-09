@@ -1,0 +1,13 @@
+<map id="testGetCurrentDate" name="testGetCurrentDate">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,47,141,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="209,5,401,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,48,196,42,191,44,142,53"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#af1591c93ce4aabee288af5462640e139" title="Register a class instance to be returned by the app&#45;container." alt="" coords="189,72,421,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,67,176,74,171,75,141,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a40da96449e478f361d003620cace8f2c" title="Register a service globally." alt="" coords="469,72,661,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="421,91,456,93,450,93,421,96"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a0f5ec5f602d20c507ff31c22683d9fe6" title=" " alt="" coords="709,72,912,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="662,91,697,93,691,93,662,96"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a2b98c921c414416a5b1369387a0a60e5" title=" " alt="" coords="960,72,1152,115"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="912,91,947,93,941,93,912,96"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="MusicianValidationControllerTest" name="MusicianValidationControllerTest">
+<area shape="rect" id="Node000001" title="Test aspects of the MusicianValidationController." alt="" coords="52,180,262,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,83,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,116,145,178,140,181,69,121"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="107,81,208,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,122,160,181,155,179,155,125"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html" title="Provide a couple of important services, partially using mocked classes." alt="" coords="82,5,232,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,45,160,82,155,80,156,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html" title="Cache&#45;service which fetches geo&#45;coding information in the background in order to use them in autocomp..." alt="" coords="232,81,362,108"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="287,120,275,141,259,158,237,172,212,182,211,177,234,167,256,154,271,138,283,123"/>
+</map>

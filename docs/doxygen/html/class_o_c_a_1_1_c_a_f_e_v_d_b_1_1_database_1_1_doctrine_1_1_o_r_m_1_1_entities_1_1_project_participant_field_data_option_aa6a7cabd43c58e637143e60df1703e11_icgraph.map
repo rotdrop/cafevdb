@@ -1,0 +1,7 @@
+<map id="ensureKeyNotNull" name="ensureKeyNotNull">
+<area shape="rect" id="Node000001" title="Initialize the key field if it is not yet set." alt="" coords="342,29,469,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#ad40c766ec8aced9770fe6ae269a1e781" title="Get key." alt="" coords="232,29,294,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,43,295,45,294,40,329,42"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a65f442ad3bedb1b6c04aa3720aa76fa5" title="Add a new option." alt="" coords="5,5,184,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,43,184,45,184,40,219,42"/>
+</map>

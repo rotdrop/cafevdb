@@ -1,0 +1,21 @@
+<map id="DuplicateMusician" name="DuplicateMusician">
+<area shape="rect" id="Node000001" title="Duplicate musician DTO." alt="" coords="5,431,134,457"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="115,81,213,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,114,82,124,66,136,55,151,51,170,51,346,57,393,68,431,62,430,52,394,46,347,46,169,50,149,62,132,80,119,102,110"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="86,157,243,184"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="165,121,167,158,162,156,163,126"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="163,5,280,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="201,46,176,82,172,80,204,42"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html" title="Convert a database entity &quot;virtually&quot; to a flat array without recursions." alt="" coords="257,332,388,359"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="252,39,274,63,280,78,283,93,283,248,286,272,294,294,316,332,311,331,290,297,281,273,278,248,278,94,275,79,269,66,252,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,367,104,433,102,428,275,362"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="317,233,414,260"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="356,272,330,333,326,330,352,276"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="438,233,501,260"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="440,268,343,334,341,329,435,270"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response.html" title="A collection of entities without duplicates." alt="" coords="123,233,237,260"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="193,271,207,290,223,306,245,319,271,331,265,332,243,324,220,310,203,294,192,276"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="171,197,180,233,175,233,169,202"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer.html" title="The goal is to serialize entities (... to JSON ...) such that the JS frontend can reconstruct the ass..." alt="" coords="524,233,634,260"/>
+<area shape="poly" id="edge10_Node000004_Node000009" title=" " alt="" coords="534,265,357,334,355,329,529,267"/>
+</map>

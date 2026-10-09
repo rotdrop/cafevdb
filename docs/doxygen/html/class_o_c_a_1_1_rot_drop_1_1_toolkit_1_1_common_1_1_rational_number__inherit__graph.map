@@ -1,0 +1,15 @@
+<map id="RationalNumber" name="RationalNumber">
+<area shape="rect" id="Node000001" title="Rational numbers, exact fractions." alt="" coords="217,80,333,107"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_abstract_decimal_rational.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="192,155,358,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,120,277,156,273,153,273,125"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="182,5,251,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,42,268,80,262,80,236,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="276,5,392,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="316,43,287,82,283,78,312,46"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="5,229,177,256"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="231,188,124,231,122,226,226,187"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="200,229,350,256"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="277,195,277,230,273,227,273,199"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4.html" title="Just like RationalNumber, but the jsonSerialize() implementation yields a decimal number string with ..." alt="" coords="374,229,523,256"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="320,185,421,229,415,229,319,190"/>
+</map>

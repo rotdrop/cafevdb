@@ -1,0 +1,6 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions =
+[
+    [ "DatabaseEntityExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test" ],
+    [ "EnduserNotificationExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_enduser_notification_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_enduser_notification_exception_test" ],
+    [ "UndoableRunQueueExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_undoable_run_queue_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_undoable_run_queue_exception_test" ]
+];

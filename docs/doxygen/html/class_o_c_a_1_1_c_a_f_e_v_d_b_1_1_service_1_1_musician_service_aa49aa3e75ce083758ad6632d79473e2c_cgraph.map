@@ -1,0 +1,5 @@
+<map id="generateDisabledEmailAddress" name="generateDisabledEmailAddress">
+<area shape="rect" id="Node000001" title="As a last resort generate a &quot;disabled&quot; email address pointing back to the orchestra from the user&#45;id ..." alt="" coords="5,21,209,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#aacf441eceead4b81407f3a2f48195ff4" title="Get userIdSlug." alt="" coords="257,5,435,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,32,244,34,238,35,209,37"/>
+</map>

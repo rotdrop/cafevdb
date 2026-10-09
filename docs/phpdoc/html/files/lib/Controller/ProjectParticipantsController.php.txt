@@ -166,7 +166,7 @@ class ProjectParticipantsController extends Controller
           $id = json_decode($value, true);
           return $id['id']??$id;
         },
-        $this->request->getParam($this->pme->cgiSysName('mrecs'), [])
+        $this->request->getParam($this->pme->cgiSysName(PHPMyEdit::MRECS_KEY), [])
       );
     }
 

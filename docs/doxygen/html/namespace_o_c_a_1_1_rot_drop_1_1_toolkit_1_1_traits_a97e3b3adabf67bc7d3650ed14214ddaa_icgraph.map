@@ -1,0 +1,13 @@
+<map id="logger" name="logger">
+<area shape="rect" id="Node000001" title="Return the stored logger class." alt="" coords="485,113,541,140"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#ab2b32ae9b6b0995383b420ac66848236" title=" " alt="" coords="264,5,409,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="479,104,436,78,409,65,410,60,438,74,484,104"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="277,88,396,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="467,121,396,112,396,107,472,120"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="286,139,387,165"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="467,133,388,147,387,142,472,132"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a700b0335035909f6817fb197ae6ef571" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="236,189,437,216"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="485,149,438,180,406,191,405,186,436,175,480,151"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_user_scope_service.html#a32093fe0abe4f324af6bda53cb2a2a07" title="Delete the token and its cookie, e.g." alt="" coords="5,72,188,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,102,189,104,188,99,264,100"/>
+</map>

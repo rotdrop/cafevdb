@@ -33,6 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test attaching the registration events as ProjectEvent entity to the projects. */
@@ -48,10 +49,12 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(MigrationsNamespace\Version20260108115432::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260207000624::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20261009150233::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -60,12 +63,9 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
@@ -102,6 +102,9 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094146::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094422::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819105948::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
@@ -112,10 +115,17 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -127,6 +137,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
@@ -145,15 +156,17 @@ class Version20260131090857Test extends TestCase
   public function testVersion20260131090857(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer->get(EventsService::class);
-    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // up to the previous
     $this->applyMigrations(upToVersion: '20260130130553');
     $this->generateCalendarBackend();
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // we actually here only need the project ...
     $this->generateProjectParticipant(persist: true);

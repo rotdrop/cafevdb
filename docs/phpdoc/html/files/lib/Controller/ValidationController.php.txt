@@ -73,7 +73,7 @@ class ValidationController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT_VALIDATE_GENERAL . '/{topic}')]
-  public function serviceSwitch(string $topic, string $value): Http\DataResponse|Http\JsONResponse
+  public function serviceSwitch(string $topic, string $value): Http\DataResponse|Http\JSONResponse
   {
     switch ($topic) {
       case self::TOPIC_MONETARY_VALUE:
@@ -87,7 +87,7 @@ class ValidationController extends Controller
             );
           }
         }
-        return new DTO\AmountResponse(amount: $amount);
+        return DTO\AmountResponse::fromArray(compact('amount'))->response();
     }
     throw new Exceptions\EnduserNotificationException($this->l->t('Unknown Request'));
   }

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_registration.html" title="App container service registration." alt="" coords="5,5,97,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,79,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal.html" title="Personal settings." alt="" coords="127,5,199,32"/>
+<area shape="poly" id="edge543_Node000000_Node000001" title=" " alt="" coords="94,16,129,18,123,19,94,21"/>
 </map>

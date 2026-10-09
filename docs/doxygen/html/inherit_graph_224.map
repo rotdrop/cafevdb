@@ -1,0 +1,17 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,132,84,159"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_expired_downloads.html" title="Cleanup temporary file downloads where the share&#45;link has expired." alt="" coords="132,5,310,32"/>
+<area shape="poly" id="edge761_Node000000_Node000001" title=" " alt="" coords="60,117,89,78,109,59,130,42,157,31,153,34,133,46,112,63,93,82,64,120"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_files_cache.html" title="Cleanup the files cache in the app&#45;storage." alt="" coords="153,56,288,83"/>
+<area shape="poly" id="edge762_Node000000_Node000002" title=" " alt="" coords="77,121,131,92,165,81,161,85,133,97,80,125"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_project_events.html" title="Repeating project events may be split into sevaral series." alt="" coords="145,107,296,133"/>
+<area shape="poly" id="edge763_Node000000_Node000003" title=" " alt="" coords="98,135,147,129,143,133,100,140"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_temporary_files.html" title="Cleanup left&#45;over temporary files from the app&#45;storage." alt="" coords="142,157,300,184"/>
+<area shape="poly" id="edge764_Node000000_Node000004" title=" " alt="" coords="98,150,144,158,139,161,100,156"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_lazy_update_geo_coding.html" title="This cannot work ATM as it needs an authenticated user." alt="" coords="143,208,299,235"/>
+<area shape="poly" id="edge765_Node000000_Node000005" title=" " alt="" coords="79,165,133,194,166,207,161,208,131,198,78,170"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_update_app_m_times.html" title="Cleanup temporary file downloads where the share&#45;link has expired." alt="" coords="154,259,288,285"/>
+<area shape="poly" id="edge767_Node000000_Node000007" title=" " alt="" coords="63,169,93,209,112,228,133,244,157,258,152,258,130,249,109,232,89,212,61,174"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html" title="Gradually sync with remote geo&#45;coding providers." alt="" coords="358,208,512,235"/>
+<area shape="poly" id="edge766_Node000005_Node000006" title=" " alt="" coords="314,219,360,221,355,222,314,224"/>
+</map>

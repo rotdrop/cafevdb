@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /** Default implementation for some methods. */
 abstract class AbstractUndoable implements IUndoable
@@ -32,11 +32,11 @@ abstract class AbstractUndoable implements IUndoable
   /** @var int */
   protected int $sortOrder = 0;
 
-  /** @var IAppContainer */
-  protected IAppContainer $appContainer;
+  /** @var ContainerInterface */
+  protected ContainerInterface $appContainer;
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer):void
+  public function initialize(ContainerInterface $appContainer):void
   {
     $this->appContainer = $appContainer;
   }

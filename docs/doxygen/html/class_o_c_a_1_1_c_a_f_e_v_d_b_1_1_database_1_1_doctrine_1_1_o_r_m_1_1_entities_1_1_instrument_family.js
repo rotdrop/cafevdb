@@ -1,7 +1,8 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family =
 [
+    [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "addInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a4f49cff0f35d24254175879f4c6a353b", null ],
     [ "getFamily", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128", null ],
-    [ "getId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a12251d0c022e9e21c137a105ff683f13", null ],
     [ "getInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a4e2c0e935863737c7a2834a29a395fdb", null ],
     [ "getUntranslatedFamily", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1", null ],
     [ "setFamily", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a2488d83ccb0ea5efa7193fb8207228ea", null ],

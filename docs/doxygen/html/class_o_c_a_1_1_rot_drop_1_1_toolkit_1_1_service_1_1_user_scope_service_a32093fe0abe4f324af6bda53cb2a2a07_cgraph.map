@@ -1,0 +1,9 @@
+<map id="deleteAuthCookie" name="deleteAuthCookie">
+<area shape="rect" id="Node000001" title="Delete the token and its cookie, e.g." alt="" coords="5,47,130,73"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="178,39,337,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,57,165,59,159,61,130,63"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="385,5,530,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="337,44,372,41,367,42,338,49"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="385,72,530,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="337,71,373,79,367,79,337,76"/>
+</map>

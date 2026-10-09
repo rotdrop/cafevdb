@@ -1,7 +1,7 @@
 <map id="ClassMetadataDecorator" name="ClassMetadataDecorator">
 <area shape="rect" id="Node000001" title="Counter part to the decorated entity manager." alt="" coords="74,80,241,107"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,166,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,41,147,78,143,81,107,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,41,148,79,142,80,108,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="190,5,269,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,45,172,81,168,78,204,41"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,42,171,82,168,77,204,44"/>
 </map>

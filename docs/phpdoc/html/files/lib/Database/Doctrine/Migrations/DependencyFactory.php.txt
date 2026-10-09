@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
 
 use Psr\Log\LoggerInterface;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory as VanillaDependencyFactory;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\MigrationFactory;
@@ -39,14 +39,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\EntityMa
  */
 class DependencyFactory extends VanillaDependencyFactory
 {
-  protected IAppContainer $appContainer;
+  protected ContainerInterface $appContainer;
 
   /** {@inheritdoc} */
   public static function fromEntityManager(
     ConfigurationLoader $configurationLoader,
     EntityManagerLoader $emLoader,
     ?LoggerInterface $logger = null,
-    ?IAppContainer $appContainer = null,
+    ?ContainerInterface $appContainer = null,
   ): self {
     $dependencyFactory = parent::fromEntityManager(
       configurationLoader: $configurationLoader,
@@ -65,10 +65,10 @@ class DependencyFactory extends VanillaDependencyFactory
       MigrationFactory::class,
       fn (): MigrationFactory => new class($this->appContainer) implements MigrationFactory {
         /**
-         * @param IAppContainer $appContainer
+         * @param ContainerInterface $appContainer
          */
         public function __construct(
-          protected IAppContainer $appContainer,
+          protected ContainerInterface $appContainer,
         ) {
         }
 
