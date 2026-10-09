@@ -446,6 +446,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
   {
     $this->sepaTransaction = $sepaTransaction;
+    $sepaTransaction->addPayment($this);
 
     return $this;
   }

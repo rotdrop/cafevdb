@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
+use InvalidArgumentException;
 
 use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
@@ -42,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * SepaBulkTransaction
  *
- * This actually models a batch collection
+ * This actually models a batch collection of payments.
  */
 #[ORM\Table(name: DatabaseTables::SEPA_BULK_TRANSACTIONS_TABLE)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
@@ -149,7 +150,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSepaTransactionData(Collection $sepaTransactionData):SepaBulkTransaction
+  public function setSepaTransactionData(Collection $sepaTransactionData): SepaBulkTransaction
   {
     $this->sepaTransactionData = $sepaTransactionData;
 
@@ -161,7 +162,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getSepaTransactionData():Collection
+  public function getSepaTransactionData(): Collection
   {
     return $this->sepaTransactionData;
   }
@@ -171,7 +172,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function addTransactionData(DatabaseStorageFile $data):SepaBulkTransaction
+  public function addTransactionData(DatabaseStorageFile $data): SepaBulkTransaction
   {
     if (!$this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->add($data);
@@ -184,7 +185,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function removeTransactionData(DatabaseStorageFile $data):SepaBulkTransaction
+  public function removeTransactionData(DatabaseStorageFile $data): SepaBulkTransaction
   {
     if ($this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->removeElement($data);
@@ -199,7 +200,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setBalancingItemsData(Collection $balancingItemsData):SepaBulkTransaction
+  public function setBalancingItemsData(Collection $balancingItemsData): SepaBulkTransaction
   {
     $this->balancingItemsData = $balancingItemsData;
 
@@ -211,7 +212,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getBalancingItemsData():Collection
+  public function getBalancingItemsData(): Collection
   {
     return $this->balancingItemsData;
   }
@@ -221,7 +222,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function addBalancingItemsData(DatabaseStorageFile $data):SepaBulkTransaction
+  public function addBalancingItemsData(DatabaseStorageFile $data): SepaBulkTransaction
   {
     if (!$this->balancingItemsData->contains($data)) {
       $this->balancingItemsData->add($data);
@@ -234,7 +235,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function removeBalancingItemsData(DatabaseStorageFile $data):SepaBulkTransaction
+  public function removeBalancingItemsData(DatabaseStorageFile $data): SepaBulkTransaction
   {
     if ($this->balancingItemsData->contains($data)) {
       $this->balancingItemsData->removeElement($data);
@@ -249,7 +250,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionDeadline(?DateTimeInterface $submissionDeadline):SepaBulkTransaction
+  public function setSubmissionDeadline(?DateTimeInterface $submissionDeadline): SepaBulkTransaction
   {
     $this->submissionDeadline = $submissionDeadline;
 
@@ -261,7 +262,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|DateTimeInterface
    */
-  public function getSubmissionDeadline():?DateTimeInterface
+  public function getSubmissionDeadline(): ?DateTimeInterface
   {
     return $this->submissionDeadline;
   }
@@ -273,7 +274,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmitDate($submitDate):SepaBulkTransaction
+  public function setSubmitDate($submitDate): SepaBulkTransaction
   {
     $this->submitDate = self::convertToDateTime($submitDate);
 
@@ -285,7 +286,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTimeInterface|null
    */
-  public function getSubmitDate():?DateTimeInterface
+  public function getSubmitDate(): ?DateTimeInterface
   {
     return $this->submitDate ?? null;
   }
@@ -297,7 +298,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setDueDate($dueDate):SepaBulkTransaction
+  public function setDueDate($dueDate): SepaBulkTransaction
   {
     $this->dueDate = self::convertToDateTime($dueDate);
 
@@ -309,7 +310,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return DateTimeInterface
    */
-  public function getDueDate():?DateTimeInterface
+  public function getDueDate(): ?DateTimeInterface
   {
     return $this->dueDate;
   }
@@ -321,7 +322,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionEventUri(?string $submissionEventUri):SepaBulkTransaction
+  public function setSubmissionEventUri(?string $submissionEventUri): SepaBulkTransaction
   {
     $this->submissionEventUri = $submissionEventUri;
 
@@ -333,7 +334,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getSubmissionEventUri():?string
+  public function getSubmissionEventUri(): ?string
   {
     return $this->submissionEventUri;
   }
@@ -345,7 +346,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionEventUid(?string $submissionEventUid):SepaBulkTransaction
+  public function setSubmissionEventUid(?string $submissionEventUid): SepaBulkTransaction
   {
     $this->submissionEventUid = $submissionEventUid;
 
@@ -357,7 +358,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getSubmissionEventUid():?string
+  public function getSubmissionEventUid(): ?string
   {
     return $this->submissionEventUid;
   }
@@ -369,7 +370,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionTaskUri(?string $submissionTaskUri):SepaBulkTransaction
+  public function setSubmissionTaskUri(?string $submissionTaskUri): SepaBulkTransaction
   {
     $this->submissionTaskUri = $submissionTaskUri;
 
@@ -381,7 +382,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getSubmissionTaskUri():?string
+  public function getSubmissionTaskUri(): ?string
   {
     return $this->submissionTaskUri;
   }
@@ -393,7 +394,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionTaskUid(?string $submissionTaskUid):SepaBulkTransaction
+  public function setSubmissionTaskUid(?string $submissionTaskUid): SepaBulkTransaction
   {
     $this->submissionTaskUid = $submissionTaskUid;
 
@@ -405,7 +406,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getSubmissionTaskUid():?string
+  public function getSubmissionTaskUid(): ?string
   {
     return $this->submissionTaskUid;
   }
@@ -417,7 +418,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setDueEventUri(?string $dueEventUri):SepaBulkTransaction
+  public function setDueEventUri(?string $dueEventUri): SepaBulkTransaction
   {
     $this->dueEventUri = $dueEventUri;
 
@@ -429,7 +430,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getDueEventUri():?string
+  public function getDueEventUri(): ?string
   {
     return $this->dueEventUri;
   }
@@ -441,7 +442,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setDueEventUid(?string $dueEventUid):SepaBulkTransaction
+  public function setDueEventUid(?string $dueEventUid): SepaBulkTransaction
   {
     $this->dueEventUid = $dueEventUid;
 
@@ -453,7 +454,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getDueEventUid():?string
+  public function getDueEventUid(): ?string
   {
     return $this->dueEventUid;
   }
@@ -465,7 +466,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setPayments(Collection $payments):SepaBulkTransaction
+  public function setPayments(Collection $payments): SepaBulkTransaction
   {
     $this->payments = $payments;
 
@@ -477,9 +478,49 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPayments():Collection
+  public function getPayments(): Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * @return ?Project
+   */
+  public function getProject(): ?Project
+  {
+    return $this->payments->count() == 0 ? null : $this->payments->first()->getProject();
+  }
+
+  /**
+   * Add a paymente and enforce that it references the same Project entity as
+   * all other payments. Merging payments from different projects is not
+   * supported.
+   *
+   * @param CompositePayment $payment
+   *
+   * @return self
+   *
+   * @throws InvalidArgumentException
+   */
+  public function addPayment(CompositePayment $payment): self
+  {
+    $project = $this->getProject();
+
+    if ($project !== null && $project !== $payment->getProject()) {
+      throw new InvalidArgumentException(
+        'Payment-project "'
+        . $payment->getProject()->getName()
+        . '" differs from the transaction project "'
+        . $project->getName()
+        . '".'
+      );
+    }
+    $this->payments->set($payment->getMusician()->getId(), $payment);
+    if ($payment->getSepaTransaction() !== $this) {
+      $payment->setSepaTransaction($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -489,7 +530,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|CompositePayment
    */
-  public function getPayment($musician):?CompositePayment
+  public function getPayment($musician): ?CompositePayment
   {
     $musicianId = ($musician instanceof Musician) ? $musician->getId() : $musician;
     if ($this->payments->containsKey($musicianId)) {
@@ -510,7 +551,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function setPreNotificationEmails(Collection $preNotificationEmails):SepaBulkTransaction
+  public function setPreNotificationEmails(Collection $preNotificationEmails): SepaBulkTransaction
   {
     $this->preNotificationEmails = $preNotificationEmails;
 
@@ -522,7 +563,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPreNotificationEmails():Collection
+  public function getPreNotificationEmails(): Collection
   {
     return $this->preNotificationEmails;
   }
@@ -534,7 +575,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return SepaBulkTransaction
    */
-  public function addPreNotificationEmail(SentEmail $sentEmail):SepaBulkTransaction
+  public function addPreNotificationEmail(SentEmail $sentEmail): SepaBulkTransaction
   {
     $messageId = $sentEmail->getMessageId();
     if ($this->getPreNotificationEmail($messageId) === null) {
@@ -550,7 +591,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return null|SentEmail
    */
-  public function getPreNotificationEmail(string $messageId):?SentEmail
+  public function getPreNotificationEmail(string $messageId): ?SentEmail
   {
     if ($this->preNotificationEmails->containsKey($messageId)) {
       return $this->preNotificationEmails->get($messageId);
@@ -579,7 +620,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->payments->count();
   }

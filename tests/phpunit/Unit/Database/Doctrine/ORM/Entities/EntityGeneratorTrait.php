@@ -518,8 +518,7 @@ trait EntityGeneratorTrait
     $bankAccount = $this->generateSepaBankAccount();
     $payment = $this->generateCompositePayment();
     $payment->setSepaBankAccount($bankAccount);
-    $entity->getPayments()->set($this->musician->getId(), $payment);
-    $payment->setSepaTransaction($entity);
+    $entity->addPayment($payment);
 
     $this->entities[Entities\SepaBankTransfer::class] = $entity;
 
