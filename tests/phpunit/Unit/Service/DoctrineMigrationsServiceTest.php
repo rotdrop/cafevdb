@@ -62,6 +62,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819094146::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819094422::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819105948::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20261009150233::class)]
 #[Attributes\CoversClass(Migrations\AbstractMigration::class)]
 #[Attributes\CoversClass(Migrations\DependencyFactory::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]

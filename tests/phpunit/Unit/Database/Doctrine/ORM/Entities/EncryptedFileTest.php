@@ -63,9 +63,6 @@ class EncryptedFileTest extends TestCase
 {
   use EntityGeneratorTrait;
 
-  protected const FILE_NAME = 'file.md';
-  protected const MIME_TYPE = 'text/markdown';
-
   /** {@inheritdoc} */
   public function setup(): void
   {
@@ -77,14 +74,9 @@ class EncryptedFileTest extends TestCase
   /** {@inheritdoc} */
   public function testCTOR(): void
   {
-    $file = new Entities\EncryptedFile(
-      fileName: self::FILE_NAME,
-      mimeType: self::MIME_TYPE,
-      owner: $this->musician,
-      data: '# Heading',
-    );
+    $file = $this->generateEncryptedFile(persist: false);
     $this->assertEquals(self::FILE_NAME, $file->getFileName());
-    $this->assertEquals(self::MIME_TYPE, $file->getMimeType());
+    $this->assertEquals(self::FILE_MIME, $file->getMimeType());
     $this->assertTrue($file->getOwners()->containsKey($this->musician->getId()));
     $this->assertFalse($this->musician->getEncryptedFiles()->contains($file));
   }
@@ -94,7 +86,7 @@ class EncryptedFileTest extends TestCase
   {
     $file = new Entities\EncryptedFile(
       fileName: self::FILE_NAME,
-      mimeType: self::MIME_TYPE,
+      mimeType: self::FILE_MIME,
       owner: null, // $this->musician,
       data: '# Heading',
     );
@@ -107,12 +99,7 @@ class EncryptedFileTest extends TestCase
   /** {@inheritdoc} */
   public function testPostPersistOwnerReflexivity(): void
   {
-    $file = new Entities\EncryptedFile(
-      fileName: self::FILE_NAME,
-      mimeType: self::MIME_TYPE,
-      owner: $this->musician,
-      data: '# Heading',
-    );
+    $file = $this->generateEncryptedFile(persist: false);
     $this->assertTrue($file->getOwners()->containsKey($this->musician->getId()));
     $this->assertFalse($this->musician->getEncryptedFiles()->contains($file));
     $file->setId(13);
