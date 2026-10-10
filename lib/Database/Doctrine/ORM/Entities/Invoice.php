@@ -142,7 +142,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * There may be an associated debit-note. If so: this it is.
    */
-  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, fetch: 'EXTRA_LAZY')]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private ?SepaBulkTransaction $sepaTransaction = null;
 
@@ -151,7 +151,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, fetch: 'EXTRA_LAZY')]
   private ?SepaBankAccount $sepaBankAccount = null;
 
   /**
@@ -159,7 +159,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, fetch: 'EXTRA_LAZY')]
   private ?SepaDebitMandate $sepaDebitMandate = null;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]

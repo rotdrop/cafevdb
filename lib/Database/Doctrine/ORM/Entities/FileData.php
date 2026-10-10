@@ -66,6 +66,8 @@ class FileData implements \ArrayAccess
   ];
 
   /**
+   * @var File
+   *
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
@@ -73,6 +75,17 @@ class FileData implements \ArrayAccess
   #[ORM\Id]
   #[ORM\ManyToOne(targetEntity: File::class, inversedBy: 'fileData', cascade: ['all'])]
   protected File $file;
+
+  /**
+   * @var bool
+   *
+   * As of ORM v3.7.x the schema validator emits an error on artifical
+   * OneToMany-ManyToOne associations.
+   */
+  #[ORM\Id]
+  #[ORM\Column(type: 'boolean', nullable: false, options: [ 'default' => true ])]
+  #[TSAttributes\Hidden]
+  protected readonly bool $lazyFileDataDummy;
 
   /**
    * @var string
@@ -107,6 +120,7 @@ class FileData implements \ArrayAccess
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->lazyFileDataDummy = 1;
   }
   // phpcs:enable
 
@@ -115,7 +129,7 @@ class FileData implements \ArrayAccess
    *
    * @param mixed $data
    *
-   * @param string $format The input format of the data
+   * @param string $format The input format of the data.
    *
    * @return FileData
    */

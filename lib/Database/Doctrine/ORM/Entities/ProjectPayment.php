@@ -87,7 +87,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'payments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Project $project;
 
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, fetch: 'EXTRA_LAZY')]
   private Musician $musician;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
