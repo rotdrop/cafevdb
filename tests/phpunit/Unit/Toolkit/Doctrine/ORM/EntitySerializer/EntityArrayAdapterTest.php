@@ -507,7 +507,15 @@ class EntityArrayAdapterTest extends TestCase
         "__DEPTH__": 0,
         "applications": [],
         "calendarEvents": [],
-        "compositePayments": [],
+        "compositePayments": {
+            "entityClassName": "CompositePayment",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "9999"
+                }
+            ]
+        },
         "created": null,
         "deleted": null,
         "financialBalanceDocumentsStorage": null,
@@ -528,7 +536,15 @@ class EntityArrayAdapterTest extends TestCase
                 }
             }
         },
-        "payments": [],
+        "payments": {
+            "entityClassName": "ProjectPayment",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "9999"
+                }
+            ]
+        },
         "registrationCalendarEvent": null,
         "registrationDeadline": null,
         "registrationStartDate": null,
@@ -732,6 +748,7 @@ class EntityArrayAdapterTest extends TestCase
                 "created": null,
                 "deleted": "2024-01-01T00:00:00.000000Z",
                 "iban": "DE02700100800030876808",
+                "invoices": [],
                 "musician": {
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
@@ -749,11 +766,20 @@ class EntityArrayAdapterTest extends TestCase
                 "created": null,
                 "deleted": null,
                 "iban": "DE02120300000000202051",
+                "invoices": [],
                 "musician": {
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "payments": [],
+                "payments": {
+                   "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "9999"
+                        }
+                    ]
+                },
                 "sepaDebitMandates": [],
                 "sequence": 2,
                 "updated": null
@@ -965,7 +991,15 @@ class EntityArrayAdapterTest extends TestCase
                 "__DEPTH__": 0,
                 "applications": [],
                 "calendarEvents": [],
-                "compositePayments": [],
+                "compositePayments": {
+                    "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "9999"
+                        }
+                    ]
+                },
                 "created": null,
                 "deleted": null,
                 "financialBalanceDocumentsStorage": null,
@@ -986,7 +1020,15 @@ class EntityArrayAdapterTest extends TestCase
                         }
                     }
                 },
-                "payments": [],
+                "payments": {
+            "entityClassName": "ProjectPayment",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "9999"
+                }
+            ]
+        },
                 "registrationCalendarEvent": null,
                 "registrationDeadline": null,
                 "registrationStartDate": null,
@@ -1156,7 +1198,15 @@ class EntityArrayAdapterTest extends TestCase
                 "__DEPTH__": 0,
                 "applications": [],
                 "calendarEvents": [],
-                "compositePayments": [],
+                "compositePayments": {
+                    "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "9999"
+                        }
+                    ]
+                },
                 "created": null,
                 "deleted": null,
                 "financialBalanceDocumentsStorage": null,
@@ -1177,7 +1227,15 @@ class EntityArrayAdapterTest extends TestCase
                         }
                     }
                 },
-                "payments": [],
+                "payments": {
+            "entityClassName": "ProjectPayment",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "9999"
+                }
+            ]
+        },
                 "registrationCalendarEvent": null,
                 "registrationDeadline": null,
                 "registrationStartDate": null,
@@ -1269,11 +1327,20 @@ class EntityArrayAdapterTest extends TestCase
                 "created": null,
                 "deleted": null,
                 "iban": "DE02120300000000202051",
+                "invoices": [],
                 "musician": {
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "payments": [],
+                "payments": {
+                   "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "9999"
+                        }
+                    ]
+                },
                 "sepaDebitMandates": [],
                 "sequence": 2,
                 "updated": null
@@ -1287,6 +1354,7 @@ class EntityArrayAdapterTest extends TestCase
                 "dueEventUid": null,
                 "dueEventUri": null,
                 "id": ' . self::FAKED_ENTITY_ID . ',
+                "invoices": [],
                 "payments": {
                     "entityClassName": "CompositePayment",
                     "entities": {
@@ -1315,7 +1383,52 @@ class EntityArrayAdapterTest extends TestCase
         "__DEPTH__": 1,
         "applications": [],
         "calendarEvents": [],
-        "compositePayments": [],
+        "compositePayments": [
+            {
+                "__DEPTH__": 0,
+                "amount": "12.23",
+                "balanceDocumentsFolder": null,
+                "created": null,
+                "dateOfReceipt": null,
+                "donationReceipt": null,
+                "id": 9999,
+                "musician": {
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "9999"
+                },
+                "notificationMessageId": null,
+                "preNotificationEmail": null,
+                "project": {
+                    "entityClassName": "Project",
+                    "flatIdentifier": "9999"
+                },
+                "projectParticipant": {
+                    "entityClassName": "ProjectParticipant",
+                    "flatIdentifier": "9999:9999"
+                },
+                "projectPayments": {
+                    "entityClassName": "ProjectPayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "9999"
+                        }
+                    ]
+                },
+                "sepaBankAccount": {
+                    "entityClassName": "SepaBankAccount",
+                    "flatIdentifier": "9999:2"
+                },
+                "sepaDebitMandate": null,
+                "sepaTransaction": {
+                    "entityClassName": "SepaBankTransfer",
+                    "flatIdentifier": "9999"
+                },
+                "subject": "TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "supportingDocument": null,
+                "updated": null
+            }
+        ],
         "created": null,
         "deleted": null,
         "financialBalanceDocumentsStorage": null,
@@ -1366,7 +1479,42 @@ class EntityArrayAdapterTest extends TestCase
                 "updated": "2024-01-01T00:00:00.000000Z"
             }
         },
-        "payments": [],
+        "payments": [
+            {
+                "__DEPTH__": 0,
+                "amount": "12.23",
+                "balanceDocumentsFolder": null,
+                "compositePayment": {
+                    "entityClassName": "CompositePayment",
+                    "flatIdentifier": "9999"
+                },
+                "created": null,
+                "id": 9999,
+                "isDonation": false,
+                "musician": {
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "9999"
+                },
+                "project": {
+                    "entityClassName": "Project",
+                    "flatIdentifier": "9999"
+                },
+                "projectParticipant": {
+                    "entityClassName": "ProjectParticipant",
+                    "flatIdentifier": "9999:9999"
+                },
+                "receivable": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "flatIdentifier": "9999:9999:9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                },
+                "receivableOption": {
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "flatIdentifier": "9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                },
+                "subject": "Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "updated": null
+            }
+        ],
         "registrationCalendarEvent": null,
         "registrationDeadline": null,
         "registrationStartDate": null,
@@ -1386,14 +1534,16 @@ class EntityArrayAdapterTest extends TestCase
   /** @return void */
   public function testSerialization(): void
   {
+    $decodeFlags = JSON_BIGINT_AS_STRING|JSON_OBJECT_AS_ARRAY|JSON_THROW_ON_ERROR;
     // tests also "deepen"
     foreach (array_keys(self::SERIALIZED_ENTITY) as $depth) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
+      // echo "DEPTH " . $depth . PHP_EOL;
       // echo json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR) . PHP_EOL;
       $this->assertEqualsCanonicalizing(
-        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()]),
-        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR)),
+        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()], flags: $decodeFlags),
+        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR), flags: $decodeFlags),
       );
     }
     // tests also "un-deepen"
@@ -1401,8 +1551,8 @@ class EntityArrayAdapterTest extends TestCase
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
       $this->assertEqualsCanonicalizing(
-        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()]),
-        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR)),
+        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()], flags: $decodeFlags),
+        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR), flags: $decodeFlags),
       );
     }
   }

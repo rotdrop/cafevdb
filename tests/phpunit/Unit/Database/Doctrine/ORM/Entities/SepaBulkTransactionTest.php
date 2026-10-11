@@ -71,18 +71,38 @@ class SepaBulkTransactionTest extends TestCase
 {
   use EntityGeneratorTrait;
 
+  private Entities\SepaBulkTransaction $transaction;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
     $this->generateProjectParticipant();
+    $this->transaction = $this->generateSepaBankTransfer();
   }
 
   /** @return void */
   public function testCompositePaymentsAssociation(): void
   {
-    $bankTransfer = $this->generateSepaBankTransfer();
-    $this->assertEquals($this->project, $bankTransfer->getProject());
-    $payment = $bankTransfer->getPayment($this->musician);
-    $this->assertEquals($bankTransfer, $payment->getSepaTransaction());
+    $this->assertEquals($this->project, $this->transaction->getProject());
+    $payment = $this->transaction->getPayment($this->musician);
+    $this->assertEquals($this->transaction, $payment->getSepaTransaction());
+  }
+
+  /** @return void */
+  public function testInvoicesAssociation(): void
+  {
+    /** @var Entities\Invoice $invoice */
+    foreach ($this->transaction->getInvoices() as $invoice) {
+      $this->assertEquals($this->transaction, $invoice->getSepaTransaction());
+    }
+  }
+
+  /** @return void */
+  public function testPreNotificationEmailsAssociation(): void
+  {
+    /** @var Entities\SentEmail $sentEmail */
+    foreach ($this->transaction->getPreNotificationEmails() as $sentEmail) {
+      $this->assertEquals($this->transaction, $sentEmail->getSepaBulkTransaction());
+    }
   }
 }

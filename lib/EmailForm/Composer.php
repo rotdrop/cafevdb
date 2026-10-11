@@ -2134,7 +2134,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // member-data update-form
     if (!empty($this->bulkTransaction)) {
       /** @var Entities\CompositePayment $compositePayment */
-      $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+      $compositePayment = $this->bulkTransaction->getPayment($musician);
       if (!empty($compositePayment)) {
         $supportingDocument = $compositePayment->getSupportingDocument();
         if (!empty($supportingDocument)) {
@@ -3047,14 +3047,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         // SentEmail entities.
         $references = array_merge($references, $this->referencing);
         sort($references);
-        $referencedBy = $sentEmail->getReferencedBy();
         foreach ($references as $reference) {
           $referencing = $this->getDatabaseRepository(Entities\SentEmail::class)->find($reference);
           if (empty($referencing)) {
             continue;
           }
-          $referencedBy->set($reference, $referencing);
-          $referencing->setReferencing($sentEmail);
+          $sentEmail->addReferencedBy($referencing);
         }
       }
       $phpMailer->setReferences((array)$references);

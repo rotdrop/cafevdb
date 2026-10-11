@@ -127,11 +127,20 @@ class SepaDebitMandate implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
   private Collection $payments;
 
+  /**
+   * @var Collection<Invoice>
+   *
+   * Linke to the payments table.
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
+  private Collection $invoices;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
-    $this->payments = new ArrayCollection();
+    $this->payments = new ArrayCollection;
+    $this->invoices = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -197,6 +206,7 @@ class SepaDebitMandate implements \ArrayAccess
   public function setSepaBankAccount(SepaBankAccount $sepaBankAccount): SepaDebitMandate
   {
     $this->sepaBankAccount = $sepaBankAccount;
+    $sepaBankAccount->addSepaDebitMandate($this);
 
     return $this;
   }
@@ -424,14 +434,77 @@ class SepaDebitMandate implements \ArrayAccess
     return $this->payments;
   }
 
+
   /**
-   * Return the number of payments attached to this entity.
+   * Add a payment and make sure the owning side is also updated.
+   *
+   * @param CompositePayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(CompositePayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getSepaDebitMandate() !== $this) {
+      $payment->setSepaDebitMandate($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return SepaDebitMandate
+   */
+  public function setInvoices(Collection $invoices): SepaDebitMandate
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices(): Collection
+  {
+    return $this->Add;
+  }
+
+  /**
+   * Add an invoice and enforce that the owning side is also updated.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getSepaDebitMandate() !== $this) {
+      $invoice->setSepaDebitMandate($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Return the number of invoices attached to this entity.
    *
    * @return int
    */
   public function usage(): int
   {
-    return $this->payments->count();
+    return $this->payments->count() + $this->invoices->count();
   }
 
   /**

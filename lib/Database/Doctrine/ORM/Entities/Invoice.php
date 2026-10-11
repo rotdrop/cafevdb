@@ -51,7 +51,10 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\UniqueConstraint(columns: ['invoice_number'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[Gedmo\SoftDeleteable(
+  fieldName: 'deleted',
+  hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class,
+)]
 class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -63,6 +66,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   public const INVOICE_NUMBER_SEPARATOR = '/';
+
   /**
    * @var array
    *
@@ -142,7 +146,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * There may be an associated debit-note. If so: this it is.
    */
-  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private ?SepaBulkTransaction $sepaTransaction = null;
 
@@ -151,7 +155,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
   private ?SepaBankAccount $sepaBankAccount = null;
 
   /**
@@ -159,7 +163,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
-  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
   private ?SepaDebitMandate $sepaDebitMandate = null;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
@@ -206,7 +210,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setInvoiceItems(Collection $invoiceItems):Invoice
+  public function setInvoiceItems(Collection $invoiceItems): Invoice
   {
     $this->invoiceItems = $invoiceItems;
 
@@ -218,9 +222,28 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Collection
    */
-  public function getInvoiceItems():Collection
+  public function getInvoiceItems(): Collection
   {
     return $this->invoiceItems;
+  }
+
+  /**
+   * Add an invoiceItem and also update the owning side.
+   *
+   * @param InvoiceItem $invoiceItem
+   *
+   * @return self
+   */
+  public function addInvoiceItem(InvoiceItem $invoiceItem): self
+  {
+    if (!$this->invoiceItems->contains($invoiceItem)) {
+      $this->invoiceItems->add($invoiceItem);
+    }
+    if ($invoiceItem->getInvoice() !== $this) {
+      $invoiceItem->setInvoice($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -230,7 +253,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return self
    */
-  public function setAmount(int|float|string|RationalNumber $amount): self
+  public function setAmount(int|float|string|RationalNumber $amount):  self
   {
     $this->amount = MonetaryNumberType::create($amount);
 
@@ -242,7 +265,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return MonetaryNumberType
    */
-  public function getAmount(): MonetaryNumberType
+  public function getAmount():  MonetaryNumberType
   {
     return $this->amount;
   }
@@ -253,7 +276,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return MonetaryNumberType
    */
-  public function sumInvoiceItemsAmount(): MonetaryNumberType
+  public function sumInvoiceItemsAmount():  MonetaryNumberType
   {
     return $this->invoiceItems->reduce(
       fn(MonetaryNumberType $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
@@ -267,7 +290,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return bool
    */
-  public function isConsistent():bool
+  public function isConsistent(): bool
   {
     if ($this->amount != $this->sumInvoiceItemsAmount()) {
       return false;
@@ -282,7 +305,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setDebitor($debitor):Invoice
+  public function setDebitor($debitor): Invoice
   {
     $this->debitor = $debitor;
 
@@ -294,7 +317,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function getDebitor():?Musician
+  public function getDebitor(): ?Musician
   {
     return $this->debitor;
   }
@@ -306,9 +329,10 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setOriginator(Musician $originator):Invoice
+  public function setOriginator(Musician $originator): Invoice
   {
     $this->originator = $originator;
+    $originator->addOriginatedInvoice($this);
 
     return $this;
   }
@@ -318,7 +342,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return null|Musician
    */
-  public function getOriginator():?Musician
+  public function getOriginator(): ?Musician
   {
     return $this->originator;
   }
@@ -330,9 +354,10 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setProject($project):Invoice
+  public function setProject($project): Invoice
   {
     $this->project = $project;
+    $project->addInvoice($this);
 
     return $this;
   }
@@ -342,7 +367,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Project
    */
-  public function getProject():?Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
@@ -354,7 +379,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setProjectParticipant(ProjectParticipant $projectParticipant):Invoice
+  public function setProjectParticipant(ProjectParticipant $projectParticipant): Invoice
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -366,7 +391,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipant
    */
-  public function getProjectParticipant():?ProjectParticipant
+  public function getProjectParticipant(): ?ProjectParticipant
   {
     return $this->projectParticipant;
   }
@@ -378,7 +403,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setInvoiceDate($invoiceDate = null):Invoice
+  public function setInvoiceDate($invoiceDate = null): Invoice
   {
     $this->invoiceDate = self::convertToDateTime($invoiceDate);
 
@@ -390,7 +415,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return \DateTime|null
    */
-  public function getInvoiceDate():?DateTimeInterface
+  public function getInvoiceDate(): ?DateTimeInterface
   {
     return $this->invoiceDate;
   }
@@ -402,7 +427,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setDueDate($dueDate = null):Invoice
+  public function setDueDate($dueDate = null): Invoice
   {
     $this->dueDate = self::convertToDateTime($dueDate);
 
@@ -414,7 +439,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return \DateTime|null
    */
-  public function getDueDate():?DateTimeInterface
+  public function getDueDate(): ?DateTimeInterface
   {
     return $this->dueDate;
   }
@@ -426,7 +451,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setBalancedDate($balancedDate = null):Invoice
+  public function setBalancedDate($balancedDate = null): Invoice
   {
     $this->balancedDate = self::convertToDateTime($balancedDate);
 
@@ -438,7 +463,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return \DateTime|null
    */
-  public function getBalancedDate():?DateTimeInterface
+  public function getBalancedDate(): ?DateTimeInterface
   {
     return $this->balancedDate;
   }
@@ -450,7 +475,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setSubject(?string $subject):Invoice
+  public function setSubject(?string $subject): Invoice
   {
     $this->subject = $subject;
 
@@ -462,7 +487,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getSubject():?string
+  public function getSubject(): ?string
   {
     return $this->subject;
   }
@@ -474,7 +499,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setPurpose(?string $purpose):Invoice
+  public function setPurpose(?string $purpose): Invoice
   {
     $this->purpose = $purpose;
 
@@ -486,7 +511,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getPurpose():?string
+  public function getPurpose(): ?string
   {
     return $this->purpose;
   }
@@ -498,7 +523,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setInvoiceNumber(?string $invoiceNumber):Invoice
+  public function setInvoiceNumber(?string $invoiceNumber): Invoice
   {
     $this->invoiceNumber = $invoiceNumber;
 
@@ -510,7 +535,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getInvoiceNumber():?string
+  public function getInvoiceNumber(): ?string
   {
     return $this->invoiceNumber;
   }
@@ -522,7 +547,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setDebitNote($debitNote):Invoice
+  public function setDebitNote($debitNote): Invoice
   {
     $this->debitNote = $debitNote;
 
@@ -546,9 +571,10 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):Invoice
+  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount): Invoice
   {
     $this->sepaBankAccount = $sepaBankAccount;
+    $sepaBankAccount->addInvoice($this);
 
     return $this;
   }
@@ -558,7 +584,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaBankAccount|null
    */
-  public function getSepaBankAccount():?SepaBankAccount
+  public function getSepaBankAccount(): ?SepaBankAccount
   {
     return $this->sepaBankAccount;
   }
@@ -570,7 +596,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):Invoice
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate): Invoice
   {
     $this->sepaDebitMandate = $sepaDebitMandate;
 
@@ -582,7 +608,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaDebitMandate|null
    */
-  public function getSepaDebitMandate():?SepaDebitMandate
+  public function getSepaDebitMandate(): ?SepaDebitMandate
   {
     return $this->sepaDebitMandate;
   }
@@ -594,9 +620,10 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):Invoice
+  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction): Invoice
   {
     $this->sepaTransaction = $sepaTransaction;
+    $sepaTransaction->addInvoice($this);
 
     return $this;
   }
@@ -606,7 +633,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaTransaction|null
    */
-  public function getSepaTransaction():?SepaBulkTransaction
+  public function getSepaTransaction(): ?SepaBulkTransaction
   {
     return $this->sepaTransaction;
   }
@@ -618,7 +645,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setNotificationEmail(?SentEmail $notificationEmail):Invoice
+  public function setNotificationEmail(?SentEmail $notificationEmail): Invoice
   {
     if ($notificationEmail !== null) {
       $notificationEmail->setInvoice($this); // we are the owner ...
@@ -633,7 +660,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return null|SentEmail
    */
-  public function getNotificationEmail():?SentEmail
+  public function getNotificationEmail(): ?SentEmail
   {
     return $this->notificationEmail;
   }
@@ -645,7 +672,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):Invoice
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder): Invoice
   {
     if (!empty($this->balanceDocumentsFolder)) {
       /** @var InvoiceItem $part */
@@ -684,7 +711,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return ?DatabaseStorageFolder
    */
-  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
+  public function getBalanceDocumentsFolder(): ?DatabaseStorageFolder
   {
     return $this->balanceDocumentsFolder;
   }
@@ -692,7 +719,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * @return null|DatabaseStorageFile
    */
-  public function getWrittenInvoice():?DatabaseStorageFile
+  public function getWrittenInvoice(): ?DatabaseStorageFile
   {
     return $this->writtenInvoice ?? null;
   }
@@ -702,7 +729,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setWrittenInvoice(?DatabaseStorageFile $writtenInvoice):Invoice
+  public function setWrittenInvoice(?DatabaseStorageFile $writtenInvoice): Invoice
   {
     $this->writtenInvoice = $writtenInvoice;
 
@@ -712,7 +739,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * @return null|TaxationStatutorySource
    */
-  public function getTaxationStatutorySource():?TaxationStatutorySource
+  public function getTaxationStatutorySource(): ?TaxationStatutorySource
   {
     return $this->taxationStatutorySource ?? null;
   }
@@ -722,7 +749,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return TaxExemptionNotice
    */
-  public function setTaxationStatutorySource(TaxationStatutorySource $taxationStatutorySource):Invoice
+  public function setTaxationStatutorySource(TaxationStatutorySource $taxationStatutorySource): Invoice
   {
     if ($taxationStatutorySource->getTaxType() != Types\EnumTaxType::SALES) {
       throw new InvalidArgumentException(
@@ -734,6 +761,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
       );
     }
     $this->taxationStatutorySource = $taxationStatutorySource;
+    $taxationStatutorySource->addInvoice($this);
 
     return $this;
   }
@@ -746,14 +774,14 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function updateSubject(?Closure $transliterate = null):Invoice
+  public function updateSubject(?Closure $transliterate = null): Invoice
   {
     $this->subject = $this->generateSubject($transliterate);
     return $this;
   }
 
   /** {@inheritdoc} */
-  public function jsonSerialize():array
+  public function jsonSerialize(): array
   {
     return $this->toArray();
   }
@@ -764,7 +792,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return string
    */
-  public function generateInvoiceNumber():string
+  public function generateInvoiceNumber(): string
   {
     if ($this->balanceDocumentsFolder) {
       $invoiceNumber = $this->balanceDocumentsFolder->getName();
@@ -786,7 +814,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     $usageCount = 0;
     if (!empty($this->notificationEmail)) {
@@ -821,7 +849,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /** {@inheritdoc} */
-  public function __toString():string
+  public function __toString(): string
   {
     return 'invoice of ' . $this->amount . ' € due at ' . $this->dueDate->format('Y-m-d') . ' by ' . $this->debitor->getPublicName(true);
   }

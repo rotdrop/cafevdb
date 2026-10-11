@@ -149,7 +149,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setMessageId(string $messageId):SentEmail
+  public function setMessageId(string $messageId): SentEmail
   {
     $this->messageId = $messageId;
 
@@ -161,7 +161,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getMessageId():string
+  public function getMessageId(): string
   {
     return $this->messageId;
   }
@@ -173,7 +173,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setCreatedBy(string $createdBy):SentEmail
+  public function setCreatedBy(string $createdBy): SentEmail
   {
     $this->createdBy = $createdBy;
 
@@ -185,7 +185,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getCreatedBy():string
+  public function getCreatedBy(): string
   {
     return $this->createdBy;
   }
@@ -197,7 +197,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBulkRecipients(string $bulkRecipients):SentEmail
+  public function setBulkRecipients(string $bulkRecipients): SentEmail
   {
     $this->bulkRecipients = $bulkRecipients;
 
@@ -209,7 +209,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getBulkRecipients():string
+  public function getBulkRecipients(): string
   {
     return $this->bulkRecipients;
   }
@@ -221,7 +221,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBulkRecipientsHash(string $bulkRecipientsHash):SentEmail
+  public function setBulkRecipientsHash(string $bulkRecipientsHash): SentEmail
   {
     $this->bulkRecipientsHash = $bulkRecipientsHash;
 
@@ -233,7 +233,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getBulkRecipientsHash():string
+  public function getBulkRecipientsHash(): string
   {
     return $this->bulkRecipientsHash;
   }
@@ -245,7 +245,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setHtmlBody(string $htmlBody):SentEmail
+  public function setHtmlBody(string $htmlBody): SentEmail
   {
     $this->htmlBody = $htmlBody;
 
@@ -257,7 +257,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getHtmlBody():string
+  public function getHtmlBody(): string
   {
     return $this->htmlBody;
   }
@@ -269,7 +269,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setHtmlBodyHash(string $htmlBodyHash):SentEmail
+  public function setHtmlBodyHash(string $htmlBodyHash): SentEmail
   {
     $this->htmlBodyHash = $htmlBodyHash;
 
@@ -281,7 +281,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getHtmlBodyHash():string
+  public function getHtmlBodyHash(): string
   {
     return $this->htmlBodyHash;
   }
@@ -293,7 +293,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setSubject(string $subject):SentEmail
+  public function setSubject(string $subject): SentEmail
   {
     $this->subject = $subject;
 
@@ -305,7 +305,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getSubject():string
+  public function getSubject(): string
   {
     return $this->subject;
   }
@@ -317,7 +317,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setSubjectHash(string $subjectHash):SentEmail
+  public function setSubjectHash(string $subjectHash): SentEmail
   {
     $this->subjectHash = $subjectHash;
 
@@ -329,7 +329,7 @@ class SentEmail
    *
    * @return string
    */
-  public function getSubjectHash():string
+  public function getSubjectHash(): string
   {
     return $this->subjectHash;
   }
@@ -341,7 +341,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setCc(?string $cc):SentEmail
+  public function setCc(?string $cc): SentEmail
   {
     $this->cc = $cc;
 
@@ -353,7 +353,7 @@ class SentEmail
    *
    * @return null|string
    */
-  public function getCc():?string
+  public function getCc(): ?string
   {
     return $this->cc;
   }
@@ -365,7 +365,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBcc(?string $bcc):SentEmail
+  public function setBcc(?string $bcc): SentEmail
   {
     $this->bcc = $bcc;
 
@@ -377,7 +377,7 @@ class SentEmail
    *
    * @return null|string
    */
-  public function getBcc():?string
+  public function getBcc(): ?string
   {
     return $this->bcc;
   }
@@ -389,9 +389,10 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setReferencing(?SentEmail $referencing):SentEmail
+  public function setReferencing(?SentEmail $referencing): SentEmail
   {
     $this->referencing = $referencing;
+    $referencing->addReferencedBy($this);
 
     return $this;
   }
@@ -401,7 +402,7 @@ class SentEmail
    *
    * @return SentEmail|null
    */
-  public function getReferencing():?SentEmail
+  public function getReferencing(): ?SentEmail
   {
     return $this->referencing;
   }
@@ -413,7 +414,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setReferencedBy(Collection $referencedBy):SentEmail
+  public function setReferencedBy(Collection $referencedBy): SentEmail
   {
     $this->referencedBy = $referencedBy;
 
@@ -425,9 +426,30 @@ class SentEmail
    *
    * @return Collection
    */
-  public function getReferencedBy():Collection
+  public function getReferencedBy(): Collection
   {
     return $this->referencedBy;
+  }
+
+  /**
+   * Add to the referencedBy collection and make sure that the owning side is
+   * also updated.
+   *
+   * @param SentEmail $referencedBy
+   *
+   * @return self
+   */
+  public function addReferencedBy(SentEmail $referencedBy): self
+  {
+    $referencedByMessageId = $referencedBy->getMessageId();
+    if ($referencedByMessageId === null) {
+      $this->referencedBy->set($referencedByMessageId, $referencedBy);
+    }
+    if ($referencedBy->getReferencing() !== $this) {
+      $referencedBy->setReferencing($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -437,7 +459,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setProject(?Project $project): SentEmail
+  public function setProject(?Project $project):  SentEmail
   {
     $this->project = $project;
 
@@ -449,7 +471,7 @@ class SentEmail
    *
    * @return Project
    */
-  public function getProject(): ?Project
+  public function getProject():  ?Project
   {
     return $this->project;
   }
@@ -461,9 +483,10 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setSepaBulkTransaction(SepaBulkTransaction $sepaBulkTransaction):SentEmail
+  public function setSepaBulkTransaction(SepaBulkTransaction $sepaBulkTransaction): SentEmail
   {
     $this->sepaBulkTransaction = $sepaBulkTransaction;
+    $sepaBulkTransaction->addPreNotificationEmail($this);
 
     return $this;
   }
@@ -473,7 +496,7 @@ class SentEmail
    *
    * @return SepaBulkTransaction
    */
-  public function getSepaBulkTransaction():SepaBulkTransaction
+  public function getSepaBulkTransaction(): SepaBulkTransaction
   {
     return $this->sepaBulkTransaction;
   }
@@ -485,7 +508,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setCompositePayment(CompositePayment $compositePayment):SentEmail
+  public function setCompositePayment(CompositePayment $compositePayment): SentEmail
   {
     $this->compositePayment = $compositePayment;
 
@@ -497,7 +520,7 @@ class SentEmail
    *
    * @return CompositePayment
    */
-  public function getCompositePayment():CompositePayment
+  public function getCompositePayment(): CompositePayment
   {
     return $this->compositePayment;
   }
@@ -509,7 +532,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setDonationReceipt(DonationReceipt $donationReceipt):SentEmail
+  public function setDonationReceipt(DonationReceipt $donationReceipt): SentEmail
   {
     $this->donationReceipt = $donationReceipt;
 
@@ -521,7 +544,7 @@ class SentEmail
    *
    * @return DonationReceipt
    */
-  public function getDonationReceipt():DonationReceipt
+  public function getDonationReceipt(): DonationReceipt
   {
     return $this->donationReceipt;
   }
@@ -533,7 +556,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setInvoice(Invoice $invoice):SentEmail
+  public function setInvoice(Invoice $invoice): SentEmail
   {
     $this->invoice = $invoice;
 
@@ -545,7 +568,7 @@ class SentEmail
    *
    * @return Invoice
    */
-  public function getInvoice():Invoice
+  public function getInvoice(): Invoice
   {
     return $this->invoice;
   }
