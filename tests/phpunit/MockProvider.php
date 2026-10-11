@@ -51,7 +51,6 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUser;
 use OCP\IUserSession;
-use OCP\L10N\IFactory as L10NFactory;
 use OCP\Security\IHasher;
 use Psr\Log\LoggerInterface;
 
