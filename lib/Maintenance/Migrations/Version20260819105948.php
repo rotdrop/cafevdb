@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Replace the web-browser history entry key by the history stack position.
  */
 final class Version20260819105948 extends AbstractStructuralMigration
 {
