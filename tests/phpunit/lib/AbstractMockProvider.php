@@ -710,9 +710,10 @@ abstract class AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder($className)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $instance = $this->createStub($className);
+    // getMockBuilder($className)
+    // ->disableOriginalConstructor()
+    // ->getMock();
     $instance->method('getAppValue')->willReturnCallback(
       function(string $appName, string $key, mixed $default = null): mixed {
         // print_r($this->appConfigValues);
@@ -787,7 +788,7 @@ abstract class AbstractMockProvider
 
     $this->instances[$className] = $instance;
 
-    $instance->expects($this->never())->method('setSystemValues');
+    // $instance->expects($this->never())->method('setSystemValues');
 
     return $instance;
   }
