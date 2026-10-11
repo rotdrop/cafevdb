@@ -80,6 +80,10 @@ trait EntityGeneratorTrait
     'a073db1b-fe3f-40aa-ad53-9c82a309351f',
   ];
 
+  protected const FILE_NAME = 'file.md';
+  protected const FILE_MIME = 'text/markdown';
+  protected const FILE_DATA = '# Heading';
+
   private static $uuidIndex = 0;
 
   private EntityManager $entityManager;
@@ -341,11 +345,56 @@ trait EntityGeneratorTrait
     return $field;
   }
 
+  /**
+   * @param string $fileName
+   *
+   * @param string $mimeType
+   *
+   * @param string $data
+   *
+   * @param bool $persist Optionally persist the generated entities, defaults to \false.
+   *
+   * @return Entities\EncryptedFile
+   */
+  public function generateEncryptedFile(
+    string $fileName = self::FILE_NAME,
+    string $mimeType = self::FILE_MIME,
+    string $data = self::FILE_DATA,
+    bool $persist = false,
+  ): Entities\EncryptedFile {
+    if (!empty($this->entities[Entities\EncryptedFile::class])) {
+      return $this->entities[Entities\EncryptedFile::class];
+    }
+    $file = new Entities\EncryptedFile(
+      fileName: $fileName,
+      mimeType: $mimeType,
+      owner: $this->musician ?? null,
+      data: $data,
+    );
+    $this->entities[Entities\EncryptedFile::class] = $file;
+
+    if ($persist) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->persist($file);
+        $this->entityManager->persist($file->getFileData());
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->rollBack();
+        }
+        throw $t;
+      }
+    }
+
+    return $file;
+  }
 
   /**
    * @param bool $persist Optionally persist the generated entities, defaults to \false.
    *
-   * @param string $generator Receivables generator, defaults to
+   * @param string $generatorClass Receivables generator, defaults to
    * ManuallyGeneratedReceivablesGenerator::class.
    *
    * @return Entities\ProjectParticipantFieldDatum
@@ -451,8 +500,8 @@ trait EntityGeneratorTrait
       ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ;
-    $this->musician->getPayments()->add($compositePayment);
-    $this->participant->getPayments()->add($compositePayment);
+    $this->musician->addPayment($compositePayment);
+    $this->participant->addPayment($compositePayment);
     $projectPayment->setCompositePayment($compositePayment);
 
     $compositePayment->getProjectPayments()->add($projectPayment);

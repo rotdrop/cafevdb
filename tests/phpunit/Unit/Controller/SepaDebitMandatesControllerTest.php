@@ -153,6 +153,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094146::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819094422::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260819105948::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20261009150233::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
@@ -417,9 +418,6 @@ class SepaDebitMandatesControllerTest extends TestCase
     $this->assertEquals($numBankAccounts + 1, count($bankAccounts));
     $this->assertEquals($numDebitMandates + 1, count($debitMandates));
   }
-
-  private const FILE_NAME = 'file.txt';
-  private const FILE_DATA = 'TEXT';
 
   /**
    * Simulate file upload with various sources.
