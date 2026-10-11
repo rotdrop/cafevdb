@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2023 Claus-Justus Heine
+ * @copyright 2020-2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,10 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Migration;
 
-use Doctrine\DBAL\Types\Types;
 use Closure;
+
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -56,11 +57,6 @@ class Version060000Date20201001210735 extends SimpleMigrationStep
         'unsigned' => true,
       ]);
       $table->setPrimaryKey(['id']);
-
-      $table->addColumn('user_id', Types::STRING, [
-        'notnull' => true,
-        'length' => 64,
-      ]);
 
       $table->addColumn('current', Types::BIGINT, [
         'notnull' => true,

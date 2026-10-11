@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Migration;
 
 use Closure;
+use Throwable;
+
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
@@ -61,19 +63,16 @@ class Version060000Date20201022230000 extends SimpleMigrationStep
       'length' => 4,
       'default' => -1,
     ]);
+    try {
+      $qb = $this->connection->getQueryBuilder();
+      $qb->update('cafevdb_blog')
+         ->set('in_reply_to', 'inreplyto')
+         ->executeStatement();
+    } catch (Throwable) {
+      // ignore
+    }
+    $table->dropColumn('inreplyto');
 
     return $schema;
-  }
-
-  /** {@inheritdoc} */
-  public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options)
-  {
-    $schema = $schemaClosure();
-    $table = $schema->getTable('cafevdb_blog');
-    $qb = $this->connection->getQueryBuilder();
-    $qb->update('cafevdb_blog')
-      ->set('in_reply_to', 'inreplyto')
-      ->execute();
-    $table->dropColumn('inreplyto');
   }
 }
