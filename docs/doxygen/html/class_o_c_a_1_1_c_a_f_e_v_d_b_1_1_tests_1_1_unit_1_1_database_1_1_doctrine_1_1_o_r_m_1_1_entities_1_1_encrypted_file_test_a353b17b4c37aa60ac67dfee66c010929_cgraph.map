@@ -1,5 +1,6 @@
 <map id="testPostPersistOwnerReflexivity" name="testPostPersistOwnerReflexivity">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="5,21,217,48"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a3aa9da770dfbe93302a539c252c768b7" title=" " alt="" coords="265,5,468,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,32,251,34,246,35,217,37"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,45,217,72"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a3aa9da770dfbe93302a539c252c768b7" title=" " alt="" coords="265,29,468,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,56,251,58,246,59,217,61"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="317,27,317,19,327,10,343,5,366,3,393,5,411,15,406,15,392,11,366,8,344,10,329,15,322,21,321,31"/>
 </map>

@@ -1,7 +1,9 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant =
 [
     [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "addInvoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#af41304938fdc63f14ec17e66a6cf6238", null ],
     [ "addParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a9f463f9fad9b1264ecb49d1a247b2e2b", null ],
+    [ "addPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a589b447a3d75a0e24d4be05656eec2e8", null ],
     [ "addProjectInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81", null ],
     [ "getDatabaseDocuments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0b1419c6b65bf1de5c4443e07ecd22c5", null ],
     [ "getInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a4a18c0abbf6628848d2c3b8c48fbca19", null ],

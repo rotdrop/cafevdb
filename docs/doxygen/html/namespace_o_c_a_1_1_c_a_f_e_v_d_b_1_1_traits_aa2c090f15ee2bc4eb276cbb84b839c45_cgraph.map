@@ -1,9 +1,21 @@
 <map id="count" name="count">
-<area shape="rect" id="Node000001" title="Counts entities by a set of criteria." alt="" coords="5,55,59,81"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a28a64f0eb0f49382d6349b5ab65c4b23" title="Set and get the given name as the current database target entity." alt="" coords="107,55,265,81"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,65,93,67,89,69,60,71"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="313,5,541,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,54,300,52,295,53,266,60"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="348,88,506,115"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="265,76,335,88,330,88,265,82"/>
+<area shape="rect" id="Node000001" title="Counts entities by a set of criteria." alt="" coords="5,185,59,212"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="107,136,267,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,189,93,181,90,185,61,194"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a28a64f0eb0f49382d6349b5ab65c4b23" title="Set and get the given name as the current database target entity." alt="" coords="108,227,266,253"/>
+<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="59,203,122,220,118,224,59,208"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="157,135,155,126,160,117,171,111,187,109,204,112,215,120,210,121,202,117,187,115,173,116,164,121,161,127,162,136"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="335,29,523,88"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="233,133,314,98,333,92,328,95,316,102,236,138"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="330,136,528,179"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="267,163,317,165,312,167,268,168"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="382,28,383,19,391,10,407,5,429,3,455,5,472,15,467,15,453,11,429,8,408,10,394,15,387,21,387,30"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="327,149,283,151,282,146,332,148"/>
+<area shape="poly" id="edge7_Node000004_Node000004" title=" " alt="" coords="383,134,381,126,389,117,405,111,429,109,455,112,472,120,467,121,454,117,429,115,406,117,392,121,387,127,388,136"/>
+<area shape="poly" id="edge9_Node000005_Node000005" title=" " alt="" coords="160,226,155,218,158,208,169,202,187,200,206,203,217,211,212,211,204,208,187,205,171,207,163,212,161,217,165,227"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="315,207,543,265"/>
+<area shape="poly" id="edge10_Node000005_Node000006" title=" " alt="" coords="266,236,302,238,297,239,267,241"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="350,313,508,340"/>
+<area shape="poly" id="edge11_Node000005_Node000007" title=" " alt="" coords="227,251,378,307,373,309,226,257"/>
+<area shape="poly" id="edge12_Node000007_Node000007" title=" " alt="" coords="388,312,381,305,386,295,403,289,429,287,458,289,475,299,470,298,457,294,429,292,404,294,390,299,386,304,393,314"/>
 </map>

@@ -757,125 +757,18 @@ var annotated_dup =
           [ "StorageUtil", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util" ],
           [ "UserStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage" ]
         ] ],
-        [ "Toolkit", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit.html", [
-          [ "AppInfo", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info.html", [
-            [ "AbstractApplication", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application" ]
-          ] ],
-          [ "Attributes", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_attributes.html", [
-            [ "DoNotCatchExceptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_attributes_1_1_do_not_catch_exceptions.html", null ]
-          ] ],
-          [ "Backend", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend.html", [
-            [ "ArchiveBackend", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend" ],
-            [ "ArchiveFormats", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats" ]
-          ] ],
-          [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common.html", [
-            [ "AbstractDecimalRational", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_abstract_decimal_rational.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_abstract_decimal_rational" ],
-            [ "DecimalRationalMonetary", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary" ],
-            [ "DecimalRationalP2S2", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2" ],
-            [ "DecimalRationalP4S4", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4" ],
-            [ "RationalNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number" ]
-          ] ],
-          [ "Console", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_console.html", [
-            [ "ConsoleOutput", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_console_1_1_console_output.html", null ]
-          ] ],
-          [ "Doctrine", null, [
-            [ "DBAL", null, [
-              [ "Types", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types.html", [
-                [ "AbstractDecimalRationalType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type" ],
-                [ "ArrayType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type" ],
-                [ "DecimalRationalMonetaryType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type" ],
-                [ "DecimalRationalP2S2Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type" ],
-                [ "DecimalRationalP4S4Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type" ],
-                [ "UuidType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type" ]
-              ] ]
-            ] ],
-            [ "ORM", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html", [
-              [ "EntitySerializer", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer.html", [
-                [ "CollectionEntityReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_collection_entity_reference.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_collection_entity_reference" ],
-                [ "EntityArrayAdapter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter" ],
-                [ "EntityReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference" ],
-                [ "EntityReferenceCollection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection" ],
-                [ "EntityReferenceIdentifier", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier" ],
-                [ "EntityResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response" ],
-                [ "EntitySerializer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer" ]
-              ] ],
-              [ "AbstractEntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager" ],
-              [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_constants.html", null ],
-              [ "EntityRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_repository.html", null ],
-              [ "SingleEntityNamespaceManager", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager" ]
-            ] ]
-          ] ],
-          [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o.html", [
-            [ "AbstractDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o" ],
-            [ "AbstractResponseDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o" ],
-            [ "LegacyFileInfo", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info" ]
-          ] ],
-          [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions.html", [
-            [ "ArchiveCannotOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_cannot_open_exception.html", null ],
-            [ "ArchiveException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html", null ],
-            [ "ArchiveNotOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_not_open_exception.html", null ],
-            [ "ArchiveTooLargeException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception" ],
-            [ "AuthorizationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_authorization_exception.html", null ],
-            [ "DatabaseEntityException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception" ],
-            [ "DatabaseEntityNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception" ],
-            [ "DatabaseException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_exception.html", null ],
-            [ "DatabaseMissingIdentifierException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception" ],
-            [ "EnduserNotificationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception" ],
-            [ "EntitySerializationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception" ],
-            [ "Exception", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html", null ],
-            [ "PhpSessionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html", null ],
-            [ "SessionStillOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception" ]
-          ] ],
-          [ "Listener", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener.html", [
-            [ "BeforeMessageLoggedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener_1_1_before_message_logged_event_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener_1_1_before_message_logged_event_listener" ]
-          ] ],
-          [ "Middleware", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware.html", [
-            [ "ExceptionMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware_1_1_exception_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware_1_1_exception_middleware" ]
-          ] ],
-          [ "Response", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response.html", [
-            [ "HttpStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status" ],
-            [ "PreRenderedTemplateResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response" ]
-          ] ],
-          [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service.html", [
-            [ "ArchiveService", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", [
-              [ "ArchiveInfo", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info" ]
-            ] ],
-            [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf" ],
-            [ "AppInfoService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service" ],
-            [ "AppPasswordService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service" ],
-            [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure" ],
-            [ "ArchiveService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service" ],
-            [ "ExecutableFinder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder" ],
-            [ "GroupFoldersServiceNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32" ],
-            [ "GroupFoldersServicePreNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32" ],
-            [ "MimeTypeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service" ],
-            [ "RequestService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service" ],
-            [ "SimpleSharingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service" ],
-            [ "UserScopeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service" ]
-          ] ],
-          [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_constants.html", null ]
-        ] ],
         [ "Tests", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests.html", [
           [ "Unit", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit.html", [
-            [ "Maintenance", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance.html", [
-              [ "Migrations", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations.html", [
-                [ "Version20260131090857Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260131090857_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260131090857_test" ],
-                [ "Version20260206193722Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260206193722_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260206193722_test" ],
-                [ "EventsServicePersistenceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_events_service_persistence_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_events_service_persistence_test" ]
-              ] ],
-              [ "ApplicationTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_application_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_application_test" ],
-              [ "MigrationsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_test" ]
-            ] ],
             [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common.html", [
               [ "AbstractUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_abstract_undoable_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_abstract_undoable_test" ],
               [ "ConsoleLoggerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test" ],
               [ "FunctionsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test" ],
               [ "GenericUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test" ],
               [ "NumberFormatterTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_number_formatter_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_number_formatter_test" ],
+              [ "RationalNumberTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test" ],
               [ "TransliteratorTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_transliterator_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_transliterator_test" ],
               [ "UndoableRunQueueTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_undoable_run_queue_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_undoable_run_queue_test" ],
-              [ "UtilTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test" ],
-              [ "RationalNumberTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test" ]
+              [ "UtilTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test" ]
             ] ],
             [ "Controller", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller.html", [
               [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o.html", [
@@ -978,57 +871,12 @@ var annotated_dup =
                   ] ],
                   [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html", [
                     [ "AutoIncrementTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_auto_increment_trait_test" ],
-                    [ "TestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_test_class.html", null ],
-                    [ "DateTimeTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test" ]
+                    [ "DateTimeTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_date_time_trait_test" ],
+                    [ "TestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_1_1_test_class.html", null ]
                   ] ]
                 ] ]
               ] ],
               [ "EntityManagerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_entity_manager_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_entity_manager_test" ]
-            ] ],
-            [ "Toolkit", null, [
-              [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html", [
-                [ "EnumGlobalSubstitutionKeyTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test" ],
-                [ "EnumMemberSubstitutionKeyTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_member_substitution_key_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_member_substitution_key_test" ],
-                [ "TestAppNameTraitClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_test_app_name_trait_class.html", null ],
-                [ "AppNameTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test" ],
-                [ "BackedEnumTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_backed_enum_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_backed_enum_trait_test" ],
-                [ "TestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_test_class.html", null ],
-                [ "DateTimeTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_date_time_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_date_time_trait_test" ],
-                [ "TranslatableEnumTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_translatable_enum_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_translatable_enum_trait_test" ]
-              ] ],
-              [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common.html", [
-                [ "DecimalRationalMonetaryTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary_test.html", null ],
-                [ "DecimalRationalP2S2Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2_test.html", null ],
-                [ "DecimalRationalP4S4Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4_test.html", null ],
-                [ "DecimalRationalTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test_class.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test_class" ],
-                [ "DecimalRationalTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test.html", null ]
-              ] ],
-              [ "Doctrine", null, [
-                [ "DBAL", null, [
-                  [ "Types", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types.html", [
-                    [ "DecimalRationalMonetaryTypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_68e75e785239919efbd499688c4755ef.html", null ],
-                    [ "DecimalRationalP2S2TypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_0451d1ee3c87a2e31d22a7f6e5014634.html", null ],
-                    [ "DecimalRationalP4S4TypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_7000cc897e10fb7c7143dd86cf235fe1.html", null ],
-                    [ "DecimalRationalTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_test_class.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_test_class" ],
-                    [ "DecimalRationalTypeTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c" ],
-                    [ "DecimalRationalTypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_type_test.html", null ]
-                  ] ]
-                ] ],
-                [ "ORM", null, [
-                  [ "EntitySerializer", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer.html", [
-                    [ "EntityArrayAdapterTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_sad69c4473bc51de18bdf0bcf16d8a457.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_sad69c4473bc51de18bdf0bcf16d8a457" ],
-                    [ "EntitySerializerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5" ]
-                  ] ]
-                ] ]
-              ] ],
-              [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o.html", [
-                [ "Serializable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable" ],
-                [ "ExampleDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o" ],
-                [ "AbstractDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test" ]
-              ] ],
-              [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service.html", [
-                [ "AppInfoServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test" ]
-              ] ]
             ] ],
             [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions.html", [
               [ "DatabaseEntityExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test" ],
@@ -1037,6 +885,15 @@ var annotated_dup =
             ] ],
             [ "Listener", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_listener.html", [
               [ "ContactsCardEventListenerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_listener_1_1_contacts_card_event_listener_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_listener_1_1_contacts_card_event_listener_test" ]
+            ] ],
+            [ "Maintenance", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance.html", [
+              [ "Migrations", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations.html", [
+                [ "EventsServicePersistenceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_events_service_persistence_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_events_service_persistence_test" ],
+                [ "Version20260131090857Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260131090857_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260131090857_test" ],
+                [ "Version20260206193722Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260206193722_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260206193722_test" ]
+              ] ],
+              [ "ApplicationTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_application_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_application_test" ],
+              [ "MigrationsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_test" ]
             ] ],
             [ "PageRenderer", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_page_renderer.html", [
               [ "AddMusiciansTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_page_renderer_1_1_add_musicians_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_page_renderer_1_1_add_musicians_test" ],
@@ -1090,15 +947,158 @@ var annotated_dup =
             [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings.html", [
               [ "AdminInitialStateTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test" ]
             ] ],
+            [ "Toolkit", null, [
+              [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common.html", [
+                [ "DecimalRationalMonetaryTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary_test.html", null ],
+                [ "DecimalRationalP2S2Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2_test.html", null ],
+                [ "DecimalRationalP4S4Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4_test.html", null ],
+                [ "DecimalRationalTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test.html", null ],
+                [ "DecimalRationalTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test_class.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_test_class" ]
+              ] ],
+              [ "Doctrine", null, [
+                [ "DBAL", null, [
+                  [ "Types", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types.html", [
+                    [ "DecimalRationalMonetaryTypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_68e75e785239919efbd499688c4755ef.html", null ],
+                    [ "DecimalRationalP2S2TypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_0451d1ee3c87a2e31d22a7f6e5014634.html", null ],
+                    [ "DecimalRationalP4S4TypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_7000cc897e10fb7c7143dd86cf235fe1.html", null ],
+                    [ "DecimalRationalTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_test_class.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_test_class" ],
+                    [ "DecimalRationalTypeTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_type_test.html", null ],
+                    [ "DecimalRationalTypeTestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_96c6acf187b90b01956b24a60558851c" ]
+                  ] ]
+                ] ],
+                [ "ORM", null, [
+                  [ "EntitySerializer", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer.html", [
+                    [ "EntityArrayAdapterTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_sad69c4473bc51de18bdf0bcf16d8a457.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_sad69c4473bc51de18bdf0bcf16d8a457" ],
+                    [ "EntitySerializerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_s2e846b46109104a234cfe7d6f1b021a5" ]
+                  ] ]
+                ] ]
+              ] ],
+              [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o.html", [
+                [ "Serializable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable" ],
+                [ "ExampleDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o" ],
+                [ "AbstractDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test" ]
+              ] ],
+              [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service.html", [
+                [ "AppInfoServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test" ]
+              ] ],
+              [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html", [
+                [ "AppNameTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_app_name_trait_test" ],
+                [ "BackedEnumTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_backed_enum_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_backed_enum_trait_test" ],
+                [ "DateTimeTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_date_time_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_date_time_trait_test" ],
+                [ "EnumGlobalSubstitutionKeyTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_global_substitution_key_test" ],
+                [ "EnumMemberSubstitutionKeyTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_member_substitution_key_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_enum_member_substitution_key_test" ],
+                [ "TestAppNameTraitClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_test_app_name_trait_class.html", null ],
+                [ "TestClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_test_class.html", null ],
+                [ "TranslatableEnumTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_translatable_enum_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits_1_1_translatable_enum_trait_test" ]
+              ] ]
+            ] ],
             [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits.html", [
               [ "AppConfigTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_app_config_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_app_config_trait_test" ],
-              [ "Instance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_instance.html", null ],
-              [ "ContactsTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_contacts_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_contacts_trait_test" ]
+              [ "ContactsTraitTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_contacts_trait_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_contacts_trait_test" ],
+              [ "Instance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_traits_1_1_instance.html", null ]
             ] ],
             [ "ArtifactsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_artifacts_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_artifacts_test" ],
             [ "InvoicesStorageTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_invoices_storage_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_invoices_storage_test" ]
           ] ],
           [ "MockProvider", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_mock_provider" ]
+        ] ],
+        [ "Toolkit", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit.html", [
+          [ "AppInfo", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info.html", [
+            [ "AbstractApplication", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application" ]
+          ] ],
+          [ "Attributes", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_attributes.html", [
+            [ "DoNotCatchExceptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_attributes_1_1_do_not_catch_exceptions.html", null ]
+          ] ],
+          [ "Backend", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend.html", [
+            [ "ArchiveBackend", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend" ],
+            [ "ArchiveFormats", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats" ]
+          ] ],
+          [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common.html", [
+            [ "AbstractDecimalRational", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_abstract_decimal_rational.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_abstract_decimal_rational" ],
+            [ "DecimalRationalMonetary", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary" ],
+            [ "DecimalRationalP2S2", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2" ],
+            [ "DecimalRationalP4S4", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4" ],
+            [ "RationalNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number" ]
+          ] ],
+          [ "Console", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_console.html", [
+            [ "ConsoleOutput", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_console_1_1_console_output.html", null ]
+          ] ],
+          [ "Doctrine", null, [
+            [ "DBAL", null, [
+              [ "Types", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types.html", [
+                [ "AbstractDecimalRationalType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type" ],
+                [ "ArrayType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_array_type" ],
+                [ "DecimalRationalMonetaryType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type" ],
+                [ "DecimalRationalP2S2Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type" ],
+                [ "DecimalRationalP4S4Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type" ],
+                [ "UuidType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type" ]
+              ] ]
+            ] ],
+            [ "ORM", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html", [
+              [ "EntitySerializer", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer.html", [
+                [ "CollectionEntityReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_collection_entity_reference.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_collection_entity_reference" ],
+                [ "EntityArrayAdapter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter" ],
+                [ "EntityReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference" ],
+                [ "EntityReferenceCollection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection" ],
+                [ "EntityReferenceIdentifier", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier" ],
+                [ "EntityResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_response" ],
+                [ "EntitySerializer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_serializer" ]
+              ] ],
+              [ "AbstractEntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_abstract_entity_manager" ],
+              [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_constants.html", null ],
+              [ "EntityRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_repository.html", null ],
+              [ "SingleEntityNamespaceManager", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager.html", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_single_entity_namespace_manager" ]
+            ] ]
+          ] ],
+          [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o.html", [
+            [ "AbstractDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o" ],
+            [ "AbstractResponseDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o" ],
+            [ "LegacyFileInfo", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info" ]
+          ] ],
+          [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions.html", [
+            [ "ArchiveCannotOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_cannot_open_exception.html", null ],
+            [ "ArchiveException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html", null ],
+            [ "ArchiveNotOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_not_open_exception.html", null ],
+            [ "ArchiveTooLargeException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception" ],
+            [ "AuthorizationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_authorization_exception.html", null ],
+            [ "DatabaseEntityException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception" ],
+            [ "DatabaseEntityNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_entity_not_found_exception" ],
+            [ "DatabaseException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_exception.html", null ],
+            [ "DatabaseMissingIdentifierException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_database_missing_identifier_exception" ],
+            [ "EnduserNotificationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception" ],
+            [ "EntitySerializationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_entity_serialization_exception" ],
+            [ "Exception", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html", null ],
+            [ "PhpSessionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html", null ],
+            [ "SessionStillOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception" ]
+          ] ],
+          [ "Listener", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener.html", [
+            [ "BeforeMessageLoggedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener_1_1_before_message_logged_event_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener_1_1_before_message_logged_event_listener" ]
+          ] ],
+          [ "Middleware", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware.html", [
+            [ "ExceptionMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware_1_1_exception_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_middleware_1_1_exception_middleware" ]
+          ] ],
+          [ "Response", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response.html", [
+            [ "HttpStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status" ],
+            [ "PreRenderedTemplateResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response" ]
+          ] ],
+          [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service.html", [
+            [ "ArchiveService", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", [
+              [ "ArchiveInfo", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service_1_1_archive_info" ]
+            ] ],
+            [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf" ],
+            [ "AppInfoService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_info_service" ],
+            [ "AppPasswordService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service" ],
+            [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure" ],
+            [ "ArchiveService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service" ],
+            [ "ExecutableFinder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder" ],
+            [ "GroupFoldersServiceNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32" ],
+            [ "GroupFoldersServicePreNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32" ],
+            [ "MimeTypeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service" ],
+            [ "RequestService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service" ],
+            [ "SimpleSharingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service" ],
+            [ "UserScopeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service" ]
+          ] ],
+          [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_constants.html", null ]
         ] ],
         [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html", null ]
       ] ],

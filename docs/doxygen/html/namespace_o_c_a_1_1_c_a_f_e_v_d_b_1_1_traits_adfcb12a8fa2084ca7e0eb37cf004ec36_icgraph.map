@@ -1,10 +1,14 @@
 <map id="oldConfigKey" name="oldConfigKey">
-<area shape="rect" id="Node000001" title="Backwards compatibility support after converting stuff to camel case." alt="" coords="307,56,406,83"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a40b0e6098c85e4fe46be90feb5346f23" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="148,5,259,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="297,51,246,35,246,30,302,50"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="5,81,100,108"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="291,77,100,93,100,88,292,72"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aba9675645d9c7c98621786975efc0dc4" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="156,107,250,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,88,247,109,245,103,297,89"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="138,110,100,105,100,100,143,109"/>
+<area shape="rect" id="Node000001" title="Backwards compatibility support after converting stuff to camel case." alt="" coords="307,80,406,107"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="381,64,373,61,357,59,341,61,333,65,331,71,335,81,330,79,325,71,329,62,339,56,357,53,375,56,386,65"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a40b0e6098c85e4fe46be90feb5346f23" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="148,29,259,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="297,75,246,59,246,54,302,74"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="5,117,100,144"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="290,103,148,121,101,127,99,122,147,116,293,99"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aba9675645d9c7c98621786975efc0dc4" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="156,155,250,181"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="316,113,233,157,232,152,311,114"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="227,14,220,10,203,8,188,10,180,14,178,20,182,29,177,28,172,21,176,11,186,5,203,3,222,5,233,14"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="77,103,69,98,52,96,37,98,29,102,27,108,31,117,26,117,22,109,25,99,35,93,53,91,71,93,82,102"/>
+<area shape="poly" id="edge7_Node000004_Node000003" title=" " alt="" coords="138,153,100,145,100,140,144,152"/>
+<area shape="poly" id="edge8_Node000004_Node000004" title=" " alt="" coords="227,139,220,136,203,133,188,135,180,140,178,145,182,155,177,153,172,146,176,136,186,130,203,128,222,131,233,140"/>
 </map>

@@ -1,10 +1,13 @@
 <map id="testMandateStoreWithCloudLinkHardCopy" name="testMandateStoreWithCloudLinkHardCopy">
-<area shape="rect" id="Node000001" title="Try to augment the mandate from the previous test with a file upload (in real life an electronic copy..." alt="" coords="5,88,191,131"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="239,88,399,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,107,226,109,220,110,191,112"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="452,5,640,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="386,85,438,70,443,69,387,90"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="447,88,644,131"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="399,115,434,118,428,118,399,121"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="444,101,415,103,414,98,449,100"/>
+<area shape="rect" id="Node000001" title="Try to augment the mandate from the previous test with a file upload (in real life an electronic copy..." alt="" coords="5,136,191,179"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="239,136,399,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,155,226,157,220,158,191,160"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="277,134,275,126,282,117,297,111,319,109,343,112,358,121,353,120,341,117,319,115,298,117,285,121,280,127,282,137"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="452,29,640,88"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="367,133,446,98,457,95,462,94,448,102,368,138"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="447,136,644,179"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="399,163,434,166,428,166,399,169"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="502,27,502,19,510,10,525,5,546,3,569,5,585,15,580,14,568,10,546,8,526,10,513,15,507,21,506,31"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="444,149,415,151,414,146,449,148"/>
+<area shape="poly" id="edge7_Node000004_Node000004" title=" " alt="" coords="503,134,501,126,508,117,523,111,546,109,570,112,586,121,581,120,569,117,546,115,524,117,511,121,506,127,507,137"/>
 </map>

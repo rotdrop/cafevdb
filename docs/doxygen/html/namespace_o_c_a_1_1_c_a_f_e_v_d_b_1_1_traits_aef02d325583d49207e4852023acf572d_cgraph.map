@@ -1,5 +1,7 @@
 <map id="getAppEncryptionKey" name="getAppEncryptionKey">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,153,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="201,5,301,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,16,188,19,183,19,153,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,153,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="49,29,44,21,48,11,60,5,79,3,100,5,112,14,107,14,98,10,79,8,61,10,52,15,50,20,54,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="201,29,301,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,40,188,43,183,43,153,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="221,28,216,21,220,11,232,5,251,3,272,5,284,15,279,14,270,10,251,8,233,10,224,15,221,20,226,30"/>
 </map>

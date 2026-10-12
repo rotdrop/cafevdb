@@ -2,6 +2,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a095c5d389db211932136b53f25f39685", null ],
     [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "addInvoiceItem", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a927e54459fa9d6046ecbca3ed03e0569", null ],
     [ "generateInvoiceNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a07129d942700a0453185e021063d2eaf", null ],
     [ "getAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a4097b54f79b8353b00e8b6712f845562", null ],
     [ "getBalancedDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a77ac1a38b9c7fc1b92f76d9c3c9a49c7", null ],

@@ -1,13 +1,16 @@
 <map id="applyHistory" name="applyHistory">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,100,123"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,96,236,123"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,107,134,109,129,110,100,112"/>
-<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="167,94,163,87,166,78,176,72,192,69,209,72,219,81,214,80,207,77,192,75,178,77,170,81,168,87,172,97"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="284,88,444,131"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,107,271,109,266,109,237,112"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="497,5,685,64"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="431,85,483,70,489,69,432,90"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="492,88,690,131"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="445,115,479,118,474,118,445,121"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="489,100,460,103,460,98,494,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,144,100,171"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,144,236,171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,155,134,157,129,158,100,160"/>
+<area shape="poly" id="edge9_Node000002_Node000002" title=" " alt="" coords="167,142,163,135,166,126,176,120,192,117,209,120,219,129,214,128,207,125,192,123,178,125,170,129,168,135,172,145"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="284,136,444,179"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,155,271,157,266,157,237,160"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="331,134,329,126,335,117,347,111,364,109,383,112,396,121,390,120,381,117,364,115,348,117,339,121,335,127,336,137"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="497,29,685,88"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="412,133,491,98,502,95,508,94,493,102,414,138"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="492,136,690,179"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="445,163,479,166,474,166,445,169"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="547,27,547,19,555,10,570,5,591,3,615,5,631,15,625,14,613,10,591,8,571,10,558,15,552,21,551,31"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="489,148,460,151,460,146,494,148"/>
+<area shape="poly" id="edge8_Node000005_Node000005" title=" " alt="" coords="548,134,546,126,553,117,568,111,591,109,615,112,631,121,626,120,614,117,591,115,570,117,557,121,551,127,553,137"/>
 </map>

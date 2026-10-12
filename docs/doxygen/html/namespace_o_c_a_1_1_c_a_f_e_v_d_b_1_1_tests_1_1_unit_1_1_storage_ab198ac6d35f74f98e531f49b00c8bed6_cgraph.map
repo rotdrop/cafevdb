@@ -1,5 +1,6 @@
 <map id="getAppDataStub" name="getAppDataStub">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,123,40"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="171,5,363,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,24,158,26,152,27,123,29"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,123,56"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="29,29,23,21,28,11,41,5,64,3,88,5,102,14,97,14,87,10,64,8,43,10,31,15,29,20,34,28"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="171,21,363,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,40,158,42,152,43,123,45"/>
 </map>

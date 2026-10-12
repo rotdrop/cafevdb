@@ -1,0 +1,10 @@
+<map id="setReferencing" name="setReferencing">
+<area shape="rect" id="Node000001" title="Sets referencing." alt="" coords="5,31,115,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a7923d54e43a269585703143599bd65d7" title="Add to the referencedBy collection and make sure that the owning side is also updated." alt="" coords="163,31,288,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,50,150,53,145,53,115,55"/>
+<area shape="poly" id="edge4_Node000002_Node000001" title=" " alt="" coords="160,36,131,38,130,32,165,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a5687f36f39c8921fc7ae867f446ac5b3" title="Returns messageId." alt="" coords="339,5,442,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,32,326,28,321,29,289,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a6942cbe0289898759e06465c67671b21" title="Returns referencing." alt="" coords="336,56,445,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="289,51,323,59,318,59,288,56"/>
+</map>

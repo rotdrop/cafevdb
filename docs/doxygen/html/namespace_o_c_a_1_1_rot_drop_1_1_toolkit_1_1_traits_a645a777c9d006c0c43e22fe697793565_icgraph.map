@@ -1,9 +1,11 @@
 <map id="logError" name="logError">
 <area shape="rect" id="Node000001" title="Log an error." alt="" coords="267,88,333,115"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="330,73,321,69,300,67,280,69,270,73,267,79,273,88,267,87,262,79,266,70,279,63,300,61,322,64,336,73"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#a5b5aa8bf49254aa23cf827319fe58166" title="Try to convert the given data&#45;block $data to PDF using any of the known converters." alt="" coords="9,5,215,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,80,218,62,188,51,188,46,220,58,263,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,81,218,62,188,51,188,46,220,58,263,80"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a89cc023810bad0773bc2699e1265c96c" title=" " alt="" coords="5,72,219,131"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,102,220,104,219,99,254,101"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a052bd8addc967549c5fd698493bd2200" title=" " alt="" coords="28,155,196,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="265,122,220,145,183,157,181,151,218,140,260,123"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a052bd8addc967549c5fd698493bd2200" title=" " alt="" coords="28,179,196,205"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,121,220,145,145,181,143,176,217,140,257,123"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="143,163,133,160,112,157,92,159,82,164,80,169,85,179,80,178,74,170,78,160,91,154,112,152,134,155,148,163"/>
 </map>

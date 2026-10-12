@@ -1,7 +1,10 @@
 <map id="getUserTopLevelFolder" name="getUserTopLevelFolder">
-<area shape="rect" id="Node000001" title="Return the name top&#45;level folder as Folder instance." alt="" coords="5,5,161,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="209,5,340,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,16,196,19,190,19,161,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="388,5,491,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,16,375,19,370,19,340,21"/>
+<area shape="rect" id="Node000001" title="Return the name top&#45;level folder as Folder instance." alt="" coords="5,29,161,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="50,29,45,21,49,11,62,5,83,3,106,5,119,14,114,14,104,10,83,8,63,10,52,15,50,20,55,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="209,29,340,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,40,196,43,190,43,161,45"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="246,28,241,21,244,11,256,5,274,3,294,5,306,15,301,14,293,10,274,8,257,10,248,15,246,20,250,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="388,29,491,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,40,375,43,370,43,340,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="411,28,406,21,410,11,421,5,440,3,460,5,471,15,466,14,458,10,440,8,423,10,414,15,411,20,416,30"/>
 </map>

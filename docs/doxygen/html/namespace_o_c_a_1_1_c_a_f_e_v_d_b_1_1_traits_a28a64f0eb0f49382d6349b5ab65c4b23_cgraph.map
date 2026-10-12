@@ -1,7 +1,9 @@
 <map id="getDatabaseRepository" name="getDatabaseRepository">
-<area shape="rect" id="Node000001" title="Set and get the given name as the current database target entity." alt="" coords="5,55,164,81"/>
+<area shape="rect" id="Node000001" title="Set and get the given name as the current database target entity." alt="" coords="5,67,164,93"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="44,67,37,58,42,48,58,42,85,40,114,43,130,51,125,52,112,48,84,45,59,47,45,52,42,57,49,66"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="212,5,440,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,54,199,52,194,53,165,60"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="247,88,405,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,76,234,88,228,89,164,82"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="159,63,199,58,194,60,160,69"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="247,112,405,139"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="160,91,239,108,234,109,159,97"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="285,111,278,103,283,93,299,87,326,85,355,88,372,98,366,97,354,93,326,91,300,93,287,97,283,103,290,113"/>
 </map>

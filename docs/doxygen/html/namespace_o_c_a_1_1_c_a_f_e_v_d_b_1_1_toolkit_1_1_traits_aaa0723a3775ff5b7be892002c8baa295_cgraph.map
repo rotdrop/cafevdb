@@ -1,14 +1,19 @@
 <map id="formatNode" name="formatNode">
-<area shape="rect" id="Node000001" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,88,95,115"/>
+<area shape="rect" id="Node000001" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,112,95,139"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="20,112,15,103,19,94,31,88,50,85,71,88,83,96,78,97,69,93,50,91,32,93,23,97,20,103,25,111"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_legacy_file_info.html#a03af6452b3ff02618dfef97106d6f30c" title="Initialize from the given array." alt="" coords="143,5,303,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,85,134,68,129,71,88,90"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="160,88,286,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,99,146,100,142,102,95,104"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="734,113,837,140"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="92,113,143,124,304,138,465,141,608,137,715,133,721,132,608,142,465,146,304,143,142,129,92,118"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="351,88,506,115"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="286,99,338,101,333,102,286,104"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="554,88,686,115"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="507,99,541,101,536,101,507,104"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="686,109,721,117,716,116,686,114"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="76,109,141,74,153,70,148,73,144,78,78,114"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="160,112,286,139"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="95,123,146,124,142,126,95,128"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="734,137,837,164"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="92,137,143,148,304,162,465,165,608,161,715,157,721,156,608,166,465,170,304,167,142,153,92,142"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="193,111,188,103,191,94,203,88,223,85,244,88,256,97,251,97,242,93,223,91,205,93,195,97,193,103,198,112"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="351,112,506,139"/>
+<area shape="poly" id="edge5_Node000003_Node000004" title=" " alt="" coords="286,123,338,125,333,126,286,128"/>
+<area shape="poly" id="edge10_Node000004_Node000004" title=" " alt="" coords="396,110,390,103,394,94,407,87,429,85,452,88,465,97,460,96,450,93,429,91,409,93,398,97,396,103,401,113"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="554,112,686,139"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="507,123,541,125,536,125,507,128"/>
+<area shape="poly" id="edge9_Node000005_Node000005" title=" " alt="" coords="591,110,586,103,590,94,601,88,620,85,640,88,652,97,647,96,638,93,620,91,603,93,594,97,592,103,596,113"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="686,133,721,141,716,140,686,138"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="757,136,752,129,755,119,767,113,785,111,805,113,817,123,812,121,804,118,785,116,768,118,759,123,757,128,761,138"/>
 </map>

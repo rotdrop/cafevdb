@@ -1,7 +1,10 @@
 <map id="shouldDebug" name="shouldDebug">
-<area shape="rect" id="Node000001" title="Check whether the current config&#45;setting for debug contains the provided flags." alt="" coords="5,5,103,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a285cc14a657dc976db9161cbd1f0f79d" title=" " alt="" coords="151,5,250,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,16,138,18,133,19,103,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="298,5,398,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,16,285,19,279,19,250,21"/>
+<area shape="rect" id="Node000001" title="Check whether the current config&#45;setting for debug contains the provided flags." alt="" coords="5,29,103,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="28,29,24,21,27,11,37,5,54,3,72,5,83,14,77,14,70,10,54,8,39,10,31,14,29,20,33,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a285cc14a657dc976db9161cbd1f0f79d" title=" " alt="" coords="151,29,250,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,40,138,42,133,43,103,45"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="175,28,170,21,173,11,184,5,200,3,218,5,229,15,224,14,216,10,200,8,185,10,178,14,176,20,180,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="298,29,398,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,40,285,43,279,43,250,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="322,28,318,21,321,11,331,5,348,3,366,5,377,15,372,13,364,10,348,8,333,10,325,14,323,20,327,30"/>
 </map>

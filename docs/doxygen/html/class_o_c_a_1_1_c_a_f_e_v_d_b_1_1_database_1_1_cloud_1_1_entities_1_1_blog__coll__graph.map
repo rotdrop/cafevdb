@@ -1,6 +1,6 @@
 <map id="Blog" name="Blog">
 <area shape="rect" id="Node000001" title="Cloud blog entity." alt="" coords="1706,856,1754,883"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" title="Invoices collects a couple of InvoiceItems of the same Musician." alt="" coords="1344,939,1407,965"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" title=" " alt="" coords="1344,939,1407,965"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1421,939,1708,874,1703,876,1422,944"/>
 <area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html" title="SentEmail." alt="" coords="1689,955,1770,981"/>
 <area shape="poly" id="edge69_Node000019_Node000002" title=" " alt="" coords="1418,969,1449,981,1481,989,1537,995,1593,992,1691,978,1686,979,1594,997,1537,1000,1480,995,1448,986,1418,975"/>

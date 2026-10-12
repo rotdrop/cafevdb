@@ -1,5 +1,6 @@
 <map id="unapplyMigrations" name="unapplyMigrations">
 <area shape="rect" id="Node000001" title="Undo applying migrations, i.e." alt="" coords="258,128,384,155"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="356,113,345,109,321,107,298,109,286,113,284,119,290,128,284,127,278,119,283,110,297,103,321,101,346,104,361,113"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_events_service_persistence_test.html#a1e58cc921e860c3442baf9afd96c8bee" title=" " alt="" coords="5,5,210,80"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="274,122,190,83,190,78,278,120"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations_1_1_version20260131090857_test.html#a1e58cc921e860c3442baf9afd96c8bee" title=" " alt="" coords="11,104,204,179"/>

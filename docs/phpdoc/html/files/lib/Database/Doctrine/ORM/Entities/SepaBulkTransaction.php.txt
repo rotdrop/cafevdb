@@ -123,8 +123,26 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var Collection<string, CompositePayment>
    */
-  #[ORM\OneToMany(targetEntity: CompositePayment::class, indexBy: 'musician_id', mappedBy: 'sepaTransaction', orphanRemoval: true, cascade: ['all'], fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(
+    targetEntity: CompositePayment::class,
+    indexBy: 'musician_id',
+    mappedBy: 'sepaTransaction',
+    orphanRemoval: true,
+    cascade: ['all'],
+    fetch: 'EXTRA_LAZY',
+  )]
   protected Collection $payments;
+
+  /**
+   * @var Collection<string, Invoice>
+   */
+  #[ORM\OneToMany(
+    targetEntity: Invoice::class,
+    mappedBy: 'sepaTransaction',
+    cascade: ['all'],
+    fetch: 'EXTRA_LAZY',
+  )]
+  protected Collection $invoices;
 
   /**
    * @var Collection<string, SentEmail>
@@ -139,6 +157,7 @@ class SepaBulkTransaction implements \ArrayAccess
     $this->sepaTransactionData = new ArrayCollection();
     $this->balancingItemsData = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
     $this->preNotificationEmails = new ArrayCollection();
   }
   // phpcs:enable
@@ -492,7 +511,7 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * Add a paymente and enforce that it references the same Project entity as
+   * Add a payment and enforce that it references the same Project entity as
    * all other payments. Merging payments from different projects is not
    * supported.
    *
@@ -545,6 +564,49 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setInvoices(Collection $invoices): SepaBulkTransaction
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices(): Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
+   * Add an invoice and also update the owning side.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getSepaBankAccount() !== $this) {
+      $invoice->setSepaBankAccount($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Set preNotificationEmails.
    *
    * @param Collection $preNotificationEmails
@@ -580,6 +642,9 @@ class SepaBulkTransaction implements \ArrayAccess
     $messageId = $sentEmail->getMessageId();
     if ($this->getPreNotificationEmail($messageId) === null) {
       $this->preNotificationEmails->set($messageId, $sentEmail);
+    }
+    if ($sentEmail->getSepaBulkTransaction() !== $this) {
+      $sentEmail->setSepaBulkTransaction($this);
     }
     return $this;
   }

@@ -1,5 +1,5 @@
 <map id="getProject" name="getProject">
-<area shape="rect" id="Node000001" title="Get project." alt="" coords="196,5,276,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203" title="Set projectParticipant." alt="" coords="5,5,148,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,19,148,21,148,16,183,19"/>
+<area shape="rect" id="Node000001" title="Get project." alt="" coords="260,21,340,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ae011017d6f7f4caf8f2b13ff032cfa0f" title="Add a payment and make sure the owning side is also updated." alt="" coords="5,5,212,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,35,212,37,212,32,247,34"/>
 </map>

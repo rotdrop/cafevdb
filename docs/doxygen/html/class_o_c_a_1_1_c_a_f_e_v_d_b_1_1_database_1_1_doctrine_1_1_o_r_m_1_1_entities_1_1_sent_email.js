@@ -1,5 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email =
 [
+    [ "addReferencedBy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a7923d54e43a269585703143599bd65d7", null ],
     [ "getBcc", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a27f79c37e4c79ed8f56b15f0dc91a7bb", null ],
     [ "getBulkRecipients", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#ab7c6e66d3994723cc469d10d3dfd1677", null ],
     [ "getBulkRecipientsHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#af0c2a7c96ea561cf3f6e7286bd046a88", null ],

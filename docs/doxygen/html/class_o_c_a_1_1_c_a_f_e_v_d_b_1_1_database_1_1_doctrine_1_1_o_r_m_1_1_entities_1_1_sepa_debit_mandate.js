@@ -1,6 +1,9 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate =
 [
+    [ "addInvoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#af41304938fdc63f14ec17e66a6cf6238", null ],
+    [ "addPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a589b447a3d75a0e24d4be05656eec2e8", null ],
     [ "adjustMandateReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a2dc77fa12c2a97f848e70a207ed60b5a", null ],
+    [ "getInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a4a18c0abbf6628848d2c3b8c48fbca19", null ],
     [ "getLastUsedDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a87f52f7d9f6ca455847074ca43723280", null ],
     [ "getMandateDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a9e714d44e5f5a1c912d7e9973cb77f4f", null ],
     [ "getMandateReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a279c13f523f475a030abb96915c56872", null ],
@@ -13,6 +16,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getSepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#abb1e5bb76dcf8296246d04c1af1e86a0", null ],
     [ "getSequence", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a8600d8f62839e755389787d12683bf5a", null ],
     [ "getWrittenMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a1f5b121a0ea8c1f09a27d3e113ae3b68", null ],
+    [ "setInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#acc6484678c39494291ceb717748a5fea", null ],
     [ "setLastUsedDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a0b3e20a334357972f049b3379f31fcf6", null ],
     [ "setMandateDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#aa0bae276fe47f5e6dbeb7491f415e0e1", null ],
     [ "setMandateReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a7de00915e9098aebefe5d8cb966afd34", null ],

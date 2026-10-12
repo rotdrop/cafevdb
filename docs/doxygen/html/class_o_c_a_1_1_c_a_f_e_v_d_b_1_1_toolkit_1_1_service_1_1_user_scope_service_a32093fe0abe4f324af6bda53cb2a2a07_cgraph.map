@@ -1,9 +1,12 @@
 <map id="deleteAuthCookie" name="deleteAuthCookie">
-<area shape="rect" id="Node000001" title="Delete the token and its cookie, e.g." alt="" coords="5,47,130,73"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="178,39,338,81"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,57,165,59,159,61,131,63"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="386,5,546,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,45,373,41,368,42,339,50"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="386,72,546,115"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="338,70,373,78,368,78,338,75"/>
+<area shape="rect" id="Node000001" title="Delete the token and its cookie, e.g." alt="" coords="5,83,130,109"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="178,75,338,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,93,165,95,159,97,131,99"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="221,73,220,65,226,56,239,50,258,48,278,50,292,59,287,59,277,56,258,53,240,55,229,60,225,66,226,75"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="386,29,546,72"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="337,76,373,71,368,72,339,81"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="386,120,546,163"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="338,111,373,121,368,121,338,116"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="427,27,425,19,431,10,445,5,466,3,489,5,504,14,498,14,487,10,466,8,447,10,435,15,430,21,431,30"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="427,118,425,110,431,101,445,95,466,93,489,96,504,105,498,104,487,101,466,99,447,101,435,105,430,111,431,121"/>
 </map>

@@ -1,0 +1,8 @@
+<map id="getReferencing" name="getReferencing">
+<area shape="rect" id="Node000001" title="Returns referencing." alt="" coords="336,5,445,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a7923d54e43a269585703143599bd65d7" title="Add to the referencedBy collection and make sure that the owning side is also updated." alt="" coords="163,5,288,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="318,19,288,21,288,16,323,19"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a8e1f9ca30ca185e46148cb1459dba8f7" title="Sets referencing." alt="" coords="5,5,115,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,28,115,30,115,25,150,28"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="130,7,165,10,159,10,130,12"/>
+</map>

@@ -1,5 +1,7 @@
 <map id="generateMailMergeTemplate" name="generateMailMergeTemplate">
-<area shape="rect" id="Node000001" title=" " alt="" coords="281,5,465,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#aca92fe119231bc3f34bcb18acdfbc98d" title=" " alt="" coords="5,5,233,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,19,233,21,233,16,268,19"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="281,29,465,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="416,14,402,10,373,8,346,10,331,15,328,20,335,30,330,28,323,21,328,11,345,5,373,3,403,5,421,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#aca92fe119231bc3f34bcb18acdfbc98d" title=" " alt="" coords="5,29,233,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="262,43,233,45,233,40,268,43"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="162,15,148,10,119,8,92,10,78,15,74,20,81,29,76,29,69,21,74,11,91,5,119,3,150,5,167,15"/>
 </map>

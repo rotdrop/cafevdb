@@ -25,6 +25,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b =
     [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service" ],
     [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings" ],
     [ "Storage", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage" ],
+    [ "Tests", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests" ],
     [ "Toolkit", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit" ],
     [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html", [
       [ "__appConfigTraitGetCloudConfig", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3c55b27d10e03517458e8711178f4517", null ],
@@ -179,6 +180,5 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b =
       [ "TimeStampTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af63421e0d0bcf177a5e5b8e61c3c2490", null ],
       [ "UserPreferencesTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae1f0d8b7f95dd2b275f29dd08fc1cb21", null ]
     ] ],
-    [ "Tests", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests" ],
     [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html", null ]
 ];

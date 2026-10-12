@@ -1,7 +1,10 @@
 <map id="getSharedFolderPath" name="getSharedFolderPath">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,149,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="197,5,306,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,16,184,19,178,19,149,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="354,5,454,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,16,341,19,336,19,307,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,149,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="47,29,42,21,45,11,57,5,77,3,98,5,110,14,105,14,96,10,77,8,59,10,49,15,47,20,52,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="197,29,306,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,40,184,43,178,43,149,45"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="225,28,220,21,223,11,234,5,251,3,270,5,281,15,276,14,268,10,251,8,236,10,227,14,225,20,229,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="354,29,454,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,40,341,43,336,43,307,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="378,28,373,21,376,11,387,5,404,3,423,5,434,15,429,13,421,10,404,8,389,10,380,14,378,20,382,30"/>
 </map>

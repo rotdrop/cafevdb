@@ -260,6 +260,25 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   }
 
   /**
+   * Add an invoice and enforce that the owning side is also updated.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getTaxationStatutorySource() !== $this) {
+      $invoice->setTaxationStatutorySource($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * @return int
    */
   public function usage():int

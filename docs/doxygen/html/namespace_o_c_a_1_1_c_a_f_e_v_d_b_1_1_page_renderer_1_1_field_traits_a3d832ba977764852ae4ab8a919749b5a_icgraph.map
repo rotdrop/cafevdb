@@ -1,5 +1,7 @@
 <map id="guessGender" name="guessGender">
-<area shape="rect" id="Node000001" title="Return an array of possibilities for the gender of the musician." alt="" coords="199,5,297,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#ae93dfff0a880a7e94f67f47c44ac12e1" title="Use as display&#45;postfix for legacy PME." alt="" coords="5,5,151,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,19,151,21,151,16,186,19"/>
+<area shape="rect" id="Node000001" title="Return an array of possibilities for the gender of the musician." alt="" coords="199,29,297,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="275,14,267,10,248,8,230,10,221,15,219,20,223,30,218,28,213,21,217,11,229,5,248,3,268,5,280,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#ae93dfff0a880a7e94f67f47c44ac12e1" title="Use as display&#45;postfix for legacy PME." alt="" coords="5,29,151,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,43,151,45,151,40,186,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="105,14,97,10,78,8,60,10,51,15,49,20,54,29,48,29,44,21,47,11,59,5,78,3,98,5,111,14"/>
 </map>

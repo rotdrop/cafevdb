@@ -1,5 +1,9 @@
 <map id="getDateTimeZone" name="getDateTimeZone">
-<area shape="rect" id="Node000001" title="Get the current timezone." alt="" coords="150,5,275,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa8518bbd35b1dd404c870053c7a7d714" title="Return the current time&#45;zone string." alt="" coords="5,5,102,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,19,102,21,102,16,137,18"/>
+<area shape="rect" id="Node000001" title="Get the current timezone." alt="" coords="179,43,304,69"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="269,27,260,24,241,21,223,23,214,28,212,33,216,43,211,41,206,34,210,24,222,18,241,16,262,19,275,28"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a40c1b03af72c7ab938c22e2c249dc272" title="Get the current timezone." alt="" coords="5,5,131,32"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="161,40,131,35,131,29,166,39"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa8518bbd35b1dd404c870053c7a7d714" title="Return the current time&#45;zone string." alt="" coords="20,80,116,107"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="166,72,117,86,116,80,161,73"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="96,65,87,61,68,59,50,61,40,65,38,71,43,80,38,80,33,71,37,62,49,56,68,53,89,56,101,65"/>
 </map>

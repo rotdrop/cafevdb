@@ -1,5 +1,10 @@
 <map id="getTaxType" name="getTaxType">
-<area shape="rect" id="Node000001" title="Get taxType." alt="" coords="278,21,366,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a0a46307ca4fae620ab3b3237a637810a" title=" " alt="" coords="5,5,230,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,35,230,37,230,32,265,34"/>
+<area shape="rect" id="Node000001" title="Get taxType." alt="" coords="418,63,506,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a0a46307ca4fae620ab3b3237a637810a" title=" " alt="" coords="142,5,366,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="400,64,366,60,366,54,405,64"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#aa11b34ccf7b23a6ba6439d952daae8b6" title=" " alt="" coords="138,88,370,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="405,87,371,97,370,92,400,88"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#af41304938fdc63f14ec17e66a6cf6238" title="Add an invoice and enforce that the owning side is also updated." alt="" coords="5,104,90,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="120,127,90,127,90,122,125,126"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="105,107,140,108,135,109,106,112"/>
 </map>

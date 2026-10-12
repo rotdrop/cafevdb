@@ -1,0 +1,13 @@
+<map id="setup" name="setup">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,45,59,72"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#ac5282f0e1e55593bdfbdd6dfc6cf3156" title=" " alt="" coords="107,29,338,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,56,93,57,88,60,59,61"/>
+<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="185,28,185,19,192,10,205,5,222,3,242,5,256,15,251,14,241,10,222,8,206,10,195,15,190,21,189,31"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a7bef87f184170c7616633d9152db74ce" title=" " alt="" coords="386,29,617,88"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,56,373,59,368,59,339,61"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="450,27,451,19,460,10,477,5,502,3,530,5,549,15,543,15,529,11,502,8,478,10,463,15,455,21,454,31"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="665,29,873,88"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="618,56,652,59,647,59,618,61"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#aaaa70f227c74a7188f3cca243f2b41e0" title="Get bankAccountOwner." alt="" coords="921,29,1192,88"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="873,56,908,59,902,59,873,61"/>
+</map>

@@ -1,5 +1,7 @@
 <map id="offsetGet" name="offsetGet">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="117,5,192,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="5,5,69,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,19,69,21,69,16,104,18"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="117,29,192,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="172,14,167,10,154,8,143,10,137,14,135,20,138,30,133,28,130,20,132,11,141,5,154,3,169,5,178,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="5,29,69,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="98,43,69,45,69,40,104,42"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="55,14,49,10,37,8,25,10,19,14,18,20,21,29,16,29,12,20,15,11,23,5,37,3,52,5,60,14"/>
 </map>

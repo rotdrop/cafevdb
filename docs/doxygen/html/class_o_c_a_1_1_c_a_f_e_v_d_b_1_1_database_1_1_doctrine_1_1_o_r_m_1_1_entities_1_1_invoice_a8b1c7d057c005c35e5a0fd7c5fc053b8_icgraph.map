@@ -1,0 +1,5 @@
+<map id="getSepaDebitMandate" name="getSepaDebitMandate">
+<area shape="rect" id="Node000001" title="Get sepaDebitMandate." alt="" coords="257,21,407,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#af41304938fdc63f14ec17e66a6cf6238" title="Add an invoice and enforce that the owning side is also updated." alt="" coords="5,5,209,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,35,209,37,209,32,244,34"/>
+</map>

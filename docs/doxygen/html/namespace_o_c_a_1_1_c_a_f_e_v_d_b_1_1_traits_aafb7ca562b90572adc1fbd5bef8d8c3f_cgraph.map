@@ -1,5 +1,7 @@
 <map id="cloudUserConfig" name="cloudUserConfig">
-<area shape="rect" id="Node000001" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="5,5,124,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="172,5,272,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,16,159,18,153,19,124,21"/>
+<area shape="rect" id="Node000001" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="5,29,124,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="37,29,32,21,36,11,47,5,65,3,84,5,95,14,90,14,82,10,64,8,48,10,40,15,38,20,42,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="172,29,272,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="124,40,159,42,153,43,124,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="194,28,190,21,193,11,204,5,222,3,241,5,252,15,247,14,239,10,222,8,206,10,197,15,195,20,199,30"/>
 </map>

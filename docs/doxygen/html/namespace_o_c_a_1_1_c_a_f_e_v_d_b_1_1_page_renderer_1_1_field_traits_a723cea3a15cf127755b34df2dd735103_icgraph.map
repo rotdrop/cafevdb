@@ -1,5 +1,7 @@
 <map id="substituteSQLFragment" name="substituteSQLFragment">
-<area shape="rect" id="Node000001" title="Replace $join_table etc." alt="" coords="199,5,358,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a8e9a4e2f7bbdcc45f789c7d3c66eace1" title="Generate three distinct columns for the total invoice amount, the amount already transferred and the ..." alt="" coords="5,5,151,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,19,151,21,151,16,186,19"/>
+<area shape="rect" id="Node000001" title="Replace $join_table etc." alt="" coords="199,29,358,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="311,14,301,10,278,8,257,10,246,15,243,20,249,30,244,28,238,21,242,11,256,5,278,3,302,5,316,14"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a8e9a4e2f7bbdcc45f789c7d3c66eace1" title="Generate three distinct columns for the total invoice amount, the amount already transferred and the ..." alt="" coords="5,29,151,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,43,151,45,151,40,186,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="111,14,100,10,78,8,57,10,46,15,43,20,49,29,44,29,38,21,42,11,56,5,78,3,102,5,116,14"/>
 </map>

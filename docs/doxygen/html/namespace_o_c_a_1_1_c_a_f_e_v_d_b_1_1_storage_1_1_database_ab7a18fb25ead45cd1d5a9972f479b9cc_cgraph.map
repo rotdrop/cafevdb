@@ -1,7 +1,9 @@
 <map id="getDonationReceiptsFolderName" name="getDonationReceiptsFolderName">
-<area shape="rect" id="Node000001" title="Get the name of the folder containing tax exemption notices." alt="" coords="5,13,220,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="268,13,358,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,24,255,27,249,27,220,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="406,5,615,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,24,393,27,388,27,359,29"/>
+<area shape="rect" id="Node000001" title="Get the name of the folder containing tax exemption notices." alt="" coords="5,29,220,56"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="78,28,72,21,77,11,90,5,113,3,136,5,151,14,145,14,135,10,112,8,92,10,80,15,78,20,83,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="268,29,358,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,40,255,43,249,43,220,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="279,28,273,21,277,11,291,5,313,3,336,5,350,14,345,14,335,10,313,8,292,10,281,15,278,20,284,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="406,21,615,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,40,393,43,388,43,359,45"/>
 </map>

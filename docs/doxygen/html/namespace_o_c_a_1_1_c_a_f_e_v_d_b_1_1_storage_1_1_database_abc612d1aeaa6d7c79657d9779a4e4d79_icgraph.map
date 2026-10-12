@@ -1,0 +1,7 @@
+<map id="getLegacyPaymentRecordFileName" name="getLegacyPaymentRecordFileName">
+<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="243,29,474,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="402,14,388,10,358,8,331,10,316,15,313,20,320,30,315,28,307,21,313,11,330,5,358,3,389,5,407,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a02900d93ebdfb87033beec6a4062100f" title="Generate a file&#45;name for the given composite payment." alt="" coords="5,29,195,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="224,43,195,45,195,40,230,43"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="143,15,130,10,100,8,73,10,58,15,54,20,62,29,56,29,49,21,54,11,72,5,100,3,131,5,149,14"/>
+</map>

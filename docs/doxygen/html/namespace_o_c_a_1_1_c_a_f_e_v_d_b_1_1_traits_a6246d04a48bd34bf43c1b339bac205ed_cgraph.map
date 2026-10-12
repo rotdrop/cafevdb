@@ -1,5 +1,7 @@
 <map id="subAdminManager" name="subAdminManager">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,135,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="183,5,283,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,16,170,18,164,19,135,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,135,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="41,29,37,21,40,11,52,5,70,3,90,5,101,14,96,14,88,10,70,8,53,10,44,15,42,20,47,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="183,29,283,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,40,170,42,164,43,135,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="205,28,200,21,203,11,215,5,233,3,253,5,264,15,259,14,251,10,233,8,216,10,207,15,205,20,209,30"/>
 </map>

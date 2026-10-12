@@ -1,0 +1,10 @@
+<map id="addReferencedBy" name="addReferencedBy">
+<area shape="rect" id="Node000001" title="Add to the referencedBy collection and make sure that the owning side is also updated." alt="" coords="5,81,131,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a5687f36f39c8921fc7ae867f446ac5b3" title="Returns messageId." alt="" coords="182,5,285,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,78,191,37,187,41,100,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a6942cbe0289898759e06465c67671b21" title="Returns referencing." alt="" coords="179,56,288,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,82,166,79,160,81,132,88"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a8e1f9ca30ca185e46148cb1459dba8f7" title="Sets referencing." alt="" coords="179,107,288,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,106,166,118,161,119,109,111"/>
+<area shape="poly" id="edge4_Node000004_Node000001" title=" " alt="" coords="190,106,146,100,146,95,195,106"/>
+</map>

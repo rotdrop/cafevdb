@@ -1,5 +1,4 @@
 <map id="currencyCode" name="currencyCode">
-<area shape="rect" id="Node000001" title="Return the currency code for the locale." alt="" coords="225,5,327,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a414231574e1ad67b0334f0581afc8d3e" title=" " alt="" coords="5,5,177,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,21,177,21,177,16,209,16"/>
+<area shape="rect" id="Node000001" title="Return the currency code for the locale." alt="" coords="5,29,108,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="72,14,67,10,56,8,47,10,41,14,40,20,43,29,38,29,35,20,37,11,44,5,57,3,69,5,77,14"/>
 </map>

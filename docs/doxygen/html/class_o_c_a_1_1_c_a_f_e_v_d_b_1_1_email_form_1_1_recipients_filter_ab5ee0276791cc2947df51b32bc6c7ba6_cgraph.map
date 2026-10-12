@@ -1,11 +1,14 @@
 <map id="filterHistory" name="filterHistory">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,94,123"/>
-<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="20,96,15,87,18,78,30,72,50,69,70,72,83,80,77,81,69,77,49,75,32,77,22,81,20,87,25,95"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="142,88,302,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,107,128,109,123,110,94,112"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="354,5,543,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="289,85,341,70,346,69,290,90"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="350,88,547,131"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="302,115,337,118,331,118,302,121"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="347,101,318,103,317,98,352,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,144,94,171"/>
+<area shape="poly" id="edge8_Node000001_Node000001" title=" " alt="" coords="20,144,15,135,18,126,30,120,50,117,70,120,83,128,77,129,69,125,49,123,32,125,22,129,20,135,25,143"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="142,136,302,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,155,128,157,123,158,94,160"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="189,134,187,126,193,117,204,111,222,109,241,112,253,121,248,120,239,117,222,115,206,117,196,121,192,127,193,137"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="354,29,543,88"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="270,133,349,98,360,95,365,94,351,102,272,138"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="350,136,547,179"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="302,163,337,166,331,166,302,169"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="404,27,405,19,413,10,428,5,449,3,472,5,488,15,483,14,471,10,449,8,429,10,416,15,410,21,409,31"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="347,149,318,151,317,146,352,148"/>
+<area shape="poly" id="edge7_Node000004_Node000004" title=" " alt="" coords="406,134,404,126,411,117,426,111,449,109,473,112,489,121,484,120,472,117,449,115,427,117,414,121,409,127,410,137"/>
 </map>

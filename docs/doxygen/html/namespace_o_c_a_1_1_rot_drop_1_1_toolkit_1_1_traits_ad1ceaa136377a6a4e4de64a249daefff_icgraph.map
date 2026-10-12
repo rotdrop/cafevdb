@@ -1,12 +1,17 @@
 <map id="getUserFolder" name="getUserFolder">
-<area shape="rect" id="Node000001" title=" " alt="" coords="700,5,803,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,5,95,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="684,21,95,21,95,16,684,16"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="520,31,652,57"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="687,29,653,37,652,31,682,29"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="317,31,472,57"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="502,44,473,47,473,41,507,44"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="143,31,269,57"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="299,44,270,47,270,41,304,44"/>
-<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="125,32,95,29,95,23,130,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="700,29,803,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="778,14,770,10,751,8,734,10,725,15,723,20,727,30,723,28,718,21,721,11,733,5,751,3,771,5,783,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,29,95,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="681,34,651,33,509,25,397,23,286,25,143,33,95,38,94,33,142,28,286,20,397,17,509,20,652,28,687,33"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="520,67,652,93"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="687,57,649,69,648,63,682,58"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="75,15,67,10,50,8,34,10,26,15,23,20,28,28,23,29,18,21,21,11,32,5,50,3,69,5,80,13"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="613,51,604,48,586,45,569,47,560,52,558,57,562,67,557,65,552,58,556,48,567,42,586,40,606,43,618,52"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="317,67,472,93"/>
+<area shape="poly" id="edge6_Node000003_Node000004" title=" " alt="" coords="502,80,473,83,473,77,507,80"/>
+<area shape="poly" id="edge10_Node000004_Node000004" title=" " alt="" coords="425,51,416,48,395,45,375,47,364,52,362,57,367,67,362,65,357,58,361,48,374,42,395,40,417,43,431,52"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="143,67,269,93"/>
+<area shape="poly" id="edge7_Node000004_Node000005" title=" " alt="" coords="299,80,270,83,270,77,304,80"/>
+<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="130,63,95,56,95,51,135,62"/>
+<area shape="poly" id="edge9_Node000005_Node000005" title=" " alt="" coords="231,51,223,48,206,45,190,47,181,52,179,57,184,67,179,65,174,58,177,48,188,42,206,40,225,43,236,52"/>
 </map>

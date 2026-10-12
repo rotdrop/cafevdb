@@ -1,5 +1,17 @@
 <map id="fetchEvent" name="fetchEvent">
-<area shape="rect" id="Node000001" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,5,90,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9879c3587b6533f0260f3aee12d7e314" title="Fetch one specific event and just return the database entity." alt="" coords="138,5,252,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,16,125,18,120,19,90,21"/>
+<area shape="rect" id="Node000001" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,123,90,149"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5" title="Augment the database entity by calendar data." alt="" coords="144,97,246,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,126,131,121,126,123,91,131"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9879c3587b6533f0260f3aee12d7e314" title="Fetch one specific event and just return the database entity." alt="" coords="138,148,252,175"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="90,141,125,148,120,150,90,146"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba" title="Convert the given VEvent object to a simpler flat array structure." alt="" coords="313,47,486,73"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,96,330,77,325,79,247,101"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aaf4cca82ea5aeb9494bd819c3822df3b" title="Use the EventIterator to generate all siblings of a recurring event." alt="" coords="336,97,464,124"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="246,108,323,110,317,111,246,113"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a304fb17fd89d3a9ab0517d50bb7ab3" title="Return the &quot;master&quot; wrapped object, where the VCalendar object here is rather not an entire calendar,..." alt="" coords="300,148,499,191"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="244,122,311,143,306,143,244,127"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ab280ff38a117e881c18075805c4dd50f" title="Return the category list for the given object." alt="" coords="547,5,763,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="486,46,534,42,529,43,487,51"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a02cc9832fe0b6ed97c1414bf1be58d48" title=" " alt="" coords="558,72,752,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="487,69,546,79,540,79,487,74"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="addInvoice" name="addInvoice">
+<area shape="rect" id="Node000001" title="Add an invoice and make sure the owning side is also updated." alt="" coords="5,63,90,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a222dfbdf28e944d58d77dcba96c67a0c" title="Get projectParticipant." alt="" coords="138,5,330,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,64,125,58,120,61,91,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="138,88,330,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="90,83,125,92,120,93,90,88"/>
+</map>

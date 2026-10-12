@@ -4,18 +4,19 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,92,183,94,177,95,148,97"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="393,81,468,108"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="345,92,380,95,375,95,346,97"/>
-<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="818,77,978,120"/>
-<area shape="poly" id="edge11_Node000002_Node000007" title=" " alt="" coords="326,106,393,117,503,124,613,122,716,116,800,111,805,111,716,122,613,128,503,129,393,123,326,111"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="818,89,978,132"/>
+<area shape="poly" id="edge12_Node000002_Node000007" title=" " alt="" coords="326,106,393,117,503,124,613,125,800,119,805,119,613,131,503,130,393,123,326,111"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a2c5736677056d73dbd8d456de4babd92" title="Get the shared folder by its id." alt="" coords="668,5,770,32"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="338,78,392,67,516,41,655,25,650,26,517,47,394,72,339,83"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="338,78,392,67,516,41,655,25,650,26,517,47,394,72,339,83"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="516,56,620,83"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="468,85,498,82,504,81,469,90"/>
-<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="469,92,805,98,800,98,469,98"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="469,93,805,107,800,108,469,99"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="672,56,766,83"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="620,67,660,69,654,69,620,72"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="818,16,978,43"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="766,56,818,47,823,46,767,62"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="766,74,805,83,800,83,766,80"/>
-<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="770,19,806,24,800,24,770,24"/>
-<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="751,30,837,71,832,70,750,35"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="818,11,978,37"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="766,55,825,42,830,41,767,60"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="766,77,805,89,800,88,766,83"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="864,87,862,79,868,70,880,65,898,63,918,65,931,74,925,73,916,70,898,68,882,70,871,74,867,81,868,90"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="770,18,806,21,800,21,770,23"/>
+<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="748,30,771,42,845,82,840,81,769,46,747,35"/>
 </map>

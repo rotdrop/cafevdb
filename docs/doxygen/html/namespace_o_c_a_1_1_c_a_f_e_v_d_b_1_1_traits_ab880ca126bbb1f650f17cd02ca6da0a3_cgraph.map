@@ -1,9 +1,13 @@
 <map id="sessionRetrieveValue" name="sessionRetrieveValue">
-<area shape="rect" id="Node000001" title="Fetch something from the session&#45;data." alt="" coords="5,5,153,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="201,5,290,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,16,188,19,182,19,153,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="338,5,415,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,16,325,19,320,19,291,21"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="463,5,564,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="416,16,450,19,445,19,416,21"/>
+<area shape="rect" id="Node000001" title="Fetch something from the session&#45;data." alt="" coords="5,29,153,56"/>
+<area shape="poly" id="edge7_Node000001_Node000001" title=" " alt="" coords="50,29,45,21,49,11,60,5,79,3,99,5,111,14,106,14,97,10,79,8,62,10,53,15,51,20,55,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="201,29,290,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,40,188,43,182,43,153,45"/>
+<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="222,28,218,21,221,11,230,5,245,3,262,5,271,15,266,13,259,10,245,8,232,10,225,14,223,20,227,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="338,29,415,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,40,325,43,320,43,291,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="353,28,349,21,352,11,362,5,377,3,393,5,402,15,397,13,391,10,377,8,363,10,356,14,355,20,358,30"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="463,29,564,56"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="416,40,450,43,445,43,416,45"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="489,28,485,21,488,11,498,5,514,3,530,5,540,15,535,13,528,10,513,8,500,10,492,14,491,20,494,30"/>
 </map>

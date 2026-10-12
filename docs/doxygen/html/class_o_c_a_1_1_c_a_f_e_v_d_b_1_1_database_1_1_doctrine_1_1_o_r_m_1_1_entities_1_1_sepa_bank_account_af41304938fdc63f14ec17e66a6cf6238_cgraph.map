@@ -1,0 +1,8 @@
+<map id="addInvoice" name="addInvoice">
+<area shape="rect" id="Node000001" title="Add an invoice and also update the owning side." alt="" coords="5,104,90,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#abb1e5bb76dcf8296246d04c1af1e86a0" title="Get sepaBankAccount." alt="" coords="138,5,335,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,101,137,74,152,70,147,72,139,78,79,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a42078b9167818ce2fef053da7fad39b5" title="Set sepaBankAccount." alt="" coords="138,88,335,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="90,122,125,126,119,127,90,128"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="134,109,106,112,105,106,140,108"/>
+</map>

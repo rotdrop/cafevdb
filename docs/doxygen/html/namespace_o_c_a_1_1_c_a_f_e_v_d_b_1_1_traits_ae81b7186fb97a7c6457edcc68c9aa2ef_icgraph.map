@@ -1,7 +1,10 @@
 <map id="getUser" name="getUser">
-<area shape="rect" id="Node000001" title="Get the currently active user." alt="" coords="357,13,424,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="231,13,309,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,27,309,29,309,24,344,27"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a56be097a045cf308eccea1dab09174ac" title=" " alt="" coords="5,5,183,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,27,183,29,183,24,218,26"/>
+<area shape="rect" id="Node000001" title="Get the currently active user." alt="" coords="357,37,424,64"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="409,21,403,18,391,16,379,18,372,22,371,28,374,38,369,36,365,28,368,19,377,13,391,11,406,13,415,23"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="231,37,309,64"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="339,51,309,53,309,48,344,51"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="289,21,283,18,270,16,258,18,251,22,250,28,253,38,248,36,245,28,247,19,256,13,270,11,285,13,294,23"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a56be097a045cf308eccea1dab09174ac" title=" " alt="" coords="5,29,183,72"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="212,51,183,53,183,48,218,50"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="121,14,111,10,94,8,78,10,68,14,64,20,65,30,60,28,59,19,64,10,76,5,94,3,113,5,126,14"/>
 </map>

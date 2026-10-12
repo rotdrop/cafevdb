@@ -119,9 +119,10 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setInvoice(mixed $invoice):InvoiceItem
+  public function setInvoice(mixed $invoice): InvoiceItem
   {
     $this->invoice = $invoice;
+    $invoice->addInvoiceItem($this);
 
     return $this;
   }
@@ -131,7 +132,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function getInvoice():?Invoice
+  public function getInvoice(): ?Invoice
   {
     return $this->invoice;
   }
@@ -143,7 +144,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):InvoiceItem
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant): InvoiceItem
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -155,7 +156,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipant
    */
-  public function getProjectParticipant():?ProjectParticipant
+  public function getProjectParticipant(): ?ProjectParticipant
   {
     return $this->projectParticipant;
   }
@@ -167,7 +168,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setProject(mixed $project):InvoiceItem
+  public function setProject(mixed $project): InvoiceItem
   {
     $this->project = $project;
 
@@ -179,7 +180,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return Project
    */
-  public function getProject():?Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
@@ -191,7 +192,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setDebitor(mixed $debitor):InvoiceItem
+  public function setDebitor(mixed $debitor): InvoiceItem
   {
     $this->debitor = $debitor;
 
@@ -203,7 +204,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function getDebitor():?Musician
+  public function getDebitor(): ?Musician
   {
     return $this->debitor;
   }
@@ -239,7 +240,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setSubject(?string $subject):InvoiceItem
+  public function setSubject(?string $subject): InvoiceItem
   {
     $this->subject = $subject;
 
@@ -251,7 +252,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return string
    */
-  public function getSubject():?string
+  public function getSubject(): ?string
   {
     return $this->subject;
   }
@@ -263,7 +264,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setIsDonation(bool $isDonation):InvoiceItem
+  public function setIsDonation(bool $isDonation): InvoiceItem
   {
     $this->isDonation = $isDonation;
 
@@ -275,7 +276,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return bool
    */
-  public function getIsDonation():?bool
+  public function getIsDonation(): ?bool
   {
     return $this->isDonation;
   }
@@ -287,7 +288,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setReceivable(ProjectParticipantFieldDatum $receivable):InvoiceItem
+  public function setReceivable(ProjectParticipantFieldDatum $receivable): InvoiceItem
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
@@ -313,7 +314,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function getReceivable():?ProjectParticipantFieldDatum
+  public function getReceivable(): ?ProjectParticipantFieldDatum
   {
     return $this->receivable;
   }
@@ -325,7 +326,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setReceivableOption(?ProjectParticipantFieldDataOption $receivableOption):InvoiceItem
+  public function setReceivableOption(?ProjectParticipantFieldDataOption $receivableOption): InvoiceItem
   {
     $this->receivableOption = $receivableOption;
 
@@ -337,7 +338,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function getReceivableOption():?ProjectParticipantFieldDataOption
+  public function getReceivableOption(): ?ProjectParticipantFieldDataOption
   {
     return $this->receivableOption;
   }
@@ -349,7 +350,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return InvoiceItem
    */
-  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):InvoiceItem
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder): InvoiceItem
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
@@ -375,13 +376,13 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    *
    * @return ?DatabaseStorageFolder
    */
-  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
+  public function getBalanceDocumentsFolder(): ?DatabaseStorageFolder
   {
     return $this->balanceDocumentsFolder;
   }
 
   /** {@inheritdoc} */
-  public function jsonSerialize():array
+  public function jsonSerialize(): array
   {
     return $this->toArray();
   }

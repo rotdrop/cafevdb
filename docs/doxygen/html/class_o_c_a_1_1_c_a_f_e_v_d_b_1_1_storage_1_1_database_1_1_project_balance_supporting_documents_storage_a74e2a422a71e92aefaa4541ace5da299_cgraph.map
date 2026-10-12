@@ -1,9 +1,11 @@
 <map id="getReadMeFactory" name="getReadMeFactory">
-<area shape="rect" id="Node000001" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,21,138,48"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76" title=" " alt="" coords="186,5,418,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,32,173,34,168,35,138,37"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="466,13,633,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,32,453,35,448,35,419,37"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="681,13,891,56"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="633,32,669,35,663,35,633,37"/>
+<area shape="rect" id="Node000001" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,45,138,72"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76" title=" " alt="" coords="186,29,418,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,56,173,58,168,59,138,61"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="257,27,257,19,266,10,281,5,302,3,326,5,343,15,337,15,325,11,302,8,282,10,269,15,262,21,261,31"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="466,37,633,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,56,453,59,448,59,419,61"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="505,35,503,27,511,18,526,13,550,11,575,13,592,22,586,21,574,18,550,16,527,18,514,23,508,29,510,38"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="681,37,891,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="633,56,669,59,663,59,633,61"/>
 </map>

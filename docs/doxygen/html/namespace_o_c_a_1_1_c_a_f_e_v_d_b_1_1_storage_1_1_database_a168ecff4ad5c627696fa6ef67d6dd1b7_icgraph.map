@@ -1,5 +1,7 @@
 <map id="getLegacyInvoiceFolderName" name="getLegacyInvoiceFolderName">
-<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="232,5,426,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a8fc522641e1d3e0756d4707780e74d00" title="PME&#45;legacy." alt="" coords="5,5,184,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,19,184,21,184,16,219,19"/>
+<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="232,29,426,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="368,14,356,10,329,8,304,10,291,15,288,20,294,30,289,28,282,21,287,11,303,5,329,3,357,5,373,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a8fc522641e1d3e0756d4707780e74d00" title="PME&#45;legacy." alt="" coords="5,29,184,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,43,184,45,184,40,219,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="134,15,121,10,94,8,70,10,56,15,53,20,60,29,55,29,48,21,53,11,69,5,95,3,123,5,139,14"/>
 </map>

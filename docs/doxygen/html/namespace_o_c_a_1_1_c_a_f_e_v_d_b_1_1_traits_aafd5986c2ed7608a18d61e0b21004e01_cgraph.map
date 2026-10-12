@@ -1,7 +1,10 @@
 <map id="formatDateTime" name="formatDateTime">
-<area shape="rect" id="Node000001" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,5,121,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af3b3d2dae405ec96b29b4072ef4824a2" title=" " alt="" coords="169,5,300,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,16,156,18,150,19,121,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="348,5,448,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="300,16,335,19,330,19,300,21"/>
+<area shape="rect" id="Node000001" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,29,121,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="33,29,28,21,32,11,44,5,63,3,84,5,96,14,91,14,82,10,63,8,45,10,36,15,34,20,38,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af3b3d2dae405ec96b29b4072ef4824a2" title=" " alt="" coords="169,29,300,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,40,156,42,150,43,121,45"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="206,28,201,21,204,11,216,5,234,3,254,5,266,15,261,14,252,10,234,8,217,10,208,15,206,20,211,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="348,29,448,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="300,40,335,43,330,43,300,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="370,28,365,21,368,11,380,5,398,3,418,5,430,15,425,14,416,10,398,8,381,10,372,15,370,20,375,30"/>
 </map>

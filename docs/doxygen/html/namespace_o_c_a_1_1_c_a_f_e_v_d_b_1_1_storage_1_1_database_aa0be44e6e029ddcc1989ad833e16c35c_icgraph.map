@@ -1,5 +1,7 @@
 <map id="getLegacyDonationReceiptFileName" name="getLegacyDonationReceiptFileName">
-<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="246,5,424,48"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a1ffba20a9b5d93d6ced81c5f2578c21f" title="Generate a file&#45;name for the given donation." alt="" coords="5,13,198,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,27,198,29,198,24,233,26"/>
+<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="246,29,424,72"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="371,13,358,10,335,8,313,10,299,15,294,21,295,30,291,27,289,19,296,10,312,5,335,3,360,5,376,14"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a1ffba20a9b5d93d6ced81c5f2578c21f" title="Generate a file&#45;name for the given donation." alt="" coords="5,37,198,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,51,198,53,198,48,233,50"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="141,23,128,18,101,16,77,18,64,23,60,28,67,37,62,37,55,29,60,19,76,13,102,11,130,13,146,22"/>
 </map>

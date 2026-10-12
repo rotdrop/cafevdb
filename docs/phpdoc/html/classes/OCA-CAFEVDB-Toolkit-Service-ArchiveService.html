@@ -276,7 +276,7 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiveFiles">$archiveFiles</a>
     <span>
-                        &nbsp;: array            </span>
+                        &nbsp;: array|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -288,7 +288,7 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_archiver">$archiver</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html"><abbr title="\OCA\CAFEVDB\Toolkit\Backend\ArchiveBackend">ArchiveBackend</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html"><abbr title="\OCA\CAFEVDB\Toolkit\Backend\ArchiveBackend">ArchiveBackend</abbr></a>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -300,7 +300,7 @@ the virtual storage and actual archive extraction controllers.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#property_fileNode">$fileNode</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\Files\File">File</abbr>            </span>
+                        &nbsp;: <abbr title="\OCP\Files\File">File</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -1168,9 +1168,9 @@ archive members).</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array</span>
+            <span class="phpdocumentor-signature__type">array|null</span>
     <span class="phpdocumentor-signature__name">$archiveFiles</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1208,7 +1208,7 @@ archive members).</p>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService-ArchiveInfo.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\ArchiveService\ArchiveInfo">ArchiveInfo</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$archiveInfo</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1244,9 +1244,9 @@ archive members).</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html"><abbr title="\OCA\CAFEVDB\Toolkit\Backend\ArchiveBackend">ArchiveBackend</abbr></a></span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html"><abbr title="\OCA\CAFEVDB\Toolkit\Backend\ArchiveBackend">ArchiveBackend</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$archiver</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1326,9 +1326,9 @@ this the surplus members would be lost silently.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\File">File</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\File">File</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$fileNode</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1533,9 +1533,9 @@ of failing or silently losing members.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">259</span>
+    <span class="phpdocumentor-element-found-in__line">255</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.259" class="phpdocumentor-element-found-in__source" data-line="259" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the given file can be opened.</p>
@@ -1597,9 +1597,9 @@ of failing or silently losing members.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Close, i.e. unconfigure. This method is error agnostic, it simply unsets
@@ -1763,9 +1763,9 @@ the initial state variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">478</span>
+    <span class="phpdocumentor-element-found-in__line">474</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.478" class="phpdocumentor-element-found-in__source" data-line="478" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a proposal for the extraction destination. Currently, this simply
@@ -1814,9 +1814,9 @@ strips double extensions like FOO.tag.N -&gt; FOO.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">429</span>
+    <span class="phpdocumentor-element-found-in__line">425</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.429" class="phpdocumentor-element-found-in__source" data-line="429" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.425" class="phpdocumentor-element-found-in__source" data-line="425" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1857,9 +1857,9 @@ strips double extensions like FOO.tag.N -&gt; FOO.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">603</span>
+    <span class="phpdocumentor-element-found-in__line">599</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.603" class="phpdocumentor-element-found-in__source" data-line="603" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.599" class="phpdocumentor-element-found-in__source" data-line="599" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the groups of archive members which collapse onto the same name
@@ -1901,9 +1901,9 @@ should report the others instead of dropping them silently.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">499</span>
+    <span class="phpdocumentor-element-found-in__line">495</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.499" class="phpdocumentor-element-found-in__source" data-line="499" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.495" class="phpdocumentor-element-found-in__source" data-line="495" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the name of the top-level folder for the case that there is only a
@@ -1942,9 +1942,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">539</span>
+    <span class="phpdocumentor-element-found-in__line">535</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.539" class="phpdocumentor-element-found-in__source" data-line="539" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.535" class="phpdocumentor-element-found-in__source" data-line="535" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -1991,9 +1991,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">507</span>
+    <span class="phpdocumentor-element-found-in__line">503</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.507" class="phpdocumentor-element-found-in__source" data-line="507" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.503" class="phpdocumentor-element-found-in__source" data-line="503" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -2030,9 +2030,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">560</span>
+    <span class="phpdocumentor-element-found-in__line">556</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.560" class="phpdocumentor-element-found-in__source" data-line="560" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.556" class="phpdocumentor-element-found-in__source" data-line="556" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -2079,9 +2079,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">229</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currently configured size-limit.</p>
@@ -2119,9 +2119,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">338</span>
+    <span class="phpdocumentor-element-found-in__line">334</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the &quot;opened&quot; status.</p>
@@ -2758,9 +2758,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">366</span>
+    <span class="phpdocumentor-element-found-in__line">362</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.362" class="phpdocumentor-element-found-in__source" data-line="362" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
     
@@ -2821,9 +2821,9 @@ single folder at folder nesting level 0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">222</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the size limit for the uncompressed size of the archives. Archives
@@ -3290,9 +3290,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">636</span>
+    <span class="phpdocumentor-element-found-in__line">632</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.632" class="phpdocumentor-element-found-in__source" data-line="632" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore the environment variables previously overridden by
@@ -3456,9 +3456,9 @@ flat number array with 3 or 4 components.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">620</span>
+    <span class="phpdocumentor-element-found-in__line">616</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.620" class="phpdocumentor-element-found-in__source" data-line="620" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.616" class="phpdocumentor-element-found-in__source" data-line="616" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enforece UTF-8 locale in the enviroment as otherwise some external
@@ -3508,9 +3508,9 @@ helpers do not function correctly.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">206</span>
+    <span class="phpdocumentor-element-found-in__line">202</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.206" class="phpdocumentor-element-found-in__source" data-line="206" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Guard against undefined $this-&gt;l.</p>
@@ -3689,9 +3689,9 @@ integer.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">245</span>
+    <span class="phpdocumentor-element-found-in__line">241</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the local operating system path of the given file-node.</p>
@@ -3739,9 +3739,9 @@ integer.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ArchiveService.php"><a href="files/lib-toolkit-service-archiveservice.html"><abbr title="lib/Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">585</span>
+    <span class="phpdocumentor-element-found-in__line">581</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.585" class="phpdocumentor-element-found-in__source" data-line="585" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ArchiveService.html#source-view.581" class="phpdocumentor-element-found-in__source" data-line="581" data-modal="source-view" data-src="files/lib/Toolkit/Service/ArchiveService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Resolve a member name as requested by the virtual storage (normalized to

@@ -1,14 +1,15 @@
 <map id="addGroupToFolder" name="addGroupToFolder">
-<area shape="rect" id="Node000001" title="Add a single group to the given shared folder." alt="" coords="5,39,133,65"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="181,39,256,65"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,49,168,51,162,53,133,55"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="304,13,407,40"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,42,291,39,286,40,257,48"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="604,56,749,99"/>
-<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="257,51,589,70,587,75,256,57"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="455,13,549,40"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="407,24,442,26,437,27,408,29"/>
+<area shape="rect" id="Node000001" title="Add a single group to the given shared folder." alt="" coords="5,63,133,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="181,63,256,89"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,73,168,75,162,77,133,79"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="304,37,407,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,66,291,63,286,64,257,72"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="604,80,749,123"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="257,75,589,94,587,99,256,81"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="455,37,549,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="407,48,442,50,437,51,408,53"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="597,5,756,32"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="549,22,584,23,578,23,549,27"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="549,37,592,52,586,52,549,43"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="548,40,583,36,588,35,549,45"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="549,61,592,76,586,76,549,67"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="643,78,641,70,647,61,659,55,676,53,695,56,708,65,703,64,694,61,676,59,660,61,650,65,646,71,647,81"/>
 </map>

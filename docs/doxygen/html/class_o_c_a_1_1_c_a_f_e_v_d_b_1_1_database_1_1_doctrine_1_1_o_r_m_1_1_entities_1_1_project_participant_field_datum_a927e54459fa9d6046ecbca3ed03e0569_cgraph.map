@@ -1,0 +1,7 @@
+<map id="addInvoiceItem" name="addInvoiceItem">
+<area shape="rect" id="Node000001" title="Add an invoiceItem and also update the owning side." alt="" coords="5,63,116,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a9816f1677e0a00492792cdab5b523555" title="Get receivable." alt="" coords="164,5,344,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,62,151,56,146,58,117,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a2d19d53b87c2858af94e5caffe240a7e" title="Set receivable." alt="" coords="164,88,344,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="116,85,151,94,146,95,116,90"/>
+</map>

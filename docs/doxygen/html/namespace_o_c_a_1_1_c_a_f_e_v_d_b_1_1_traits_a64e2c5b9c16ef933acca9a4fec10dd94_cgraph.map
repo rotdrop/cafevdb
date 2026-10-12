@@ -1,7 +1,10 @@
 <map id="getSystemValueInt" name="getSystemValueInt">
-<area shape="rect" id="Node000001" title="Forward to OCP\IConfig\getSystemValueInt()." alt="" coords="5,5,137,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="185,5,275,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,16,171,18,166,19,137,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="323,5,423,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="275,16,310,19,305,19,275,21"/>
+<area shape="rect" id="Node000001" title="Forward to OCP\IConfig\getSystemValueInt()." alt="" coords="5,29,137,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="43,29,39,21,42,11,53,5,71,3,90,5,102,14,96,14,88,10,71,8,55,10,46,15,44,20,48,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="185,29,275,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,40,171,42,166,43,137,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="205,28,200,21,203,11,214,5,230,3,247,5,258,15,253,14,245,10,230,8,215,10,208,14,206,20,209,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="323,29,423,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="275,40,310,43,305,43,275,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="348,28,344,21,347,11,357,5,373,3,391,5,401,15,396,13,389,10,373,8,359,10,351,14,349,20,353,30"/>
 </map>

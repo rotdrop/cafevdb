@@ -1,7 +1,10 @@
 <map id="sessionKey" name="sessionKey">
-<area shape="rect" id="Node000001" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="5,5,95,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="143,5,220,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,130,18,125,19,95,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="268,5,368,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,16,255,19,249,19,220,21"/>
+<area shape="rect" id="Node000001" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="5,29,95,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="26,29,23,21,26,11,35,5,50,3,66,5,76,14,71,14,64,10,50,8,37,10,30,14,28,20,32,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="143,29,220,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,40,130,42,125,43,95,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="158,28,154,21,157,11,166,5,181,3,198,5,207,15,202,14,195,10,181,8,168,10,161,14,159,20,163,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="268,29,368,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="220,40,255,43,249,43,220,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="294,28,290,21,293,11,303,5,318,3,335,5,345,15,340,13,333,10,318,8,304,10,297,14,295,20,299,30"/>
 </map>

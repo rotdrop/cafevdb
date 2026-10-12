@@ -220,7 +220,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setYear(?int $year):Project
+  public function setYear(?int $year): Project
   {
     $this->year = $year;
 
@@ -244,7 +244,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setName(?string $name):Project
+  public function setName(?string $name): Project
   {
     $this->name = $name;
 
@@ -280,7 +280,7 @@ class Project implements \ArrayAccess
    *
    * @return EnumProjectTemporalType
    */
-  public function getType():Types\EnumProjectTemporalType
+  public function getType(): Types\EnumProjectTemporalType
   {
     return $this->type;
   }
@@ -292,7 +292,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setMailingListId(?string $mailingListId):Project
+  public function setMailingListId(?string $mailingListId): Project
   {
     $this->mailingListId = $mailingListId;
     return $this;
@@ -303,7 +303,7 @@ class Project implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getMailingListId():?string
+  public function getMailingListId(): ?string
   {
     return $this->mailingListId;
   }
@@ -315,7 +315,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setRegistrationStartDate(mixed $registrationStartDate):Project
+  public function setRegistrationStartDate(mixed $registrationStartDate): Project
   {
     if (empty($registrationStartDate)) {
       $this->registrationStartDate = null;
@@ -333,7 +333,7 @@ class Project implements \ArrayAccess
    *
    * @return DateTimeImmutable
    */
-  public function getRegistrationStartDate():?DateTimeInterface
+  public function getRegistrationStartDate(): ?DateTimeInterface
   {
     return $this->registrationStartDate;
   }
@@ -345,7 +345,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  public function setRegistrationDeadline(mixed $registrationDeadline): Project
   {
     if (empty($registrationDeadline)) {
       $this->registrationDeadline = null;
@@ -363,7 +363,7 @@ class Project implements \ArrayAccess
    *
    * @return DateTimeImmutable
    */
-  public function getRegistrationDeadline():?DateTimeInterface
+  public function getRegistrationDeadline(): ?DateTimeInterface
   {
     return $this->registrationDeadline;
   }
@@ -375,7 +375,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setWebPages(Collection $webPages):Project
+  public function setWebPages(Collection $webPages): Project
   {
     $this->webPages = $webPages;
 
@@ -399,7 +399,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setApplications(Collection $applications):Project
+  public function setApplications(Collection $applications): Project
   {
     $this->applications = $applications;
 
@@ -411,7 +411,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getApplications():Collection
+  public function getApplications(): Collection
   {
     return $this->applications;
   }
@@ -423,7 +423,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipantFields(Collection $participantFields):Project
+  public function setParticipantFields(Collection $participantFields): Project
   {
     $this->participantFields = $participantFields;
 
@@ -439,7 +439,7 @@ class Project implements \ArrayAccess
    */
   public function getParticipantFields(
     string|Types\EnumParticipationContext $participationContext = Types\EnumParticipationContext::UNRESTRICTED,
-  ):Collection {
+  ): Collection {
     // Sorting during load does not work when using Translatable, so trigger load.
     if ($this->participantFields instanceof \OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection) {
       $this->participantFields->initialize();
@@ -461,7 +461,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipantFieldsData(Collection $participantFieldsData):Project
+  public function setParticipantFieldsData(Collection $participantFieldsData): Project
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -473,7 +473,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getParticipantFieldsData():Collection
+  public function getParticipantFieldsData(): Collection
   {
     return $this->participantFieldsData;
   }
@@ -485,7 +485,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipants(Collection $participants):Project
+  public function setParticipants(Collection $participants): Project
   {
     $this->participants = $participants;
 
@@ -503,7 +503,7 @@ class Project implements \ArrayAccess
    */
   public function getParticipants(
     string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
-  ):Collection {
+  ): Collection {
     switch (ParticipationContext::get($participationContext)) {
       case ParticipationContext::UNRESTRICTED:
         return $this->participants;
@@ -524,7 +524,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):Project
+  public function setSepaDebitMandates(Collection $sepaDebitMandates): Project
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 
@@ -536,7 +536,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getSepaDebitMandates():Collection
+  public function getSepaDebitMandates(): Collection
   {
     return $this->sepaDebitMandates;
   }
@@ -572,7 +572,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
+  public function setInstrumentationNumbers(Collection $instrumentationNumbers): Project
   {
     $this->instrumentationNumbers = $instrumentationNumbers;
 
@@ -596,7 +596,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setPayments(Collection $payments):Project
+  public function setPayments(Collection $payments): Project
   {
     $this->payments = $payments;
 
@@ -608,9 +608,28 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPayments():Collection
+  public function getPayments(): Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * Add a project payment and make sure the owning side is also updated.
+   *
+   * @param ProjectPayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(ProjectPayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getProject()!== $this) {
+      $payment->setProject($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -620,7 +639,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setCompositePayments(Collection $compositePayments):Project
+  public function setCompositePayments(Collection $compositePayments): Project
   {
     $this->compositePayments = $compositePayments;
 
@@ -632,9 +651,28 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getCompositePayments():Collection
+  public function getCompositePayments(): Collection
   {
     return $this->compositePayments;
+  }
+
+  /**
+   * Add a payment and make sure the owning side is also updated.
+   *
+   * @param CompositePayment $payment
+   *
+   * @return self
+   */
+  public function addCompositePayment(CompositePayment $payment): self
+  {
+    if (!$this->compositePayments->contains($payment)) {
+      $this->compositePayments->add($payment);
+    }
+    if ($payment->getProject() !== $this) {
+      $payment->setProject($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -644,7 +682,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setInvoices(Collection $invoices):Project
+  public function setInvoices(Collection $invoices): Project
   {
     $this->invoices = $invoices;
 
@@ -656,9 +694,28 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getInvoices():Collection
+  public function getInvoices(): Collection
   {
     return $this->invoices;
+  }
+
+  /**
+   * Add an invoice and make sure the owning side is also updated.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getProject()!== $this) {
+      $invoice->setProject($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -668,7 +725,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setSentEmail(Collection $sentEmail):Project
+  public function setSentEmail(Collection $sentEmail): Project
   {
     $this->sentEmail = $sentEmail;
 
@@ -680,7 +737,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getSentEmail():Collection
+  public function getSentEmail(): Collection
   {
     return $this->sentEmail;
   }
@@ -692,7 +749,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setFinancialBalanceDocumentsStorage(DatabaseStorage $financialBalanceDocumentsStorage):Project
+  public function setFinancialBalanceDocumentsStorage(DatabaseStorage $financialBalanceDocumentsStorage): Project
   {
     $this->financialBalanceDocumentsStorage = $financialBalanceDocumentsStorage;
 
@@ -704,7 +761,7 @@ class Project implements \ArrayAccess
    *
    * @return null|DatabaseStorage
    */
-  public function getFinancialBalanceDocumentsStorage():?DatabaseStorage
+  public function getFinancialBalanceDocumentsStorage(): ?DatabaseStorage
   {
     return $this->financialBalanceDocumentsStorage;
   }
@@ -714,7 +771,7 @@ class Project implements \ArrayAccess
    *
    * @return null|DatabaseStorageFolder
    */
-  public function getFinancialBalanceDocumentsFolder():?DatabaseStorageFolder
+  public function getFinancialBalanceDocumentsFolder(): ?DatabaseStorageFolder
   {
     return empty($this->financialBalanceDocumentsStorage) ? null : $this->financialBalanceDocumentsStorage->getRoot();
   }
@@ -725,7 +782,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getFinancialBalanceSupportingDocuments():Collection
+  public function getFinancialBalanceSupportingDocuments(): Collection
   {
     if (empty($this->financialBalanceDocumentsStorage)) {
       return new ArrayCollection;
@@ -741,7 +798,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setParticipantInstruments(Collection $participantInstruments):Project
+  public function setParticipantInstruments(Collection $participantInstruments): Project
   {
     $this->participantInstruments = $participantInstruments;
 
@@ -753,7 +810,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getParticipantInstruments():Collection
+  public function getParticipantInstruments(): Collection
   {
     return $this->participantInstruments;
   }
@@ -765,7 +822,7 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setCalendarEvents(Collection $calendarEvents):Project
+  public function setCalendarEvents(Collection $calendarEvents): Project
   {
     $this->calendarEvents = $calendarEvents;
 
@@ -777,7 +834,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getCalendarEvents():Collection
+  public function getCalendarEvents(): Collection
   {
     return $this->calendarEvents;
   }
@@ -789,13 +846,13 @@ class Project implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->payments->count() + $this->invoices->count();
   }
 
   /** {@inheritdoc} */
-  public function __toString():string
+  public function __toString(): string
   {
     return $this->name . '@' . $this->id;
   }

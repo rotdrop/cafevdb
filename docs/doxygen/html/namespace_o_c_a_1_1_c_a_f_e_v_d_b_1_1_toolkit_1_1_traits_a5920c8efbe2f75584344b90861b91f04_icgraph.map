@@ -1,5 +1,7 @@
 <map id="getCloudAdmins" name="getCloudAdmins">
-<area shape="rect" id="Node000001" title="Return all admin users." alt="" coords="217,5,334,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a928f7c6182d7b1658009c62f738288e7" title="Contact information for the overall admins." alt="" coords="5,5,169,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,19,169,21,169,16,204,19"/>
+<area shape="rect" id="Node000001" title="Return all admin users." alt="" coords="217,29,334,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="306,14,296,10,275,8,256,10,245,15,243,20,248,30,243,28,237,21,241,11,254,5,275,3,298,5,311,14"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a928f7c6182d7b1658009c62f738288e7" title="Contact information for the overall admins." alt="" coords="5,29,169,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,43,169,45,169,40,204,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="118,14,108,10,87,8,67,10,57,15,54,20,60,29,54,29,49,21,53,11,66,5,87,3,110,5,123,14"/>
 </map>

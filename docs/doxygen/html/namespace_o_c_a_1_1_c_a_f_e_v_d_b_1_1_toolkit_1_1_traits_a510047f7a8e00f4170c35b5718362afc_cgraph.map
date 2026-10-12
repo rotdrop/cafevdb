@@ -1,9 +1,13 @@
 <map id="getUserAppFolder" name="getUserAppFolder">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,132,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="180,5,335,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,16,167,18,161,19,132,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="383,5,514,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,16,370,19,365,19,335,21"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="562,5,666,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="515,16,550,19,544,19,515,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,132,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="36,29,31,21,34,11,47,5,69,3,91,5,105,14,99,14,90,10,68,8,49,10,38,15,36,20,41,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a846d85acaa379ee927acbc7120838a1b" title="Return the name top&#45;level folder as Folder instance." alt="" coords="180,29,335,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="132,40,167,42,161,43,132,45"/>
+<area shape="poly" id="edge7_Node000002_Node000002" title=" " alt="" coords="225,28,219,21,223,11,236,5,257,3,280,5,293,14,288,14,278,10,257,8,238,10,227,15,225,20,230,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="383,29,514,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="335,40,370,43,365,43,335,45"/>
+<area shape="poly" id="edge6_Node000003_Node000003" title=" " alt="" coords="420,28,415,21,419,11,430,5,449,3,469,5,480,15,475,13,467,10,449,8,432,10,423,15,420,20,425,30"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="562,29,666,56"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="515,40,550,43,544,43,515,45"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="585,28,580,21,584,11,595,5,614,3,634,5,646,15,641,13,632,10,614,8,597,10,588,15,586,20,590,30"/>
 </map>

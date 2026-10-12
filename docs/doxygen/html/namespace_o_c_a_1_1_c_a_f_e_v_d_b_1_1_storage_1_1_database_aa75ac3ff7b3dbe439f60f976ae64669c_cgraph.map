@@ -1,7 +1,9 @@
 <map id="getBankTransactionsFolderName" name="getBankTransactionsFolderName">
-<area shape="rect" id="Node000001" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,13,221,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="269,13,359,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,24,256,27,250,27,221,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="407,5,616,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="359,24,394,27,389,27,360,29"/>
+<area shape="rect" id="Node000001" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,29,221,56"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="78,28,73,21,77,11,91,5,113,3,137,5,151,14,146,14,135,10,113,8,92,10,81,15,78,20,84,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="269,29,359,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,40,256,43,250,43,221,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="280,28,274,21,278,11,292,5,314,3,337,5,351,14,346,14,336,10,314,8,293,10,282,15,279,20,285,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="407,21,616,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="359,40,394,43,389,43,360,45"/>
 </map>

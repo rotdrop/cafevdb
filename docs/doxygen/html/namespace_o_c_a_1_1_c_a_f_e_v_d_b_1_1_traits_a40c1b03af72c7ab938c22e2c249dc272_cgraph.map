@@ -1,7 +1,13 @@
 <map id="getDateTimeZone" name="getDateTimeZone">
-<area shape="rect" id="Node000001" title="Get the current timezone." alt="" coords="5,5,131,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3a2983317152273aaf635e4bd61f0c7a" title=" " alt="" coords="179,5,277,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,16,166,18,160,19,131,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="325,5,425,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="277,16,312,19,306,19,277,21"/>
+<area shape="rect" id="Node000001" title="Get the current timezone." alt="" coords="5,67,131,93"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3a2983317152273aaf635e4bd61f0c7a" title=" " alt="" coords="192,29,290,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,64,180,55,175,57,132,69"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adb69a9cef776376cd60f16e18dbb5d00" title="Get the current timezone." alt="" coords="179,104,304,131"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="131,91,166,100,161,101,131,96"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="213,28,209,21,212,11,223,5,241,3,261,5,272,14,267,14,259,10,241,8,225,10,216,15,214,20,218,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="352,67,452,93"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="291,51,339,65,334,65,291,57"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="374,65,369,58,373,48,384,42,402,40,422,43,433,52,428,51,420,48,402,45,386,47,377,52,375,57,379,67"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="301,101,335,95,340,95,302,106"/>
+<area shape="poly" id="edge7_Node000004_Node000004" title=" " alt="" coords="213,102,209,95,212,86,223,80,241,77,261,80,272,89,267,88,259,85,241,83,225,85,216,89,214,95,218,105"/>
 </map>

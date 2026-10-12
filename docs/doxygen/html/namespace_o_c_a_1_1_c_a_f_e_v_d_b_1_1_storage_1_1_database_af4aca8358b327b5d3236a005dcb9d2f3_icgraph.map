@@ -1,5 +1,7 @@
 <map id="getLegacyDebitMandateFileName" name="getLegacyDebitMandateFileName">
-<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="230,5,448,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a61153feea4ded7dd861675e761e506bb" title="Generate a file&#45;name for a hard&#45;copy of the given debit&#45;mandate." alt="" coords="5,5,182,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,19,182,21,182,16,217,19"/>
+<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="230,29,448,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="380,14,367,10,339,8,313,10,299,15,296,20,302,30,297,28,290,21,295,11,312,5,339,3,368,5,385,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a61153feea4ded7dd861675e761e506bb" title="Generate a file&#45;name for a hard&#45;copy of the given debit&#45;mandate." alt="" coords="5,29,182,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,43,182,45,182,40,217,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="135,15,122,10,93,8,68,10,53,15,50,20,57,29,52,29,45,21,50,11,67,5,94,3,123,5,140,14"/>
 </map>

@@ -1,5 +1,6 @@
 <map id="testEventMatrix" name="testEventMatrix">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,119,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#aa6b4cbe622dc77bc90df00caae97f692" title="Perform basic tests with the event&#45;matrix output." alt="" coords="167,5,349,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,24,154,26,149,27,119,29"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,37,119,64"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#aa6b4cbe622dc77bc90df00caae97f692" title="Perform basic tests with the event&#45;matrix output." alt="" coords="167,29,349,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,48,154,50,149,51,119,53"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="221,27,219,19,225,10,238,5,258,3,279,5,293,14,288,13,277,10,258,8,240,10,228,15,224,21,225,30"/>
 </map>

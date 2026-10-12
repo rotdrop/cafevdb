@@ -278,6 +278,12 @@ autoincrement value and unfortunately does not accept 0. For TypeScript
 we really do not want this as TS only received initialized entities.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_invoices">$invoices</a>
+    <span>
+                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_payments">$payments</a>
     <span>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>&gt;            </span>
@@ -368,11 +374,18 @@ the bank in order to match the $dueDate.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addInvoice">addInvoice()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Add an invoice and also update the owning side.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPayment">addPayment()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
-<dd>Add a paymente and enforce that it references the same Project entity as
+<dd>Add a payment and enforce that it references the same Project entity as
 all other payments. Merging payments from different projects is not
 supported.</dd>
 
@@ -435,6 +448,13 @@ supported.</dd>
                                 &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getInvoices">getInvoices()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
+</dt>
+<dd>Get invoices.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayment">getPayment()</a>
@@ -593,6 +613,13 @@ supported.</dd>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setInvoices">setInvoices()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a>    </span>
+</dt>
+<dd>Set invoices.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setPayments">setPayments()</a>
@@ -1056,6 +1083,67 @@ may not change the visibility of a property.</p>
             -protected
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_invoices">
+        $invoices
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_invoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">139</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&gt;</span>
+    <span class="phpdocumentor-signature__name">$invoices</span>
+    </code>
+
+    
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="property_invoices_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_invoices_attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToMany">OneToMany</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $mappedBy: &#039;sepaTransaction&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $cascade: [&#039;all&#039;]
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $fetch: &#039;EXTRA_LAZY&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_payments">
         $payments
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_payments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1133,9 +1221,9 @@ may not change the visibility of a property.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">132</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -1681,9 +1769,9 @@ the bank in order to match the $dueDate.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -1752,9 +1840,9 @@ the bank in order to match the $dueDate.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">225</span>
+    <span class="phpdocumentor-element-found-in__line">244</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.225" class="phpdocumentor-element-found-in__source" data-line="225" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -1793,6 +1881,56 @@ the bank in order to match the $dueDate.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_addInvoice">
+        addInvoice()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addInvoice" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">597</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Add an invoice and also update the owning side.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">addInvoice</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoice</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$invoice</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_addPayment">
         addPayment()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPayment" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1801,12 +1939,12 @@ the bank in order to match the $dueDate.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">505</span>
+    <span class="phpdocumentor-element-found-in__line">524</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.505" class="phpdocumentor-element-found-in__source" data-line="505" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.524" class="phpdocumentor-element-found-in__source" data-line="524" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Add a paymente and enforce that it references the same Project entity as
+        <p class="phpdocumentor-summary">Add a payment and enforce that it references the same Project entity as
 all other payments. Merging payments from different projects is not
 supported.</p>
 
@@ -1867,9 +2005,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">578</span>
+    <span class="phpdocumentor-element-found-in__line">640</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.578" class="phpdocumentor-element-found-in__source" data-line="578" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.640" class="phpdocumentor-element-found-in__source" data-line="640" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add a new email to the list of pre-notificiations</p>
@@ -1917,9 +2055,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">175</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -2054,9 +2192,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">215</span>
+    <span class="phpdocumentor-element-found-in__line">234</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.215" class="phpdocumentor-element-found-in__source" data-line="215" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get balancingItemsData.</p>
@@ -2094,9 +2232,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">313</span>
+    <span class="phpdocumentor-element-found-in__line">332</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.332" class="phpdocumentor-element-found-in__source" data-line="332" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dueDate.</p>
@@ -2134,9 +2272,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">457</span>
+    <span class="phpdocumentor-element-found-in__line">476</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.457" class="phpdocumentor-element-found-in__source" data-line="457" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dueEventUid.</p>
@@ -2174,9 +2312,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">433</span>
+    <span class="phpdocumentor-element-found-in__line">452</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.433" class="phpdocumentor-element-found-in__source" data-line="433" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dueEventUri.</p>
@@ -2246,6 +2384,46 @@ supported.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getInvoices">
+        getInvoices()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getInvoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">585</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.585" class="phpdocumentor-element-found-in__source" data-line="585" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get invoices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getInvoices</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getPayment">
         getPayment()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayment" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2254,9 +2432,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">533</span>
+    <span class="phpdocumentor-element-found-in__line">552</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.533" class="phpdocumentor-element-found-in__source" data-line="533" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.552" class="phpdocumentor-element-found-in__source" data-line="552" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the payment for the specified musician</p>
@@ -2306,9 +2484,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">481</span>
+    <span class="phpdocumentor-element-found-in__line">500</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.481" class="phpdocumentor-element-found-in__source" data-line="481" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.500" class="phpdocumentor-element-found-in__source" data-line="500" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -2346,9 +2524,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">594</span>
+    <span class="phpdocumentor-element-found-in__line">659</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.659" class="phpdocumentor-element-found-in__source" data-line="659" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the preNotificationEmail for the specified musician</p>
@@ -2396,9 +2574,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">566</span>
+    <span class="phpdocumentor-element-found-in__line">628</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.566" class="phpdocumentor-element-found-in__source" data-line="566" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.628" class="phpdocumentor-element-found-in__source" data-line="628" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get preNotificationEmails.</p>
@@ -2436,9 +2614,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">489</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.489" class="phpdocumentor-element-found-in__source" data-line="489" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.508" class="phpdocumentor-element-found-in__source" data-line="508" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -2475,9 +2653,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">165</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaTransactionData.</p>
@@ -2515,9 +2693,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">265</span>
+    <span class="phpdocumentor-element-found-in__line">284</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submissionDeadline.</p>
@@ -2555,9 +2733,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">361</span>
+    <span class="phpdocumentor-element-found-in__line">380</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.361" class="phpdocumentor-element-found-in__source" data-line="361" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.380" class="phpdocumentor-element-found-in__source" data-line="380" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submissionEventUid.</p>
@@ -2595,9 +2773,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">337</span>
+    <span class="phpdocumentor-element-found-in__line">356</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.337" class="phpdocumentor-element-found-in__source" data-line="337" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.356" class="phpdocumentor-element-found-in__source" data-line="356" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submissionEventUri.</p>
@@ -2635,9 +2813,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">409</span>
+    <span class="phpdocumentor-element-found-in__line">428</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.409" class="phpdocumentor-element-found-in__source" data-line="409" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submissionTaskUid.</p>
@@ -2675,9 +2853,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">385</span>
+    <span class="phpdocumentor-element-found-in__line">404</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.404" class="phpdocumentor-element-found-in__source" data-line="404" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submissionTaskUri.</p>
@@ -2715,9 +2893,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">289</span>
+    <span class="phpdocumentor-element-found-in__line">308</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get submitDate.</p>
@@ -2950,9 +3128,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">257</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.257" class="phpdocumentor-element-found-in__source" data-line="257" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -2999,9 +3177,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">207</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -3048,9 +3226,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">203</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set balancingItemsData.</p>
@@ -3098,9 +3276,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">301</span>
+    <span class="phpdocumentor-element-found-in__line">320</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.301" class="phpdocumentor-element-found-in__source" data-line="301" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.320" class="phpdocumentor-element-found-in__source" data-line="320" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dueDate.</p>
@@ -3148,9 +3326,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">445</span>
+    <span class="phpdocumentor-element-found-in__line">464</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.445" class="phpdocumentor-element-found-in__source" data-line="445" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dueEventUid.</p>
@@ -3198,9 +3376,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">421</span>
+    <span class="phpdocumentor-element-found-in__line">440</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dueEventUri.</p>
@@ -3290,6 +3468,56 @@ supported.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setInvoices">
+        setInvoices()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setInvoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">573</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.573" class="phpdocumentor-element-found-in__source" data-line="573" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set invoices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setInvoices</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoices</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$invoices</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setPayments">
         setPayments()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setPayments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3298,9 +3526,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">469</span>
+    <span class="phpdocumentor-element-found-in__line">488</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.469" class="phpdocumentor-element-found-in__source" data-line="469" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.488" class="phpdocumentor-element-found-in__source" data-line="488" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -3348,9 +3576,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">554</span>
+    <span class="phpdocumentor-element-found-in__line">616</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.554" class="phpdocumentor-element-found-in__source" data-line="554" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.616" class="phpdocumentor-element-found-in__source" data-line="616" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set preNotificationEmails.</p>
@@ -3398,9 +3626,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaTransactionData.</p>
@@ -3448,9 +3676,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">253</span>
+    <span class="phpdocumentor-element-found-in__line">272</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.253" class="phpdocumentor-element-found-in__source" data-line="253" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.272" class="phpdocumentor-element-found-in__source" data-line="272" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submissionDeadline.</p>
@@ -3498,9 +3726,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">368</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.368" class="phpdocumentor-element-found-in__source" data-line="368" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submissionEventUid.</p>
@@ -3548,9 +3776,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">325</span>
+    <span class="phpdocumentor-element-found-in__line">344</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.325" class="phpdocumentor-element-found-in__source" data-line="325" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submissionEventUri.</p>
@@ -3598,9 +3826,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">397</span>
+    <span class="phpdocumentor-element-found-in__line">416</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.416" class="phpdocumentor-element-found-in__source" data-line="416" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submissionTaskUid.</p>
@@ -3648,9 +3876,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">373</span>
+    <span class="phpdocumentor-element-found-in__line">392</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.373" class="phpdocumentor-element-found-in__source" data-line="373" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.392" class="phpdocumentor-element-found-in__source" data-line="392" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submissionTaskUri.</p>
@@ -3698,9 +3926,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">277</span>
+    <span class="phpdocumentor-element-found-in__line">296</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.277" class="phpdocumentor-element-found-in__source" data-line="277" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.296" class="phpdocumentor-element-found-in__source" data-line="296" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set submitDate.</p>
@@ -3787,9 +4015,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">610</span>
+    <span class="phpdocumentor-element-found-in__line">675</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.610" class="phpdocumentor-element-found-in__source" data-line="610" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.675" class="phpdocumentor-element-found-in__source" data-line="675" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
     
@@ -3830,9 +4058,9 @@ supported.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php"><a href="files/lib-database-doctrine-orm-entities-sepabulktransaction.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php">SepaBulkTransaction.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">623</span>
+    <span class="phpdocumentor-element-found-in__line">688</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.623" class="phpdocumentor-element-found-in__source" data-line="623" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#source-view.688" class="phpdocumentor-element-found-in__source" data-line="688" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaBulkTransaction.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the number of related CompositePayment entities.</p>
@@ -4129,6 +4357,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_dueEventUid">$dueEventUid</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_dueEventUri">$dueEventUri</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_invoices">$invoices</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_payments">$payments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_preNotificationEmails">$preNotificationEmails</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_sepaTransactionData">$sepaTransactionData</a></li>
@@ -4148,6 +4377,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addBalancingItemsData">addBalancingItemsData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addInvoice">addInvoice()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPayment">addPayment()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPreNotificationEmail">addPreNotificationEmail()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addTransactionData">addTransactionData()</a></li>
@@ -4158,6 +4388,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getDueEventUid">getDueEventUid()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getDueEventUri">getDueEventUri()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getInvoices">getInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayment">getPayment()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayments">getPayments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPreNotificationEmail">getPreNotificationEmail()</a></li>
@@ -4181,6 +4412,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setDueEventUid">setDueEventUid()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setDueEventUri">setDueEventUri()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setInvoices">setInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setPayments">setPayments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setPreNotificationEmails">setPreNotificationEmails()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setSepaTransactionData">setSepaTransactionData()</a></li>

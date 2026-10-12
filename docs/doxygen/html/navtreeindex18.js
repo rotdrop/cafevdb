@@ -1,5 +1,11 @@
 var NAVTREEINDEX18 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a095c5d389db211932136b53f25f39685":[8,0,0,0,8,1,2,0,17,0],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a095c5d389db211932136b53f25f39685":[9,0,0,0,8,1,2,0,17,0],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a0afa3e5ed2dd82b60794e11ff3e905db":[8,0,0,0,8,1,2,0,17,16],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a0afa3e5ed2dd82b60794e11ff3e905db":[9,0,0,0,8,1,2,0,17,16],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a1d032efbce2b4edb7c269a1e13562f40":[8,0,0,0,8,1,2,0,17,8],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a1d032efbce2b4edb7c269a1e13562f40":[9,0,0,0,8,1,2,0,17,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a2e7bb35c71bf1824456ceb944cb7a845":[8,0,0,0,8,1,2,0,17,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a2e7bb35c71bf1824456ceb944cb7a845":[9,0,0,0,8,1,2,0,17,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html#a2ffbde41a7b05e34b6b4b952156722e8":[8,0,0,0,8,1,2,0,17,22],
@@ -243,11 +249,5 @@ var NAVTREEINDEX18 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html":[8,0,0,0,8,1,2,0,24],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html":[9,0,0,0,8,1,2,0,24],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html#a6ff72799110abc8a4591401ce80b5c63":[8,0,0,0,8,1,2,0,24,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html#a6ff72799110abc8a4591401ce80b5c63":[9,0,0,0,8,1,2,0,24,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html":[8,0,0,0,8,1,2,0,25],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html":[9,0,0,0,8,1,2,0,25],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a07e50849ebeca3568acdeab647f8b6ae":[8,0,0,0,8,1,2,0,25,5],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a07e50849ebeca3568acdeab647f8b6ae":[9,0,0,0,8,1,2,0,25,5],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a095c5d389db211932136b53f25f39685":[8,0,0,0,8,1,2,0,25,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a095c5d389db211932136b53f25f39685":[9,0,0,0,8,1,2,0,25,0]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html#a6ff72799110abc8a4591401ce80b5c63":[9,0,0,0,8,1,2,0,24,0]
 };

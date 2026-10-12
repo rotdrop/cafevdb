@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Invoices collects a couple of InvoiceItems of the same Musician.">
+<g id="a_Node000001"><a xlink:title=" ">
 <polygon fill="#999999" stroke="#666666" points="1715.75,-1165 1668.25,-1165 1668.25,-1145 1715.75,-1145 1715.75,-1165"/>
 <text xml:space="preserve" text-anchor="middle" x="1692" y="-1151.5" font-family="Helvetica,sans-Serif" font-size="10.00">Invoice</text>
 </a>
@@ -291,8 +291,8 @@
 <!-- Node22 -->
 <g id="Node000022" class="node">
 <title>Node22</title>
-<g id="a_Node000022"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title="Invoices collects a couple of InvoiceItems of the same Musician.">
-<polygon fill="white" stroke="#666666" points="1715.75,-753 1668.25,-753 1668.25,-733 1715.75,-733 1715.75,-753"/>
+<g id="a_Node000022"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="1715.75,-753 1668.25,-753 1668.25,-733 1715.75,-733 1715.75,-753"/>
 <text xml:space="preserve" text-anchor="middle" x="1692" y="-739.5" font-family="Helvetica,sans-Serif" font-size="10.00">Invoice</text>
 </a>
 </g>

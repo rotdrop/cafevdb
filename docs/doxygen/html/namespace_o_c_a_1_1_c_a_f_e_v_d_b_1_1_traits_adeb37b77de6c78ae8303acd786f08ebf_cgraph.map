@@ -1,5 +1,7 @@
 <map id="getGroupSubAdmins" name="getGroupSubAdmins">
-<area shape="rect" id="Node000001" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,147,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="195,5,295,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,16,182,19,176,19,147,21"/>
+<area shape="rect" id="Node000001" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,29,147,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="47,29,42,21,45,11,57,5,76,3,96,5,109,14,103,14,95,10,76,8,59,10,49,15,47,20,52,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="195,29,295,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,40,182,43,176,43,147,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="216,28,211,21,214,11,226,5,245,3,265,5,277,15,272,14,263,10,245,8,227,10,218,15,216,20,220,30"/>
 </map>

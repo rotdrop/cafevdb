@@ -1,9 +1,10 @@
 <map id="ensureFolders" name="ensureFolders">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,109,61"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="157,35,250,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,45,143,47,138,49,109,51"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,109,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="157,47,250,73"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,57,143,59,138,61,109,63"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="298,5,458,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,38,286,34,281,35,251,43"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="298,56,458,99"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="250,53,285,61,280,61,250,58"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,46,307,35,302,37,251,52"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="298,80,458,123"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="251,68,285,79,280,79,250,74"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="345,78,343,70,349,61,360,55,378,53,397,56,410,65,405,64,396,61,378,59,362,61,352,65,348,71,349,81"/>
 </map>

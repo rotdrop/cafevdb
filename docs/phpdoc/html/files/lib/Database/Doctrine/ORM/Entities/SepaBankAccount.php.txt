@@ -111,12 +111,19 @@ class SepaBankAccount implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private Collection $payments;
 
+  /**
+   * @var Collection<Invoice>
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
+  private Collection $invoices;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
-    $this->sepaDebitMandates = new ArrayCollection();
-    $this->payments = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection;
+    $this->payments = new ArrayCollection;
+    $this->invoices = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -292,6 +299,27 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
+   * Add a paymente and enforce that it references the same Project entity as
+   * all other payments. Merging payments from different projects is not
+   * supported.
+   *
+   * @param CompositePayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(CompositePayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getSepaBankAccount() !== $this) {
+      $payment->setSepaBankAccount($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Set sepaDebitMandates.
    *
    * @param Collection $sepaDebitMandates
@@ -316,6 +344,70 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
+   * Add a sepaDebitMandatee and enforce that it references the same Project entity as
+   * all other sepaDebitMandates. Merging sepaDebitMandates from different projects is not
+   * supported.
+   *
+   * @param SepaDebitMandate $sepaDebitMandate
+   *
+   * @return self
+   */
+  public function addSepaDebitMandate(SepaDebitMandate $sepaDebitMandate): self
+  {
+    if (!$this->sepaDebitMandates->contains($sepaDebitMandate)) {
+      $this->sepaDebitMandates->add($sepaDebitMandate);
+    }
+    if ($sepaDebitMandate->getSepaBankAccount() !== $this) {
+      $sepaDebitMandate->setSepaBankAccount($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return SepaBankAccount
+   */
+  public function setInvoices(Collection $invoices): SepaBankAccount
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices(): Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
+   * Add an invoice and also update the owning side.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getSepaBankAccount() !== $this) {
+      $invoice->setSepaBankAccount($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Return the usage count. The bank-account is used and thus
    * undeleteable and unchangeable (up to less important data like
    * typos in the bank-account-owner) if there are recorded payments
@@ -325,7 +417,7 @@ class SepaBankAccount implements \ArrayAccess
    */
   public function usage(): int
   {
-    return $this->payments->count() + $this->sepaDebitMandates->count();
+    return $this->payments->count() + $this->sepaDebitMandates->count() + $this->invoices->count();
   }
 
   /**

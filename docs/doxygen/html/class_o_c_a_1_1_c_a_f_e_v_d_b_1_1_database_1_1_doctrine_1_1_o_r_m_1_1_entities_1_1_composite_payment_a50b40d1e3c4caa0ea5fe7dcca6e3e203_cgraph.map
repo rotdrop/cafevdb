@@ -1,5 +1,7 @@
 <map id="setProjectParticipant" name="setProjectParticipant">
-<area shape="rect" id="Node000001" title="Set projectParticipant." alt="" coords="5,5,148,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="196,5,276,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,16,183,19,178,19,148,21"/>
+<area shape="rect" id="Node000001" title="Set projectParticipant." alt="" coords="5,31,148,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#af8edf80cab80ad212b3ef897fe7e3cc9" title="Set musician." alt="" coords="196,5,287,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,30,183,27,178,29,149,36"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#aec78c4546ef4c8c304ccda4d008c6b62" title="Set project." alt="" coords="201,56,282,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,52,188,61,183,61,148,58"/>
 </map>

@@ -500,8 +500,8 @@ trait EntityGeneratorTrait
       ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ;
-    $this->musician->getPayments()->add($compositePayment);
-    $this->participant->getPayments()->add($compositePayment);
+    $this->musician->addPayment($compositePayment);
+    $this->participant->addPayment($compositePayment);
     $projectPayment->setCompositePayment($compositePayment);
 
     $compositePayment->getProjectPayments()->add($projectPayment);

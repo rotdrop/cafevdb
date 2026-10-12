@@ -1,5 +1,7 @@
 <map id="computeHash" name="computeHash">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,108,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="156,5,256,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,16,143,18,137,19,108,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,108,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="30,29,26,21,29,11,40,5,57,3,75,5,86,14,80,14,73,10,56,8,41,10,33,14,31,20,35,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="156,29,256,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="108,40,143,42,137,43,108,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="180,28,175,21,178,11,189,5,206,3,224,5,235,15,230,14,222,10,206,8,191,10,182,14,181,20,185,30"/>
 </map>

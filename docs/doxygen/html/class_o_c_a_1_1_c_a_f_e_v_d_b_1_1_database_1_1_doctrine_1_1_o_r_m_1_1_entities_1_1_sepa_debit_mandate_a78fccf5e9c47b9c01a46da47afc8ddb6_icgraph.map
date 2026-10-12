@@ -1,0 +1,6 @@
+<map id="setSepaBankAccount" name="setSepaBankAccount">
+<area shape="rect" id="Node000001" title="Set sepaBankAccount." alt="" coords="323,21,470,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a06256772c7d45bbfafeced8104102a54" title="Add a sepaDebitMandatee and enforce that it references the same Project entity as all other sepaDebit..." alt="" coords="5,5,275,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,43,275,46,275,41,310,43"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="290,23,325,26,320,27,290,28"/>
+</map>

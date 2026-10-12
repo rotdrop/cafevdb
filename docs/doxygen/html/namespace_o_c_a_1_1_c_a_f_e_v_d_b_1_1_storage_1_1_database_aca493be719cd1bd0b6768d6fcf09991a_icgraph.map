@@ -1,5 +1,6 @@
 <map id="getDocumentsFolderName" name="getDocumentsFolderName">
-<area shape="rect" id="Node000001" title="Get the name of the per&#45;participant document folder." alt="" coords="249,21,426,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_participants_storage.html#a74e2a422a71e92aefaa4541ace5da299" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,5,201,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,35,201,37,201,32,236,34"/>
+<area shape="rect" id="Node000001" title="Get the name of the per&#45;participant document folder." alt="" coords="249,29,426,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="377,14,364,10,337,8,313,10,299,15,296,20,303,30,298,28,291,21,296,11,312,5,337,3,366,5,382,15"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_participants_storage.html#a74e2a422a71e92aefaa4541ace5da299" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,13,201,72"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="231,43,201,45,201,40,236,42"/>
 </map>

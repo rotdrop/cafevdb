@@ -1,5 +1,7 @@
 <map id="formatStorageValue" name="formatStorageValue">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,141,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="189,5,266,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,16,176,18,170,19,141,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,141,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="46,29,41,21,45,11,56,5,73,3,92,5,103,14,98,14,90,10,73,8,57,10,49,15,47,20,51,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="189,29,266,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="141,40,176,42,170,43,141,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="200,28,196,21,199,11,210,5,227,3,246,5,257,15,252,14,244,10,227,8,212,10,203,15,201,20,205,30"/>
 </map>

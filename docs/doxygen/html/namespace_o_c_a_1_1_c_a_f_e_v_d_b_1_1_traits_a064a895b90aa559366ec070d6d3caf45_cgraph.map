@@ -1,5 +1,7 @@
 <map id="sleepUntil" name="sleepUntil">
-<area shape="rect" id="Node000001" title="Finally this is a wrapper around time_sleep_until()." alt="" coords="5,5,85,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="133,5,233,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,16,120,18,114,19,85,21"/>
+<area shape="rect" id="Node000001" title="Finally this is a wrapper around time_sleep_until()." alt="" coords="5,29,85,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="20,29,17,21,19,11,29,5,45,3,62,5,72,14,67,14,60,10,45,8,31,10,24,14,22,20,26,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="133,29,233,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,40,120,42,114,43,85,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="159,28,154,21,157,11,167,5,183,3,200,5,210,15,205,14,198,10,183,8,169,10,162,14,160,20,163,30"/>
 </map>

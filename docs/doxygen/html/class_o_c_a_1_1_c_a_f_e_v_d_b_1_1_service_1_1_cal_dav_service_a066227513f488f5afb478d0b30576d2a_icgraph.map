@@ -1,7 +1,9 @@
 <map id="getFromCache" name="getFromCache">
-<area shape="rect" id="Node000001" title="Fetch an object from the calendar object cache." alt="" coords="382,5,489,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="205,5,334,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,19,334,21,334,16,369,19"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#acfb67e9236f6553c82d36a193ad866d1" title="Restore the given calendar object from the trashbin." alt="" coords="5,5,157,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,19,157,21,157,16,192,19"/>
+<area shape="rect" id="Node000001" title="Fetch an object from the calendar object cache." alt="" coords="382,31,489,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="205,31,334,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,44,334,47,334,41,369,44"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ad3092c80bf312f1cb05374dad1a9e53b" title="Move the given object, given by its local URI relative to the old calendar, to the given new calendar..." alt="" coords="9,5,153,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,34,153,31,153,26,192,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#acfb67e9236f6553c82d36a193ad866d1" title="Restore the given calendar object from the trashbin." alt="" coords="5,56,157,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="186,55,158,62,157,56,192,54"/>
 </map>

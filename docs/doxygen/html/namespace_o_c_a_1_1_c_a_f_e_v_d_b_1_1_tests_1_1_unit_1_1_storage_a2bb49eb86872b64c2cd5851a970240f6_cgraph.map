@@ -1,8 +1,10 @@
 <map id="getAppStorage" name="getAppStorage">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,113,40"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="326,5,518,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,24,311,24,310,29,113,29"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#ab198ac6d35f74f98e531f49b00c8bed6" title=" " alt="" coords="161,39,278,65"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,33,148,40,142,41,113,38"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="278,42,308,41,313,40,279,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,113,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="31,29,26,21,30,11,41,5,59,3,78,5,90,14,85,15,77,10,59,8,43,10,34,15,32,20,36,29"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="326,21,518,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,33,161,28,237,27,314,32,308,33,237,32,161,33,113,38"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#ab198ac6d35f74f98e531f49b00c8bed6" title=" " alt="" coords="161,67,278,93"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,53,148,62,143,63,113,58"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="278,67,308,64,313,63,279,72"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="191,65,187,58,190,48,201,42,219,40,239,43,250,52,245,51,237,48,219,45,203,47,194,52,192,57,196,67"/>
 </map>

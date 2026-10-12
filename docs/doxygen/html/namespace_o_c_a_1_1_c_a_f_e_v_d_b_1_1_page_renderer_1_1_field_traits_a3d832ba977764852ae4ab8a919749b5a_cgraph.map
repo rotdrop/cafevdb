@@ -1,5 +1,6 @@
 <map id="guessGender" name="guessGender">
-<area shape="rect" id="Node000001" title="Return an array of possibilities for the gender of the musician." alt="" coords="5,21,104,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="152,5,391,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,32,139,34,134,35,104,37"/>
+<area shape="rect" id="Node000001" title="Return an array of possibilities for the gender of the musician." alt="" coords="5,29,104,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="17,30,11,21,16,11,31,5,55,3,80,5,95,14,90,15,79,10,54,8,32,10,19,15,17,20,23,28"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="152,13,391,72"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="104,40,139,42,134,43,104,45"/>
 </map>

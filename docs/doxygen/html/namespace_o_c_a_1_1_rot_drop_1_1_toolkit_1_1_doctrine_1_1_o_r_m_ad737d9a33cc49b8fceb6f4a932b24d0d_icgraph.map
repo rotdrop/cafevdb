@@ -1,8 +1,11 @@
 <map id="count" name="count">
-<area shape="rect" id="Node000001" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,56,212,83"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="13,5,103,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,54,93,35,94,30,147,52"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="5,56,111,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,78,111,81,111,76,146,78"/>
-<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="126,58,161,62,156,62,126,63"/>
+<area shape="rect" id="Node000001" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,104,212,131"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="205,88,199,85,185,83,173,85,166,89,164,95,168,105,163,102,159,95,162,86,171,80,185,77,201,80,210,89"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="13,29,103,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="150,95,109,70,89,59,89,54,112,66,155,94"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="5,104,111,131"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="140,126,111,129,111,124,146,126"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="78,15,72,10,58,8,45,10,39,14,37,20,40,29,35,29,32,21,34,11,43,5,58,3,74,5,83,13"/>
+<area shape="poly" id="edge5_Node000003_Node000001" title=" " alt="" coords="126,106,161,110,156,110,126,111"/>
+<area shape="poly" id="edge6_Node000003_Node000003" title=" " alt="" coords="78,89,72,85,58,83,45,85,39,89,37,95,40,104,35,103,32,95,34,86,43,80,58,77,74,80,83,89"/>
 </map>

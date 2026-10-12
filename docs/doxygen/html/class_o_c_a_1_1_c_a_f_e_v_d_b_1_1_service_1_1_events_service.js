@@ -18,6 +18,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service =
     [ "flushDatabase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a71e9c3cdd021a6e1d0406962797b7ac0", null ],
     [ "getCalendarDisplayName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a22bc18698bcfc1dd2c944ea1e404f53c", null ],
     [ "getCalendarId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0c26e96685f3326cedfc84c4abc9efc", null ],
+    [ "getEventData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5", null ],
     [ "getProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9879c3587b6533f0260f3aee12d7e314", null ],
     [ "getProjectRegistrationCategory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ae55980602759fe9a146c90e766879c49", null ],
     [ "getRecordAbsenceCategory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#afea0342bf7dc45b069dc94e4f043429d", null ],

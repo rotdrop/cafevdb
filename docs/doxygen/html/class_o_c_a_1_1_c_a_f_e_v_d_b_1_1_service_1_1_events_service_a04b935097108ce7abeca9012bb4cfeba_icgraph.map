@@ -1,0 +1,7 @@
+<map id="fillEventDataFromVObject" name="fillEventDataFromVObject">
+<area shape="rect" id="Node000001" title="Convert the given VEvent object to a simpler flat array structure." alt="" coords="287,5,460,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5" title="Augment the database entity by calendar data." alt="" coords="138,5,239,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,19,239,21,239,16,274,19"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a860420d7add97f86ebda19e41f74e7aa" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,5,90,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,19,90,21,90,16,125,18"/>
+</map>

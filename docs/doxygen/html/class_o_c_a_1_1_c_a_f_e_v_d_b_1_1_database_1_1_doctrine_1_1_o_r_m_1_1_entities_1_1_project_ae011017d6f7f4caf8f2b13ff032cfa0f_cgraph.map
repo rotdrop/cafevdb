@@ -1,0 +1,7 @@
+<map id="addCompositePayment" name="addCompositePayment">
+<area shape="rect" id="Node000001" title="Add a payment and make sure the owning side is also updated." alt="" coords="5,63,163,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="211,5,414,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,59,198,55,193,57,163,65"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#aec78c4546ef4c8c304ccda4d008c6b62" title="Set project." alt="" coords="211,88,414,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,87,198,96,193,97,162,93"/>
+</map>

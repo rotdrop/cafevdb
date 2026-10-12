@@ -110,8 +110,8 @@
 <!-- Node19 -->
 <g id="Node000019" class="node">
 <title>Node19</title>
-<g id="a_Node000019"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title="Invoices collects a couple of InvoiceItems of the same Musician.">
-<polygon fill="white" stroke="#666666" points="1729.75,-620 1682.25,-620 1682.25,-600 1729.75,-600 1729.75,-620"/>
+<g id="a_Node000019"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="1729.75,-620 1682.25,-620 1682.25,-600 1729.75,-600 1729.75,-620"/>
 <text xml:space="preserve" text-anchor="middle" x="1706" y="-606.5" font-family="Helvetica,sans-Serif" font-size="10.00">Invoice</text>
 </a>
 </g>

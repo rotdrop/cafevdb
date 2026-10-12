@@ -1,11 +1,15 @@
 <map id="getCategories" name="getCategories">
-<area shape="rect" id="Node000001" title="Return the category list for the given object." alt="" coords="555,104,657,131"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba" title="Convert the given VEvent object to a simpler flat array structure." alt="" coords="295,5,484,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="557,97,506,78,476,67,477,62,508,74,562,98"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a56c88d38cee8dc1aa92c347fab9f9376" title="Check whether the given object referes to a project registration event." alt="" coords="272,88,507,147"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="537,118,508,120,507,115,542,117"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a65acaff5b7ab74125bbfabf6cc45c3cc" title=" " alt="" coords="280,171,498,213"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="563,137,508,161,472,173,471,168,506,156,558,138"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac6edede4ce08a8617f8ea03fc0404710" title=" " alt="" coords="5,88,224,147"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="254,118,224,120,224,115,259,117"/>
+<area shape="rect" id="Node000001" title="Return the category list for the given object." alt="" coords="780,104,883,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba" title="Convert the given VEvent object to a simpler flat array structure." alt="" coords="520,5,709,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="782,97,731,78,702,67,702,62,733,74,788,98"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a56c88d38cee8dc1aa92c347fab9f9376" title="Check whether the given object referes to a project registration event." alt="" coords="497,88,732,147"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="762,118,733,120,733,115,768,117"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a65acaff5b7ab74125bbfabf6cc45c3cc" title=" " alt="" coords="506,171,724,213"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="788,137,733,161,698,173,697,168,731,156,783,138"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5" title="Augment the database entity by calendar data." alt="" coords="243,13,437,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="502,35,438,37,437,32,507,34"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a860420d7add97f86ebda19e41f74e7aa" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,13,183,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,36,184,37,182,32,229,33"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac6edede4ce08a8617f8ea03fc0404710" title=" " alt="" coords="231,88,449,147"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="479,118,450,120,449,115,484,117"/>
 </map>

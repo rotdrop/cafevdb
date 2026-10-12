@@ -1,7 +1,10 @@
 <map id="di" name="di">
-<area shape="rect" id="Node000001" title="Dependency injection of $className." alt="" coords="5,5,44,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3a2983317152273aaf635e4bd61f0c7a" title=" " alt="" coords="92,5,190,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,16,79,17,74,20,44,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="238,5,338,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="190,16,225,19,219,19,190,21"/>
+<area shape="rect" id="Node000001" title="Dependency injection of $className." alt="" coords="8,29,47,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="6,29,3,20,5,11,14,5,27,3,42,5,51,14,45,15,40,10,27,8,16,10,10,14,8,20,11,28"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3a2983317152273aaf635e4bd61f0c7a" title=" " alt="" coords="95,29,193,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,40,82,41,77,44,47,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="123,28,119,20,122,11,130,5,144,3,158,5,167,15,162,14,156,10,144,8,132,10,126,14,125,20,128,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="241,29,341,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="193,40,228,43,222,43,193,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="265,28,261,21,264,11,274,5,291,3,309,5,320,15,314,14,307,10,291,8,276,10,268,14,266,20,270,30"/>
 </map>

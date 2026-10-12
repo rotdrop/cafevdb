@@ -1,7 +1,9 @@
 <map id="getSupportingDocumentsFolderName" name="getSupportingDocumentsFolderName">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,245,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="293,13,383,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,24,279,27,274,27,245,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="431,5,640,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,24,418,27,413,27,384,29"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,245,56"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="89,28,83,21,87,11,101,5,125,3,150,5,165,14,160,14,149,10,125,8,103,10,91,15,88,20,94,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="293,29,383,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,40,279,43,274,43,245,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="304,28,298,21,302,11,316,5,338,3,361,5,375,14,370,14,360,10,338,8,317,10,306,15,303,20,309,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="431,21,640,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,40,418,43,413,43,384,45"/>
 </map>

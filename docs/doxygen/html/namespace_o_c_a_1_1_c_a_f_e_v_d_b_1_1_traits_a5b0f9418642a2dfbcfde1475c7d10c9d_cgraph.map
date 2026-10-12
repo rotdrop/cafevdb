@@ -1,5 +1,7 @@
 <map id="inGroup" name="inGroup">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,72,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="120,5,220,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,16,107,18,102,19,72,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,72,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="15,29,11,21,14,11,23,5,39,3,55,5,64,14,59,14,53,10,38,8,25,10,18,14,17,20,20,28"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="120,29,220,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,40,107,42,102,43,72,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="147,28,143,21,145,11,155,5,170,3,186,5,196,15,190,14,184,10,170,8,157,10,150,14,148,20,151,30"/>
 </map>

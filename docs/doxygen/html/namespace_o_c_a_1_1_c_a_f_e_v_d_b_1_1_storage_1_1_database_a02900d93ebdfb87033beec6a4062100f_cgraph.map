@@ -1,0 +1,12 @@
+<map id="getPaymentRecordFileName" name="getPaymentRecordFileName">
+<area shape="rect" id="Node000001" title="Generate a file&#45;name for the given composite payment." alt="" coords="5,29,195,56"/>
+<area shape="poly" id="edge6_Node000001_Node000001" title=" " alt="" coords="56,29,49,21,54,11,72,5,100,3,131,5,149,14,143,15,130,10,100,8,73,10,58,15,54,20,62,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#abc612d1aeaa6d7c79657d9779a4e4d79" title="PME&#45;legacy." alt="" coords="243,29,474,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,40,230,42,224,43,195,45"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="323,28,317,21,321,11,335,5,358,3,383,5,398,14,393,14,382,10,358,8,336,10,325,15,322,20,328,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="522,29,612,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="474,40,509,43,504,43,474,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="533,28,527,21,532,11,545,5,567,3,591,5,605,15,600,14,589,10,567,8,547,10,535,15,533,20,538,30"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="660,21,870,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="613,40,648,43,642,43,613,45"/>
+</map>

@@ -177,7 +177,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setField(mixed $field):ProjectParticipantFieldDataOption
+  public function setField(mixed $field): ProjectParticipantFieldDataOption
   {
     $this->field = $field;
 
@@ -189,7 +189,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantField
    */
-  public function getField():ProjectParticipantField
+  public function getField(): ProjectParticipantField
   {
     return $this->field;
   }
@@ -241,7 +241,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setLabel(?string $label):ProjectParticipantFieldDataOption
+  public function setLabel(?string $label): ProjectParticipantFieldDataOption
   {
     $this->label = $label;
     if ($this->getLocale() == ConfigConstants::DEFAULT_LOCALE) {
@@ -255,7 +255,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getLabel():?string
+  public function getLabel(): ?string
   {
     return $this->label;
   }
@@ -269,7 +269,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @throws Exceptions\DatabaseReadonlyException
    */
-  public function setUntranslatedLabel(?string $untranslatedLabel):ProjectParticipantFieldDataOption
+  public function setUntranslatedLabel(?string $untranslatedLabel): ProjectParticipantFieldDataOption
   {
     throw new Exceptions\DatabaseReadonlyException('The property "untranslatedLabel" cannot be set, it is read-only.');
     return $this;
@@ -280,7 +280,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getUntranslatedLabel():?string
+  public function getUntranslatedLabel(): ?string
   {
     return $this->untranslatedLabel;
   }
@@ -292,7 +292,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setData(?string $data):ProjectParticipantFieldDataOption
+  public function setData(?string $data): ProjectParticipantFieldDataOption
   {
     $this->data = $data;
 
@@ -316,7 +316,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldBalancingAccountOption
    */
-  public function setBalancingAccount(?string $balancingAccount):ProjectParticipantFieldDataOption
+  public function setBalancingAccount(?string $balancingAccount): ProjectParticipantFieldDataOption
   {
     $this->balancingAccount = $balancingAccount;
 
@@ -367,7 +367,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setTooltip(?string $tooltip):ProjectParticipantFieldDataOption
+  public function setTooltip(?string $tooltip): ProjectParticipantFieldDataOption
   {
     $this->tooltip = $tooltip;
 
@@ -379,7 +379,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return string
    */
-  public function getTooltip():?string
+  public function getTooltip(): ?string
   {
     return $this->tooltip;
   }
@@ -391,7 +391,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setLimit(?int $limit):ProjectParticipantFieldDataOption
+  public function setLimit(?int $limit): ProjectParticipantFieldDataOption
   {
     $this->limit = $limit;
 
@@ -415,7 +415,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setFieldData(Collection $fieldData):ProjectParticipantFieldDataOption
+  public function setFieldData(Collection $fieldData): ProjectParticipantFieldDataOption
   {
     $this->fieldData = $fieldData;
 
@@ -427,7 +427,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getFieldData():Collection
+  public function getFieldData(): Collection
   {
     return $this->fieldData;
   }
@@ -439,7 +439,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantPaymentsOption
    */
-  public function setPayments(Collection $payments):ProjectParticipantFieldDataOption
+  public function setPayments(Collection $payments): ProjectParticipantFieldDataOption
   {
     $this->payments = $payments;
 
@@ -451,9 +451,28 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPayments():Collection
+  public function getPayments(): Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * Add a project payment and make sure the owning side is also updated.
+   *
+   * @param ProjectPayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(ProjectPayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getReceivableOption() != $this) {
+      $payment->setReceivableOption($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -463,7 +482,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantInvoiceItemsOption
    */
-  public function setInvoiceItems(Collection $invoiceItems):ProjectParticipantFieldDataOption
+  public function setInvoiceItems(Collection $invoiceItems): ProjectParticipantFieldDataOption
   {
     $this->invoiceItems = $invoiceItems;
 
@@ -475,9 +494,28 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getInvoiceItems():Collection
+  public function getInvoiceItems(): Collection
   {
     return $this->invoiceItems;
+  }
+
+  /**
+   * Add an invoiceItem and also update the owning side.
+   *
+   * @param InvoiceItem $invoiceItem
+   *
+   * @return self
+   */
+  public function addInvoiceItem(InvoiceItem $invoiceItem): self
+  {
+    if (!$this->invoiceItems->contains($invoiceItem)) {
+      $this->invoiceItems->add($invoiceItem);
+    }
+    if ($invoiceItem->getReceivableOption() !== $this) {
+      $invoiceItem->setReceivableOption($this);
+    }
+
+    return $this;
   }
 
   /**
@@ -490,7 +528,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @todo Why does this return a collection? There should be zero or one data
    * item.
    */
-  public function getMusicianFieldData(Musician $musician):Collection
+  public function getMusicianFieldData(Musician $musician): Collection
   {
     return $this->fieldData->matching(
       DBUtil::criteriaWhere([ 'musician' => $musician ])
@@ -503,13 +541,13 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->fieldData->count() + $this->payments->count() + $this->invoiceItems->count();
   }
 
   /** @return bool Whether this field links to the cloud-file-systen. */
-  public function isFileSystemContext():bool
+  public function isFileSystemContext(): bool
   {
     return $this->field->getDataType() == FieldDataType::CLOUD_FILE
       && $this->field->getMultiplicity() != FieldMultiplicity::SIMPLE;
@@ -524,7 +562,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @return array The array of translatable fields based on the state of the
    * entity. This must be a sub-set of the input array.
    */
-  public function filterTranslatableFields(array $fields):array
+  public function filterTranslatableFields(array $fields): array
   {
     if (($this->field instanceof ProjectParticipantField) && $this->isFileSystemContext()) {
       // Field name is used as file-system name, so keep it "constant", do not translate
@@ -537,7 +575,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /** {@inheritdoc} */
-  public function __toString():string
+  public function __toString(): string
   {
     return $this->label . ':' . $this->key . (empty($this->field) ? '' : '@' . $this->field->getName() . ':' . $this->field->getId());
   }

@@ -1,8 +1,11 @@
 <map id="prepareFindBy" name="prepareFindBy">
-<area shape="rect" id="Node000001" title="Parse the criteria." alt="" coords="5,5,111,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,5,212,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,25,146,27,140,27,111,30"/>
-<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="155,11,127,12,126,7,161,11"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="260,5,409,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,16,247,19,242,19,213,21"/>
+<area shape="rect" id="Node000001" title="Parse the criteria." alt="" coords="5,29,111,56"/>
+<area shape="poly" id="edge6_Node000001_Node000001" title=" " alt="" coords="35,29,32,21,34,11,43,5,58,3,74,5,83,14,78,14,72,10,58,8,45,10,39,14,37,20,40,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,29,212,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,49,146,51,140,51,111,54"/>
+<area shape="poly" id="edge5_Node000002_Node000001" title=" " alt="" coords="155,35,127,36,126,31,161,35"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="163,28,159,21,162,11,171,5,185,3,201,5,210,15,205,14,199,10,185,8,173,10,166,14,164,20,168,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="260,29,409,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="212,40,247,43,242,43,213,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="309,28,304,21,307,11,318,5,335,3,353,5,364,15,358,13,351,10,335,8,319,10,311,14,309,20,313,30"/>
 </map>

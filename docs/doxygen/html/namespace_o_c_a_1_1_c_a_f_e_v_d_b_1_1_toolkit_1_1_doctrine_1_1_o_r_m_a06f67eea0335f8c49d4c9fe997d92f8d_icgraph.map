@@ -1,5 +1,7 @@
 <map id="findLike" name="findLike">
-<area shape="rect" id="Node000001" title="Find entities by given wild&#45;card criteria." alt="" coords="144,5,210,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,5,96,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,19,96,21,96,16,130,18"/>
+<area shape="rect" id="Node000001" title="Find entities by given wild&#45;card criteria." alt="" coords="144,29,210,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="197,14,190,10,177,8,164,10,158,14,156,20,159,30,154,28,151,21,153,11,162,5,177,3,193,5,202,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,29,96,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="125,43,96,45,96,40,130,42"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="70,14,64,10,50,8,38,10,31,14,30,20,33,29,28,29,24,21,27,11,36,5,51,3,66,5,75,14"/>
 </map>

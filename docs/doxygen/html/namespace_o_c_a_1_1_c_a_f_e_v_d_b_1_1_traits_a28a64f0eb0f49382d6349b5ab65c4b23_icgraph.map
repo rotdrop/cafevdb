@@ -1,15 +1,20 @@
 <map id="getDatabaseRepository" name="getDatabaseRepository">
-<area shape="rect" id="Node000001" title="Set and get the given name as the current database target entity." alt="" coords="136,132,294,159"/>
+<area shape="rect" id="Node000001" title="Set and get the given name as the current database target entity." alt="" coords="136,192,294,219"/>
+<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="242,177,233,173,215,171,197,173,188,177,186,183,191,192,185,191,181,183,184,174,196,168,215,165,235,168,247,176"/>
 <area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa2c090f15ee2bc4eb276cbb84b839c45" title="Counts entities by a set of criteria." alt="" coords="20,5,73,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,123,86,46,71,35,70,30,89,42,189,121"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a032c772d2cec3fdb4f824d3c741fc12c" title="Finds an entity by its primary key / identifier." alt="" coords="25,56,68,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,127,68,81,68,76,171,123"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a711b32acbac8d6e5019df0087ccf7fdb" title="Finds all entities in the repository." alt="" coords="18,107,75,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="118,133,77,127,75,122,122,129"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9e8702ec38e941341a0d5251897e36c3" title="Finds entities by a set of criteria." alt="" coords="17,157,76,184"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="118,161,77,169,75,164,122,158"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad38fcff61d5b7940cf9b4911e16b1e39" title="Finds a single entity by a set of criteria." alt="" coords="5,208,88,235"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="168,168,79,210,77,205,170,163"/>
-<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="9,259,84,285"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="188,170,89,249,72,261,69,256,86,245,184,167"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,179,149,116,119,80,86,46,73,35,72,30,89,42,123,76,153,112,199,178"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a032c772d2cec3fdb4f824d3c741fc12c" title="Finds an entity by its primary key / identifier." alt="" coords="25,80,68,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,184,86,121,69,109,67,104,89,116,184,182"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a711b32acbac8d6e5019df0087ccf7fdb" title="Finds all entities in the repository." alt="" coords="18,155,75,181"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="135,190,76,177,75,172,139,186"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9e8702ec38e941341a0d5251897e36c3" title="Finds entities by a set of criteria." alt="" coords="17,229,76,256"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="135,225,77,239,75,234,139,221"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad38fcff61d5b7940cf9b4911e16b1e39" title="Finds a single entity by a set of criteria." alt="" coords="5,280,88,307"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="173,229,75,282,73,277,175,224"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="9,355,84,381"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="191,232,64,356,60,352,187,228"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="75,72,75,67,70,63,46,59,28,61,19,67,18,73,27,83,22,85,13,75,14,64,26,56,47,53,73,58,79,65,80,72"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="74,140,65,136,46,133,29,135,20,140,18,145,22,154,17,155,12,146,16,136,28,130,47,128,67,131,79,138"/>
+<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="74,215,65,210,46,208,29,210,20,215,18,220,22,228,17,230,12,221,16,211,28,205,47,203,67,205,79,213"/>
+<area shape="poly" id="edge11_Node000007_Node000007" title=" " alt="" coords="74,340,65,336,46,333,29,335,20,340,18,345,22,354,17,355,12,346,16,336,28,330,47,328,67,331,79,339"/>
 </map>

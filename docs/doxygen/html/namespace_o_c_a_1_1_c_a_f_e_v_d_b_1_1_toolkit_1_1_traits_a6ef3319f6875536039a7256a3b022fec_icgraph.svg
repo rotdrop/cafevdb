@@ -6,7 +6,7 @@
 <!-- Title: logDebug Pages: 1 -->
 <!--zoomable 522 -->
 
-<svg id="main" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" onload="init(evt)">
+<svg id="main" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
 
 <style type="text/css"><![CDATA[
 .node, .edge {opacity: 0.7;}
@@ -46,13 +46,8 @@
     <use xlink:href="#rim2" fill="#404040"><set attributeName="fill" to="#808080" begin="reset.mouseover" end="reset.mouseout"/></use>
   </g>
 </defs>
-<script type="application/ecmascript">
-var viewWidth = 1227;
-var viewHeight = 522;
-var sectionId = 'dynsection-27';
-</script>
 <script type="application/ecmascript" xlink:href="svg.min.js"/>
-<svg id="graph" class="graph">
+<svg id="graph" class="graph" data-view-width="1227" data-view-height="522" data-section-id="dynsection-71">
 <g id="viewport">
 <title>logDebug</title>
 <!-- Node1 -->
@@ -61,6 +56,15 @@ var sectionId = 'dynsection-27';
 <g id="a_Node000001"><a xlink:title="Log a debug message.">
 <polygon fill="#999999" stroke="#666666" points="1219,-268 1161.75,-268 1161.75,-248 1219,-248 1219,-268"/>
 <text xml:space="preserve" text-anchor="middle" x="1190.38" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">logDebug</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node1 -->
+<g id="edge26_Node000001_Node000001" class="edge">
+<title>Node1&#45;&gt;Node1</title>
+<g id="a_edge26_Node000001_Node000001"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1215.94,-279.44C1212.64,-283.3 1204.12,-286 1190.38,-286 1165.24,-286 1157.58,-276.98 1167.4,-268.34"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1219.37,-278.76 1213.7,-269.81 1212.55,-280.35 1219.37,-278.76"/>
 </a>
 </g>
 </g>
@@ -136,9 +140,9 @@ var sectionId = 'dynsection-27';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node13 -->
-<g id="edge27_Node000001_Node000013" class="edge">
+<g id="edge28_Node000001_Node000013" class="edge">
 <title>Node1&#45;&gt;Node13</title>
-<g id="a_edge27_Node000001_Node000013"><a xlink:title=" ">
+<g id="a_edge28_Node000001_Node000013"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M1149.88,-256.57C1095.8,-254.62 997.72,-251.07 930.18,-248.63"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="1149.73,-260.07 1159.85,-256.93 1149.99,-253.07 1149.73,-260.07"/>
 </a>
@@ -216,9 +220,9 @@ var sectionId = 'dynsection-27';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node19 -->
-<g id="edge26_Node000001_Node000019" class="edge">
+<g id="edge27_Node000001_Node000019" class="edge">
 <title>Node1&#45;&gt;Node19</title>
-<g id="a_edge26_Node000001_Node000019"><a xlink:title=" ">
+<g id="a_edge27_Node000001_Node000019"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M1185.25,-236.7C1178.23,-205.88 1161.13,-148.84 1125.75,-115 1122.45,-111.84 1118.79,-109 1114.91,-106.43"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="1181.79,-237.28 1187.29,-246.34 1188.64,-235.83 1181.79,-237.28"/>
 </a>
@@ -236,9 +240,9 @@ var sectionId = 'dynsection-27';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node20 -->
-<g id="edge28_Node000001_Node000020" class="edge">
+<g id="edge29_Node000001_Node000020" class="edge">
 <title>Node1&#45;&gt;Node20</title>
-<g id="a_edge28_Node000001_Node000020"><a xlink:title=" ">
+<g id="a_edge29_Node000001_Node000020"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M1188.59,-236.19C1185.97,-195.09 1174.62,-105.57 1125.75,-53 1122.74,-49.76 1119.35,-46.86 1115.71,-44.25"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="1185.09,-236.19 1189.09,-246 1192.08,-235.84 1185.09,-236.19"/>
 </a>
@@ -537,9 +541,9 @@ var sectionId = 'dynsection-27';
 </g>
 </g>
 <!-- Node20&#45;&gt;Node21 -->
-<g id="edge29_Node000020_Node000021" class="edge">
+<g id="edge30_Node000020_Node000021" class="edge">
 <title>Node20&#45;&gt;Node21</title>
-<g id="a_edge29_Node000020_Node000021"><a xlink:title=" ">
+<g id="a_edge30_Node000020_Node000021"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M958.69,-22C944.56,-22 930.21,-22 916.92,-22"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="958.42,-25.5 968.42,-22 958.42,-18.5 958.42,-25.5"/>
 </a>
@@ -550,13 +554,13 @@ var sectionId = 'dynsection-27';
 
 <g id="navigator" transform="translate(0 0)" fill="#404254">
   <rect fill="#f2f5e9" fill-opacity="0.5" stroke="#606060" stroke-width=".5" x="0" y="0" width="60" height="60"/>
-  <use id="zoomplus" xlink:href="#zoomPlus" x="17" y="9" onmousedown="handleZoom(evt,'in')"/>
-  <use id="zoomminus" xlink:href="#zoomMin" x="42" y="9" onmousedown="handleZoom(evt,'out')"/>
-  <use id="reset" xlink:href="#resetDef" x="30" y="36" onmousedown="handleReset()"/>
-   <use id="arrowup" xlink:href="#arrowUp" x="0" y="0" onmousedown="handlePan(0,-1)"/>
-  <use id="arrowright" xlink:href="#arrowRight" x="0" y="0" onmousedown="handlePan(1,0)"/>
-  <use id="arrowdown" xlink:href="#arrowDown" x="0" y="0" onmousedown="handlePan(0,1)"/>
-  <use id="arrowleft" xlink:href="#arrowLeft" x="0" y="0" onmousedown="handlePan(-1,0)"/>
+  <use id="zoomplus" xlink:href="#zoomPlus" x="17" y="9" data-zoom="in"/>
+  <use id="zoomminus" xlink:href="#zoomMin" x="42" y="9" data-zoom="out"/>
+  <use id="reset" xlink:href="#resetDef" x="30" y="36" data-reset="true"/>
+  <use id="arrowup" xlink:href="#arrowUp" x="0" y="0" data-pan-x="0" data-pan-y="-1"/>
+  <use id="arrowright" xlink:href="#arrowRight" x="0" y="0" data-pan-x="1" data-pan-y="0"/>
+  <use id="arrowdown" xlink:href="#arrowDown" x="0" y="0" data-pan-x="0" data-pan-y="1"/>
+  <use id="arrowleft" xlink:href="#arrowLeft" x="0" y="0" data-pan-x="-1" data-pan-y="0"/>
 </g>
 <svg viewBox="0 0 15 15" width="100%" height="30px" preserveAspectRatio="xMaxYMin meet">
  <g id="arrow_out" transform="scale(0.3 0.3)">
@@ -576,10 +580,4 @@ var sectionId = 'dynsection-27';
 [data-mouse-over-selected='true']  { opacity: 1.0; }
 ]]>
 </style>
-<script type="application/ecmascript"><![CDATA[
-document.addEventListener('DOMContentLoaded', (event) => {
-  highlightEdges();
-  highlightAdjacentNodes();
-});
-]]></script>
 </svg>

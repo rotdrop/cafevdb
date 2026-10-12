@@ -1,5 +1,7 @@
 <map id="appL10n" name="appL10n">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,76,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="124,5,224,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,16,110,18,105,19,76,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,76,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="17,29,13,21,16,11,25,5,41,3,57,5,67,14,61,14,55,10,40,8,27,10,20,14,18,20,22,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="124,29,224,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="76,40,110,42,105,43,76,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="150,28,146,21,149,11,159,5,174,3,190,5,200,15,195,14,188,10,174,8,160,10,153,14,152,20,155,30"/>
 </map>

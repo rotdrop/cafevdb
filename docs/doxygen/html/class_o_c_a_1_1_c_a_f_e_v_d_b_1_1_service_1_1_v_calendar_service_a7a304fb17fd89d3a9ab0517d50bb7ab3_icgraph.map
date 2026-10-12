@@ -1,5 +1,9 @@
 <map id="getVObject" name="getVObject">
-<area shape="rect" id="Node000001" title="Return the &quot;master&quot; wrapped object, where the VCalendar object here is rather not an entire calendar,..." alt="" coords="248,21,334,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,200,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,35,200,37,200,32,235,34"/>
+<area shape="rect" id="Node000001" title="Return the &quot;master&quot; wrapped object, where the VCalendar object here is rather not an entire calendar,..." alt="" coords="473,59,559,85"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="231,5,425,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,61,426,57,426,51,460,61"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5" title="Augment the database entity by calendar data." alt="" coords="231,88,425,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="460,83,426,93,425,87,455,84"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a860420d7add97f86ebda19e41f74e7aa" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,88,183,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="212,110,183,112,183,107,218,109"/>
 </map>

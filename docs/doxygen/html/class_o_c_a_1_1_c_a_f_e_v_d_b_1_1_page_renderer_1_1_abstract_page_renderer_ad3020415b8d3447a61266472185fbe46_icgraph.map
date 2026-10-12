@@ -1,11 +1,12 @@
 <map id="navigationItem" name="navigationItem">
-<area shape="rect" id="Node000001" title="Return the navigation item for this renderer." alt="" coords="259,113,365,140"/>
+<area shape="rect" id="Node000001" title="Return the navigation item for this renderer." alt="" coords="259,125,365,152"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html#a9850a470cb17dee584709d25a8c9845f" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array&lt;SidebarNavigationItem&gt;}" alt="" coords="5,5,211,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="278,104,247,83,209,62,184,51,184,46,212,58,249,79,284,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,115,250,89,209,62,186,51,185,46,212,58,253,84,288,115"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_blog.html#a9850a470cb17dee584709d25a8c9845f" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array&lt;SidebarNavigationItem&gt;}" alt="" coords="5,72,211,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,116,211,113,211,108,246,115"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a9850a470cb17dee584709d25a8c9845f" title="{}" alt="" coords="5,139,211,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,139,212,146,210,141,246,137"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a9850a470cb17dee584709d25a8c9845f" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array&lt;SidebarNavigationItem&gt;}" alt="" coords="5,205,211,248"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="283,148,249,174,212,196,185,207,183,202,209,191,247,170,278,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,124,207,118,206,113,246,123"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a9850a470cb17dee584709d25a8c9845f" title="{}" alt="" coords="5,163,211,205"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,155,207,165,206,160,246,153"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a9850a470cb17dee584709d25a8c9845f" title="{Return a list of navigation items:[ NAV_ITEM0, NAV_ITEM1, ... ]array&lt;SidebarNavigationItem&gt;}" alt="" coords="5,229,211,272"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="288,161,253,193,212,220,187,231,185,226,209,215,250,189,283,164"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="139,148,128,144,108,141,89,143,77,148,73,154,74,162,69,162,67,153,74,144,88,138,108,136,130,138,145,146"/>
 </map>

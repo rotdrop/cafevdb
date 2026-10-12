@@ -1,5 +1,6 @@
 <map id="navigationItems" name="navigationItems">
 <area shape="rect" id="Node000001" title="{}" alt="" coords="5,47,119,73"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="23,47,17,38,21,28,37,22,62,20,90,23,105,31,100,33,88,28,62,25,38,27,25,32,22,37,28,45"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#ad3020415b8d3447a61266472185fbe46" title="Return the navigation item for this renderer." alt="" coords="167,5,413,48"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,49,154,46,149,48,120,54"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.SidebarNavigationItem}" alt="" coords="187,72,392,115"/>

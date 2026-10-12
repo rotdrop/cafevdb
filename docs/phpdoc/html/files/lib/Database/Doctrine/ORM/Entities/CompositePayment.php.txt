@@ -187,7 +187,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setProjectPayments(Collection $projectPayments):CompositePayment
+  public function setProjectPayments(Collection $projectPayments): CompositePayment
   {
     $this->projectPayments = $projectPayments;
 
@@ -199,7 +199,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return Collection
    */
-  public function getProjectPayments():Collection
+  public function getProjectPayments(): Collection
   {
     return $this->projectPayments;
   }
@@ -249,9 +249,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setMusician($musician):CompositePayment
+  public function setMusician($musician): CompositePayment
   {
     $this->musician = $musician;
+    $musician->addPayment($this);
 
     return $this;
   }
@@ -261,7 +262,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function getMusician():?Musician
+  public function getMusician(): ?Musician
   {
     return $this->musician;
   }
@@ -273,9 +274,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setProject($project):CompositePayment
+  public function setProject($project): CompositePayment
   {
     $this->project = $project;
+    $project->addCompositePayment($this);
 
     return $this;
   }
@@ -285,7 +287,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return Project
    */
-  public function getProject():?Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
@@ -297,11 +299,11 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):CompositePayment
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant): CompositePayment
   {
     $this->projectParticipant = $projectParticipant;
-    $this->project = $projectParticipant->getProject();
-    $this->musician = $projectParticipant->getMusician();
+    $this->setProject($projectParticipant->getProject());
+    $this->setMusician($projectParticipant->getMusician());
 
     return $this;
   }
@@ -311,7 +313,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipant
    */
-  public function getProjectParticipant():?ProjectParticipant
+  public function getProjectParticipant(): ?ProjectParticipant
   {
     return $this->projectParticipant;
   }
@@ -323,7 +325,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setDateOfReceipt($dateOfReceipt = null):CompositePayment
+  public function setDateOfReceipt($dateOfReceipt = null): CompositePayment
   {
     $this->dateOfReceipt = self::convertToDateTime($dateOfReceipt);
 
@@ -335,7 +337,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return \DateTime|null
    */
-  public function getDateOfReceipt():?DateTimeInterface
+  public function getDateOfReceipt(): ?DateTimeInterface
   {
     return $this->dateOfReceipt;
   }
@@ -347,7 +349,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setSubject(?string $subject):CompositePayment
+  public function setSubject(?string $subject): CompositePayment
   {
     $this->subject = $subject;
 
@@ -359,7 +361,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getSubject():?string
+  public function getSubject(): ?string
   {
     return $this->subject;
   }
@@ -371,7 +373,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setDebitNote($debitNote):CompositePayment
+  public function setDebitNote($debitNote): CompositePayment
   {
     $this->debitNote = $debitNote;
 
@@ -395,9 +397,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):CompositePayment
+  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount): CompositePayment
   {
     $this->sepaBankAccount = $sepaBankAccount;
+    $sepaBankAccount->addPayment($this);
 
     return $this;
   }
@@ -407,7 +410,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaBankAccount|null
    */
-  public function getSepaBankAccount():?SepaBankAccount
+  public function getSepaBankAccount(): ?SepaBankAccount
   {
     return $this->sepaBankAccount;
   }
@@ -419,9 +422,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):CompositePayment
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate): CompositePayment
   {
     $this->sepaDebitMandate = $sepaDebitMandate;
+    $sepaDebitMandate->addPayment($this);
 
     return $this;
   }
@@ -431,7 +435,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaDebitMandate|null
    */
-  public function getSepaDebitMandate():?SepaDebitMandate
+  public function getSepaDebitMandate(): ?SepaDebitMandate
   {
     return $this->sepaDebitMandate;
   }
@@ -443,7 +447,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
+  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction): CompositePayment
   {
     $this->sepaTransaction = $sepaTransaction;
     $sepaTransaction->addPayment($this);
@@ -456,7 +460,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return SepaTransaction|null
    */
-  public function getSepaTransaction():?SepaBulkTransaction
+  public function getSepaTransaction(): ?SepaBulkTransaction
   {
     return $this->sepaTransaction;
   }
@@ -468,7 +472,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setNotificationMessageId(?string $notificationMessageId):CompositePayment
+  public function setNotificationMessageId(?string $notificationMessageId): CompositePayment
   {
     $this->notificationMessageId = $notificationMessageId;
 
@@ -480,7 +484,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getNotificationMessageId():?string
+  public function getNotificationMessageId(): ?string
   {
     return $this->notificationMessageId;
   }
@@ -492,7 +496,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setPreNotificationEmail(?SentEmail $preNotificationEmail):CompositePayment
+  public function setPreNotificationEmail(?SentEmail $preNotificationEmail): CompositePayment
   {
     if ($preNotificationEmail !== null) {
       if (empty($this->notificationMessageId)) {
@@ -516,7 +520,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return null|SentEmail
    */
-  public function getPreNotificationEmail():?SentEmail
+  public function getPreNotificationEmail(): ?SentEmail
   {
     return $this->preNotificationEmail;
   }
@@ -528,7 +532,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setDonationReceipt(?string $donationReceipt):CompositePayment
+  public function setDonationReceipt(?string $donationReceipt): CompositePayment
   {
     $this->donationReceipt = $donationReceipt;
 
@@ -552,7 +556,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument):CompositePayment
+  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument): CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
       $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
@@ -574,7 +578,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return null|DatabaseStorageFile
    */
-  public function getSupportingDocument():?DatabaseStorageFile
+  public function getSupportingDocument(): ?DatabaseStorageFile
   {
     return $this->supportingDocument;
   }
@@ -586,7 +590,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectPayment
    */
-  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):CompositePayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder): CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder)) {
       /** @var ProjectPayment $part */
@@ -626,7 +630,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ?DatabaseStorageFolder
    */
-  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
+  public function getBalanceDocumentsFolder(): ?DatabaseStorageFolder
   {
     return $this->balanceDocumentsFolder;
   }
@@ -634,7 +638,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @return Count the number of donations contained in this composite.
    */
-  public function countDonations():int
+  public function countDonations(): int
   {
     return $this->projectPayments->reduce(
       fn(bool $accumulator, ProjectPayment $payment) => $accumulator + (int)$payment->getIsDonation(),
@@ -645,7 +649,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @return MonetaryNumberType The sum of all contained donation parts.
    */
-  public function getDonationAmount(): MonetaryNumberType
+  public function getDonationAmount():  MonetaryNumberType
   {
     return $this->projectPayments->reduce(
       fn(MonetaryNumberType $accumulator, ProjectPayment $payment)
@@ -658,7 +662,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @return MonetaryNumberType The sum of all contained non-donation parts.
    */
-  public function getNonDonationAmount(): MonetaryNumberType
+  public function getNonDonationAmount():  MonetaryNumberType
   {
     return $this->projectPayments->reduce(
       fn(MonetaryNumberType $accumulator, ProjectPayment $payment)
@@ -671,7 +675,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @return Collection The ProjectPayment entities which are donations.
    */
-  public function getDonations():Collection
+  public function getDonations(): Collection
   {
     return $this->projectPayments->filter(fn(ProjectPayment $payment) => $payment->getIsDonation());
   }
@@ -679,7 +683,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @return Collection The ProjectPayment entities which aren't donations.
    */
-  public function getNonDonations():Collection
+  public function getNonDonations(): Collection
   {
     return $this->projectPayments->filter(fn(ProjectPayment $payment) => !$payment->getIsDonation());
   }
@@ -694,12 +698,12 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * ProjectParticipantFieldDatum::paymentReference().
    *
    * @param null|Closure $transliterate A transliteration routine with the
-   * signature function(string $x):string. It defaults to the identity if not
+   * signature function(string $x): string. It defaults to the identity if not
    * specified.
    *
    * @return string
    */
-  public function generateSubject(?Closure $transliterate = null):string
+  public function generateSubject(?Closure $transliterate = null): string
   {
     if (empty($transliterate)) {
       $transliterate = fn(string $x) => $x;
@@ -853,7 +857,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function updateSubject(?Closure $transliterate = null):CompositePayment
+  public function updateSubject(?Closure $transliterate = null): CompositePayment
   {
     $this->subject = $this->generateSubject($transliterate);
     return $this;
@@ -864,7 +868,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return DateTimeInterface
    */
-  public function getReceivablesDueDate():DateTimeInterface
+  public function getReceivablesDueDate(): DateTimeInterface
   {
     return max(
       $this->projectPayments->map(
@@ -874,13 +878,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /** {@inheritdoc} */
-  public function jsonSerialize():array
+  public function jsonSerialize(): array
   {
     return $this->toArray();
   }
 
     /** {@inheritdoc} */
-  public function __toString():string
+  public function __toString(): string
   {
     return 'payment of ' . $this->amount . ' € at ' . $this->dateOfReceipt->format('Y-m-d') . ' by ' . $this->musician->getPublicName(true);
   }

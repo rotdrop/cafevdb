@@ -1,5 +1,16 @@
 <map id="moveCalendarObject" name="moveCalendarObject">
-<area shape="rect" id="Node000001" title="Move the given object, given by its local URI relative to the old calendar, to the given new calendar..." alt="" coords="5,5,149,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="197,5,334,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,16,184,19,179,19,149,21"/>
+<area shape="rect" id="Node000001" title="Move the given object, given by its local URI relative to the old calendar, to the given new calendar..." alt="" coords="5,34,149,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="635,59,773,86"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,31,233,16,344,6,466,5,528,10,588,19,629,32,668,52,663,51,628,37,587,24,527,15,466,10,344,11,234,22,146,36"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="197,85,326,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,58,198,78,193,81,129,64"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a4c3fe95c05e0336bd680f99f5c5dd013" title="Adds the given calendar data to the cache." alt="" coords="434,34,528,61"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="322,81,421,60,416,62,323,86"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a066227513f488f5afb478d0b30576d2a" title="Fetch an object from the calendar object cache." alt="" coords="427,85,534,111"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="326,95,414,97,409,99,327,100"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="434,135,528,162"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="323,109,421,134,416,135,322,114"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="374,186,587,229"/>
+<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="280,109,323,140,375,171,390,180,385,180,373,176,320,145,279,114"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="528,137,586,121,659,93,664,92,588,126,529,142"/>
 </map>

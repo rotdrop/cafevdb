@@ -1,5 +1,6 @@
 <map id="logDebug" name="logDebug">
 <area shape="rect" id="Node000001" title="Log a debug message." alt="" coords="1554,334,1631,360"/>
+<area shape="poly" id="edge26_Node000001_Node000001" title=" " alt="" coords="1624,318,1614,315,1592,312,1572,314,1562,319,1559,324,1564,334,1559,332,1554,325,1558,315,1571,309,1593,307,1616,309,1629,319"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a13bfe0a165b8f3fc32dd8e598709e465" title=" " alt="" coords="543,71,750,130"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1581,317,1571,290,1555,257,1533,225,1505,200,1477,186,1444,174,1363,159,1268,151,1165,148,962,148,875,146,806,140,751,129,750,124,807,135,875,141,962,143,1165,143,1268,145,1364,153,1446,169,1480,181,1508,195,1537,221,1560,254,1576,288,1586,320"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="1302,251,1497,310"/>
@@ -7,7 +8,7 @@
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="806,242,1002,300"/>
 <area shape="poly" id="edge21_Node000001_Node000008" title=" " alt="" coords="1576,319,1548,277,1528,257,1505,241,1441,217,1372,202,1302,197,1233,198,1165,206,1101,216,993,243,992,238,1100,211,1164,200,1232,193,1303,192,1373,197,1442,212,1508,236,1532,253,1552,274,1581,320"/>
 <area shape="rect" id="Node000013" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#ab053279bea70dd2be3ff1676354fd041" title="Return all shared folders matching the given regexp." alt="" coords="1050,334,1245,392"/>
-<area shape="poly" id="edge27_Node000001_Node000013" title=" " alt="" coords="1536,349,1246,362,1245,357,1541,348"/>
+<area shape="poly" id="edge28_Node000001_Node000013" title=" " alt="" coords="1536,349,1246,362,1245,357,1541,348"/>
 <area shape="rect" id="Node000015" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="1302,384,1497,443"/>
 <area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="1542,364,1487,386,1486,381,1537,366"/>
 <area shape="rect" id="Node000017" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a2c5736677056d73dbd8d456de4babd92" title="Get the shared folder by its id." alt="" coords="806,67,1002,126"/>
@@ -15,9 +16,9 @@
 <area shape="rect" id="Node000018" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a89cc023810bad0773bc2699e1265c96c" title=" " alt="" coords="1293,467,1506,526"/>
 <area shape="poly" id="edge25_Node000001_Node000018" title=" " alt="" coords="1578,372,1549,417,1508,457,1489,469,1487,464,1505,453,1544,413,1573,375"/>
 <area shape="rect" id="Node000019" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#ab053279bea70dd2be3ff1676354fd041" title="Return all shared folders matching the given regexp." alt="" coords="1302,550,1497,608"/>
-<area shape="poly" id="edge26_Node000001_Node000019" title=" " alt="" coords="1588,373,1578,412,1563,456,1540,500,1508,539,1493,551,1491,546,1504,536,1535,497,1558,454,1573,411,1584,377"/>
+<area shape="poly" id="edge27_Node000001_Node000019" title=" " alt="" coords="1588,373,1578,412,1563,456,1540,500,1508,539,1493,551,1491,546,1504,536,1535,497,1558,454,1573,411,1584,377"/>
 <area shape="rect" id="Node000020" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#a25fc26469387b67cd0d509332fab0df5" title="Install a fall&#45;back converter script." alt="" coords="1299,632,1500,691"/>
-<area shape="poly" id="edge28_Node000001_Node000020" title=" " alt="" coords="1592,374,1587,428,1574,493,1549,561,1531,593,1508,622,1494,634,1492,629,1504,618,1526,590,1544,559,1569,492,1582,427,1588,378"/>
+<area shape="poly" id="edge29_Node000001_Node000020" title=" " alt="" coords="1592,374,1587,428,1574,493,1549,561,1531,593,1508,622,1494,634,1492,629,1504,618,1526,590,1544,559,1569,492,1582,427,1588,378"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="268,195,468,254"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="546,137,536,144,427,196,424,192,534,139,551,134"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#af683f3e3910aa34f238c4336211d1a77" title=" " alt="" coords="249,71,487,130"/>
@@ -48,5 +49,5 @@
 <area shape="poly" id="edge23_Node000017_Node000002" title=" " alt="" coords="789,99,752,101,750,96,794,97"/>
 <area shape="poly" id="edge24_Node000017_Node000004" title=" " alt="" coords="806,62,689,32,619,19,545,11,469,9,393,15,319,32,250,61,224,79,200,101,161,152,134,205,116,250,111,248,129,203,157,149,196,97,220,75,247,57,318,27,392,10,469,3,546,5,620,14,690,27,811,61"/>
 <area shape="rect" id="Node000021" href="$class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#ab2b32ae9b6b0995383b420ac66848236" title=" " alt="" coords="1075,632,1220,691"/>
-<area shape="poly" id="edge29_Node000020_Node000021" title=" " alt="" coords="1281,662,1221,664,1221,659,1286,661"/>
+<area shape="poly" id="edge30_Node000020_Node000021" title=" " alt="" coords="1281,662,1221,664,1221,659,1286,661"/>
 </map>

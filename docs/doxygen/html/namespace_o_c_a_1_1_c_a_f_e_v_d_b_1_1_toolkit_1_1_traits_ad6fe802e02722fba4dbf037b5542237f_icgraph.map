@@ -1,5 +1,7 @@
 <map id="floatValue" name="floatValue">
-<area shape="rect" id="Node000001" title="Try to parse a floating point value." alt="" coords="150,5,228,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53e661a445d92119cf8033c6a394de7f" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,5,102,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,19,102,21,102,16,137,18"/>
+<area shape="rect" id="Node000001" title="Try to parse a floating point value." alt="" coords="150,29,228,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="210,14,203,10,189,8,175,10,168,14,166,20,170,30,165,28,161,21,164,11,173,5,189,3,206,5,215,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53e661a445d92119cf8033c6a394de7f" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,29,102,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="131,43,102,45,102,40,137,42"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="75,14,68,10,53,8,40,10,33,14,31,20,35,29,29,29,26,21,28,11,38,5,54,3,70,5,80,14"/>
 </map>

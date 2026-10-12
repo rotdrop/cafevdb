@@ -273,8 +273,8 @@
 <!-- Node21 -->
 <g id="Node000021" class="node">
 <title>Node21</title>
-<g id="a_Node000021"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title="Invoices collects a couple of InvoiceItems of the same Musician.">
-<polygon fill="white" stroke="#666666" points="1769.38,-763.91 1721.88,-763.91 1721.88,-743.91 1769.38,-743.91 1769.38,-763.91"/>
+<g id="a_Node000021"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="1769.38,-763.91 1721.88,-763.91 1721.88,-743.91 1769.38,-743.91 1769.38,-763.91"/>
 <text xml:space="preserve" text-anchor="middle" x="1745.62" y="-750.41" font-family="Helvetica,sans-Serif" font-size="10.00">Invoice</text>
 </a>
 </g>

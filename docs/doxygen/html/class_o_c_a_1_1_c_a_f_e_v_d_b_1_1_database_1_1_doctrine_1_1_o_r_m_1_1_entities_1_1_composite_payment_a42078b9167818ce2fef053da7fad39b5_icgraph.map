@@ -1,0 +1,6 @@
+<map id="setSepaBankAccount" name="setSepaBankAccount">
+<area shape="rect" id="Node000001" title="Set sepaBankAccount." alt="" coords="264,21,411,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a589b447a3d75a0e24d4be05656eec2e8" title="Add a paymente and enforce that it references the same Project entity as all other payments." alt="" coords="5,5,216,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,44,216,46,216,41,251,43"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="231,23,266,26,261,26,231,28"/>
+</map>

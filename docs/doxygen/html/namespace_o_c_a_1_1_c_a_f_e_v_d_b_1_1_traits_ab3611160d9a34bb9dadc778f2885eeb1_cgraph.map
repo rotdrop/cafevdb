@@ -1,5 +1,7 @@
 <map id="userId" name="userId">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,63,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="111,5,211,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,16,97,18,92,19,63,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,63,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="11,29,8,21,10,11,19,5,34,3,50,5,59,14,54,14,48,10,34,8,21,10,15,14,13,20,16,28"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="111,29,211,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,40,97,42,92,43,63,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="138,28,134,21,137,11,146,5,161,3,177,5,186,15,181,14,174,10,161,8,148,10,141,14,140,20,143,30"/>
 </map>

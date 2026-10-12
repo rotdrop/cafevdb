@@ -1,5 +1,7 @@
 <map id="getAuthCookie" name="getAuthCookie">
-<area shape="rect" id="Node000001" title="Get or generate a cookie, e.g." alt="" coords="155,5,262,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,5,107,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,19,107,21,107,16,142,18"/>
+<area shape="rect" id="Node000001" title="Get or generate a cookie, e.g." alt="" coords="155,29,262,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="233,14,225,10,208,8,193,10,184,14,182,20,187,30,182,28,177,21,180,11,191,5,208,3,227,5,238,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,29,107,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="137,43,107,45,107,40,142,42"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="80,14,73,10,56,8,40,10,32,14,30,20,34,29,29,29,25,21,28,11,39,5,56,3,75,5,86,14"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="transliterate" name="transliterate">
-<area shape="rect" id="Node000001" title="Transliterate the given string to the given or default locale." alt="" coords="5,5,95,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="143,5,220,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,130,18,125,19,95,21"/>
+<area shape="rect" id="Node000001" title="Transliterate the given string to the given or default locale." alt="" coords="5,29,95,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="26,29,23,21,26,11,35,5,50,3,66,5,76,14,71,14,64,10,50,8,37,10,30,14,28,20,32,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="143,29,220,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,40,130,42,125,43,95,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="158,28,154,21,157,11,166,5,181,3,198,5,207,15,202,14,195,10,181,8,168,10,161,14,159,20,163,30"/>
 </map>

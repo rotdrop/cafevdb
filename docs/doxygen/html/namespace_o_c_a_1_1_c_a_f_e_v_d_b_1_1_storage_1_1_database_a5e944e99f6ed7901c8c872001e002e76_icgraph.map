@@ -1,5 +1,6 @@
 <map id="getSupportingDocumentsFolderName" name="getSupportingDocumentsFolderName">
-<area shape="rect" id="Node000001" title=" " alt="" coords="302,21,541,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_balance_supporting_documents_storage.html#a74e2a422a71e92aefaa4541ace5da299" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,5,254,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,35,254,37,254,32,289,34"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="302,29,541,56"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="471,14,455,10,421,8,391,10,373,15,369,20,377,30,372,28,364,20,370,11,390,5,421,3,456,5,476,15"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_balance_supporting_documents_storage.html#a74e2a422a71e92aefaa4541ace5da299" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,13,254,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,43,254,45,254,40,289,42"/>
 </map>

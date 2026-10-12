@@ -448,6 +448,27 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Add a payment and make sure the owning side is also updated.
+   *
+   * @param CompositePayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(CompositePayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getProjectParticipant() !== $this) {
+      $payment->setProjectParticipant($this);
+    }
+    $this->project->addCompositePayment($payment);
+    $this->musician->addPayment($payment);
+
+    return $this;
+  }
+
+  /**
    * Set invoices.
    *
    * @param Collection $invoices
@@ -469,6 +490,27 @@ class ProjectParticipant implements \ArrayAccess
   public function getInvoices():Collection
   {
     return $this->invoices;
+  }
+
+  /**
+   * Add an invoice and make sure the owning side is also updated.
+   *
+   * @param Invoice $invoice
+   *
+   * @return self
+   */
+  public function addInvoice(Invoice $invoice): self
+  {
+    if (!$this->invoices->contains($invoice)) {
+      $this->invoices->add($invoice);
+    }
+    if ($invoice->getProjectParticipant() !== $this) {
+      $invoice->setProjectParticipant($this);
+    }
+    $this->project->addInvoice($invoice);
+    $this->musician->addInvoice($invoice);
+
+    return $this;
   }
 
   /**

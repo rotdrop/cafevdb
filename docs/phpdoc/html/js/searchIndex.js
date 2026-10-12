@@ -15591,6 +15591,11 @@ Search.appendIndex(
             "summary": "Get\u0020invoiceItems.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getInvoiceItems"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AaddInvoiceItem\u0028\u0029",
+            "name": "addInvoiceItem",
+            "summary": "Add\u0020an\u0020invoiceItem\u0020and\u0020also\u0020update\u0020the\u0020owning\u0020side.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_addInvoiceItem"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetAmount\u0028\u0029",
             "name": "setAmount",
             "summary": "Set\u0020amount.",
@@ -16571,6 +16576,11 @@ Search.appendIndex(
             "summary": "Set\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetPayments\u0028\u0029",
             "name": "getPayments",
             "summary": "Get\u0020payments.",
@@ -16716,6 +16726,11 @@ Search.appendIndex(
             "summary": "Get\u0020invoices.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getInvoices"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addInvoice"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetOriginatedInvoices\u0028\u0029",
             "name": "setOriginatedInvoices",
             "summary": "Set\u0020originatedInvoices.",
@@ -16725,6 +16740,11 @@ Search.appendIndex(
             "name": "getOriginatedInvoices",
             "summary": "Get\u0020originatedInvoices.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getOriginatedInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddOriginatedInvoice\u0028\u0029",
+            "name": "addOriginatedInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addOriginatedInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
@@ -17346,6 +17366,11 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020project\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AsetCompositePayments\u0028\u0029",
             "name": "setCompositePayments",
             "summary": "Set\u0020compositePayments.",
@@ -17356,6 +17381,11 @@ Search.appendIndex(
             "summary": "Get\u0020compositePayments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCompositePayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AaddCompositePayment\u0028\u0029",
+            "name": "addCompositePayment",
+            "summary": "Add\u0020a\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_addCompositePayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AsetInvoices\u0028\u0029",
             "name": "setInvoices",
             "summary": "Set\u0020invoices.",
@@ -17365,6 +17395,11 @@ Search.appendIndex(
             "name": "getInvoices",
             "summary": "Get\u0020invoices.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_addInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AsetSentEmail\u0028\u0029",
             "name": "setSentEmail",
@@ -18166,6 +18201,11 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AsetInvoices\u0028\u0029",
             "name": "setInvoices",
             "summary": "Set\u0020invoices.",
@@ -18175,6 +18215,11 @@ Search.appendIndex(
             "name": "getInvoices",
             "summary": "Get\u0020invoices.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_addInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AsetDatabaseDocuments\u0028\u0029",
             "name": "setDatabaseDocuments",
@@ -18761,6 +18806,11 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020project\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AsetInvoiceItems\u0028\u0029",
             "name": "setInvoiceItems",
             "summary": "Set\u0020invoiceItems.",
@@ -18770,6 +18820,11 @@ Search.appendIndex(
             "name": "getInvoiceItems",
             "summary": "Get\u0020invoiceItems.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_getInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AaddInvoiceItem\u0028\u0029",
+            "name": "addInvoiceItem",
+            "summary": "Add\u0020an\u0020invoiceItem\u0020and\u0020also\u0020update\u0020the\u0020owning\u0020side.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_addInvoiceItem"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AgetMusicianFieldData\u0028\u0029",
             "name": "getMusicianFieldData",
@@ -18976,6 +19031,11 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020project\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AsetInvoiceItems\u0028\u0029",
             "name": "setInvoiceItems",
             "summary": "Set\u0020invoiceItems.",
@@ -18985,6 +19045,11 @@ Search.appendIndex(
             "name": "getInvoiceItems",
             "summary": "Get\u0020invoiceItems.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_getInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AaddInvoiceItem\u0028\u0029",
+            "name": "addInvoiceItem",
+            "summary": "Add\u0020an\u0020invoiceItem\u0020and\u0020also\u0020update\u0020the\u0020owning\u0020side.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_addInvoiceItem"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AfromDefaultValue\u0028\u0029",
             "name": "fromDefaultValue",
@@ -19476,6 +19541,11 @@ Search.appendIndex(
             "summary": "Returns\u0020referencedBy.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getReferencedBy"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003AaddReferencedBy\u0028\u0029",
+            "name": "addReferencedBy",
+            "summary": "Add\u0020to\u0020the\u0020referencedBy\u0020collection\u0020and\u0020make\u0020sure\u0020that\u0020the\u0020owning\u0020side\u0020is\nalso\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_addReferencedBy"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003AsetProject\u0028\u0029",
             "name": "setProject",
             "summary": "Sets\u0020project.",
@@ -19691,6 +19761,11 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020paymente\u0020and\u0020enforce\u0020that\u0020it\u0020references\u0020the\u0020same\u0020Project\u0020entity\u0020as\nall\u0020other\u0020payments.\u0020Merging\u0020payments\u0020from\u0020different\u0020projects\u0020is\u0020not\nsupported.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_addPayment"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AsetSepaDebitMandates\u0028\u0029",
             "name": "setSepaDebitMandates",
             "summary": "Set\u0020sepaDebitMandates.",
@@ -19700,6 +19775,26 @@ Search.appendIndex(
             "name": "getSepaDebitMandates",
             "summary": "Get\u0020sepaDebitMandates.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getSepaDebitMandates"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AaddSepaDebitMandate\u0028\u0029",
+            "name": "addSepaDebitMandate",
+            "summary": "Add\u0020a\u0020sepaDebitMandatee\u0020and\u0020enforce\u0020that\u0020it\u0020references\u0020the\u0020same\u0020Project\u0020entity\u0020as\nall\u0020other\u0020sepaDebitMandates.\u0020Merging\u0020sepaDebitMandates\u0020from\u0020different\u0020projects\u0020is\u0020not\nsupported.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_addSepaDebitMandate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "Set\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "Get\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020also\u0020update\u0020the\u0020owning\u0020side.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_addInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
@@ -19755,6 +19850,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#property_invoices"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankTransfer",
             "name": "SepaBankTransfer",
@@ -19918,13 +20018,28 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AaddPayment\u0028\u0029",
             "name": "addPayment",
-            "summary": "Add\u0020a\u0020paymente\u0020and\u0020enforce\u0020that\u0020it\u0020references\u0020the\u0020same\u0020Project\u0020entity\u0020as\nall\u0020other\u0020payments.\u0020Merging\u0020payments\u0020from\u0020different\u0020projects\u0020is\u0020not\nsupported.",
+            "summary": "Add\u0020a\u0020payment\u0020and\u0020enforce\u0020that\u0020it\u0020references\u0020the\u0020same\u0020Project\u0020entity\u0020as\nall\u0020other\u0020payments.\u0020Merging\u0020payments\u0020from\u0020different\u0020projects\u0020is\u0020not\nsupported.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addPayment"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AgetPayment\u0028\u0029",
             "name": "getPayment",
             "summary": "Get\u0020the\u0020payment\u0020for\u0020the\u0020specified\u0020musician",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getPayment"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "Set\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "Get\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020also\u0020update\u0020the\u0020owning\u0020side.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#method_addInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003AsetPreNotificationEmails\u0028\u0029",
             "name": "setPreNotificationEmails",
@@ -20015,6 +20130,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html#property_invoices"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransaction\u003A\u003A\u0024preNotificationEmails",
             "name": "preNotificationEmails",
@@ -20151,9 +20271,29 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003AaddPayment\u0028\u0029",
+            "name": "addPayment",
+            "summary": "Add\u0020a\u0020payment\u0020and\u0020make\u0020sure\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addPayment"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "Set\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "Get\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020enforce\u0020that\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addInvoice"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
-            "summary": "Return\u0020the\u0020number\u0020of\u0020payments\u0020attached\u0020to\u0020this\u0020entity.",
+            "summary": "Return\u0020the\u0020number\u0020of\u0020invoices\u0020attached\u0020to\u0020this\u0020entity.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_usage"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003AadjustMandateReference\u0028\u0029",
@@ -20220,6 +20360,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_invoices"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitNote",
             "name": "SepaDebitNote",
@@ -20390,6 +20535,11 @@ Search.appendIndex(
             "name": "setInvoices",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AaddInvoice\u0028\u0029",
+            "name": "addInvoice",
+            "summary": "Add\u0020an\u0020invoice\u0020and\u0020enforce\u0020that\u0020the\u0020owning\u0020side\u0020is\u0020also\u0020updated.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_addInvoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
@@ -59485,6 +59635,21 @@ Search.appendIndex(
             "name": "testCompositePaymentsAssociation",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#method_testCompositePaymentsAssociation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest\u003A\u003AtestInvoicesAssociation\u0028\u0029",
+            "name": "testInvoicesAssociation",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#method_testInvoicesAssociation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest\u003A\u003AtestPreNotificationEmailsAssociation\u0028\u0029",
+            "name": "testPreNotificationEmailsAssociation",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#method_testPreNotificationEmailsAssociation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Entities\\SepaBulkTransactionTest\u003A\u003A\u0024transaction",
+            "name": "transaction",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-SepaBulkTransactionTest.html#property_transaction"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepositoryTest",
             "name": "InstrumentsRepositoryTest",

@@ -1,7 +1,9 @@
 <map id="getTaxAuthoritiesFolderName" name="getTaxAuthoritiesFolderName">
-<area shape="rect" id="Node000001" title="Get the name of the folder containing tax office related stuff." alt="" coords="5,13,199,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="247,13,337,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,24,234,26,229,27,199,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="385,5,594,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="337,24,372,27,367,27,338,29"/>
+<area shape="rect" id="Node000001" title="Get the name of the folder containing tax office related stuff." alt="" coords="5,29,199,56"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="69,29,64,21,68,11,81,5,102,3,125,5,138,14,133,14,123,10,102,8,82,10,72,15,69,20,74,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="247,29,337,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,40,234,42,229,43,199,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="259,28,254,21,258,11,271,5,292,3,315,5,328,14,323,14,313,10,292,8,272,10,261,15,259,20,264,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="385,21,594,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="337,40,372,43,367,43,338,45"/>
 </map>

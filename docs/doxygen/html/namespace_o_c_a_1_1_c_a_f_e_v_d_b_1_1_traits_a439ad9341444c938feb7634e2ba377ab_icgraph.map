@@ -1,5 +1,7 @@
 <map id="queryBuilder" name="queryBuilder">
-<area shape="rect" id="Node000001" title="Create a QueryBuilder instance." alt="" coords="100,5,193,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad22b1de64c2274358a6e72a2d664972d" title=" " alt="" coords="5,5,52,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,20,52,21,52,16,87,18"/>
+<area shape="rect" id="Node000001" title="Create a QueryBuilder instance." alt="" coords="100,29,193,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="165,14,159,10,146,8,135,10,128,14,127,20,130,30,125,28,122,20,124,11,133,5,146,3,161,5,170,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad22b1de64c2274358a6e72a2d664972d" title=" " alt="" coords="5,29,52,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,44,52,45,52,40,87,42"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="47,15,41,10,28,8,17,10,11,14,9,20,12,28,7,29,4,20,6,11,15,5,29,3,43,5,52,14"/>
 </map>

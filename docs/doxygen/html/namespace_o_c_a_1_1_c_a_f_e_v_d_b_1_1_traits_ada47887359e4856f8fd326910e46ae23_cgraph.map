@@ -1,7 +1,10 @@
 <map id="getSystemValueBool" name="getSystemValueBool">
-<area shape="rect" id="Node000001" title="Forward to OCP\IConfig\getSystemValueBool()." alt="" coords="5,5,148,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="196,5,286,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,16,183,19,177,19,148,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="334,5,434,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="286,16,321,19,316,19,286,21"/>
+<area shape="rect" id="Node000001" title="Forward to OCP\IConfig\getSystemValueBool()." alt="" coords="5,29,148,56"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="48,29,43,21,47,11,58,5,77,3,96,5,108,14,103,14,95,10,76,8,60,10,51,15,48,20,53,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="196,29,286,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,40,183,43,177,43,148,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="216,28,211,21,214,11,225,5,241,3,258,5,269,15,264,14,256,10,241,8,226,10,219,14,217,20,220,30"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="334,29,434,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="286,40,321,43,316,43,286,45"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="359,28,355,21,358,11,368,5,384,3,402,5,412,15,407,13,400,10,384,8,370,10,362,14,360,20,364,30"/>
 </map>

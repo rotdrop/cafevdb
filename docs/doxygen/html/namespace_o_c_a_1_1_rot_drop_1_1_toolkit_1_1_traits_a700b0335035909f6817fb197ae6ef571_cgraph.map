@@ -1,7 +1,10 @@
 <map id="getLoginCredentialsFromToken" name="getLoginCredentialsFromToken">
-<area shape="rect" id="Node000001" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="5,31,207,57"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="255,5,351,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,28,242,26,237,27,208,34"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="275,56,331,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,54,262,64,257,64,207,60"/>
+<area shape="rect" id="Node000001" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="5,67,207,93"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="72,66,67,58,71,48,84,42,106,40,130,43,143,51,138,52,128,48,106,45,85,47,74,52,72,57,77,66"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="255,29,351,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="179,64,242,54,237,55,180,69"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="275,104,331,131"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="180,91,262,109,257,110,179,97"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="269,28,263,21,267,11,281,5,303,3,326,5,340,14,335,14,325,10,303,8,282,10,271,15,269,20,274,30"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="272,105,264,97,266,87,280,80,303,77,330,81,342,93,337,92,328,86,303,83,281,85,271,90,269,96,277,106"/>
 </map>

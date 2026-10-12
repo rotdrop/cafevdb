@@ -1,5 +1,6 @@
 <map id="getPrefixParams" name="getPrefixParams">
-<area shape="rect" id="Node000001" title="Get all request parameters matching the given prefix at the start as an associated array,..." alt="" coords="254,21,372,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_instrument_insurance_controller.html#a3368b985327edb83331bd119c726f750" title=" " alt="" coords="5,5,206,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,35,206,37,206,32,241,34"/>
+<area shape="rect" id="Node000001" title="Get all request parameters matching the given prefix at the start as an associated array,..." alt="" coords="254,29,372,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="347,14,336,10,313,8,291,10,279,15,277,20,282,30,277,28,271,21,276,11,290,5,313,3,338,5,352,14"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_instrument_insurance_controller.html#a3368b985327edb83331bd119c726f750" title=" " alt="" coords="5,13,206,72"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="235,43,206,45,206,40,241,42"/>
 </map>

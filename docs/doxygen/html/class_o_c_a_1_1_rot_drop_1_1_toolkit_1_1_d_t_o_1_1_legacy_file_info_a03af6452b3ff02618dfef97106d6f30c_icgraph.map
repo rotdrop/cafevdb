@@ -1,5 +1,6 @@
 <map id="fromArray" name="fromArray">
-<area shape="rect" id="Node000001" title="Initialize from the given array." alt="" coords="199,13,277,40"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,5,151,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,27,151,29,151,24,186,26"/>
+<area shape="rect" id="Node000001" title="Initialize from the given array." alt="" coords="199,37,277,64"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,29,151,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,51,151,53,151,48,186,50"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="102,14,94,10,78,8,63,10,54,14,51,20,52,29,47,28,46,19,51,11,62,5,78,3,96,5,107,13"/>
 </map>

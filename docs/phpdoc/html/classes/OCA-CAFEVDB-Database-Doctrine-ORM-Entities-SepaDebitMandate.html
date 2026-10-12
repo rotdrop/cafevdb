@@ -245,6 +245,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_invoices">$invoices</a>
+    <span>
+                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string|int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
     <span>
                         &nbsp;: mixed            </span>
@@ -357,6 +363,20 @@ incremented using
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addInvoice">addInvoice()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Add an invoice and enforce that the owning side is also updated.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addPayment">addPayment()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Add a payment and make sure the owning side is also updated.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_adjustMandateReference">adjustMandateReference()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -382,6 +402,13 @@ incremented using
 </dt>
 <dd>Get the deleted at timestamp value. Will return null if
 the entity has not been soft deleted.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getInvoices">getInvoices()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
+</dt>
+<dd>Get invoices.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getLastUsedDate">getLastUsedDate()</a>
@@ -525,6 +552,13 @@ next call to delete.</dd>
 <dd>Set or clear the deleted at timestamp.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setInvoices">setInvoices()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate">SepaDebitMandate</abbr></a>    </span>
+</dt>
+<dd>Set invoices.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setLastUsedDate">setLastUsedDate()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate">SepaDebitMandate</abbr></a>    </span>
@@ -626,7 +660,7 @@ next call to delete.</dd>
     <span>
                                 &nbsp;: int    </span>
 </dt>
-<dd>Return the number of payments attached to this entity.</dd>
+<dd>Return the number of invoices attached to this entity.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a>
@@ -710,6 +744,66 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: true
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_invoices">
+        $invoices
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_invoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">135</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string|int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&gt;</span>
+    <span class="phpdocumentor-signature__name">$invoices</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Linke to the payments table.</p>
+</section>
+
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="property_invoices_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_invoices_attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToMany">OneToMany</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $mappedBy: &#039;sepaDebitMandate&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $fetch: &#039;EXTRA_LAZY&#039;
     </dd>
     </dl>
                     </section>
@@ -1538,9 +1632,9 @@ incremented using
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
     
@@ -1601,9 +1695,59 @@ incremented using
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_adjustMandateReference">
-        adjustMandateReference()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_adjustMandateReference" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_addInvoice">
+        addInvoice()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addInvoice" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">488</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.488" class="phpdocumentor-element-found-in__source" data-line="488" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Add an invoice and enforce that the owning side is also updated.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">addInvoice</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoice</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$invoice</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_addPayment">
+        addPayment()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addPayment" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
@@ -1612,6 +1756,56 @@ incremented using
     <span class="phpdocumentor-element-found-in__line">445</span>
 
             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.445" class="phpdocumentor-element-found-in__source" data-line="445" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Add a payment and make sure the owning side is also updated.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">addPayment</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$payment</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$payment</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_adjustMandateReference">
+        adjustMandateReference()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_adjustMandateReference" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">518</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">See that the mandate-sequence is reflected by the mandate reference.</p>
@@ -1803,6 +1997,46 @@ the entity has not been soft deleted.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getInvoices">
+        getInvoices()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getInvoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">476</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get invoices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getInvoices</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getLastUsedDate">
         getLastUsedDate()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getLastUsedDate" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1811,9 +2045,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">350</span>
+    <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get lastUsedDate.</p>
@@ -1851,9 +2085,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">280</span>
+    <span class="phpdocumentor-element-found-in__line">290</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mandateDate.</p>
@@ -1891,9 +2125,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">243</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mandateReference.</p>
@@ -1931,9 +2165,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">185</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get musician.</p>
@@ -1971,9 +2205,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">374</span>
+    <span class="phpdocumentor-element-found-in__line">384</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.374" class="phpdocumentor-element-found-in__source" data-line="374" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.384" class="phpdocumentor-element-found-in__source" data-line="384" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get nonRecurring.</p>
@@ -2011,9 +2245,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">422</span>
+    <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.422" class="phpdocumentor-element-found-in__source" data-line="422" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -2051,9 +2285,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">327</span>
+    <span class="phpdocumentor-element-found-in__line">337</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.337" class="phpdocumentor-element-found-in__source" data-line="337" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get preNotificationBusinessDays.</p>
@@ -2091,9 +2325,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">303</span>
+    <span class="phpdocumentor-element-found-in__line">313</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get preNotificationCalendarDays.</p>
@@ -2131,9 +2365,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">257</span>
+    <span class="phpdocumentor-element-found-in__line">267</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.257" class="phpdocumentor-element-found-in__source" data-line="257" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get project.</p>
@@ -2171,9 +2405,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">209</span>
+    <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.209" class="phpdocumentor-element-found-in__source" data-line="209" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaBankAccount.</p>
@@ -2211,9 +2445,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">161</span>
+    <span class="phpdocumentor-element-found-in__line">170</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sequence.</p>
@@ -2251,9 +2485,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">398</span>
+    <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get writtenMandate.</p>
@@ -2649,6 +2883,56 @@ next call to delete.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setInvoices">
+        setInvoices()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setInvoices" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">464</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set invoices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setInvoices</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoices</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate">SepaDebitMandate</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$invoices</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate">SepaDebitMandate</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setLastUsedDate">
         setLastUsedDate()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setLastUsedDate" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2657,9 +2941,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">339</span>
+    <span class="phpdocumentor-element-found-in__line">349</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.339" class="phpdocumentor-element-found-in__source" data-line="339" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set lastUsedDate.</p>
@@ -2707,9 +2991,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">269</span>
+    <span class="phpdocumentor-element-found-in__line">279</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.269" class="phpdocumentor-element-found-in__source" data-line="269" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mandateDate.</p>
@@ -2757,9 +3041,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">221</span>
+    <span class="phpdocumentor-element-found-in__line">231</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.231" class="phpdocumentor-element-found-in__source" data-line="231" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mandateReference.</p>
@@ -2807,9 +3091,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">173</span>
+    <span class="phpdocumentor-element-found-in__line">182</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set musician.</p>
@@ -2857,9 +3141,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">362</span>
+    <span class="phpdocumentor-element-found-in__line">372</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.362" class="phpdocumentor-element-found-in__source" data-line="362" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set nonRecurring.</p>
@@ -2907,9 +3191,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">410</span>
+    <span class="phpdocumentor-element-found-in__line">420</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.410" class="phpdocumentor-element-found-in__source" data-line="410" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -2957,9 +3241,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">315</span>
+    <span class="phpdocumentor-element-found-in__line">325</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.315" class="phpdocumentor-element-found-in__source" data-line="315" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.325" class="phpdocumentor-element-found-in__source" data-line="325" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set preNotificationBusinessDays.</p>
@@ -3007,9 +3291,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">302</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.302" class="phpdocumentor-element-found-in__source" data-line="302" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set preNotificationCalendarDays.</p>
@@ -3057,9 +3341,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">245</span>
+    <span class="phpdocumentor-element-found-in__line">255</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set project or project-id</p>
@@ -3107,9 +3391,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">197</span>
+    <span class="phpdocumentor-element-found-in__line">206</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.206" class="phpdocumentor-element-found-in__source" data-line="206" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaBankAccount.</p>
@@ -3157,9 +3441,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sequence</p>
@@ -3223,9 +3507,9 @@ sequences here. Perhaps a slug-handler ...</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">396</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.396" class="phpdocumentor-element-found-in__source" data-line="396" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set writtenMandate.</p>
@@ -3352,12 +3636,12 @@ sequences here. Perhaps a slug-handler ...</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php"><a href="files/lib-database-doctrine-orm-entities-sepadebitmandate.html"><abbr title="lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">505</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#source-view.505" class="phpdocumentor-element-found-in__source" data-line="505" data-modal="source-view" data-src="files/lib/Database/Doctrine/ORM/Entities/SepaDebitMandate.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Return the number of payments attached to this entity.</p>
+        <p class="phpdocumentor-summary">Return the number of invoices attached to this entity.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -3647,6 +3931,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_invoices">$invoices</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_lastUsedDate">$lastUsedDate</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#property_mandateDate">$mandateDate</a></li>
@@ -3668,10 +3953,13 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addInvoice">addInvoice()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_addPayment">addPayment()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_adjustMandateReference">adjustMandateReference()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getInvoices">getInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getLastUsedDate">getLastUsedDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getMandateDate">getMandateDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_getMandateReference">getMandateReference()</a></li>
@@ -3692,6 +3980,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setInvoices">setInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setLastUsedDate">setLastUsedDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setMandateDate">setMandateDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method_setMandateReference">setMandateReference()</a></li>

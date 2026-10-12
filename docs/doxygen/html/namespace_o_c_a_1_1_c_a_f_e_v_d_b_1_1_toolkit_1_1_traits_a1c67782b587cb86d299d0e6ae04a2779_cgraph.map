@@ -1,5 +1,7 @@
 <map id="formatFloatValue" name="formatFloatValue">
-<area shape="rect" id="Node000001" title="Format a float value for display in the given or the default locale." alt="" coords="5,5,125,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="173,5,250,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,16,160,18,154,19,125,21"/>
+<area shape="rect" id="Node000001" title="Format a float value for display in the given or the default locale." alt="" coords="5,29,125,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="39,29,35,21,38,11,48,5,65,3,83,5,94,14,88,14,81,10,65,8,50,10,42,14,40,20,44,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="173,29,250,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="125,40,160,42,154,43,125,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="186,28,181,21,184,11,195,5,211,3,229,5,240,15,235,14,227,10,211,8,196,10,189,14,187,20,190,30"/>
 </map>

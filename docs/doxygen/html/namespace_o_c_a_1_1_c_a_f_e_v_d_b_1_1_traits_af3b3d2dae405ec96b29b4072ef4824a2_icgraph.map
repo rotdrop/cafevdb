@@ -1,7 +1,10 @@
 <map id="dateTimeFormatter" name="dateTimeFormatter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="169,31,300,57"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aabf644196b9bf78eab6b1f20dd7c255f" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="20,5,106,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,33,107,28,107,22,156,31"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafd5986c2ed7608a18d61e0b21004e01" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,56,121,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,56,121,63,120,58,156,55"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="169,67,300,93"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="262,51,253,48,234,45,217,47,207,52,205,57,210,67,205,65,200,58,203,48,215,42,234,40,255,43,267,52"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aabf644196b9bf78eab6b1f20dd7c255f" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="20,29,106,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="153,64,107,55,107,49,158,62"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafd5986c2ed7608a18d61e0b21004e01" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,104,121,131"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="153,98,122,107,120,102,158,97"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="91,15,82,10,63,8,45,10,36,15,34,20,38,28,33,29,28,21,32,11,44,5,63,3,84,5,96,13"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="91,89,82,85,63,83,45,85,36,89,34,95,38,103,33,104,28,95,32,86,44,80,63,77,84,80,96,89"/>
 </map>

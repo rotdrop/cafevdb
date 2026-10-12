@@ -1,10 +1,12 @@
 <map id="updateOne" name="updateOne">
-<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="5,104,90,131"/>
-<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="13,104,7,95,11,86,25,79,48,77,71,80,85,88,81,90,70,85,47,83,27,85,15,89,13,95,18,103"/>
+<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="5,145,90,172"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="13,146,7,137,11,127,25,121,48,119,71,121,85,129,81,131,70,126,47,124,27,126,15,131,13,136,18,144"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="147,5,350,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,101,137,74,154,68,150,72,139,78,79,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,144,91,109,136,74,147,70,144,73,139,78,95,113,62,147"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="159,88,338,147"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,115,146,116,141,119,91,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,148,146,137,142,141,91,152"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a2289734c2bdef623da274cd90a2b33f1" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="138,171,359,229"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="78,129,139,156,155,164,150,165,137,161,77,134"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="89,165,125,173,120,175,91,170"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#af89110e6f20a634ea7ba8b32cae2ad32" title="Update the amount to invoice for bound service&#45;fee field." alt="" coords="145,253,352,312"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="61,169,95,204,139,239,148,246,143,246,136,244,91,208,60,175"/>
 </map>

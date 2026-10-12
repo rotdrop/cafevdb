@@ -1,5 +1,7 @@
 <map id="encryptionKeyValid" name="encryptionKeyValid">
-<area shape="rect" id="Node000001" title="Check the validity of the encryption key." alt="" coords="5,5,138,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="186,5,286,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,16,173,18,168,19,138,21"/>
+<area shape="rect" id="Node000001" title="Check the validity of the encryption key." alt="" coords="5,29,138,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="43,29,38,21,42,11,53,5,72,3,91,5,103,14,98,14,90,10,71,8,55,10,46,15,43,20,48,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="186,29,286,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,40,173,42,168,43,138,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="207,28,202,21,206,11,217,5,236,3,256,5,268,15,262,14,254,10,236,8,219,10,210,15,208,20,212,30"/>
 </map>

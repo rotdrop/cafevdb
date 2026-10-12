@@ -1,5 +1,9 @@
 <map id="getVEventSiblings" name="getVEventSiblings">
-<area shape="rect" id="Node000001" title="Use the EventIterator to generate all siblings of a recurring event." alt="" coords="152,5,280,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ab266e1b2f40afdf180bc9de4f3a06708" title="Export the given events in ICAL format." alt="" coords="5,5,104,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,19,104,21,104,16,139,18"/>
+<area shape="rect" id="Node000001" title="Use the EventIterator to generate all siblings of a recurring event." alt="" coords="287,31,415,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ab266e1b2f40afdf180bc9de4f3a06708" title="Export the given events in ICAL format." alt="" coords="139,5,238,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,32,238,29,238,24,274,31"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5" title="Augment the database entity by calendar data." alt="" coords="138,56,239,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="274,56,240,64,239,59,269,57"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a860420d7add97f86ebda19e41f74e7aa" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,56,90,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="119,70,90,72,90,67,125,69"/>
 </map>

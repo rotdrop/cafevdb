@@ -1,5 +1,7 @@
 <map id="disableFilter" name="disableFilter">
-<area shape="rect" id="Node000001" title="Disable the given filter." alt="" coords="5,5,97,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a16b8435fe1253f9b38af865a4f71443d" title="Enable the given filter." alt="" coords="145,5,233,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,16,132,18,127,19,97,21"/>
+<area shape="rect" id="Node000001" title="Disable the given filter." alt="" coords="5,29,97,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="26,29,23,21,25,11,35,5,51,3,68,5,78,14,73,14,66,10,51,8,37,10,30,14,28,20,32,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a16b8435fe1253f9b38af865a4f71443d" title="Enable the given filter." alt="" coords="145,29,233,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="97,40,132,42,127,43,97,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="165,28,160,21,163,11,173,5,189,3,206,5,216,15,211,14,204,10,189,8,175,10,168,14,166,20,169,30"/>
 </map>

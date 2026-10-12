@@ -1,0 +1,6 @@
+<map id="findOneBy" name="findOneBy">
+<area shape="rect" id="Node000001" title="Find just one or no entity matching the criteria." alt="" coords="209,29,291,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="277,14,268,10,250,8,233,10,223,15,221,20,226,30,221,28,216,21,219,11,231,5,250,3,270,5,282,14"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad38fcff61d5b7940cf9b4911e16b1e39" title="Finds a single entity by a set of criteria." alt="" coords="5,21,161,64"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="191,43,161,45,161,40,196,42"/>
+</map>

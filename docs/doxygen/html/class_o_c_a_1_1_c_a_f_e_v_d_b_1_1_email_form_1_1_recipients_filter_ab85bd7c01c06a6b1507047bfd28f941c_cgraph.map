@@ -1,28 +1,31 @@
 <map id="loadHistory" name="loadHistory">
-<area shape="rect" id="Node000001" title="Load the history from the session data." alt="" coords="5,147,93,173"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="361,96,449,123"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,144,140,132,249,117,348,111,343,113,250,122,141,137,94,149"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="141,147,264,173"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="92,157,127,159,123,161,94,163"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" title="Validate the given history records, return false on error." alt="" coords="148,223,256,249"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="78,171,162,214,158,217,77,177"/>
-<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="370,95,365,87,369,78,383,71,405,69,429,72,444,81,438,81,428,77,405,75,384,77,373,81,370,87,376,96"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="546,88,707,131"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="449,107,533,109,528,110,450,112"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="759,5,948,64"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="693,85,746,70,751,68,695,90"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="755,88,952,131"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="707,115,741,118,736,119,707,121"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="751,101,722,103,722,98,757,100"/>
-<area shape="poly" id="edge11_Node000006_Node000002" title=" " alt="" coords="258,143,349,123,344,125,260,149"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="338,147,472,173"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="264,157,325,159,320,161,265,163"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="312,197,498,224"/>
-<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="259,171,337,193,332,194,259,177"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="547,197,706,224"/>
-<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="498,208,534,210,529,211,499,213"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" title="Validate all history records." alt="" coords="326,248,484,275"/>
-<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="257,240,314,250,308,250,257,245"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" title="Validate one history entry." alt="" coords="551,248,702,275"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="484,259,539,261,533,261,484,264"/>
+<area shape="rect" id="Node000001" title="Load the history from the session data." alt="" coords="5,195,93,221"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="361,144,449,171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,192,140,180,249,165,348,159,343,161,250,170,141,185,94,197"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="141,195,264,221"/>
+<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="92,205,127,207,123,209,94,211"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" title="Validate the given history records, return false on error." alt="" coords="148,271,256,297"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="78,219,162,262,158,265,77,225"/>
+<area shape="poly" id="edge9_Node000002_Node000002" title=" " alt="" coords="370,143,365,135,369,126,383,119,405,117,429,120,444,129,438,129,428,125,405,123,384,125,373,129,370,135,376,144"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="546,136,707,179"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="449,155,533,157,528,158,450,160"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="585,134,583,126,590,117,604,111,627,109,650,112,666,121,661,120,649,117,626,115,606,117,593,121,588,127,589,137"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="759,29,948,88"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="674,133,754,98,765,95,770,94,756,102,676,138"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="755,136,952,179"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="707,163,741,166,736,167,707,169"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="809,27,810,19,818,10,832,5,853,3,877,5,893,15,888,14,876,10,853,8,834,10,821,15,814,21,813,31"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="751,149,722,151,722,146,757,148"/>
+<area shape="poly" id="edge8_Node000005_Node000005" title=" " alt="" coords="811,134,809,126,816,117,831,111,853,109,878,112,894,121,888,120,876,117,853,115,832,117,819,121,814,127,815,137"/>
+<area shape="poly" id="edge14_Node000006_Node000002" title=" " alt="" coords="258,191,349,171,344,173,260,197"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="338,195,472,221"/>
+<area shape="poly" id="edge11_Node000006_Node000007" title=" " alt="" coords="264,205,325,207,320,209,265,211"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="312,245,498,272"/>
+<area shape="poly" id="edge12_Node000006_Node000008" title=" " alt="" coords="259,219,337,241,332,242,259,225"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="547,245,706,272"/>
+<area shape="poly" id="edge13_Node000008_Node000009" title=" " alt="" coords="498,256,534,258,529,259,499,261"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" title="Validate all history records." alt="" coords="326,296,484,323"/>
+<area shape="poly" id="edge16_Node000010_Node000011" title=" " alt="" coords="257,288,314,298,308,298,257,293"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" title="Validate one history entry." alt="" coords="551,296,702,323"/>
+<area shape="poly" id="edge17_Node000011_Node000012" title=" " alt="" coords="484,307,539,309,533,309,484,312"/>
 </map>

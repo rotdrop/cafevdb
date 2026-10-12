@@ -21,6 +21,5 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctri
     [ "MockEmailTemplatesRepositoryTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a52cb781e68d34bfeb27d76d703d63efa", null ],
     [ "MockInstrumentsRepositoryTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#ac53e5325fd708fa09a17277faa732b8f", null ],
     [ "MockMusiciansRepositoryTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a76e66eeb07da19c609a2d247e44a6244", null ],
-    [ "MockProjectsRepositoryTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a1950d4c461955fbc18406cca23f449a0", null ],
-    [ "PROJECT_EVENT_DATA", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a777ca722e658fb2cba6ed265bd3478db", null ]
+    [ "MockProjectsRepositoryTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities.html#a1950d4c461955fbc18406cca23f449a0", null ]
 ];

@@ -393,6 +393,25 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Add a project payment and make sure the owning side is also updated.
+   *
+   * @param ProjectPayment $payment
+   *
+   * @return self
+   */
+  public function addPayment(ProjectPayment $payment): self
+  {
+    if (!$this->payments->contains($payment)) {
+      $this->payments->add($payment);
+    }
+    if ($payment->getReceivable() != $this) {
+      $payment->setReceivable($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Set invoiceItems.
    *
    * @param null|Collection $invoiceItems
@@ -414,6 +433,25 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function getInvoiceItems():?Collection
   {
     return $this->invoiceItems;
+  }
+
+  /**
+   * Add an invoiceItem and also update the owning side.
+   *
+   * @param InvoiceItem $invoiceItem
+   *
+   * @return self
+   */
+  public function addInvoiceItem(InvoiceItem $invoiceItem): self
+  {
+    if (!$this->invoiceItems->contains($invoiceItem)) {
+      $this->invoiceItems->add($invoiceItem);
+    }
+    if ($invoiceItem->getReceivable() !== $this) {
+      $invoiceItem->setReceivable($this);
+    }
+
+    return $this;
   }
 
   /**

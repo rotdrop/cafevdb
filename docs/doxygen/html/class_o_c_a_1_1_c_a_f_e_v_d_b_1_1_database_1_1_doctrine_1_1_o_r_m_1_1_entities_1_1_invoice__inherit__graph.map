@@ -1,5 +1,5 @@
 <map id="Invoice" name="Invoice">
-<area shape="rect" id="Node000001" title="Invoices collects a couple of InvoiceItems of the same Musician." alt="" coords="101,80,165,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="101,80,165,107"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html" title="Cloud blog entity." alt="" coords="5,155,53,181"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="104,118,49,156,46,152,101,114"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html" title="Cloud progress status entity." alt="" coords="77,155,189,181"/>

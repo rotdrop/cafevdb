@@ -1,7 +1,8 @@
 <map id="generateSepaBankAccount" name="generateSepaBankAccount">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,21,185,48"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="233,5,440,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,32,220,34,215,35,185,37"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#aaaa70f227c74a7188f3cca243f2b41e0" title="Get bankAccountOwner." alt="" coords="488,5,759,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="440,32,475,35,470,35,441,37"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,185,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="54,29,47,21,52,11,68,5,95,3,124,5,141,14,135,15,123,10,95,8,70,10,56,15,52,20,59,29"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="233,13,440,72"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="185,40,220,42,215,43,185,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html#aaaa70f227c74a7188f3cca243f2b41e0" title="Get bankAccountOwner." alt="" coords="488,13,759,72"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="440,40,475,43,470,43,441,45"/>
 </map>

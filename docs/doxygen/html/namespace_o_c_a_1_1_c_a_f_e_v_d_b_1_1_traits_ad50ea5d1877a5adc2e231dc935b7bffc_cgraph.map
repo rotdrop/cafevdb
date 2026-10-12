@@ -1,5 +1,7 @@
 <map id="getLanguage" name="getLanguage">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,101,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="149,5,249,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,16,135,18,130,19,101,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,101,56"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="27,29,23,21,26,11,36,5,53,3,71,5,81,14,76,14,69,10,53,8,38,10,30,14,28,20,32,29"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="149,29,249,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,40,135,42,130,43,101,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="173,28,169,21,172,11,182,5,199,3,217,5,227,15,222,14,215,10,199,8,184,10,176,14,174,20,178,30"/>
 </map>

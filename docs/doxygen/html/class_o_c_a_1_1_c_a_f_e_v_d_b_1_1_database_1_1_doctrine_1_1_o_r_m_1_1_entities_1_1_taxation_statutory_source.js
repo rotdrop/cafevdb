@@ -1,5 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source =
 [
+    [ "addInvoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#af41304938fdc63f14ec17e66a6cf6238", null ],
     [ "getCountry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#ad92da151b159c2bdbb64cbe7a4790d1a", null ],
     [ "getHint", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a196e505e5d35b4de917f22ebfed96b9a", null ],
     [ "getInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html#a4a18c0abbf6628848d2c3b8c48fbca19", null ],
