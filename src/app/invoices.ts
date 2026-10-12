@@ -68,6 +68,7 @@ const findByName = ($container: JQuery, name: string) =>
 const iiAmountName = pmeData('InvoiceItems:amount');
 const iiSubjectName = pmeData('InvoiceItems:subject');
 const iDueDateName = pmeData('due_date');
+const iiDueDateName = pmeData('ProjectParticipantFields:due_date');
 
 asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   if (event.template !== template) {
@@ -232,6 +233,11 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
               $dueDateInput.val(formatDate($selectedReceivable!.data('data').dueDate));
               $dueDateInput.addClass('auto-filled');
             }
+            const $itemDueDateInput = findByName($container, iDueDateName);
+            if (!($itemDueDateInput.val()) || $itemDueDateInput.hasClass('auto-filled')) {
+              $itemDueDateInput.val(formatDate($selectedReceivable!.data('data').dueDate));
+              $itemDueDateInput.addClass('auto-filled');
+            }
           }
         } else {
           $receivableOptions.prop('disabled', false);
@@ -272,6 +278,11 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
           if (!($dueDateInput.val()) || $dueDateInput.hasClass('auto-filled')) {
             $dueDateInput.val(formatDate($receivableOption.data('data').dueDate));
             $dueDateInput.addClass('auto-filled');
+          }
+          const $itemDueDateInput = findByName($container, iiDueDateName);
+          if (!($itemDueDateInput.val()) || $itemDueDateInput.hasClass('auto-filled')) {
+            $itemDueDateInput.val(formatDate($receivableOption.data('data').dueDate));
+            $itemDueDateInput.addClass('auto-filled');
           }
           const $subjectInput = findByName($container, iiSubjectName);
           if ($subjectInput.val() === '' || $subjectInput.hasClass('auto-filled')) {
