@@ -1353,7 +1353,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               if (empty($entity)) {
                 throw new Exception($this->l->t(
                   'Unable to find entity in table %s given id %s',
-                  [ $table, print_r($this->flatIdentifier($entityClass, $entityId), true) ]));
+                  [ $table, print_r($this->flattenIdentifier($entityClass, $entityId), true) ]));
               }
               if (method_exists($entity, 'setDeleted')) {
                 $entity['deleted'] = null;

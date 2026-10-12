@@ -691,12 +691,13 @@ WHERE dsf.id IS NOT NULL',
       [
         'name' => $this->l->t('Debitor'),
         'css' => [ 'postfix' => [ 'debitor-id', CssClasses::ALLOW_EMPTY ], ],
-        'select|AFL' => 'D',
+        // 'select|AFL' => 'D',
+        'select' => 'D',
         'input' => 'M',
-        'input|C' => 'R',
-        'select|CVD' => 'T',
+        // 'input|C' => 'R',
+        // 'select|CVD' => 'T',
         // 'select|C' => null, // 'T',
-        'sql' => static::musicianPublicNameSql(),
+        // 'sql' => static::musicianPublicNameSql(),
         // 'default|C' => $this->musicianId, // ???
         'values' => [
           'description' => [
@@ -1803,11 +1804,11 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$amountIndex]['input'] = 'HR';
           $pme->fdd[$invoiceItemsAmountIndex]['input'] = 'M';
           $pme->fdd[$balancedDateIndex]['input'] = 'HR';
-          $pme->fdd[$invoiceDateIndex]['input'] = 'VR';
+          $pme->fdd[$invoiceDateIndex]['input'] = 'R';
           $pme->fdd[$invoiceDateIndex]['sql'] = '$column';
-          $pme->fdd[$dueDateIndex]['input'] = 'VR';
+          $pme->fdd[$dueDateIndex]['input'] = 'R';
           $pme->fdd[$dueDateIndex]['sql'] = '$column';
-          $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'VR';
+          $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'R';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
           $pme->fdd[$debitorIdIndex]['input'] = 'R';
           $pme->fdd[$writtenInvoiceIndex]['input'] = 'HR';
