@@ -1162,7 +1162,7 @@ export default defineStore(storeId, () => {
         currentHistoryState.value.replacePath(entry.path);
       }
       // bypass routing
-      const windowHistoryState = { ...currentHistoryState.value.state };
+      const windowHistoryState = JSON.parse(JSON.stringify(currentHistoryState.value.state));
       const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
       logger.debug('REPLACE HISTORY STATE', {
         windowHistoryState: { ...(window?.history?.state ?? {}) },
