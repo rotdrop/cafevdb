@@ -369,7 +369,7 @@ class MailMergeController extends Controller
             $paymentData = [];
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-          $recipientData = EntityArrayAdapter::create($recipient, depth: 2);
+          $recipientData = EntityArrayAdapter::create($recipient, depth: 2)->jsonSerialize();
           if ($recipientData['addressSupplement'] == 'c/o ' . $recipientData['name']) {
             // clear the name and just keep the addressSupplement
             unset($recipientData['name']);
