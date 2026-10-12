@@ -2163,8 +2163,10 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
 
   // view/change/copy/delete buttons lead to a a popup
   if (form.find('input[name="templateRenderer"]').length > 0) {
-    const submitSel = `${formSel} input[class$="navigation"]:submit`
-      + ` ${formSel} input.${pmeToken('add')}:submit`;
+    const submitSel = [
+      `${formSel} input[class$="navigation"]:submit`,
+      ` ${formSel} input.${pmeToken('add')}:submit`,
+    ].join(',');
 
     $container
       .off('click', submitSel)
