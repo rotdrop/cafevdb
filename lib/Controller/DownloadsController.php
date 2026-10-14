@@ -38,11 +38,14 @@ use OCA\CAFEVDB\Common\Util;
  * AJAX end-points for download requests independent from the cloud
  * file-system.
  */
+#[TSAttributes\TypeScript]
 class DownloadsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT = 'download';
 
   public const SECTION_DATABASE = 'database';
   public const SECTION_FILECACHE = 'filecache';
@@ -88,7 +91,7 @@ class DownloadsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/download/{section}/{object}',
+    url: '/' . self::END_POINT . '/{section}/{object}',
     requirements: [ 'section' => '^(?!pdf).*$' ], // why?
   )]
   public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
@@ -173,7 +176,7 @@ class DownloadsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'GET',
-    url: '/download/{section}/{object}',
+    url: '/' . self::END_POINT . '/{section}/{object}',
     requirements: [ 'section' => '^(?!pdf).*$' ], // why?
   )]
   public function get(string $section, string $object, array $items = [], ?string $fileName = null)
