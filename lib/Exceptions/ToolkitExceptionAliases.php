@@ -30,4 +30,5 @@ class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseEntityNotFoundException::cla
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseException::class, DatabaseException::class);
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseMissingIdentifierException::class, DatabaseMissingIdentifierException::class);
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\EntitySerializationException::class, EntitySerializationException::class);
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class, EnduserNotificationException::class);
 // @codeCoverageIgnoreEnd
