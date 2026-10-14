@@ -68,9 +68,9 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   }
 
   /** @return null|string */
-  public function getName():?string
+  public function getName(): ?string
   {
-    return $this->name;
+    return $this->name ?? null;
   }
 
   /**
@@ -141,7 +141,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
    */
   public function getPathName():string
   {
-    $path = $this->name;
+    $path = $this->name ?? '';
     if (!$this->isRootFolder()) {
       $path = $this->parent->getPathName() . Constants::PATH_SEP . $path;
     }
