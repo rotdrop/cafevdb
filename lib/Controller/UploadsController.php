@@ -108,7 +108,7 @@ class UploadsController extends Controller
     int $ownerId = 0,
     string $uploadFolder = AppStorage::UPLOAD_FOLDER
   ): Http\DataResponse|Http\JsonResponse {
-    $uploadMOde = EnumFileUploadMode::get($uploadMOde);
+    $uploadMode = EnumFileUploadMode::get($uploadMode);
     $storage = EnumFileStorageBackend::get($storage);
     if ($uploadMode == EnumFileUploadMode::MOVE) {
       if (empty($originalFileName)) {
