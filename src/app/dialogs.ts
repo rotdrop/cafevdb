@@ -32,8 +32,10 @@
 import type { IDialogButton, IFilePickerButton } from '@nextcloud/dialogs';
 import type { INode } from '@nextcloud/files';
 
+import IconMove from '@mdi/svg/svg/folder-move.svg';
+import IconCopy from '@mdi/svg/svg/folder-multiple.svg';
 import { FileType } from '@nextcloud/files';
-import { translate as t } from '@nextcloud/l10n';
+import { translatePlural as n, translate as t } from '@nextcloud/l10n';
 import { basename } from 'path';
 import { appName } from '../config.ts';
 import { hasProperty } from '../toolkit/types/type-traits.ts';
@@ -126,7 +128,7 @@ const message = ({
   dialogClasses,
 }: LegacyMessageParameters) => {
 
-  console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml, dialogClasses });
+  console.trace('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml, dialogClasses });
 
   const cssClasses = [appNameTag, 'legacy-dialog', dialogType];
   if (dialogClasses) {
@@ -307,13 +309,23 @@ const debugPopup = (data: unknown, callback?: () => void) => {
   }
 };
 
-export interface LegacyFilePickerParameters {
+export enum FilePickerType {
+  Choose = 1,
+  Move = 2,
+  Copy = 3,
+  CopyMove = 4,
+}
+
+export interface LegacyFilePickerParameters<Multiple extends true|undefined = undefined, PickerType extends FilePickerType = FilePickerType.Choose> {
   title: string;
-  callback: (paths: string|string[]) => void;
-  multiple?: boolean;
-  modal?: boolean; // unused
+  callback: Multiple extends true
+    ? (paths: string[], nodes: INode[], type: PickerType extends FilePickerType.Choose ? FilePickerType.Choose : FilePickerType.Copy|FilePickerType.Move) => void|Promise<void>
+    : (path: string, node: INode, type: PickerType extends FilePickerType.Choose ? FilePickerType.Choose : FilePickerType.Copy|FilePickerType.Move) => void|Promise<void>;
+  multiple?: Multiple;
   allowDirectories?: boolean;
+  target?: string;
   startPath?: string;
+  type?: PickerType;
 }
 
 const getNodePath = (node: INode) => {
@@ -326,31 +338,91 @@ const getNodePath = (node: INode) => {
   return path;
 };
 
-const filePicker = (options: LegacyFilePickerParameters) => {
+const filePicker = async <Multiple extends true|undefined = undefined, PickerType extends FilePickerType = FilePickerType.Choose>(
+  options: LegacyFilePickerParameters<Multiple, PickerType>,
+) => {
   const builder = getFilePickerBuilder(options.title);
 
-  return builder.setButtonFactory((nodes, path) => {
-    const [node] = nodes;
-    const target = node?.displayname || node?.basename || basename(path);
+  try {
+    return await builder.setButtonFactory((nodes, path) => {
+      const buttons: IFilePickerButton[] = [];
+      const [node] = nodes;
+      const target = node?.displayname || node?.basename || basename(path);
+      const type = options.type ?? FilePickerType.Choose;
 
-    const isDirectory = nodes.length === 0
-      || nodes.reduce((result: boolean, node: INode) => result || node.type === FileType.Folder, false);
-    const result: IFilePickerButton[] = [{
-      callback: options.multiple
-        ? (nodes) => options.callback(nodes.map(getNodePath))
-        : (nodes) => options.callback(getNodePath(nodes[0])),
-      label: node && !options.multiple ? t('core', 'Choose {file}', { file: target }) : t('core', 'Choose'),
-      variant: 'primary' as const,
-      disabled: !options.allowDirectories && isDirectory,
-    }];
-    console.info('BUTTON FACTORY', { result, nodes, path, isDirectory, options });
-    return result;
-  })
-    .allowDirectories(options.allowDirectories === true)
-    .setMultiSelect(options.multiple === true)
-    .startAt(options.startPath || '')
-    .build()
-    .pick();
+      const isDirectory = nodes.length === 0
+        || nodes.reduce((result: boolean, node: INode) => result || node.type === FileType.Folder, false);
+
+      if (type === FilePickerType.Choose) {
+        let label = t('appName', 'Choose');
+        if (nodes.length === 1) {
+          label = t('appName', 'Choose {file}', { file: target });
+        } else if (options.multiple) {
+          label = n('appName', 'Choose %n file', 'Choose %n files', nodes.length);
+        }
+        buttons.push({
+          callback: options.multiple === true
+            // @ts-expect-error 2345 Do not understand why ...
+            ? (nodes: INode[]) => options.callback(nodes.map(getNodePath), nodes, FilePickerType.Choose)
+            // @ts-expect-error 2345 Do not understand why ...
+            : (nodes: INode[]) => options.callback(getNodePath(nodes[0]), nodes[0], FilePickerType.Choose),
+          label,
+          variant: 'primary',
+          disabled: !options.allowDirectories && isDirectory,
+        });
+      } else {
+        if (type === FilePickerType.CopyMove || type === FilePickerType.Copy) {
+          buttons.push({
+            callback: options.multiple === true
+              // @ts-expect-error 2345 Do not understand why ...
+              ? (nodes: INode[]) => options.callback(nodes.map(getNodePath), nodes, FilePickerType.Copy)
+              // @ts-expect-error 2345 Do not understand why ...
+              : (nodes: INode[]) => options.callback(getNodePath(nodes[0]), nodes[0], FilePickerType.Copy),
+            label: target
+              ? (options.target
+                ? t('appName', 'Copy {target}', { target })
+                : t('appName', 'Copy to {target}', { target }))
+              : t('appName', 'Copy'),
+            icon: IconCopy,
+            variant: type === FilePickerType.Copy ? 'primary' : 'secondary',
+            disabled: !options.allowDirectories && isDirectory,
+          });
+        }
+        if (type === FilePickerType.CopyMove || type === FilePickerType.Move) {
+
+          buttons.push({
+            callback: options.multiple === true
+              // @ts-expect-error 2345 Do not understand why ...
+              ? (nodes: INode[]) => options.callback(nodes.map(getNodePath), nodes, FilePickerType.Move)
+              // @ts-expect-error 2345 Do not understand why ...
+              : (nodes: INode[]) => options.callback(getNodePath(nodes[0]), nodes[0], FilePickerType.Move),
+            label: target
+              ? (options.target
+                ? t('appName', 'Move {target}', { target })
+                : t('appName', 'Move to {target}', { target }))
+              : t('appName', 'Move'),
+            icon: IconMove,
+            variant: 'primary', // move is always primary - also on copy-move
+            disabled: !options.allowDirectories && isDirectory,
+          });
+        }
+      }
+      console.info('BUTTON FACTORY', { buttons, nodes, path, isDirectory, options });
+      return buttons;
+    })
+      .allowDirectories(options.allowDirectories === true)
+      .setMultiSelect(options.multiple === true)
+      .startAt(options.startPath || '')
+      .build()
+      .pick();
+  } catch (error) {
+    if (error instanceof Error && error.message === 'FilePicker: No nodes selected') {
+      // this is not an error
+      console.debug('FILEPICKER: user did not select any files');
+      return;
+    }
+    throw error;
+  }
 };
 
 const attachDialogHandlers = () => {
