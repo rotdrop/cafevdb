@@ -30,7 +30,7 @@ import type { TemplateParameters } from '../components/oc-template/oc-template-p
 
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
-import { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
+import { EnumFileUploadMode, UploadsController } from '../../build/ts-types/php-modules/Controller.ts';
 import { appName } from '../config.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import * as Ajax from './ajax.ts';
@@ -65,7 +65,7 @@ const defaultOptions: Required<CloudFilePickerParameters> = {
     cleanup();
   },
   filePickerCaption: t(appName, 'Select a file from the cloud'),
-  stashUrl: 'upload/stash',
+  stashUrl: UploadsController.END_POINT_STASH,
   multiple: false,
   modal: false,
   initialCloudFolder: '',

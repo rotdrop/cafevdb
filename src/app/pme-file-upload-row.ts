@@ -32,6 +32,7 @@ import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
 import md5 from 'blueimp-md5';
+import { UploadsController } from '../../build/ts-types/php-modules/Controller.ts';
 import {
   END_POINT_FILES,
   FILE_ACTION_DELETE,
@@ -56,7 +57,7 @@ import { disabledCssClass } from 'variables.module.scss';
 const defaultUploadUrls = {
   upload: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_UPLOAD}`,
   delete: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_DELETE}`,
-  stash: 'upload/stash',
+  stash: UploadsController.END_POINT_STASH,
 };
 
 const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
