@@ -1886,6 +1886,11 @@ Search.appendIndex(
             "summary": "Html\u0020to\u0020text\u0020converter.\u0020Try\u0020to\u0020use\u0020\u0022lynx\u0022\u0020as\u0020that\u0020seems\u0020to\u0020be\u0020the\u0020only\nhtml\u002Dto\u002Dtext\u0020tool\u0020which\u0020has\u0020sort\u002Dof\u0020support\u0020for\u0020HTML\u0020tables.",
             "url": "classes/OCA-CAFEVDB-Common-Html2Text.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Common\\Html2Text\u003A\u003AnormalizeSpaces\u0028\u0029",
+            "name": "normalizeSpaces",
+            "summary": "Trim\u0020the\u0020string\u0020and\u0020remove\u0020spaces\u0020followed\u0020by\u0020a\u0020newline\u0020character.",
+            "url": "classes/OCA-CAFEVDB-Common-Html2Text.html#method_normalizeSpaces"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\Html2Text\u003A\u003Aconvert\u0028\u0029",
             "name": "convert",
             "summary": "",
@@ -3870,6 +3875,11 @@ Search.appendIndex(
             "name": "get",
             "summary": "Fetch\u0020something\u0020and\u0020return\u0020it\u0020as\u0020download.",
             "url": "classes/OCA-CAFEVDB-Controller-DownloadsController.html#method_get"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DownloadsController\u003A\u003AEND_POINT",
+            "name": "END_POINT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DownloadsController.html#constant_END_POINT"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DownloadsController\u003A\u003ASECTION_DATABASE",
             "name": "SECTION_DATABASE",
@@ -9941,11 +9951,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-UploadsController.html#constant_UPLOAD_KEY"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\UploadsController\u003A\u003A\u0024configService",
-            "name": "configService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-UploadsController.html#property_configService"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\UploadsController\u003A\u003A\u0024appStorage",
             "name": "appStorage",
             "summary": "",
@@ -9955,6 +9960,16 @@ Search.appendIndex(
             "name": "userStorage",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-UploadsController.html#property_userStorage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\UploadsController\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-UploadsController.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\UploadsController\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-UploadsController.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\ValidationController",
             "name": "ValidationController",
@@ -26760,46 +26775,6 @@ Search.appendIndex(
             "name": "EncryptionKeyException",
             "summary": "Base\u0020class\u0020for\u0020other\u0020exceptions.",
             "url": "classes/OCA-CAFEVDB-Exceptions-EncryptionKeyException.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException",
-            "name": "EnduserNotificationException",
-            "summary": "This\u0020exception\u0020should\u0020provide\u0020an\u0020error\u0020message\u0020which\u0020informs\u0020an\nend\u002Duser\u0020about\u0020an\u0020error.",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#method___construct"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003AsetHttpStatusCode\u0028\u0029",
-            "name": "setHttpStatusCode",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#method_setHttpStatusCode"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003AgetHttpStatusCode\u0028\u0029",
-            "name": "getHttpStatusCode",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#method_getHttpStatusCode"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003AsetContext\u0028\u0029",
-            "name": "setContext",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#method_setContext"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003AgetContext\u0028\u0029",
-            "name": "getContext",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#method_getContext"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024httpStatusCode",
-            "name": "httpStatusCode",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#property_httpStatusCode"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\EnduserNotificationException\u003A\u003A\u0024context",
-            "name": "context",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html#property_context"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\Exception",
             "name": "Exception",
@@ -45471,11 +45446,6 @@ Search.appendIndex(
             "summary": "Return\u0020a\u0020system\u002Ddirectory\u0020path\u0020to\u0020temporary\u0020storage.",
             "url": "classes/OCA-CAFEVDB-Storage-AppStorage.html#method_getTemporaryDirectory"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\AppStorage\u003A\u003APATH_SEP",
-            "name": "PATH_SEP",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Storage-AppStorage.html#constant_PATH_SEP"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\AppStorage\u003A\u003AUPLOAD_FOLDER",
             "name": "UPLOAD_FOLDER",
             "summary": "",
@@ -46913,7 +46883,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AgetDatabaseFile\u0028\u0029",
             "name": "getDatabaseFile",
-            "summary": "Return\u0020the\u0020underline\u0020storage\u0020entity\u0020if\u0020the\u0020cloud\u002Dpath\u0020refers\u0020to\u0020a\ndb\u002Dbacked\u0020cloud\u002Dfile.",
+            "summary": "Return\u0020the\u0020underlying\u0020storage\u0020entity\u0020if\u0020the\u0020cloud\u002Dpath\u0020refers\u0020to\u0020a\ndb\u002Dbacked\u0020cloud\u002Dfile.",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_getDatabaseFile"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AgetDownloadLink\u0028\u0029",
@@ -55916,6 +55886,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-GenericUndoableTest.html#constant_DO_RESULT"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\Html2TextTest",
+            "name": "Html2TextTest",
+            "summary": "Test\u0020the\u0020Html2Text\u0020class",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\Html2TextTest\u003A\u003AtestConversion\u0028\u0029",
+            "name": "testConversion",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testConversion"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\Html2TextTest\u003A\u003AHTML_TEXTS",
+            "name": "HTML_TEXTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#constant_HTML_TEXTS"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Common\\NumberFormatterTest",
             "name": "NumberFormatterTest",
             "summary": "Test\u0020aspects\u0020of\u0020the\u0020NumberFormatter\u0020class.",
@@ -57456,6 +57441,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadFileMetaDataTrait.html#method_getUploadFileMetaData"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\UploadModeTestTest",
+            "name": "UploadModeTestTest",
+            "summary": "Test\u0020consistency\u0020of\u0020the\u0020enum\u0020with\u0020constants\u0020from\u0020ConfigConstants.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadModeTestTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\UploadModeTestTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadModeTestTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\UploadModeTestTest\u003A\u003AtestUploadModeTypeCheck\u0028\u0029",
+            "name": "testUploadModeTypeCheck",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadModeTestTest.html#method_testUploadModeTypeCheck"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\UploadModeTestTest\u003A\u003ADTO_CLASS",
+            "name": "DTO_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadModeTestTest.html#constant_DTO_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\DTO\\UploadModeTestTest\u003A\u003A\u0024dto",
+            "name": "dto",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-DTO-UploadModeTestTest.html#property_dto"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\EmailFormControllerTest",
             "name": "EmailFormControllerTest",
             "summary": "",
@@ -58411,11 +58421,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_controller"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024timeFactory",
-            "name": "timeFactory",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_timeFactory"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024field",
             "name": "field",
             "summary": "",
@@ -58440,11 +58445,6 @@ Search.appendIndex(
             "name": "fieldId",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_fieldId"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024now",
-            "name": "now",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectParticipantFieldsControllerTest.html#property_now"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ProjectParticipantFieldsControllerTest\u003A\u003A\u0024postData",
             "name": "postData",
@@ -58875,6 +58875,156 @@ Search.appendIndex(
             "name": "postData",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-ToolTipsControllerTest.html#property_postData"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest",
+            "name": "UploadsControllerTest",
+            "summary": "Test\u0020aspects\u0020of\u0020the\u0020UploadsController.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003Asetup\u0028\u0029",
+            "name": "setup",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_setup"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtearDown\u0028\u0029",
+            "name": "tearDown",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_tearDown"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashDefault\u0028\u0029",
+            "name": "testStashDefault",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashDefault"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestObtainCloudFilesStashModes\u0028\u0029",
+            "name": "testObtainCloudFilesStashModes",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testObtainCloudFilesStashModes"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashCloudFilesWithoutFiles\u0028\u0029",
+            "name": "testStashCloudFilesWithoutFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashCloudFilesWithoutFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashCloudFilesAsCopy\u0028\u0029",
+            "name": "testStashCloudFilesAsCopy",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashCloudFilesAsCopy"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashCloudFilesAsMove\u0028\u0029",
+            "name": "testStashCloudFilesAsMove",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashCloudFilesAsMove"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashCloudFilesAsLink\u0028\u0029",
+            "name": "testStashCloudFilesAsLink",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashCloudFilesAsLink"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashDbFiles\u0028\u0029",
+            "name": "testStashDbFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashDbFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashDeviceFilesNoFiles\u0028\u0029",
+            "name": "testStashDeviceFilesNoFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashDeviceFilesNoFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashDeviceFiles\u0028\u0029",
+            "name": "testStashDeviceFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashDeviceFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestStashDeviceFilesAsMoveOrLink\u0028\u0029",
+            "name": "testStashDeviceFilesAsMoveOrLink",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testStashDeviceFilesAsMoveOrLink"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AtestMoveStashedFileToCloud\u0028\u0029",
+            "name": "testMoveStashedFileToCloud",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#method_testMoveStashedFileToCloud"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003ACONTROLLER_CLASS",
+            "name": "CONTROLLER_CLASS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_CONTROLLER_CLASS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AEXPECTED_ROUTES",
+            "name": "EXPECTED_ROUTES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_EXPECTED_ROUTES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003ABASE_NAME",
+            "name": "BASE_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_BASE_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AFILE_CONTENT",
+            "name": "FILE_CONTENT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_FILE_CONTENT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AMOVE_DESTINATION",
+            "name": "MOVE_DESTINATION",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_MOVE_DESTINATION"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003AORIGINAL_FILE_NAME",
+            "name": "ORIGINAL_FILE_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#constant_ORIGINAL_FILE_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024fileMimeType",
+            "name": "fileMimeType",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_fileMimeType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024mockProvider",
+            "name": "mockProvider",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_mockProvider"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024controller",
+            "name": "controller",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_controller"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024tempManager",
+            "name": "tempManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_tempManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024urlGenerator",
+            "name": "urlGenerator",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_urlGenerator"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024postData",
+            "name": "postData",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_postData"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024files",
+            "name": "files",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_files"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024server",
+            "name": "server",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_server"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\UploadsControllerTest\u003A\u003A\u0024appName",
+            "name": "appName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Controller-UploadsControllerTest.html#property_appName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Controller\\ValidationControllerTest",
             "name": "ValidationControllerTest",
@@ -59890,111 +60040,6 @@ Search.appendIndex(
             "name": "l10n",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-EnumMemberSubstitutionKeyTest.html#property_l10n"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest",
-            "name": "DatabaseEntityExceptionTest",
-            "summary": "Test\u0020the\u0020Toolkit\\Exceptions\\DatabaseEntityException\u0020class\u0020and\u0020some\u0020of\u0020its\u0020child\nclasses.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityException\u0028\u0029",
-            "name": "testDatabaseEntityException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityNotFoundException\u0028\u0029",
-            "name": "testDatabaseEntityNotFoundException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityNotFoundException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityNotUniqueException\u0028\u0029",
-            "name": "testDatabaseEntityNotUniqueException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityNotUniqueException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseMissingIdentifierException\u0028\u0029",
-            "name": "testDatabaseMissingIdentifierException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseMissingIdentifierException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityInconsistenValueException\u0028\u0029",
-            "name": "testDatabaseEntityInconsistenValueException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityInconsistenValueException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AMESSAGE",
-            "name": "MESSAGE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_MESSAGE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003ACODE",
-            "name": "CODE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_CODE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003APREVIOUS",
-            "name": "PREVIOUS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_PREVIOUS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AENTITY_NAME",
-            "name": "ENTITY_NAME",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_ENTITY_NAME"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AIDENTIFIER",
-            "name": "IDENTIFIER",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_IDENTIFIER"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AFIELD",
-            "name": "FIELD",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_FIELD"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AEXPECTED",
-            "name": "EXPECTED",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_EXPECTED"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AACTUAL",
-            "name": "ACTUAL",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-DatabaseEntityExceptionTest.html#constant_ACTUAL"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest",
-            "name": "EnduserNotificationExceptionTest",
-            "summary": "Test\u0020the\u0020Exceptions\\DatabaseEntityException\u0020class\u0020and\u0020some\u0020of\u0020its\u0020child\nclasses.",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AtestEnduserNotificationException\u0028\u0029",
-            "name": "testEnduserNotificationException",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#method_testEnduserNotificationException"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AMESSAGE",
-            "name": "MESSAGE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#constant_MESSAGE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003ACODE",
-            "name": "CODE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#constant_CODE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003APREVIOUS",
-            "name": "PREVIOUS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#constant_PREVIOUS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AHTTP_STATUS",
-            "name": "HTTP_STATUS",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#constant_HTTP_STATUS"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003ACONTEXT",
-            "name": "CONTEXT",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Exceptions-EnduserNotificationExceptionTest.html#constant_CONTEXT"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Exceptions\\UndoableRunQueueExceptionTest",
             "name": "UndoableRunQueueExceptionTest",
@@ -63331,6 +63376,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-GetAppStorageTrait.html#property_appData"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\GetAppStorageTrait\u003A\u003A\u0024mimeTypeDetector",
+            "name": "mimeTypeDetector",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-GetAppStorageTrait.html#property_mimeTypeDetector"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\GetAppStorageTrait\u003A\u003A\u0024mockProvider",
             "name": "mockProvider",
             "summary": "",
@@ -63361,6 +63411,11 @@ Search.appendIndex(
             "summary": "Fabricate\u0020a\u0020stub\u0020or\u0020mock\u0020intercepting\u0020file\u0020system\u0020access.",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003AsetNodePermissions\u0028\u0029",
+            "name": "setNodePermissions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003AgetUserStorageStub\u0028\u0029",
             "name": "getUserStorageStub",
             "summary": "Generate\u0020a\u0020stub\u0020or\u0020mock\u0020for\u0020the\u0020UserStorage\u0020class.",
@@ -63386,15 +63441,30 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_urlGenerator"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024fileNodes",
-            "name": "fileNodes",
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024mimeTypeDetector",
+            "name": "mimeTypeDetector",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes"
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024fileSystemNodes",
+            "name": "fileSystemNodes",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024nodePermissions",
+            "name": "nodePermissions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024nodeId",
             "name": "nodeId",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Storage\\MockUserStorageTrait\u003A\u003A\u0024databaseDirEntries",
+            "name": "databaseDirEntries",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Common\\DecimalRationalMonetaryTest",
             "name": "DecimalRationalMonetaryTest",
@@ -63956,6 +64026,111 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-DTO-AbstractDTOTest.html#property_dto"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest",
+            "name": "DatabaseEntityExceptionTest",
+            "summary": "Test\u0020the\u0020Toolkit\\Exceptions\\DatabaseEntityException\u0020class\u0020and\u0020some\u0020of\u0020its\u0020child\nclasses.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityException\u0028\u0029",
+            "name": "testDatabaseEntityException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityNotFoundException\u0028\u0029",
+            "name": "testDatabaseEntityNotFoundException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityNotFoundException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityNotUniqueException\u0028\u0029",
+            "name": "testDatabaseEntityNotUniqueException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityNotUniqueException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseMissingIdentifierException\u0028\u0029",
+            "name": "testDatabaseMissingIdentifierException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseMissingIdentifierException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AtestDatabaseEntityInconsistenValueException\u0028\u0029",
+            "name": "testDatabaseEntityInconsistenValueException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#method_testDatabaseEntityInconsistenValueException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AMESSAGE",
+            "name": "MESSAGE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_MESSAGE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003ACODE",
+            "name": "CODE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_CODE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003APREVIOUS",
+            "name": "PREVIOUS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_PREVIOUS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AENTITY_NAME",
+            "name": "ENTITY_NAME",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_ENTITY_NAME"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AIDENTIFIER",
+            "name": "IDENTIFIER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_IDENTIFIER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AFIELD",
+            "name": "FIELD",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_FIELD"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AEXPECTED",
+            "name": "EXPECTED",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_EXPECTED"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\DatabaseEntityExceptionTest\u003A\u003AACTUAL",
+            "name": "ACTUAL",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-DatabaseEntityExceptionTest.html#constant_ACTUAL"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest",
+            "name": "EnduserNotificationExceptionTest",
+            "summary": "Test\u0020the\u0020Exceptions\\DatabaseEntityException\u0020class\u0020and\u0020some\u0020of\u0020its\u0020child\nclasses.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AtestEnduserNotificationException\u0028\u0029",
+            "name": "testEnduserNotificationException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#method_testEnduserNotificationException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AMESSAGE",
+            "name": "MESSAGE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#constant_MESSAGE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003ACODE",
+            "name": "CODE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#constant_CODE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003APREVIOUS",
+            "name": "PREVIOUS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#constant_PREVIOUS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003AHTTP_STATUS",
+            "name": "HTTP_STATUS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#constant_HTTP_STATUS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions\\EnduserNotificationExceptionTest\u003A\u003ACONTEXT",
+            "name": "CONTEXT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Exceptions-EnduserNotificationExceptionTest.html#constant_CONTEXT"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Service\\AppInfoServiceTest",
             "name": "AppInfoServiceTest",
             "summary": "Test\u0020consistency\u0020of\u0020the\u0020enum\u0020with\u0020constants\u0020from\u0020ConfigConstants",
@@ -64060,6 +64235,16 @@ Search.appendIndex(
             "name": "TWO",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-IntEnumExample.html#enumcase_TWO"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits\\CheckGrumbleTrait",
+            "name": "CheckGrumbleTrait",
+            "summary": "Check\u0020that\u0020a\u0020Http\\DataResponse\u0020is\u0020the\u0020result\u0020of\u0020ResponseTrait\u003A\u003Agrumble\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-CheckGrumbleTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits\\CheckGrumbleTrait\u003A\u003AensureGrumbleResponse\u0028\u0029",
+            "name": "ensureGrumbleResponse",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Traits-CheckGrumbleTrait.html#method_ensureGrumbleResponse"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Traits\\TestClass",
             "name": "TestClass",
@@ -65040,6 +65225,11 @@ Search.appendIndex(
             "name": "DTO",
             "summary": "",
             "url": "namespaces/oca-cafevdb-tests-unit-toolkit-dto.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Exceptions",
+            "name": "Exceptions",
+            "summary": "",
+            "url": "namespaces/oca-cafevdb-tests-unit-toolkit-exceptions.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Tests\\Unit\\Toolkit\\Service",
             "name": "Service",

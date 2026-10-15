@@ -14,6 +14,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit =
       [ "getAppDataStub", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#ab198ac6d35f74f98e531f49b00c8bed6", null ],
       [ "getAppStorage", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#a2bb49eb86872b64c2cd5851a970240f6", null ],
       [ "getUserStorageStub", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#a845e525c5514bd8afd0ed507e2cad62c", null ],
+      [ "setNodePermissions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#afd7831104ee74a484d5ca9ddb8fd355d", null ],
       [ "GetAppStorageTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#a5143b88c18117a4d6578922e36d13823", null ],
       [ "MockUserStorageTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html#a062e800b77258f42e262ee5d270312cc", null ]
     ] ],
@@ -28,6 +29,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit =
         ] ]
       ] ],
       [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o" ],
+      [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions" ],
       [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service" ],
       [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits" ]
     ] ],

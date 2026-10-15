@@ -1,5 +1,11 @@
 var NAVTREEINDEX31 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a7516ca30af0db3cdbf9a7739b48ce91d":[8,0,0,0,11,3,0],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a7516ca30af0db3cdbf9a7739b48ce91d":[9,0,0,0,11,3,0],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a81f56964f3bc494fc8dec2050d4814f2":[8,0,0,0,11,3,15],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a81f56964f3bc494fc8dec2050d4814f2":[9,0,0,0,11,3,15],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a830b5c75df72b32396701bc563fbe3c7":[8,0,0,0,11,3,10],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a830b5c75df72b32396701bc563fbe3c7":[9,0,0,0,11,3,10],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a8600d8f62839e755389787d12683bf5a":[8,0,0,0,11,3,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a8600d8f62839e755389787d12683bf5a":[9,0,0,0,11,3,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a92930507b623a17a38dbc9d5ef8efea3":[8,0,0,0,11,3,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX31 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html":[8,0,0,0,12,17],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html":[9,0,0,0,12,17],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html":[8,0,0,0,12,18],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html":[9,0,0,0,12,18],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html":[8,0,0,0,12,19],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html":[9,0,0,0,12,19],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html":[8,0,0,0,12,20],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html":[9,0,0,0,12,20],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html":[8,0,0,0,12,21],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html":[9,0,0,0,12,21]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html":[9,0,0,0,12,18]
 };

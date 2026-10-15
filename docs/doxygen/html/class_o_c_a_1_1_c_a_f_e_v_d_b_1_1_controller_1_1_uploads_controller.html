@@ -136,8 +136,9 @@ Collaboration diagram for UploadsController:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6d0e61e5f7fb9895feaefdaa964422d9" id="r_a6d0e61e5f7fb9895feaefdaa964422d9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6d0e61e5f7fb9895feaefdaa964422d9">__construct</a> ( $appName, IRequest $request, protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a> $configService, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html">AppStorage</a> $appStorage, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a> $userStorage,)</td></tr>
-<tr class="memdesc:a6d0e61e5f7fb9895feaefdaa964422d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">{}  <br /></td></tr>
+<tr class="memitem:ab16682bd2fd0a510a802979d981f0a49" id="r_ab16682bd2fd0a510a802979d981f0a49"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab16682bd2fd0a510a802979d981f0a49">__construct</a> ( $appName, IRequest $request, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html">AppStorage</a> $appStorage, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a> $userStorage, protected IL10N $l, protected LoggerInterface $logger,)</td></tr>
+<tr class="memdesc:ab16682bd2fd0a510a802979d981f0a49"><td class="mdescLeft">&#160;</td><td class="mdescRight">{}  <br /></td></tr>
+<tr class="memitem:a5cd4e239fec2eaf2e1705225475c4848" id="r_a5cd4e239fec2eaf2e1705225475c4848"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a5cd4e239fec2eaf2e1705225475c4848">move</a> (string $stashedFile, string $destinationPath,)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -145,16 +146,15 @@ Data Fields</h2></td></tr>
 <tr class="memitem:aa0f5c8a545678326ba45e1e2d4e66f92" id="r_aa0f5c8a545678326ba45e1e2d4e66f92"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#aa0f5c8a545678326ba45e1e2d4e66f92">END_POINT_STASH</a> = 'upload/stash'</td></tr>
 <tr class="memitem:a5567e626d93aa8ddb6db89931611188a" id="r_a5567e626d93aa8ddb6db89931611188a"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a5567e626d93aa8ddb6db89931611188a">UPLOAD_KEY</a> = 'files'</td></tr>
 <tr class="memitem:a347a4a9ae362d32cace3d16c0f794732" id="r_a347a4a9ae362d32cace3d16c0f794732"><td class="memItemLeft">verb&#160;</td><td class="memItemRight">: 'POST'</td></tr>
-<tr class="memitem:a3ed47f9a04f8979b1d53e70c4ee75070" id="r_a3ed47f9a04f8979b1d53e70c4ee75070"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a3ed47f9a04f8979b1d53e70c4ee75070">url</a>: '/' . self::END_POINT_MOVE . '/{storage}'</td></tr>
-<tr class="memitem:aa4b2e95aac4cbbc699e1d450722b8c26" id="r_aa4b2e95aac4cbbc699e1d450722b8c26"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#aa4b2e95aac4cbbc699e1d450722b8c26">defaults</a>: ['storage' =&gt; EnumFileStorageBackend::CLOUD-&gt;value]</td></tr>
+<tr class="memitem:a3ed47f9a04f8979b1d53e70c4ee75070" id="r_a3ed47f9a04f8979b1d53e70c4ee75070"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a3ed47f9a04f8979b1d53e70c4ee75070">url</a>: Constants::PATH_SEP . self::END_POINT_MOVE . Constants::PATH_SEP . EnumFileStorageBackend::CLOUD-&gt;value</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Simple upload end-points which move uploaded file to and from a temporary location in the app-storage area. </p>
 
-<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00053">53</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00054">54</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6d0e61e5f7fb9895feaefdaa964422d9" name="a6d0e61e5f7fb9895feaefdaa964422d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d0e61e5f7fb9895feaefdaa964422d9">&#9670;&#160;</a></span>__construct()</h2>
+<a id="ab16682bd2fd0a510a802979d981f0a49" name="ab16682bd2fd0a510a802979d981f0a49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab16682bd2fd0a510a802979d981f0a49">&#9670;&#160;</a></span>__construct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -172,17 +172,22 @@ Data Fields</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a></td>          <td class="paramname"><span class="paramname"><em>$configService</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html">AppStorage</a></td>          <td class="paramname"><span class="paramname"><em>$appStorage</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a></td>          <td class="paramname"><span class="paramname"><em>$userStorage</em></span>&#160;)</td>
+          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a></td>          <td class="paramname"><span class="paramname"><em>$userStorage</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">protected IL10N</td>          <td class="paramname"><span class="paramname"><em>$l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">protected LoggerInterface</td>          <td class="paramname"><span class="paramname"><em>$logger</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -190,6 +195,30 @@ Data Fields</h2></td></tr>
 <p>{} </p>
 
 <p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00065">65</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a5cd4e239fec2eaf2e1705225475c4848" name="a5cd4e239fec2eaf2e1705225475c4848"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cd4e239fec2eaf2e1705225475c4848">&#9670;&#160;</a></span>move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">verb move </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$stashedFile</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$destinationPath</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00092">92</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
 
 </div>
 </div>
@@ -207,43 +236,16 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$stashedFile</td><td>The stashed file-name in the app-storage area. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$destinationPath</td><td>DOCME. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$uploadMode</td><td>One of the upload-modes EnumFileUploadMode::COPY, EnumFileUploadMode::MOVE, self::UPLOAD_MODE link. </td></tr>
-    <tr><td class="paramtype">null&#160;|&#160;string</td><td class="paramname">$originalFileName</td><td>The original upload file-name if any. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$storage</td><td>Either 'cloud' or 'db'. Route has default argument 'cloud'. </td></tr>
-    <tr><td class="paramtype">bool</td><td class="paramname">$encrypted</td><td>Whether to store the data encrypted (DB only). </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$ownerId</td><td>Musician-id of owner of encrypted file. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$uploadFolder</td><td>The sub-folder in the app-storage containing the stashed file.</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$stashedFile</td><td>The stashed file-name in the app-storage area.</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$destinationPath</td><td>DOCME.</td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;EnumFileStorageBackend</td><td class="paramname">$storage</td><td></td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;EnumFileUploadMode</td><td class="paramname">$uploadMode</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>DataResponse</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">Exceptions</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<p>\EnduserNotificationException </p>
+<dl class="section return"><dt>Returns</dt><dd>JsonResponse </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00097">97</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
-
-</div>
-</div>
-<a id="aa4b2e95aac4cbbc699e1d450722b8c26" name="aa4b2e95aac4cbbc699e1d450722b8c26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4b2e95aac4cbbc699e1d450722b8c26">&#9670;&#160;</a></span>defaults</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">verb defaults</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00099">99</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00089">89</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
 
 </div>
 </div>
@@ -307,7 +309,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00098">98</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_uploads_controller_8php_source.html#l00090">90</a> of file <a class="el" href="_uploads_controller_8php_source.html">UploadsController.php</a>.</p>
 
 </div>
 </div>

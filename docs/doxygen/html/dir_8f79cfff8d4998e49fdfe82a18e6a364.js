@@ -39,5 +39,6 @@ var dir_8f79cfff8d4998e49fdfe82a18e6a364 =
     [ "TestResponseDTOTrait.php", "_test_response_d_t_o_trait_8php_source.html", null ],
     [ "UploadFileDataResponseDTOTest.php", "_upload_file_data_response_d_t_o_test_8php_source.html", null ],
     [ "UploadFileMetaDataDTOTest.php", "_upload_file_meta_data_d_t_o_test_8php_source.html", null ],
-    [ "UploadFileMetaDataTrait.php", "_upload_file_meta_data_trait_8php_source.html", null ]
+    [ "UploadFileMetaDataTrait.php", "_upload_file_meta_data_trait_8php_source.html", null ],
+    [ "UploadModeTestTest.php", "_upload_mode_test_test_8php_source.html", null ]
 ];

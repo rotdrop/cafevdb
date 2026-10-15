@@ -34,7 +34,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 #[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumFileUploadMode: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
   case COPY = 'copy';
   case LINK = 'link';

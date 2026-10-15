@@ -1,9 +1,5 @@
 var NAVTREEINDEX49 =
 {
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba":[8,0,0,0,20,20,12],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba":[9,0,0,0,20,20,12],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a0718b02fe238b238d780523e64f77126":[8,0,0,0,20,20,14],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a0718b02fe238b238d780523e64f77126":[9,0,0,0,20,20,14],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a0c6f3899138f6f232500179d10f34701":[8,0,0,0,20,20,36],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a0c6f3899138f6f232500179d10f34701":[9,0,0,0,20,20,36],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a11230d1bf7a17b8f89d1f470d32e8089":[8,0,0,0,20,20,25],
@@ -249,5 +245,9 @@ var NAVTREEINDEX49 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html":[8,0,0,0,20,2,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html":[9,0,0,0,20,1,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a2fdc726cf491a9711551d477f0bec150":[8,0,0,0,20,2,6,3],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a2fdc726cf491a9711551d477f0bec150":[9,0,0,0,20,1,6,3]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a2fdc726cf491a9711551d477f0bec150":[9,0,0,0,20,1,6,3],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a8584c592cfad3e648784d448b5729de3":[8,0,0,0,20,2,6,1],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a8584c592cfad3e648784d448b5729de3":[9,0,0,0,20,1,6,1],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a971042fdec9995a3c83348723b015113":[8,0,0,0,20,2,6,2],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a971042fdec9995a3c83348723b015113":[9,0,0,0,20,1,6,2]
 };

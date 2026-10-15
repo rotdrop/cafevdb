@@ -110,6 +110,12 @@
                                     <tr>
                         <td class="phpdocumentor-cell"><a href="reports/deprecated.html#lib/Service/IMAP/IMAPMessage.php">lib/Service/IMAP/IMAPMessage.php</a></td>
                     </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"><a href="reports/deprecated.html#lib/Toolkit/Traits/ResponseTrait.php">lib/Toolkit/Traits/ResponseTrait.php</a></td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"><a href="reports/deprecated.html#php-toolkit/Traits/ResponseTrait.php">php-toolkit/Traits/ResponseTrait.php</a></td>
+                    </tr>
                             </table>
             
                             <a id="lib/Service/IMAP/IMAPMessage.php"></a>
@@ -130,6 +136,52 @@
                                 <td class="phpdocumentor-cell">172</td>
                                 <td class="phpdocumentor-cell"><a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#method_setFlags"><abbr title="\OCA\CAFEVDB\Service\IMAP\IMAPMessage::setFlags()">IMAPMessage::setFlags()</abbr></a></td>
                                 <td class="phpdocumentor-cell"><p>Seems unused</p>
+</td>
+                            </tr>
+                                                            </table>
+                            <a id="lib/Toolkit/Traits/ResponseTrait.php"></a>
+                <h3><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></h3>
+                <table>
+                    <tr>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Element</th>
+                        <th class="phpdocumentor-heading">Reason</th>
+                    </tr>
+                                                                        <tr>
+                                <td class="phpdocumentor-cell">226</td>
+                                <td class="phpdocumentor-cell"><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\ResponseTrait::grumble()">ResponseTrait::grumble()</abbr></a></td>
+                                <td class="phpdocumentor-cell"><p>Controller code should rather throw exceptions and generate
+error responses by means of
+OCA\CAFEVDB\Toolkit\Middleware\ExceptionMiddleware.</p>
+</td>
+                            </tr>
+                                                    <tr>
+                                <td class="phpdocumentor-cell">226</td>
+                                <td class="phpdocumentor-cell"><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\ResponseTrait::grumble()">ResponseTrait::grumble()</abbr></a></td>
+                                <td class="phpdocumentor-cell"><p>controller code should rather throw exceptions and generate error responses by means of ' . ExceptionMiddleware::class</p>
+</td>
+                            </tr>
+                                                            </table>
+                            <a id="php-toolkit/Traits/ResponseTrait.php"></a>
+                <h3><abbr title="php-toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></h3>
+                <table>
+                    <tr>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Element</th>
+                        <th class="phpdocumentor-heading">Reason</th>
+                    </tr>
+                                                                        <tr>
+                                <td class="phpdocumentor-cell">226</td>
+                                <td class="phpdocumentor-cell"><a href="classes/OCA-RotDrop-Toolkit-Traits-ResponseTrait.html#method_grumble"><abbr title="\OCA\RotDrop\Toolkit\Traits\ResponseTrait::grumble()">ResponseTrait::grumble()</abbr></a></td>
+                                <td class="phpdocumentor-cell"><p>Controller code should rather throw exceptions and generate
+error responses by means of
+OCA\RotDrop\Toolkit\Middleware\ExceptionMiddleware.</p>
+</td>
+                            </tr>
+                                                    <tr>
+                                <td class="phpdocumentor-cell">226</td>
+                                <td class="phpdocumentor-cell"><a href="classes/OCA-RotDrop-Toolkit-Traits-ResponseTrait.html#method_grumble"><abbr title="\OCA\RotDrop\Toolkit\Traits\ResponseTrait::grumble()">ResponseTrait::grumble()</abbr></a></td>
+                                <td class="phpdocumentor-cell"><p>controller code should rather throw exceptions and generate error responses by means of ' . ExceptionMiddleware::class</p>
 </td>
                             </tr>
                                                             </table>

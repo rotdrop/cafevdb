@@ -1,5 +1,7 @@
 <map id="convert" name="convert">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,70,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#ab90bcfd5ae9b8d7c6a687386f44bc216" title=" " alt="" coords="118,5,216,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,16,105,18,100,19,70,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,70,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#ab90bcfd5ae9b8d7c6a687386f44bc216" title=" " alt="" coords="129,5,228,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,36,116,29,112,32,71,41"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#a8cce3bddd623b2fa4760c181a1eb77e9" title="Trim the string and remove spaces followed by a newline character." alt="" coords="118,56,239,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="70,47,105,55,100,57,70,52"/>
 </map>

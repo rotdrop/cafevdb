@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>      $key = EnumPersonalSettingsKey::get($parameter);</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown configuration key &quot;%s&quot;.&#39;</span>, $parameter),</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>      );</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      <span class="keywordflow">case</span> EnumPersonalSettingsKey::TOOL_TIPS_ENABLED:</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, [<span class="stringliteral">&#39;flags&#39;</span> =&gt; FILTER_NULL_ON_FAILURE]);</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keywordflow">if</span> ($realValue === <span class="keyword">null</span>) {</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Value &quot;%1$s&quot; for set &quot;%2$s&quot; is not convertible to boolean.&#39;</span>, [$value, $parameter]),</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>          );</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        }</div>
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>      <span class="keywordflow">case</span> EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT:</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        $realValue = filter_var($value, FILTER_VALIDATE_INT, [<span class="stringliteral">&#39;options&#39;</span> =&gt; [<span class="stringliteral">&#39;min_range&#39;</span> =&gt; -1]]);</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">if</span> ($realValue === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Value &quot;%1$s&quot; for set &quot;%2$s&quot; is not in the allowed range.&#39;</span>, [$value, $parameter]),</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>          );</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        }</div>
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>          $debug |= $item[<span class="stringliteral">&#39;value&#39;</span>];</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">if</span> ($debug &gt; ConfigConstants::DEBUG_ALL) {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown debug modes in request: %s$s&#39;</span>, [print_r($debugModes, <span class="keyword">true</span>)]),</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>          );</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        }</div>
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>      <span class="keywordflow">case</span> EnumPersonalSettingsKey::WYSIWYG_EDITOR:</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordflow">if</span> (!isset(ConfigConstants::WYSIWYG_EDITORS[$value])) {</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown WYSIWYG-editor: %s$s&#39;</span>, [ $value ]),</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>          );</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        }</div>
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>      <span class="keywordflow">case</span> EnumPersonalSettingsKey::ENCRYPTION_KEY:</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="comment">// Get data</span></div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keywordflow">if</span> (!is_array($value) || !isset($value[EnumPersonalSettingsKey::ENCRYPTION_KEY-&gt;value]) || !isset($value[<span class="stringliteral">&#39;loginpassword&#39;</span>])) {</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Invalid request data: &quot;%s&quot;.&#39;</span>, [ print_r($value, <span class="keyword">true</span>) ]),</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>          );</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        }</div>
@@ -339,14 +339,14 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="comment">// Re-validate the user</span></div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keywordflow">if</span> ($this-&gt;userManager()-&gt;checkPassword($this-&gt;userId(), $password) === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Invalid password for &quot;%s&quot;.&#39;</span>, [$this-&gt;userId()]),</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>          );</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        }</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="comment">// Then check whether the key is correct</span></div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keywordflow">if</span> (!$this-&gt;encryptionKeyValid($encryptionKey)) {</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Invalid encryption key.&#39;</span>),</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>          );</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        }</div>
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>          $this-&gt;encryptionService()-&gt;setUserEncryptionKey($encryptionKey);</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>          $this-&gt;encryptionService()-&gt;setAppEncryptionKey($encryptionKey);</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to store the app encryption key for user &quot;%s&quot;.&#39;</span>, $this-&gt;userId()),</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            previous: $t,</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>          );</div>
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>      <span class="keywordflow">default</span>:</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    }</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown Request&#39;</span>));</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown Request&#39;</span>));</div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>  }</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span></div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">  #[Attributes\SubAdminRequired]</span></div>
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>              <span class="keywordflow">return</span> (<span class="keyword">new</span> <a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html">DTO</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html">MessagesResponse</a>([$this-&gt;l-&gt;t(<span class="stringliteral">&#39;DB-test passed and DB-password set.&#39;</span>)]))-&gt;response();</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>              $this-&gt;setConfigValue(ConfigConstants::APP_DB_PASSWORD, $oldDbPassword);</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                $this-&gt;l-&gt;t(<span class="stringliteral">&#39;DB-test failed. Check the account settings. Check was performed with the new password.&#39;</span>),</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>              );</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>            }</div>
@@ -440,13 +440,13 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            <span class="keywordflow">if</span> ($this-&gt;configCheckService-&gt;databaseAccessible()) {</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>              <span class="keywordflow">return</span> (<span class="keyword">new</span> <a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html">DTO</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html">MessagesResponse</a>([$this-&gt;l-&gt;t(<span class="stringliteral">&#39;DB-test passed with stored password (empty input ignored).&#39;</span>)]))-&gt;response();</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                $this-&gt;l-&gt;t(<span class="stringliteral">&#39;DB-test failed with stored password (empty input ignored).&#39;</span>),</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>              );</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            }</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>          }</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;DB-test failed with an exception&#39;</span>),</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            previous: $t,</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>          );</div>
@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>          $configValues = $this-&gt;configService-&gt;decryptConfigValues();</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>          $this-&gt;deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to decrypt the config values with the old encryptionkey.&#39;</span>),</div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>            previous: $t,</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>          );</div>
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>            }</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>          }</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>          $this-&gt;deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to take a backup of the decrypted config values.&#39;</span>),</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>            previouws: $t,</div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>          );</div>
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>              $this-&gt;deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);</div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>            }</div>
 <div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>          }</div>
-<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>            message: implode(<span class="charliteral">&#39; &#39;</span>, $messages),</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>            previous: $t,</div>
 <div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>          );</div>
@@ -1017,7 +1017,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>              $this-&gt;setConfigValue($projectParameter.<span class="stringliteral">&#39;Id&#39;</span>, $project[<span class="stringliteral">&#39;id&#39;</span>]);</div>
 <div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>            }</div>
 <div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to create project with name &quot;%s&quot;.&#39;</span>, $projectName),</div>
 <div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>              previous: $t,</div>
 <div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>            );</div>
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>          <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>            $this-&gt;projectService-&gt;sanitizeProject($project);</div>
 <div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to sanitize the project &quot;%s&quot;.&#39;</span>, $projectName),</div>
 <div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>              previous: $t,</div>
 <div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>            );</div>
@@ -1077,7 +1077,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>                            $projectName, $projectId ])),</div>
 <div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>          ];</div>
 <div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failed to remove project &quot;%s&quot;, id &quot;%d&quot;.&#39;</span>, [ $projectName, $projectId ]),</div>
 <div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>            prevous: $t,</div>
 <div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>          );</div>
@@ -1099,7 +1099,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>            $this-&gt;setConfigValue($projectParameter, $project[<span class="stringliteral">&#39;name&#39;</span>]);</div>
 <div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>            $this-&gt;setConfigValue($projectParameter.<span class="stringliteral">&#39;Id&#39;</span>, $project[<span class="stringliteral">&#39;id&#39;</span>]);</div>
 <div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Result of rename is empty without throwing an exception.&#39;</span>));</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Result of rename is empty without throwing an exception.&#39;</span>));</div>
 <div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>          }</div>
 <div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span> </div>
 <div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>          $data = [</div>
@@ -1110,7 +1110,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>            <span class="stringliteral">&#39;projectId&#39;</span> =&gt; $projectId,</div>
 <div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>          ];</div>
 <div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>            message: $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>              <span class="stringliteral">&#39;Failed to rename project &quot;%s&quot;, id &quot;%d&quot; to new name &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>              [ $projectName, $projectId, $newName ],</div>
@@ -1142,28 +1142,28 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>            }</div>
 <div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>          }</div>
 <div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>        }</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>        <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>        <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>          $this-&gt;l-&gt;t(<span class="stringliteral">&#39;SETTING %s NOT YET IMPLEMENTED&#39;</span>, $parameter),</div>
 <div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>        );</div>
 <div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span> </div>
 <div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>      <span class="keywordflow">case</span> ConfigConstants::SHARE_OWNER_PASSWORD_KEY:</div>
 <div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>        $shareOwnerUid = $this-&gt;getConfigValue(ConfigConstants::SHARE_OWNER_KEY);</div>
 <div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>        <span class="keywordflow">if</span> (empty($shareOwnerUid)) {</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Please create the share-owner user first.&#39;</span>));</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Please create the share-owner user first.&#39;</span>));</div>
 <div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>        }</div>
 <div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>        $shareOwner = $this-&gt;user($shareOwnerUid);</div>
 <div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>        <span class="keywordflow">if</span> (empty($shareOwner)) {</div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Share-owner does not seem to exist, please recreate.&#39;</span>));</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Share-owner does not seem to exist, please recreate.&#39;</span>));</div>
 <div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>        }</div>
 <div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>        <span class="keywordflow">if</span> (!$shareOwner-&gt;canChangePassword()) {</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Authentication backend does not support changing passwords.&#39;</span>));</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Authentication backend does not support changing passwords.&#39;</span>));</div>
 <div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>        }</div>
 <div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>        $realValue = trim($value); <span class="comment">// @@todo: check for valid password chars.</span></div>
 <div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        <span class="keywordflow">if</span> (empty($realValue)) {</div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Password must not be empty&#39;</span>));</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Password must not be empty&#39;</span>));</div>
 <div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>        }</div>
 <div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>        <span class="keywordflow">if</span> (!$shareOwner-&gt;setPassword($realValue)) {</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to set password for &quot;%s&quot;.&#39;</span>, [$shareOwnerUid]));</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to set password for &quot;%s&quot;.&#39;</span>, [$shareOwnerUid]));</div>
 <div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>        }</div>
 <div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>        $this-&gt;setConfigValue($parameter, $realValue); <span class="comment">// remember for remote API perhaps</span></div>
 <div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>        <span class="keywordflow">return</span> (<span class="keyword">new</span> <a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html">DTO</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html">MessagesResponse</a>([$this-&gt;l-&gt;t(<span class="stringliteral">&#39;Successfully changed passsword for &quot;%s&quot;.&#39;</span>, [$shareOwnerUid])]))-&gt;response();</div>
@@ -1207,7 +1207,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>          <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>            $this-&gt;userStorage-&gt;get($templatesFolder . $value);</div>
 <div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to find the file &quot;%s&quot;.&#39;</span>, $value),</div>
 <div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>              previous: $t,</div>
 <div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>            );</div>
@@ -1290,7 +1290,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;&quot;%s&quot; does not exist or is unaccessible.&#39;</span>, [$actual]));</div>
 <div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>          }</div>
 <div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failure checking folder &quot;%s&quot;, caught an exception.&#39;</span>, $real),</div>
 <div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>            previous: $t</div>
 <div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>          );</div>
@@ -1308,19 +1308,19 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>      <span class="keywordflow">case</span> ConfigConstants::PROJECTS_FOLDER:</div>
 <div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>        $appGroup = $this-&gt;getConfigValue(ConfigConstants::USER_GROUP_KEY);</div>
 <div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>        <span class="keywordflow">if</span> (empty($appGroup)) {</div>
-<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;App user-group is not set.&#39;</span>),</div>
 <div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>          );</div>
 <div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>        }</div>
 <div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>        $shareOwner = $this-&gt;getConfigValue(ConfigConstants::SHARE_OWNER_KEY);</div>
 <div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>        <span class="keywordflow">if</span> (empty($shareOwner)) {</div>
-<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Share-owner is not set.&#39;</span>),</div>
 <div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>          );</div>
 <div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>        }</div>
 <div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>        $sharedFolder = $this-&gt;getConfigValue(ConfigConstants::SHARED_FOLDER);</div>
 <div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>        <span class="keywordflow">if</span> (empty($sharedFolder)) {</div>
-<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Shared folder is not set.&#39;</span>),</div>
 <div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>          );</div>
 <div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>        }</div>
@@ -1337,12 +1337,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>        $force = filter_var($value[$parameter.<span class="stringliteral">&#39;-force&#39;</span>], FILTER_VALIDATE_BOOLEAN, [<span class="stringliteral">&#39;flags&#39;</span> =&gt; FILTER_NULL_ON_FAILURE]);</div>
 <div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>        $actual = $this-&gt;getConfigValue($parameter);</div>
 <div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>        <span class="keywordflow">if</span> (empty($real)) {</div>
-<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Folder must not be empty.&#39;</span>),</div>
 <div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>          );</div>
 <div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>        }</div>
 <div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>        <span class="keywordflow">if</span> ($actual != $saved) {</div>
-<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Submitted &quot;%s&quot; != &quot;%s&quot; (stored)&#39;</span>, [$saved, $actual]),</div>
 <div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>          );</div>
 <div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>        }</div>
@@ -1362,7 +1362,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>          <span class="keywordflow">case</span> ConfigConstants::TRANSACTIONS_FOLDER:</div>
 <div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>            $prefixFolder = $this-&gt;getConfigValue(ConfigConstants::FINANCE_FOLDER);</div>
 <div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>            <span class="keywordflow">if</span> (empty($prefixFolder)) {</div>
-<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>                $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>                  <span class="stringliteral">&#39;&quot;%s&quot; has to be defined first before defining &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>                  [ ConfigConstants::FINANCE_FOLDER, $parameter ]),</div>
@@ -1418,12 +1418,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>                <span class="stringliteral">&#39;folderLink&#39;</span> =&gt; $folderLink,</div>
 <div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>              ])-&gt;response();</div>
 <div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>                $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failed to create new shared folder &quot;%s&quot;.&#39;</span>, $prefixFolder . $real),</div>
 <div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>              );</div>
 <div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>            }</div>
 <div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>          } elseif ($real != $saved) {</div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>              $saved . <span class="stringliteral">&#39; != &#39;</span> . $real,</div>
 <div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>            );</div>
 <div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>          } elseif ($this-&gt;configCheckService-&gt;checkProjectFolder($prefixFolder . $actual)) {</div>
@@ -1462,12 +1462,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>              <span class="stringliteral">&#39;folderLink&#39;</span> =&gt; $folderLink,</div>
 <div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>            ])-&gt;response();</div>
 <div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;&quot;%s&quot; does not exist or is unaccessible.&#39;</span>, $prefixFolder . $actual),</div>
 <div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>            );</div>
 <div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>          }</div>
 <div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failure checking folder &quot;%s&quot;, caught an exception.&#39;</span>, $prefixFolder . $real),</div>
 <div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>            previous: $t,</div>
 <div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>          );</div>
@@ -1497,7 +1497,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failed to create new shared calendar &quot;%s&quot;.&#39;</span>, [$real]));</div>
 <div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>          }</div>
 <div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failure checking calendar &quot;%s&quot;, caught an exception.&#39;</span>, $real),</div>
 <div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>            previous: $t,</div>
 <div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>          );</div>
@@ -1512,7 +1512,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>          $newId = $this-&gt;configCheckService-&gt;checkSharedAddressBook($uri, $real, $actualId);</div>
 <div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>          <span class="keywordflow">if</span> ($newId &lt;= 0) {</div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failed to create new shared address book &quot;%s&quot;.&#39;</span>, [$real]),</div>
 <div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>            );</div>
 <div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>          }</div>
@@ -1523,7 +1523,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>            value: [<span class="stringliteral">&#39;name&#39;</span> =&gt; $real, <span class="stringliteral">&#39;id&#39;</span> =&gt; $newId],</div>
 <div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>          ))-&gt;response();</div>
 <div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Failure checking address book &quot;%s&quot;, caught an exception.&#39;</span>, $real),</div>
 <div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>            previous: $t,</div>
 <div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>          );</div>
@@ -1542,7 +1542,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>          $message = $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Display name of musicians-addressbook set to &quot;%s&quot;.&#39;</span>, $real);</div>
 <div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>        }</div>
 <div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>        <span class="keywordflow">if</span> ($addressBook-&gt;getDisplayName() != $real) {</div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>            $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>              <span class="stringliteral">&#39;Unable to set display-name of musicians-addressbook to &quot;%s&quot;, it remains at &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>              [ $real, $addressBook-&gt;getDisplayName() ],</div>
@@ -1557,7 +1557,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>      <span class="keywordflow">case</span> ConfigConstants::EVENT_DURATION_KEY:</div>
 <div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>        $realValue = filter_var($value, FILTER_VALIDATE_INT, [<span class="stringliteral">&#39;options&#39;</span> =&gt; [<span class="stringliteral">&#39;min_range&#39;</span> =&gt; 0]]);</div>
 <div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>        <span class="keywordflow">if</span> ($realValue === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Value &quot;%1$s&quot; for set &quot;%2$s&quot; is not in the allowed range.&#39;</span>, [$value, $parameter]));</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Value &quot;%1$s&quot; for set &quot;%2$s&quot; is not in the allowed range.&#39;</span>, [$value, $parameter]));</div>
 <div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        }</div>
 <div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>        $this-&gt;setUserValue($parameter, $realValue);</div>
 <div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>        <span class="keywordflow">return</span> (<span class="keyword">new</span> <a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html">DTO</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html">MessagesResponse</a>([$this-&gt;l-&gt;t(<span class="stringliteral">&#39;Setting %2$s to %1$s minutes.&#39;</span>, [$realValue, $parameter])]))-&gt;response();</div>
@@ -1596,7 +1596,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>            $userConnectorService-&gt;writeUserSqlConfig($cloudUserViewsDatabase, <span class="keyword">delete</span>: <span class="keyword">true</span>);</div>
 <div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>          }</div>
 <div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>            message: $realValue</div>
 <div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>            ? $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to configure the club-member\&#39;s cloud user backend.&#39;</span>)</div>
 <div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>            : $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to disable the club-member\&#39;s cloud user backend.&#39;</span>),</div>
@@ -1622,14 +1622,14 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01558" name="l01558"></a><span class="lineno"> 1558</span>            $userConnectorService-&gt;configureCloudUserBackend();</div>
 <div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>            $userConnectorService-&gt;setCloudUserSubAdmins();</div>
 <div class="line"><a id="l01560" name="l01560"></a><span class="lineno"> 1560</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01562" name="l01562"></a><span class="lineno"> 1562</span>              <span class="comment">// TRANSLATORS: Parameter is the name of a user backend.</span></div>
 <div class="line"><a id="l01563" name="l01563"></a><span class="lineno"> 1563</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to configure &quot;%1$s&quot;.&#39;</span>, CloudUserConnectorService::CLOUD_USER_BACKEND),</div>
 <div class="line"><a id="l01564" name="l01564"></a><span class="lineno"> 1564</span>              previous: $t,</div>
 <div class="line"><a id="l01565" name="l01565"></a><span class="lineno"> 1565</span>            );</div>
 <div class="line"><a id="l01566" name="l01566"></a><span class="lineno"> 1566</span>          }</div>
 <div class="line"><a id="l01567" name="l01567"></a><span class="lineno"> 1567</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01568" name="l01568"></a><span class="lineno"> 1568</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01568" name="l01568"></a><span class="lineno"> 1568</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01569" name="l01569"></a><span class="lineno"> 1569</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to recreate the views for the cloud user backend.&#39;</span>),</div>
 <div class="line"><a id="l01570" name="l01570"></a><span class="lineno"> 1570</span>            previous: $t,</div>
 <div class="line"><a id="l01571" name="l01571"></a><span class="lineno"> 1571</span>          );</div>
@@ -1656,7 +1656,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01593" name="l01593"></a><span class="lineno"> 1593</span>            $userConnectorService-&gt;removeMusicianPersonalizedViews($oldValue);</div>
 <div class="line"><a id="l01594" name="l01594"></a><span class="lineno"> 1594</span>            $userConnectorService-&gt;updateMusicianPersonalizedViews($newValue);</div>
 <div class="line"><a id="l01595" name="l01595"></a><span class="lineno"> 1595</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01596" name="l01596"></a><span class="lineno"> 1596</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01596" name="l01596"></a><span class="lineno"> 1596</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01597" name="l01597"></a><span class="lineno"> 1597</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to reconfigure the database for the cloud - orchestra member interaction.&#39;</span>),</div>
 <div class="line"><a id="l01598" name="l01598"></a><span class="lineno"> 1598</span>              previous: $t,</div>
 <div class="line"><a id="l01599" name="l01599"></a><span class="lineno"> 1599</span>            );</div>
@@ -1686,7 +1686,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01624" name="l01624"></a><span class="lineno"> 1624</span>            $userConnectorService-&gt;removeMusicianPersonalizedViews($cloudUserViewsDatabase);</div>
 <div class="line"><a id="l01625" name="l01625"></a><span class="lineno"> 1625</span>          }</div>
 <div class="line"><a id="l01626" name="l01626"></a><span class="lineno"> 1626</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01627" name="l01627"></a><span class="lineno"> 1627</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01627" name="l01627"></a><span class="lineno"> 1627</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01628" name="l01628"></a><span class="lineno"> 1628</span>            message: $realValue</div>
 <div class="line"><a id="l01629" name="l01629"></a><span class="lineno"> 1629</span>            ? $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to regenerate the views for the personal access of club-members to their data.&#39;</span>)</div>
 <div class="line"><a id="l01630" name="l01630"></a><span class="lineno"> 1630</span>            : $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to remove the view for the personal access of club-members to their data.&#39;</span>),</div>
@@ -1708,7 +1708,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01647" name="l01647"></a><span class="lineno"> 1647</span>          list(<span class="stringliteral">&#39;hints&#39;</span> =&gt; $hints,) = $userConnectorService-&gt;checkRequirements($cloudUserViewsDatabase);</div>
 <div class="line"><a id="l01648" name="l01648"></a><span class="lineno"> 1648</span>          $userConnectorService-&gt;updateMusicianPersonalizedViews($cloudUserViewsDatabase);</div>
 <div class="line"><a id="l01649" name="l01649"></a><span class="lineno"> 1649</span>        } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l01650" name="l01650"></a><span class="lineno"> 1650</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01650" name="l01650"></a><span class="lineno"> 1650</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01651" name="l01651"></a><span class="lineno"> 1651</span>            message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to regenerate the views for the personal access of club-members to their data.&#39;</span>),</div>
 <div class="line"><a id="l01652" name="l01652"></a><span class="lineno"> 1652</span>            previous: $t,</div>
 <div class="line"><a id="l01653" name="l01653"></a><span class="lineno"> 1653</span>          );</div>
@@ -1813,7 +1813,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01753" name="l01753"></a><span class="lineno"> 1753</span>        $listsService = $this-&gt;di(MailingListsService::class);</div>
 <div class="line"><a id="l01754" name="l01754"></a><span class="lineno"> 1754</span>        $announcementsMailingList = $this-&gt;getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);</div>
 <div class="line"><a id="l01755" name="l01755"></a><span class="lineno"> 1755</span>        <span class="keywordflow">if</span> (empty($announcementsMailingList)) {</div>
-<div class="line"><a id="l01756" name="l01756"></a><span class="lineno"> 1756</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01756" name="l01756"></a><span class="lineno"> 1756</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01757" name="l01757"></a><span class="lineno"> 1757</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Please configure the mailing-list address first, otherwise I do not know which list I have to work on.&#39;</span>),</div>
 <div class="line"><a id="l01758" name="l01758"></a><span class="lineno"> 1758</span>          );</div>
 <div class="line"><a id="l01759" name="l01759"></a><span class="lineno"> 1759</span>        }</div>
@@ -1843,7 +1843,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01783" name="l01783"></a><span class="lineno"> 1783</span>        $realValue = Util::normalizeSpaces($value);</div>
 <div class="line"><a id="l01784" name="l01784"></a><span class="lineno"> 1784</span>        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l01785" name="l01785"></a><span class="lineno"> 1785</span>          $parsedEmail = $this-&gt;emailAddressService-&gt;parseAddressString($realValue);</div>
-<div class="line"><a id="l01786" name="l01786"></a><span class="lineno"> 1786</span>        } <span class="keywordflow">catch</span> (<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions.html">Exceptions</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">EnduserNotificationException</a> $e) {</div>
+<div class="line"><a id="l01786" name="l01786"></a><span class="lineno"> 1786</span>        } <span class="keywordflow">catch</span> (<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions.html">Exceptions</a>\<a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html">EnduserNotificationException</a> $e) {</div>
 <div class="line"><a id="l01787" name="l01787"></a><span class="lineno"> 1787</span>          <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to parse email address &quot;%1$s&quot;: %2$s&#39;</span>, [ $value, $e-&gt;getMessage() ]));</div>
 <div class="line"><a id="l01788" name="l01788"></a><span class="lineno"> 1788</span>        }</div>
 <div class="line"><a id="l01789" name="l01789"></a><span class="lineno"> 1789</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d">count</a>($parsedEmail) !== 1) {</div>
@@ -1897,7 +1897,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01839" name="l01839"></a><span class="lineno"> 1839</span>      <span class="keywordflow">case</span> EnumSimpleSettingsKey::EMAIL_FROM_DOMAIN_KEY-&gt;value:</div>
 <div class="line"><a id="l01840" name="l01840"></a><span class="lineno"> 1840</span>        $emailFromDomain = $this-&gt;getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);</div>
 <div class="line"><a id="l01841" name="l01841"></a><span class="lineno"> 1841</span>        <span class="keywordflow">if</span> (empty($emailFromDomain)) {</div>
-<div class="line"><a id="l01842" name="l01842"></a><span class="lineno"> 1842</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01842" name="l01842"></a><span class="lineno"> 1842</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01843" name="l01843"></a><span class="lineno"> 1843</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Please first configure the email domain you intend to send messages form.&#39;</span>),</div>
 <div class="line"><a id="l01844" name="l01844"></a><span class="lineno"> 1844</span>          );</div>
 <div class="line"><a id="l01845" name="l01845"></a><span class="lineno"> 1845</span>        }</div>
@@ -1987,13 +1987,13 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l01931" name="l01931"></a><span class="lineno"> 1931</span>            $listsService = $this-&gt;di(MailingListsService::class);</div>
 <div class="line"><a id="l01932" name="l01932"></a><span class="lineno"> 1932</span>            <span class="keywordflow">if</span> (empty($listsService-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a021665eed2f119c5beed4adeaebd8f96">getServerConfig</a>())) {</div>
 <div class="line"><a id="l01933" name="l01933"></a><span class="lineno"> 1933</span>              $this-&gt;setConfigValue($parameter, $oldValue);</div>
-<div class="line"><a id="l01934" name="l01934"></a><span class="lineno"> 1934</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01934" name="l01934"></a><span class="lineno"> 1934</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01935" name="l01935"></a><span class="lineno"> 1935</span>                message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to connect to mailing list service at &quot;%s&quot;&#39;</span>, $mailingListRestUrl),</div>
 <div class="line"><a id="l01936" name="l01936"></a><span class="lineno"> 1936</span>              );</div>
 <div class="line"><a id="l01937" name="l01937"></a><span class="lineno"> 1937</span>            }</div>
 <div class="line"><a id="l01938" name="l01938"></a><span class="lineno"> 1938</span>          } <span class="keywordflow">catch</span> (Throwable $t) {</div>
 <div class="line"><a id="l01939" name="l01939"></a><span class="lineno"> 1939</span>            $this-&gt;setConfigValue($parameter, $oldValue);</div>
-<div class="line"><a id="l01940" name="l01940"></a><span class="lineno"> 1940</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l01940" name="l01940"></a><span class="lineno"> 1940</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l01941" name="l01941"></a><span class="lineno"> 1941</span>              message: $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to connect to mailing list service at &quot;%s&quot;&#39;</span>, $mailingListRestUrl),</div>
 <div class="line"><a id="l01942" name="l01942"></a><span class="lineno"> 1942</span>              previous: $t,</div>
 <div class="line"><a id="l01943" name="l01943"></a><span class="lineno"> 1943</span>            );</div>
@@ -2177,7 +2177,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l02140" name="l02140"></a><span class="lineno"> 2140</span>        $templateName = $this-&gt;request-&gt;getParam(<span class="stringliteral">&#39;documentTemplate&#39;</span>);</div>
 <div class="line"><a id="l02141" name="l02141"></a><span class="lineno"> 2141</span>        <span class="keywordflow">if</span> (empty(ConfigConstants::DOCUMENT_TEMPLATES[$templateName])</div>
 <div class="line"><a id="l02142" name="l02142"></a><span class="lineno"> 2142</span>            || ConfigConstants::DOCUMENT_TEMPLATES[$templateName][<span class="stringliteral">&#39;type&#39;</span>] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {</div>
-<div class="line"><a id="l02143" name="l02143"></a><span class="lineno"> 2143</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l02143" name="l02143"></a><span class="lineno"> 2143</span>          <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l02144" name="l02144"></a><span class="lineno"> 2144</span>            $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown auto-fill template: &quot;%s&quot;.&#39;</span>, $templateName),</div>
 <div class="line"><a id="l02145" name="l02145"></a><span class="lineno"> 2145</span>          );</div>
 <div class="line"><a id="l02146" name="l02146"></a><span class="lineno"> 2146</span>        }</div>
@@ -2370,7 +2370,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l02337" name="l02337"></a><span class="lineno"> 2337</span>            $blocks[<span class="stringliteral">&#39;recipient&#39;</span>] = <span class="stringliteral">&#39;instins.billTo&#39;</span>;</div>
 <div class="line"><a id="l02338" name="l02338"></a><span class="lineno"> 2338</span>            <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l02339" name="l02339"></a><span class="lineno"> 2339</span>          <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l02340" name="l02340"></a><span class="lineno"> 2340</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l02340" name="l02340"></a><span class="lineno"> 2340</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l02341" name="l02341"></a><span class="lineno"> 2341</span>              $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l02342" name="l02342"></a><span class="lineno"> 2342</span>                <span class="stringliteral">&#39;Auto-fill test for template &quot;%s: not yet implemented, sorry.&#39;</span>, $templateName,</div>
 <div class="line"><a id="l02343" name="l02343"></a><span class="lineno"> 2343</span>              ),</div>
@@ -2382,7 +2382,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l02350" name="l02350"></a><span class="lineno"> 2350</span>            $documentFiller = $this-&gt;di(OpenDocumentFiller::class);</div>
 <div class="line"><a id="l02351" name="l02351"></a><span class="lineno"> 2351</span>            $templateFileName = $this-&gt;getDocumentTemplatesPath($templateName);</div>
 <div class="line"><a id="l02352" name="l02352"></a><span class="lineno"> 2352</span>            <span class="keywordflow">if</span> (empty($templateFileName)) {</div>
-<div class="line"><a id="l02353" name="l02353"></a><span class="lineno"> 2353</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l02353" name="l02353"></a><span class="lineno"> 2353</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l02354" name="l02354"></a><span class="lineno"> 2354</span>                $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l02355" name="l02355"></a><span class="lineno"> 2355</span>                  <span class="stringliteral">&#39;There is no template file for template &quot;%s&quot;&#39;</span>, $templateName,</div>
 <div class="line"><a id="l02356" name="l02356"></a><span class="lineno"> 2356</span>                ),</div>
@@ -2436,7 +2436,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="line"><a id="l02418" name="l02418"></a><span class="lineno"> 2418</span>    try {</div>
 <div class="line"><a id="l02419" name="l02419"></a><span class="lineno"> 2419</span>      $key = <a class="code hl_enumeration" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a714e949555bfc3e0988a46a29b148f2f">EnumSimpleSettingsKey</a>::get($key);</div>
 <div class="line"><a id="l02420" name="l02420"></a><span class="lineno"> 2420</span>    } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l02421" name="l02421"></a><span class="lineno"> 2421</span>      <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l02421" name="l02421"></a><span class="lineno"> 2421</span>      <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l02422" name="l02422"></a><span class="lineno"> 2422</span>        $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Configuration key &quot;%1$s&quot; is not known. This is an internal error, please contact the server administrator.&#39;</span>, $key),</div>
 <div class="line"><a id="l02423" name="l02423"></a><span class="lineno"> 2423</span>        previous: $t,</div>
 <div class="line"><a id="l02424" name="l02424"></a><span class="lineno"> 2424</span>        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,</div>
@@ -2546,7 +2546,6 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller_html_af61e154e32aaa503585d32d272db2bcf"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html#af61e154e32aaa503585d32d272db2bcf">OCA\CAFEVDB\Controller\PersonalSettingsController\generateLocaleInfo</a></div><div class="ttdeci">generateLocaleInfo(?string $scope=null)</div><div class="ttdef"><b>Definition</b> <a href="#l02085">PersonalSettingsController.php:2085</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_html_a3d0963e68bb313b163a73f2803c64600"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a3d0963e68bb313b163a73f2803c64600">OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project\getName</a></div><div class="ttdeci">getName()</div><div class="ttdoc">Get name.</div><div class="ttdef"><b>Definition</b> <a href="_project_8php_source.html#l00261">Project.php:261</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html">OCA\CAFEVDB\Exceptions\CannotEncryptException</a></div><div class="ttdef"><b>Definition</b> <a href="_cannot_encrypt_exception_8php_source.html#l00028">CannotEncryptException.php:29</a></div></div>
-<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">OCA\CAFEVDB\Exceptions\EnduserNotificationException</a></div><div class="ttdoc">This exception should provide an error message which informs an end-user about an error.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_exceptions_2_enduser_notification_exception_8php_source.html#l00037">EnduserNotificationException.php:38</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html">OCA\CAFEVDB\Exceptions\Exception</a></div><div class="ttdoc">General abstraction base-class.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_exceptions_2_exception_8php_source.html#l00030">Exception.php:31</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html">OCA\CAFEVDB\Service\CalDavService</a></div><div class="ttdoc">Service class in order to interface to the dav app of Nextcloud.</div><div class="ttdef"><b>Definition</b> <a href="_cal_dav_service_8php_source.html#l00052">CalDavService.php:53</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html">OCA\CAFEVDB\Service\ConfigCheckService</a></div><div class="ttdoc">Check for a usable configuration.</div><div class="ttdef"><b>Definition</b> <a href="_config_check_service_8php_source.html#l00049">ConfigCheckService.php:50</a></div></div>
@@ -2565,6 +2564,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_personal_sett
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">OCA\CAFEVDB\Storage\UserStorage</a></div><div class="ttdoc">Some tweaks to for the user-folder stuff.</div><div class="ttdef"><b>Definition</b> <a href="_user_storage_8php_source.html#l00058">UserStorage.php:59</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o_html_aa65449face6335c3e7becc78538996ae"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html#aa65449face6335c3e7becc78538996ae">OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO\response</a></div><div class="ttdeci">response(int $httpStatusCode=Http::STATUS_OK)</div><div class="ttdoc">Stuff into a DataResponse.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_toolkit_2_d_t_o_2_abstract_response_d_t_o_8php_source.html#l00042">AbstractResponseDTO.php:42</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter_html_a729e946b4ef600e71740113c6d4332c0"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_array_adapter.html#a729e946b4ef600e71740113c6d4332c0">OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter\key</a></div><div class="ttdeci">key()</div><div class="ttdoc">{}</div><div class="ttdef"><b>Definition</b> <a href="lib_2_toolkit_2_doctrine_2_o_r_m_2_entity_serializer_2_entity_array_adapter_8php_source.html#l00278">EntityArrayAdapter.php:278</a></div></div>
+<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html">OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException</a></div><div class="ttdoc">This exception should provide an error message which informs an end-user about an error.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_toolkit_2_exceptions_2_enduser_notification_exception_8php_source.html#l00035">EnduserNotificationException.php:36</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_html"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html">OCA\CAFEVDB\Controller\DTO</a></div><div class="ttdoc">Orchestra member, musician and project management application.</div><div class="ttdef"><b>Definition</b> <a href="_add_musicians_response_8php_source.html#l00025">AddMusiciansResponse.php:25</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_html"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html">OCA\CAFEVDB\Controller</a></div><div class="ttdoc">Orchestra member, musician and project management application.</div><div class="ttdef"><b>Definition</b> <a href="_accounting_controller_8php_source.html#l00025">AccountingController.php:25</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_html_a714e949555bfc3e0988a46a29b148f2f"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a714e949555bfc3e0988a46a29b148f2f">OCA\CAFEVDB\Controller\EnumSimpleSettingsKey</a></div><div class="ttdeci">EnumSimpleSettingsKey</div><div class="ttdoc">Simple setting as enum.</div><div class="ttdef"><b>Definition</b> <a href="_enum_simple_settings_key_8php_source.html#l00032">EnumSimpleSettingsKey.php:33</a></div></div>

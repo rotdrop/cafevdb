@@ -472,7 +472,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_invoice_8php_
 <div class="foldopen" id="foldopen00538" data-start="{" data-end="}">
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno"><a class="line" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a63393fa8f6bf1b7cb917d605f86db45b">  538</a></span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a63393fa8f6bf1b7cb917d605f86db45b">getInvoiceNumber</a>(): ?string</div>
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>  {</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    <span class="keywordflow">return</span> $this-&gt;invoiceNumber;</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    <span class="keywordflow">return</span> $this-&gt;invoiceNumber ?? <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>  }</div>
 </div>
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span></div>

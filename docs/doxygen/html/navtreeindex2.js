@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"_instrument_insurance_controller_8php_source.html":[10,0,0,6,54],
+"_instrument_insurance_controller_test_8php_source.html":[10,0,3,0,1,2,15],
 "_instrument_insurance_receivables_generator_8php_source.html":[10,0,0,20,2,9],
 "_instrument_insurance_service_8php_source.html":[10,0,0,20,2,10],
 "_instrument_insurance_validation_response_8php_source.html":[10,0,0,6,0,35],
@@ -109,7 +111,7 @@ var NAVTREEINDEX2 =
 "_not_authorized_exception_8php_source.html":[10,0,0,12,31],
 "_notifier_8php_source.html":[10,0,0,18,0],
 "_number_formatter_8php_source.html":[10,0,0,5,11],
-"_number_formatter_test_8php_source.html":[10,0,3,0,1,1,4],
+"_number_formatter_test_8php_source.html":[10,0,3,0,1,1,5],
 "_o_c___calendar___object_8php_source.html":[10,0,0,13,0,0],
 "_old_settings_keys_8php_source.html":[10,0,0,21,4],
 "_open_document_filler_8php_source.html":[10,0,0,9,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "_progress_response_8php_source.html":[10,0,0,6,0,55],
 "_progress_status_8php_source.html":[10,0,0,8,0,0,1],
 "_progress_status_controller_8php_source.html":[10,0,0,6,64],
-"_progress_status_controller_test_8php_source.html":[10,0,3,0,1,2,21],
-"_progress_status_mapper_8php_source.html":[10,0,0,8,0,1,2],
-"_progress_status_not_found_exception_8php_source.html":[10,0,0,12,32]
+"_progress_status_controller_test_8php_source.html":[10,0,3,0,1,2,21]
 };

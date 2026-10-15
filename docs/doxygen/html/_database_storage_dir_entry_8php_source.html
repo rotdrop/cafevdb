@@ -155,9 +155,9 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_database_stor
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  {</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  }</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">public</span> <span class="keyword">function</span> getName():?string</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">public</span> <span class="keyword">function</span> getName(): ?string</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">return</span> $this-&gt;name;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">return</span> $this-&gt;name ?? <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  }</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">public</span> <span class="keyword">function</span> setName(?<span class="keywordtype">string</span> $name):DatabaseStorageDirEntry</div>
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_database_stor
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keyword">public</span> <span class="keyword">function</span> getPathName():string</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  {</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    $path = $this-&gt;name;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    $path = $this-&gt;name ?? <span class="stringliteral">&#39;&#39;</span>;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keywordflow">if</span> (!$this-&gt;isRootFolder()) {</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>      $path = $this-&gt;parent-&gt;getPathName() . Constants::PATH_SEP . $path;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    }</div>

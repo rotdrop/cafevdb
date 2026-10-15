@@ -1519,8 +1519,8 @@ class ProjectParticipantFieldsService
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'The field is already in use, therefore the multiplicity may no longer be changed from "%1$s" to "%2$s".', [
-              $this->l->t($oldFieldMultiplicity),
-              $this->l->t($newFieldMultiplicity),
+              $oldFieldMultiplicity->t($this->l),
+              $newFieldMultiplicity->t($this->l),
             ]));
       } else {
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);

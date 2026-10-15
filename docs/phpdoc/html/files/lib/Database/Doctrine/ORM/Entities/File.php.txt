@@ -114,7 +114,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setMimeType(?string $mimeType = null):File
+  public function setMimeType(?string $mimeType = null): File
   {
     $this->mimeType = $mimeType;
 
@@ -126,7 +126,7 @@ class File implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getMimeType():?string
+  public function getMimeType(): ?string
   {
     return $this->mimeType;
   }
@@ -138,7 +138,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setFileName($fileName = null):File
+  public function setFileName(?string $fileName = null): File
   {
     $this->fileName = $fileName;
 
@@ -162,7 +162,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setDirName(string $dirName):File
+  public function setDirName(string $dirName): File
   {
     $this->fileName = trim($dirName, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . ($this->getBaseName()??'');
     return $this;
@@ -173,7 +173,7 @@ class File implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getDirName():?string
+  public function getDirName(): ?string
   {
     return is_string($this->fileName) ? dirname($this->fileName) : null;
   }
@@ -185,7 +185,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setBaseName(string $baseName):File
+  public function setBaseName(string $baseName): File
   {
     $pathInfo = pathinfo($this->fileName);
 
@@ -205,7 +205,7 @@ class File implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getBaseName(?string $extension = null):?string
+  public function getBaseName(?string $extension = null): ?string
   {
     return is_string($this->fileName) ? basename($this->fileName, $extension) : null;
   }
@@ -217,7 +217,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setExtension(string $extension):File
+  public function setExtension(string $extension): File
   {
     $pathInfo = pathinfo($this->fileName ?? '');
     $this->fileName = $pathInfo['filename'] . '.' . $extension;
@@ -235,7 +235,7 @@ class File implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getExtension(?string $extension = null):?string
+  public function getExtension(?string $extension = null): ?string
   {
     return is_string($this->fileName) ? pathinfo($this->fileName, PATHINFO_EXTENSION) : null;
   }
@@ -247,7 +247,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setDataHash($dataHash = null):File
+  public function setDataHash($dataHash = null): File
   {
     $this->dataHash = $dataHash;
 
@@ -271,7 +271,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setSize(int $size = -1):File
+  public function setSize(int $size = -1): File
   {
     $this->size = $size;
 
@@ -283,7 +283,7 @@ class File implements \ArrayAccess
    *
    * @return int
    */
-  public function getSize():int
+  public function getSize(): int
   {
     return $this->size;
   }
@@ -295,7 +295,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setFileData(FileData $fileData):File
+  public function setFileData(FileData $fileData): File
   {
     $this->fileData = new ArrayCollection([ $fileData ]);
     $fileData->setFile($this);
@@ -307,7 +307,7 @@ class File implements \ArrayAccess
    *
    * @return FileData
    */
-  public function getFileData():FileData
+  public function getFileData(): FileData
   {
     return $this->fileData->first();
   }
@@ -319,7 +319,7 @@ class File implements \ArrayAccess
    *
    * @return mixed
    */
-  public function getData(string $format = FileData::DATA_FORMAT_BINARY):mixed
+  public function getData(string $format = FileData::DATA_FORMAT_BINARY): mixed
   {
     return $this->getFileData()->getData($format);
   }

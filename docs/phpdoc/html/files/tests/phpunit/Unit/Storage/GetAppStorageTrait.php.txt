@@ -25,10 +25,11 @@
 namespace OCA\CAFEVDB\Tests\Unit\Storage;
 
 use OCP\Files\IAppData;
-use OCP\Files\SimpleFS\ISimpleFile;
-use OCP\Files\SimpleFS\ISimpleFolder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\Files\SimpleFS\ISimpleFolder;
 
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Storage\AppStorage;
@@ -40,6 +41,8 @@ trait GetAppStorageTrait
   private AppStorage $appStorage;
 
   private IAppData $appData;
+
+  private IMimeTypeDetector $mimeTypeDetector;
 
   private MockProvider $mockProvider;
 
@@ -60,7 +63,8 @@ trait GetAppStorageTrait
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $appContainer = $this->mockProvider->getAppContainer();
-    $this->timeFactory = $appContainer->get(TimeFactory::class);
+    $this->timeFactory = $this->timeFactory ?? $appContainer->get(TimeFactory::class);
+    $this->mimeTypeDetector = $this->mimeTypeDetector ?? $appContainer->get(IMimeTypeDetector::class);
 
     if ($mock) {
       $this->appData = $this->getMockBuilder(IAppData::class)
@@ -90,6 +94,7 @@ trait GetAppStorageTrait
         'node' => $folder,
         'content' => [],
         'parent' => $parentId,
+        'mimeType' => 'httpd/unix-directory',
       ];
       $folder->method('getName')->willReturn($name);
       $folder->method('getDirectoryListing')->willReturnCallback(fn() => $this->nodes[$folderId]['content']);
@@ -114,7 +119,7 @@ trait GetAppStorageTrait
         },
       );
       $folder->method('newFile')->willReturnCallback(
-        function(string $nodeName, $content = null) use ($folderId) {
+        function(string $nodeName, ?string $content = null) use ($folderId) : ISimpleFile {
           $node = $this->createStub(ISimpleFile::class);
           $nodeId = spl_object_id($node);
           $this->nodes[$nodeId] = [
@@ -122,6 +127,7 @@ trait GetAppStorageTrait
             'node' => $node,
             'content' => $content,
             'parent' => $folderId,
+            'mimeType' => $this->mimeTypeDetector->detectString($content ?? ''),
           ];
           $this->nodes[$folderId]['content'][$nodeName] = $node;
           $node->method('getName')->willReturn($nodeName);
@@ -133,12 +139,14 @@ trait GetAppStorageTrait
           );
           $node->method('getContent')->willReturnCallback(fn() => $this->nodes[$nodeId]['content']);
           $node->method('putContent')->willReturnCallback(
-            function($data) use ($nodeId) {
+            function(?string $data) use ($nodeId) : void {
               $this->nodes[$nodeId]['content'] = $data;
               $this->nodes[$nodeId]['mtime'] = $this->timeFactory->now()->getTimestamp();
+              $this->nodes[$nodeId]['mimeType'] = $this->mimeTypeDetector->detectString($data ?? '');
             },
           );
           $node->method('getMTime')->willReturnCallback(fn() => $this->nodes[$nodeId]['mtime']);
+          $node->method('getMimeType')->willReturnCallback(fn() => $this->nodes[$nodeId]['mimeType']);
 
           return $node;
         },

@@ -141,13 +141,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
+<tr class="memitem:aea3840573c9699ff1f0faca92c40cbc1" id="r_aea3840573c9699ff1f0faca92c40cbc1"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#aea3840573c9699ff1f0faca92c40cbc1">END_POINT</a> = 'download'</td></tr>
 <tr class="memitem:a62a9d9b088e3dd291d90767ff2b6f227" id="r_a62a9d9b088e3dd291d90767ff2b6f227"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a62a9d9b088e3dd291d90767ff2b6f227">SECTION_DATABASE</a> = 'database'</td></tr>
 <tr class="memitem:a059ff139978dc574188f0a1655f4da5a" id="r_a059ff139978dc574188f0a1655f4da5a"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a059ff139978dc574188f0a1655f4da5a">SECTION_FILECACHE</a> = 'filecache'</td></tr>
 <tr class="memitem:a6067507cdc596cf0b2b5226d1b555864" id="r_a6067507cdc596cf0b2b5226d1b555864"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a6067507cdc596cf0b2b5226d1b555864">OBJECT_COLLECTION</a> = 'collection'</td></tr>
 <tr class="memitem:af5de1015a23d2ea75bc9191c995a4651" id="r_af5de1015a23d2ea75bc9191c995a4651"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#af5de1015a23d2ea75bc9191c995a4651">COLLECTION_ITEMS</a> = 'items'</td></tr>
 <tr class="memitem:a347a4a9ae362d32cace3d16c0f794732" id="r_a347a4a9ae362d32cace3d16c0f794732"><td class="memItemLeft">verb&#160;</td><td class="memItemRight">: 'POST'</td></tr>
 <tr class="memdesc:a347a4a9ae362d32cace3d16c0f794732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch something and return it as download.  <br /></td></tr>
-<tr class="memitem:a3ed47f9a04f8979b1d53e70c4ee75070" id="r_a3ed47f9a04f8979b1d53e70c4ee75070"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a3ed47f9a04f8979b1d53e70c4ee75070">url</a>: '/download/{section}/{object}'</td></tr>
+<tr class="memitem:a3ed47f9a04f8979b1d53e70c4ee75070" id="r_a3ed47f9a04f8979b1d53e70c4ee75070"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a3ed47f9a04f8979b1d53e70c4ee75070">url</a>: '/' . self::END_POINT . '/{section}/{object}'</td></tr>
 <tr class="memitem:a75b98195fc55acb702ee3575a0a9b9e0" id="r_a75b98195fc55acb702ee3575a0a9b9e0"><td class="memItemLeft">verb&#160;</td><td class="memItemRight"><a class="el" href="#a75b98195fc55acb702ee3575a0a9b9e0">requirements</a>: [ 'section' =&gt; '^(?!pdf).*$' ]</td></tr>
 <tr class="memitem:a403e6021d6708b8a10f496a1521a7ebb" id="r_a403e6021d6708b8a10f496a1521a7ebb"><td class="memItemLeft">verb&#160;</td><td class="memItemRight">: '<a class="el" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a3bafa00ad71f1f213e3fbf1fd1980f52a12a8dcf59c16b5aadfda3a08ba67d529">GET</a>'</td></tr>
 <tr class="memdesc:a403e6021d6708b8a10f496a1521a7ebb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch something and return it as download.  <br /></td></tr>
@@ -155,7 +156,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AJAX end-points for download requests independent from the cloud file-system. </p>
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00041">41</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00042">42</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa9b715919cd34b81e30be05baafe641d" name="aa9b715919cd34b81e30be05baafe641d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9b715919cd34b81e30be05baafe641d">&#9670;&#160;</a></span>__construct()</h2>
@@ -186,7 +187,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00054">54</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00057">57</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -220,7 +221,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00179">179</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00182">182</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -249,7 +250,7 @@ Data Fields</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>mixed \OCP\Response Something derived from \OCP\Response. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00090">90</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00093">93</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -277,7 +278,7 @@ Data Fields</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>mixed \OCP\Response Something derived from \OCP\Response. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00175">175</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00178">178</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -293,7 +294,23 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00051">51</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00054">54</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+
+</div>
+</div>
+<a id="aea3840573c9699ff1f0faca92c40cbc1" name="aea3840573c9699ff1f0faca92c40cbc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea3840573c9699ff1f0faca92c40cbc1">&#9670;&#160;</a></span>END_POINT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const END_POINT = 'download'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00048">48</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -309,7 +326,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00050">50</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00053">53</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -325,7 +342,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00092">92</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00095">95</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -341,7 +358,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00047">47</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00050">50</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -357,7 +374,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00048">48</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00051">51</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>
@@ -373,7 +390,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00091">91</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_downloads_controller_8php_source.html#l00094">94</a> of file <a class="el" href="_downloads_controller_8php_source.html">DownloadsController.php</a>.</p>
 
 </div>
 </div>

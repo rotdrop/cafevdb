@@ -21,7 +21,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions =
     [ "EncryptionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html", null ],
     [ "EncryptionFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html", null ],
     [ "EncryptionKeyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html", null ],
-    [ "EnduserNotificationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception" ],
     [ "Exception", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html", null ],
     [ "FilterFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_filter_failed_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_filter_failed_exception" ],
     [ "MigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html", null ],

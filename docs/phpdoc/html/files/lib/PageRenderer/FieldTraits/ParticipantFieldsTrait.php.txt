@@ -379,7 +379,7 @@ trait ParticipantFieldsTrait
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
-                list(, $invoiceFddName) = $this->makeJoinTableField(
+                /* list(, $invoiceFddName) = */$this->makeJoinTableField(
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
@@ -508,6 +508,7 @@ trait ParticipantFieldsTrait
                     $fieldOption = $field->getDataOption($optionKey);
                   }
 
+                  $fieldDataType = $field->getDataType();
                   $pathChain = [
                     'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                     'documentsFolders' => $this->getDocumentsFolderName(),
@@ -1329,7 +1330,10 @@ trait ParticipantFieldsTrait
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS ' . self::MONETARY_TYPE . ')',
+                    'sql' => "{$subTotalsSign}CAST(
+  COALESCE(SUM({$optionValueSql}) * COUNT(DISTINCT {$optionKeySql}) / COUNT({$optionKeySql}), 0)
+  AS " . self::MONETARY_TYPE . "
+)",
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1446,7 +1450,7 @@ trait ParticipantFieldsTrait
             // $labelFdd = &$fieldDescData[$labelFddName];
 
             // yet another field for the supporting documents
-            list(, $invoiceFddName) = $this->makeJoinTableField(
+            /* list(, $invoiceFddName) = */$this->makeJoinTableField(
               $fieldDescData, $tableName, 'supporting_document_id', [
                 'input' => 'SRH',
                 'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
@@ -1834,12 +1838,15 @@ WHERE pp.project_id = $this->projectId",
               $groupMemberFdd['display|LFVD'] = array_merge(
                 $groupMemberFdd['display'],
                 [
-                  'prefix' => '<span class="allowed-option money group service-fee flex-container flex-baseline"><span class="allowed-option-name money ' . CssClasses::CLIP_LONG_TEXT . ' group">',
+                  'prefix' => '<span class="allowed-option money group service-fee flex-container flex-baseline">
+  <span class="allowed-option-name money ' . CssClasses::CLIP_LONG_TEXT . ' group">',
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $tableName) {
                     $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = empty($selectedKey) ? '' : ' selected';
-                    return '</span><span class="allowed-option-separator money">&nbsp;</span>'
-                      .'<span class="allowed-option-value money">'.$money.'</span></span>';
+                    return '  </span>
+  <span class="allowed-option-separator money">&nbsp;</span>
+  <span class="allowed-option-value money">' . $money . '</span>
+</span>';
                   },
                 ]);
               $groupMemberFdd['display|ACP'] = array_merge(

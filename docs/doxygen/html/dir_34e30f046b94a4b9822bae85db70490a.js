@@ -31,6 +31,7 @@ var dir_34e30f046b94a4b9822bae85db70490a =
     [ "SepaDebitMandatesControllerTest.php", "_sepa_debit_mandates_controller_test_8php_source.html", null ],
     [ "TestRoutesAreDefinedTrait.php", "_test_routes_are_defined_trait_8php_source.html", null ],
     [ "ToolTipsControllerTest.php", "_tool_tips_controller_test_8php_source.html", null ],
+    [ "UploadsControllerTest.php", "_uploads_controller_test_8php_source.html", null ],
     [ "ValidationControllerTest.php", "_validation_controller_test_8php_source.html", null ],
     [ "VueAppControllerTest.php", "_vue_app_controller_test_8php_source.html", null ],
     [ "WebBrowserHistoryControllerTest.php", "_web_browser_history_controller_test_8php_source.html", null ]

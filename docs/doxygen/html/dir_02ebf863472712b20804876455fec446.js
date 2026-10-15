@@ -4,6 +4,7 @@ var dir_02ebf863472712b20804876455fec446 =
     [ "ConsoleLoggerTest.php", "_console_logger_test_8php_source.html", null ],
     [ "FunctionsTest.php", "_functions_test_8php_source.html", null ],
     [ "GenericUndoableTest.php", "_generic_undoable_test_8php_source.html", null ],
+    [ "Html2TextTest.php", "_html2_text_test_8php_source.html", null ],
     [ "NumberFormatterTest.php", "_number_formatter_test_8php_source.html", null ],
     [ "TimeFactoryTrait.php", "_time_factory_trait_8php_source.html", null ],
     [ "TransliteratorTest.php", "_transliterator_test_8php_source.html", null ],

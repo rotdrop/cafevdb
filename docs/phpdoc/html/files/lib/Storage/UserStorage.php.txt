@@ -88,7 +88,7 @@ class UserStorage
    *
    * @return UserStorage
    */
-  public function setUser(?IUser $user):UserStorage
+  public function setUser(?IUser $user): UserStorage
   {
     $this->user = $user;
     if (!empty($this->user)) {
@@ -102,7 +102,7 @@ class UserStorage
   /**
    * @return null|IUser The current user
    */
-  public function user():?IUser
+  public function user(): ?IUser
   {
     return $this->user;
   }
@@ -110,7 +110,7 @@ class UserStorage
   /**
    * @return string The current user-id
    */
-  public function userId():string
+  public function userId(): string
   {
     return $this->user->getUID();
   }
@@ -122,7 +122,7 @@ class UserStorage
    *
    * @return null|string
    */
-  public function getUserPath(Node $node):?string
+  public function getUserPath(Node $node): ?string
   {
     $path = $node->getPath();
     $userFolderPath = $this->userFolder->getPath();
@@ -145,7 +145,7 @@ class UserStorage
    *
    * @return null|Node The user-folder or the given sub-folder
    */
-  public function get(?string $path, ?string $type = null, bool $useCache = false, bool $throw = false):?Node
+  public function get(?string $path, ?string $type = null, bool $useCache = false, bool $throw = false): ?Node
   {
     try {
       if ($useCache && !empty($this->nodeCache[$path])) {
@@ -181,7 +181,7 @@ class UserStorage
    *
    * @return null|File The user-folder or the given sub-folder
    */
-  public function getFile(string $path, bool $useCache = false):?File
+  public function getFile(string $path, bool $useCache = false): ?File
   {
     return $this->get($path, FileInfo::TYPE_FILE, $useCache);
   }
@@ -193,7 +193,7 @@ class UserStorage
    *
    * @return null|Folder
    */
-  public function getFolder(string $path, bool $useCache = false):?Folder
+  public function getFolder(string $path, bool $useCache = false): ?Folder
   {
     return $this->get($path, FileInfo::TYPE_FOLDER, $useCache);
   }
@@ -210,7 +210,7 @@ class UserStorage
    *
    * @return void
    */
-  private function archiveFolderRecursively(Folder $folder, int $parentsToStrip, ZipStream $zipStream):void
+  private function archiveFolderRecursively(Folder $folder, int $parentsToStrip, ZipStream $zipStream): void
   {
     $folderContents = $folder->getDirectoryListing();
     /** @var Node $node */
@@ -241,7 +241,7 @@ class UserStorage
    *
    * @return null|string
    */
-  public function getFolderArchive($pathOrFolder, int $parentsToStrip = 0, string $format = 'zip'):?string
+  public function getFolderArchive($pathOrFolder, int $parentsToStrip = 0, string $format = 'zip'): ?string
   {
     /** @var \OCP\Files\File $node */
     if (!($pathOrFolder instanceof Folder)) {
@@ -314,7 +314,7 @@ class UserStorage
    *
    * @return null|Folder The destination folder or null in case of an error.
    */
-  public function copyTree(mixed $src, mixed $dst, ?string $excludeRegexp = null, int $flags = self::KEEP_DEST):?Folder
+  public function copyTree(mixed $src, mixed $dst, ?string $excludeRegexp = null, int $flags = self::KEEP_DEST): ?Folder
   {
     // $this->logInfo('SRC // DST ' . $src . ' || ' . $dst);
 
@@ -417,7 +417,7 @@ class UserStorage
    *
    * @return string The concatenated paths.
    */
-  public static function pathCat($first, ?string $second = null):string
+  public static function pathCat($first, ?string $second = null): string
   {
     if (is_array($first)) {
       $first = implode(self::PATH_SEP, $first);
@@ -445,7 +445,7 @@ class UserStorage
    *
    * @return string
    */
-  public static function stripParents(string $path, int $depth):string
+  public static function stripParents(string $path, int $depth): string
   {
     return self::PATH_SEP . implode(self::PATH_SEP, array_slice(Util::explode(self::PATH_SEP, $path), $depth));
   }
@@ -453,7 +453,7 @@ class UserStorage
   /**
    * @return \OCP\Files\Folder The root-folder
    */
-  public function getRoot():Folder
+  public function getRoot(): Folder
   {
     return $this->rootFolder;
   }
@@ -466,7 +466,7 @@ class UserStorage
    *
    * @return void
    */
-  public function delete(string $path):void
+  public function delete(string $path): void
   {
     try {
       $this->userFolder->get($path)->delete();
@@ -493,7 +493,7 @@ class UserStorage
    *
    * @bug This method uses internal APIs.
    */
-  public function restore(string $path, ?array $timeInterval = null, bool $overwriteExisting = false):bool
+  public function restore(string $path, ?array $timeInterval = null, bool $overwriteExisting = false): bool
   {
     /** @var ITrashManager $trashManager */
     $trashManager = $this->appContainer->get(ITrashManager::class);
@@ -550,7 +550,7 @@ class UserStorage
    *
    * @throws Exception If renaming fails.
    */
-  public function rename(string $oldPath, string $newPath):void
+  public function rename(string $oldPath, string $newPath): void
   {
     try {
       $newFullPath = $this->userFolder->getFullPath($newPath);
@@ -574,7 +574,7 @@ class UserStorage
    *
    * @throws Exception If something goes wrong.
    */
-  public function copy(string $oldPath, string $newPath):void
+  public function copy(string $oldPath, string $newPath): void
   {
     try {
       $newPath = $this->userFolder->getFullPath($newPath);
@@ -630,7 +630,7 @@ class UserStorage
    *
    * @throws Exceptionn If something goes wrong.
    */
-  public function ensureFolderChain(array $chain):Folder
+  public function ensureFolderChain(array $chain): Folder
   {
     $path = '';
     foreach ($chain as $component) {
@@ -661,7 +661,7 @@ class UserStorage
    *
    * @return File
    */
-  public function putContent(string $path, string $content):File
+  public function putContent(string $path, string $content): File
   {
     try {
       try {
@@ -685,7 +685,7 @@ class UserStorage
    *
    * @return The file content.
    */
-  public function getContent(string $path):string
+  public function getContent(string $path): string
   {
     // check if file exists and read from it if possible
     try {
@@ -702,14 +702,14 @@ class UserStorage
   }
 
   /**
-   * Return the underline storage entity if the cloud-path refers to a
+   * Return the underlying storage entity if the cloud-path refers to a
    * db-backed cloud-file.
    *
    * @param string $cloudPath The path in the cloud FS.
    *
    * @return null|Entities\DatabaseStorageDirEntry
    */
-  public function getDatabaseFile(string $cloudPath):?Entities\DatabaseStorageDirEntry
+  public function getDatabaseFile(string $cloudPath): ?Entities\DatabaseStorageDirEntry
   {
     $cloudFile = $this->get($cloudPath);
     if (empty($cloudFile)) {
@@ -753,7 +753,7 @@ class UserStorage
    *
    * @throws FileNotFoundException
    */
-  public function getDownloadLink($pathOrNode):?string
+  public function getDownloadLink($pathOrNode): ?string
   {
     if (is_string($pathOrNode)) {
       $node = $this->get($pathOrNode, useCache: true, throw: true);
@@ -800,7 +800,7 @@ class UserStorage
    *
    * @return string|null URL to the files app.
    */
-  public function getFilesAppLink($pathOrNode, bool $subDir = false):?string
+  public function getFilesAppLink($pathOrNode, bool $subDir = false): ?string
   {
     if (is_string($pathOrNode)) {
       try {
@@ -836,7 +836,7 @@ class UserStorage
    *
    * @return null|string
    */
-  public function createDataUri($pathOrNode):?string
+  public function createDataUri($pathOrNode): ?string
   {
     /** @var \OCP\Files\File $node */
     if (is_string($pathOrNode)) {

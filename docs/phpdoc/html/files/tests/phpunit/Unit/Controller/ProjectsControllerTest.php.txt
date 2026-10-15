@@ -44,7 +44,6 @@ use OCA\CAFEVDB\Controller\ProjectsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\DTO\EventMatrixRow;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MusicianService;
@@ -56,6 +55,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 use OCA\CAFEVDB\Toolkit;
+use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test the ProjectsController class. */
 #[Attributes\CoversClass(EventsService::class)]
@@ -83,7 +83,6 @@ use OCA\CAFEVDB\Toolkit;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\TranslationNotFoundListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\AuthorizationService::class)]
@@ -98,6 +97,7 @@ use OCA\CAFEVDB\Toolkit;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]

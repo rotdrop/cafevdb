@@ -1,7 +1,13 @@
 <map id="ffill" name="ffill">
-<area shape="rect" id="Node000001" title="Fill the given template file which must exist in the cloud file&#45;system with the given template&#45;data." alt="" coords="5,5,44,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html#a6febfc1bfcad096d493979cd224906b1" title=" " alt="" coords="92,5,169,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,16,78,17,73,20,44,21"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html#aa7a6bdd2ad1be7f410a6433ad79486b3" title="Return the data which would be filled into the template." alt="" coords="217,5,279,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="169,16,204,19,199,19,170,21"/>
+<area shape="rect" id="Node000001" title="Fill the given template file which must exist in the cloud file&#45;system with the given template&#45;data." alt="" coords="5,76,44,103"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html#a6febfc1bfcad096d493979cd224906b1" title=" " alt="" coords="92,76,169,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,87,78,88,74,91,45,92"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#a8c2cb1b2ebba9f4deaf5f6b2dadfd205" title=" " alt="" coords="217,39,392,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="169,80,204,77,199,78,170,86"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html#aa7a6bdd2ad1be7f410a6433ad79486b3" title="Return the data which would be filled into the template." alt="" coords="274,105,336,132"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="170,93,261,110,256,112,169,98"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#ab90bcfd5ae9b8d7c6a687386f44bc216" title=" " alt="" coords="447,5,623,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="392,45,434,41,429,42,393,50"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html#a8cce3bddd623b2fa4760c181a1eb77e9" title="Trim the string and remove spaces followed by a newline character." alt="" coords="440,72,630,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="393,70,428,77,422,77,393,75"/>
 </map>

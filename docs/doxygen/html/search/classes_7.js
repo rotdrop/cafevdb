@@ -12,6 +12,7 @@ var searchData=
   ['historyservice_9',['HistoryService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html',1,'OCA::CAFEVDB::Service']]],
   ['historyservicetest_10',['HistoryServiceTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_history_service_test.html',1,'OCA::CAFEVDB::Tests::Unit::Service']]],
   ['html2text_11',['Html2Text',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html',1,'OCA::CAFEVDB::Common']]],
-  ['httpstatus_12',['HttpStatus',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus']]],
-  ['humandatetime_13',['HumanDateTime',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o_1_1_human_date_time.html',1,'OCA::CAFEVDB::Service::DTO']]]
+  ['html2texttest_12',['Html2TextTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html',1,'OCA::CAFEVDB::Tests::Unit::Common']]],
+  ['httpstatus_13',['HttpStatus',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_response_1_1_http_status.html',1,'HttpStatus']]],
+  ['humandatetime_14',['HumanDateTime',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o_1_1_human_date_time.html',1,'OCA::CAFEVDB::Service::DTO']]]
 ];

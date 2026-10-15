@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
 
 use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Html2Text;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -197,6 +198,8 @@ class OpenDocumentFiller
         $value = $value->toDecimal();
       } elseif ($value === null) {
         $value = '';
+      } if (is_string($value) && strip_tags($value) !== $value) {
+        $value = Html2Text::convert($value);
       }
     });
 

@@ -537,7 +537,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   public function getInvoiceNumber(): ?string
   {
-    return $this->invoiceNumber;
+    return $this->invoiceNumber ?? null;
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2025 Claus-Justus Heine
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,6 +71,23 @@ class Html2Text
   ];
 
   /**
+   * Trim the string and remove spaces followed by a newline character.
+   *
+   * @param string $text
+   *
+   * @return string
+   */
+  private static function normalizeSpaces(string $text): string
+  {
+    $text = str_replace("\xc2\xad", '', $text); // soft hyphen
+    $text = str_replace("\xc2\xa0", "\x20", $text);
+    $text = trim($text);
+    $text = preg_replace('/\h+([\n.,;:?!])/u', '$1', $text);
+
+    return $text;
+  }
+
+  /**
    * @param string $html
    *
    * @return string
@@ -80,13 +97,13 @@ class Html2Text
     foreach (self::HTML_CONVERTERS as $converter => $arguments) {
       $text = self::callConverter($converter, $arguments, $html);
       if ($text !== null) {
-        return $text;
+        return self::normalizeSpaces($text);
       }
     }
     // Fallback. No support for tables.
     $html2Text = new PhpHtml2Text;
     $html2Text->setHtml($html);
-    return $html2Text->convert();
+    return self::normalizeSpaces($html2Text->convert(), stripLinebreaks: false);
   }
 
   /**

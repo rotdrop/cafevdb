@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, 2025, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2022, 2024-2026, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Constants;
 
 /**
  * App-storage wrapper in order to have a common interface with the user-storage.
@@ -47,7 +48,6 @@ class AppStorage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const PATH_SEP = '/';
   public const UPLOAD_FOLDER = 'uploads';
   public const DRAFTS_FOLDER = 'drafts';
 
@@ -126,7 +126,7 @@ class AppStorage
   public function getFile(string $dirName, ?string $fileName = null, bool $throw = true):?ISimpleFile
   {
     if (empty($fileName)) {
-      $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+      $components = array_filter(Util::explode(Constants::PATH_SEP, $dirName));
       if (count($components) != 2) {
         throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.', $dirName));
       }
@@ -163,7 +163,7 @@ class AppStorage
       $file = $this->getFile($dirName, $fileName);
     } catch (NotFoundException) {
       if (empty($fileName)) {
-        $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+        $components = array_filter(Util::explode(Constants::PATH_SEP, $dirName));
         if (count($components) != 2) {
           throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
         }
@@ -187,7 +187,7 @@ class AppStorage
   public function fileExists(string $dirName, ?string $fileName = null):bool
   {
     if (empty($fileName)) {
-      $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+      $components = array_filter(Util::explode(Constants::PATH_SEP, $dirName));
       if (count($components) != 2) {
         throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
       }
@@ -211,7 +211,7 @@ class AppStorage
    */
   public function fileExistsInFolder(string $dirName, string $fileName):bool
   {
-    $components = array_filter(Util::explode(self::PATH_SEP, $fileName));
+    $components = array_filter(Util::explode(Constants::PATH_SEP, $fileName));
     if (count($components) == 2) {
       if ($components[0] != $dirName) {
         return false;

@@ -13,5 +13,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits 
     [ "TranslatableEnumExample", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html#adef066e1511dbe3c233513058081ce3e", null ],
     [ "TranslatableEnumExampleL10NOverride", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html#a802a00816b40ffb84163215b829b2534", [
       [ "l10nTag", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html#a802a00816b40ffb84163215b829b2534a62b3ec3ea8e65406c581e3c6a29a9320", null ]
-    ] ]
+    ] ],
+    [ "ensureGrumbleResponse", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html#a7fa3f77954fbfc857b23e46043aa2ecd", null ],
+    [ "CheckGrumbleTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_traits.html#a63bcea440b26837d2889776b8806a8c7", null ]
 ];

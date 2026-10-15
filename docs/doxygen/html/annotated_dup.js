@@ -476,7 +476,6 @@ var annotated_dup =
           [ "EncryptionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html", null ],
           [ "EncryptionFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html", null ],
           [ "EncryptionKeyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html", null ],
-          [ "EnduserNotificationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception" ],
           [ "Exception", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html", null ],
           [ "FilterFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_filter_failed_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_filter_failed_exception" ],
           [ "MigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html", null ],
@@ -764,6 +763,7 @@ var annotated_dup =
               [ "ConsoleLoggerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test" ],
               [ "FunctionsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test" ],
               [ "GenericUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test" ],
+              [ "Html2TextTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test" ],
               [ "NumberFormatterTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_number_formatter_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_number_formatter_test" ],
               [ "RationalNumberTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_rational_number_test" ],
               [ "TransliteratorTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_transliterator_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_transliterator_test" ],
@@ -808,7 +808,8 @@ var annotated_dup =
                 [ "SepaDebitMandateDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_sepa_debit_mandate_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_sepa_debit_mandate_d_t_o_test" ],
                 [ "SpecialProjectsResponseDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_special_projects_response_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_special_projects_response_d_t_o_test" ],
                 [ "UploadFileDataResponseDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_data_response_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_data_response_d_t_o_test" ],
-                [ "UploadFileMetaDataDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_meta_data_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_meta_data_d_t_o_test" ]
+                [ "UploadFileMetaDataDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_meta_data_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_file_meta_data_d_t_o_test" ],
+                [ "UploadModeTestTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_mode_test_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_d_t_o_1_1_upload_mode_test_test" ]
               ] ],
               [ "AccountingControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_accounting_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_accounting_controller_test" ],
               [ "AdminSettingsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_admin_settings_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_admin_settings_controller_test" ],
@@ -839,6 +840,7 @@ var annotated_dup =
               [ "SepaBulkTransactionsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_bulk_transactions_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_bulk_transactions_controller_test" ],
               [ "SepaDebitMandatesControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_sepa_debit_mandates_controller_test" ],
               [ "ToolTipsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_tool_tips_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_tool_tips_controller_test" ],
+              [ "UploadsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_uploads_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_uploads_controller_test" ],
               [ "ValidationControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_validation_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_validation_controller_test" ],
               [ "VueAppControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_vue_app_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_vue_app_controller_test" ],
               [ "WebBrowserHistoryControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_web_browser_history_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_web_browser_history_controller_test" ]
@@ -879,8 +881,6 @@ var annotated_dup =
               [ "EntityManagerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_entity_manager_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_entity_manager_test" ]
             ] ],
             [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions.html", [
-              [ "DatabaseEntityExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_database_entity_exception_test" ],
-              [ "EnduserNotificationExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_enduser_notification_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_enduser_notification_exception_test" ],
               [ "UndoableRunQueueExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_undoable_run_queue_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_exceptions_1_1_undoable_run_queue_exception_test" ]
             ] ],
             [ "Listener", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_listener.html", [
@@ -977,6 +977,10 @@ var annotated_dup =
                 [ "Serializable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_serializable" ],
                 [ "ExampleDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_example_d_t_o" ],
                 [ "AbstractDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o_test" ]
+              ] ],
+              [ "Exceptions", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions.html", [
+                [ "DatabaseEntityExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions_1_1_database_entity_exception_test" ],
+                [ "EnduserNotificationExceptionTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception_test" ]
               ] ],
               [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service.html", [
                 [ "AppInfoServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_service_1_1_app_info_service_test" ]

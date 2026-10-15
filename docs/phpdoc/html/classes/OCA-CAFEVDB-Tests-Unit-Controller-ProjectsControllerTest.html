@@ -357,14 +357,6 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        \OCA\CAFEVDB\Exceptions\EnduserNotificationException::class
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class
     </dd>
     </dl>
@@ -470,6 +462,14 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -610,6 +610,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries">$databaseDirEntries</a>
+    <span>
+                        &nbsp;: array&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entities">$entities</a>
     <span>
                         &nbsp;: array            </span>
@@ -634,7 +640,7 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes">$fileNodes</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes">$fileSystemNodes</a>
     <span>
                         &nbsp;: array            </span>
 </dt>
@@ -652,6 +658,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Files\IMimeTypeDetector">IMimeTypeDetector</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider">$mockProvider</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Tests-MockProvider.html"><abbr title="\OCA\CAFEVDB\Tests\MockProvider">MockProvider</abbr></a>            </span>
@@ -661,6 +673,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a>
     <span>
                         &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions">$nodePermissions</a>
+    <span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -789,6 +807,12 @@
 </dt>
 <dd>Generate a stub or mock for the UserStorage class.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions">setNodePermissions()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
     </dl>
 
 
@@ -883,7 +907,7 @@
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">NAME_VALIDATION</span>
-    = <span class="phpdocumentor-signature__default-value">[[&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;year&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; &#039;project name &#039; . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;exception&#039; =&gt; \OCA\CAFEVDB\Exceptions\EnduserNotificationException::class]]]</span>
+    = <span class="phpdocumentor-signature__default-value">[[&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;year&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; null, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; &#039;project name &#039; . self::PROJECT_YEAR, &#039;year&#039; =&gt; self::PROJECT_YEAR, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;output&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR]]], [&#039;control&#039; =&gt; &#039;name&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; true], [&#039;control&#039; =&gt; &#039;submit&#039;, &#039;input&#039; =&gt; [&#039;name&#039; =&gt; self::PROJECT_NAME . self::PROJECT_YEAR, &#039;year&#039; =&gt; 84, &#039;type&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY-&gt;value], &#039;result&#039; =&gt; [&#039;exception&#039; =&gt; \OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class]]]</span>
 </code>
 
 
@@ -981,9 +1005,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -993,6 +1017,44 @@
             <span class="phpdocumentor-signature__type"><abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_databaseDirEntries">
+        $databaseDirEntries
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">69</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>&gt;</span>
+    <span class="phpdocumentor-signature__name">$databaseDirEntries</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
     
     
@@ -1161,9 +1223,9 @@
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_fileNodes">
-        $fileNodes
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_fileSystemNodes">
+        $fileSystemNodes
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
@@ -1171,9 +1233,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -1181,7 +1243,7 @@
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type">array</span>
-    <span class="phpdocumentor-signature__name">$fileNodes</span>
+    <span class="phpdocumentor-signature__name">$fileSystemNodes</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
     
@@ -1275,6 +1337,44 @@
             -private
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_mimeTypeDetector">
+        $mimeTypeDetector
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">60</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\IMimeTypeDetector">IMimeTypeDetector</abbr></span>
+    <span class="phpdocumentor-signature__name">$mimeTypeDetector</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_mockProvider">
         $mockProvider
         <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1285,9 +1385,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -1323,9 +1423,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -1335,6 +1435,44 @@
             <span class="phpdocumentor-signature__type">int</span>
     <span class="phpdocumentor-signature__name">$nodeId</span>
      = <span class="phpdocumentor-signature__default-value">1</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_nodePermissions">
+        $nodePermissions
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">64</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$nodePermissions</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
     
     
@@ -1627,9 +1765,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
     
@@ -2033,9 +2171,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a stub or mock for the UserStorage class.</p>
@@ -2058,6 +2196,58 @@
                     <section class="phpdocumentor-description"><p>If \true generate a mock, else a stub</p>
 </section>
 
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setNodePermissions">
+        setNodePermissions()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">78</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">setNodePermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$path</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$permissions</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
             </dd>
             </dl>
 
@@ -2194,15 +2384,18 @@
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_appContainer">$appContainer</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries">$databaseDirEntries</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entities">$entities</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entityManager">$entityManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_entityRepositories">$entityRepositories</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#property_eventsService">$eventsService</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileNodes">$fileNodes</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes">$fileSystemNodes</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkShares">$linkShares</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_linkSharesByPath">$linkSharesByPath</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mockProvider">$mockProvider</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions">$nodePermissions</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#property_pme">$pme</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_postData">$postData</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Controller-ProjectsControllerTest.html#property_projectsController">$projectsController</a></li>
@@ -2228,6 +2421,7 @@
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_eventMatrixTest">eventMatrixTest()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Legacy-PME-GetPMEStubTrait.html#method_getPHPMyEditStub">getPHPMyEditStub()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub">getUserStorageStub()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions">setNodePermissions()</a></li>
                                     </ul>
             </li>
                     </ul>

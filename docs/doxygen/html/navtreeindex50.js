@@ -1,9 +1,5 @@
 var NAVTREEINDEX50 =
 {
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a8584c592cfad3e648784d448b5729de3":[8,0,0,0,20,2,6,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a8584c592cfad3e648784d448b5729de3":[9,0,0,0,20,1,6,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a971042fdec9995a3c83348723b015113":[8,0,0,0,20,2,6,2],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a971042fdec9995a3c83348723b015113":[9,0,0,0,20,1,6,2],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#ae6c5fdcfbc1d6dbadd36e9fc11c51814":[8,0,0,0,20,2,6,4],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#ae6c5fdcfbc1d6dbadd36e9fc11c51814":[9,0,0,0,20,1,6,4],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#afb3413e1048cef9c667ad1db5114366c":[8,0,0,0,20,2,6,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX50 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#a6e42d23c3b01d0a34a558cfa9ac35df1":[9,0,0,0,20,2,1,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#a816a4fed31fb6ef05d29284eec6ad32a":[9,0,0,0,20,2,1,7],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ac73eef9ff76ea330c0dab36ca448b90d":[9,0,0,0,20,2,1,2],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ac751e87b3d4c4bf2feb03bee8b092755":[9,0,0,0,20,2,1,1]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ac751e87b3d4c4bf2feb03bee8b092755":[9,0,0,0,20,2,1,1],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ad39c70322389b8d8c48a65e41b5a93c7":[9,0,0,0,20,2,1,4],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ae5cad4df4d96ecb2d7c157737a846787":[9,0,0,0,20,2,1,6],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#aeb70b1530eeb563f599e4fafa8c214e6":[9,0,0,0,20,2,1,5],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_i_m_a_p_message.html":[9,0,0,0,20,2,2]
 };

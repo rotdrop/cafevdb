@@ -1,5 +1,11 @@
 var NAVTREEINDEX16 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#ac99e60655b39f908612c6b206e2bb30d":[8,0,0,0,8,1,0,0,0,6],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#ac99e60655b39f908612c6b206e2bb30d":[9,0,0,0,8,1,0,0,0,6],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#ae21dadcaf66639148d55c73e8a17ec78":[8,0,0,0,8,1,0,0,0,2],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#ae21dadcaf66639148d55c73e8a17ec78":[9,0,0,0,8,1,0,0,0,2],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html":[8,0,0,0,8,1,3],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html":[9,0,0,0,8,1,3],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html#a0402831500bc33566403caea76c5b47a":[8,0,0,0,8,1,3,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html#a0402831500bc33566403caea76c5b47a":[9,0,0,0,8,1,3,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html#a4b454a62c3d54101d4f09e050b4b6a15":[8,0,0,0,8,1,3,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX16 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a1b7c1b5313d6b73d29848c3eb464529f":[8,0,0,0,8,1,2,0,5,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a1b7c1b5313d6b73d29848c3eb464529f":[9,0,0,0,8,1,2,0,5,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a1cd03d292a59ab03480f7393051bde8e":[8,0,0,0,8,1,2,0,5,3],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a1cd03d292a59ab03480f7393051bde8e":[9,0,0,0,8,1,2,0,5,3],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a631b7928fe799aec13a5249e19ce3bc6":[8,0,0,0,8,1,2,0,5,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a631b7928fe799aec13a5249e19ce3bc6":[9,0,0,0,8,1,2,0,5,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a7fffdf298aa5631a4ce0dc573f792bca":[8,0,0,0,8,1,2,0,5,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a7fffdf298aa5631a4ce0dc573f792bca":[9,0,0,0,8,1,2,0,5,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#aa73753c7e2a152b215fda429b03b6ebb":[8,0,0,0,8,1,2,0,5,4],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#aa73753c7e2a152b215fda429b03b6ebb":[9,0,0,0,8,1,2,0,5,4]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_doctrine_migrations_version.html#a1cd03d292a59ab03480f7393051bde8e":[9,0,0,0,8,1,2,0,5,3]
 };

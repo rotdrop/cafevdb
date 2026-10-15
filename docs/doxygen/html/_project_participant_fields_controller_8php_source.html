@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      <span class="keywordflow">case</span> EnumParticipantFieldRequestTopic::PROPERTY:</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">foreach</span> ([<span class="stringliteral">&#39;fieldId&#39;</span>, <span class="stringliteral">&#39;property&#39;</span>] as $parameter) {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>          <span class="keywordflow">if</span> (empty($this-&gt;request-&gt;getParam($parameter))) {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>              $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="stringliteral">&#39;Missing parameters in request &quot;%s&quot;: &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                [ $topic, $parameter ]),</div>
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            $fieldId = $this-&gt;request-&gt;getParam(<span class="stringliteral">&#39;fieldId&#39;</span>);</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            $field = $this-&gt;getDatabaseRepository(<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities.html">Entities</a>\ProjectParticipantField::class)-&gt;find($fieldId);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keywordflow">if</span> (empty($field)) {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to fetch field with id &quot;%d&quot;.&#39;</span>, $fieldId),</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>              );</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            }</div>
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>              $propertyValue = $field-&gt;getDefaultValue();</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            } <span class="keywordflow">catch</span> (Throwable $t) {</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                  <span class="stringliteral">&#39;Unable to retrieve property &quot;%s&quot; from field &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                  [ $property, $field-&gt;getName() ]),</div>
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keywordflow">switch</span> ($subTopic) {</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>          <span class="keywordflow">case</span> EnumParticipantFieldRequestSubTopic::DEFINE:</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keywordflow">if</span> (empty($data)) {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Missing parameters in request &quot;%s&quot;.&#39;</span>, $topic)),</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>              );</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            }</div>
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            $dataOptions = $projectValues[<span class="stringliteral">&#39;data_options&#39;</span>];</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            $dataOptions = array_values($dataOptions); <span class="comment">// get rid of -1 index</span></div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d">count</a>($dataOptions) !== 1) {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                  <span class="stringliteral">&#39;No or too many items available: &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                  print_r($dataOptions, <span class="keyword">true</span>) )),</div>
@@ -267,14 +267,14 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            }</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            $item = $dataOptions[0];</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="keywordflow">if</span> ($item[<span class="stringliteral">&#39;label&#39;</span>] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                  <span class="stringliteral">&#39;Generator data must be tagged with &quot;%s&quot; label, got &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                  [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item[<span class="stringliteral">&#39;label&#39;</span>], ])),</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>              );</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            }</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">if</span> ($item[<span class="stringliteral">&#39;key&#39;</span>] != Uuid::NIL) {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Generator data must be tagged with NIL uuid, got &quot;%s&quot;.&#39;</span>, $item[<span class="stringliteral">&#39;key&#39;</span>])),</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>              );</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            }</div>
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>              $this-&gt;logException($t);</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            }</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <span class="keywordflow">if</span> (empty($generatorClass)) {</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Generator &quot;%s&quot; could not be instantiated.&#39;</span>, $item[<span class="stringliteral">&#39;data&#39;</span>])),</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>              );</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            }</div>
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>          <span class="keywordflow">case</span> EnumParticipantFieldRequestSubTopic::RUN:</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            <span class="keywordflow">foreach</span> ([<span class="stringliteral">&#39;fieldId&#39;</span>, <span class="stringliteral">&#39;startDate&#39;</span>,] as $parameter) {</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>              <span class="keywordflow">if</span> (empty($data[$parameter])) {</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                  ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    <span class="stringliteral">&#39;Missing parameters in request &quot;%s&quot;: &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                    [ $topic, $parameter ])),</div>
@@ -326,14 +326,14 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            $fieldId = $data[<span class="stringliteral">&#39;fieldId&#39;</span>];</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            $field = $this-&gt;getDatabaseRepository(<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities.html">Entities</a>\ProjectParticipantField::class)-&gt;find($fieldId);</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <span class="keywordflow">if</span> (empty($field)) {</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to fetch field with id &quot;%d&quot;.&#39;</span>, $fieldId)),</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>              );</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            }</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span></div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            $managementOption = $field-&gt;getManagementOption();</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            <span class="keywordflow">if</span> (empty($managementOption)) {</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                (</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                  $this-&gt;l-&gt;t(<span class="stringliteral">&#39;No management option in field &quot;%s&quot;.&#39;</span>, $field-&gt;getName())),</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>              );</div>
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span></div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            $generator = $this-&gt;di(ReceivablesGeneratorFactory::class)-&gt;getGenerator($field, $progressStatus);</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            <span class="keywordflow">if</span> (empty($generator)) {</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                (</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                  $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                    <span class="stringliteral">&#39;Unable to load generator for recurring receivables &quot;%s&quot;.&#39;</span>,</div>
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            } <span class="keywordflow">catch</span> (Throwable $t) {</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>              $this-&gt;logException($t);</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>              $this-&gt;entityManager-&gt;rollback();</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to generate receivables for the field &quot;%1$s&quot;.&#39;</span>, $field-&gt;getName()),</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                previous: $t,</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,</div>
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keywordflow">switch</span> ($subTopic) {</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>          <span class="keywordflow">case</span> EnumParticipantFieldRequestSubTopic::DEFINE:</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            <span class="keywordflow">if</span> (empty($data)) {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Missing parameters in request %s&#39;</span>, $topic)),</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>              );</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            }</div>
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>              <span class="keyword">false</span>);</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_o_r_m.html#ad737d9a33cc49b8fceb6f4a932b24d0d">count</a>($dataOptions) !== 1) {</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>                ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                  <span class="stringliteral">&#39;No or too many items available: %s&#39;</span>,</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                  print_r($dataOptions, <span class="keyword">true</span>) )),</div>
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            $item = array_shift($dataOptions);</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span> </div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">if</span> ($item[<span class="stringliteral">&#39;label&#39;</span>] === Constants::README_NAME) {</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                  <span class="stringliteral">&#39;Using &quot;%1$s&quot; as option-label is not allowed.&#39;</span></div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                  . <span class="stringliteral">&#39; The &quot;%2$s&quot;-file is reserved by the app to hold the contents of the tooltip for this field.&#39;</span>, [</div>
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                  <span class="keywordflow">if</span> (!empty($item[<span class="stringliteral">&#39;data&#39;</span>])) {</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                    $parsed = $this-&gt;fuzzyInput-&gt;currencyValue($item[<span class="stringliteral">&#39;data&#39;</span>]);</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>                    <span class="keywordflow">if</span> ($parsed === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                      <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                      <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>                        $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Could not parse number: &quot;%s&quot;&#39;</span>, $item[<span class="stringliteral">&#39;data&#39;</span>]),</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                        context: [ <span class="stringliteral">&#39;item&#39;</span> =&gt;  $item ],</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                      );</div>
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>                  <span class="keywordflow">if</span> (!empty($item[<span class="stringliteral">&#39;deposit&#39;</span>])) {</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>                    $parsed = $this-&gt;fuzzyInput-&gt;currencyValue($item[<span class="stringliteral">&#39;deposit&#39;</span>]);</div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                    <span class="keywordflow">if</span> ($parsed === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                      <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                      <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                        ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Could not parse number: &quot;%s&quot;&#39;</span>, [ $item[<span class="stringliteral">&#39;deposit&#39;</span>] ])),</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                      );</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>                    }</div>
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>                  <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>                <span class="keywordflow">case</span> FieldDataType::CLOUD_FILE:</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>                  <span class="keywordflow">if</span> ($item[<span class="stringliteral">&#39;label&#39;</span>] === Constants::README_NAME) {</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>                    <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>                    <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>                      ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>                        <span class="stringliteral">&#39;Using &quot;%1$s&quot; as option-label is not allowed.&#39;</span></div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>                        . <span class="stringliteral">&#39; The &quot;%2$s&quot;-file is used by the app to hold the contents of the help-text for this field.&#39;</span>, [</div>
@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>              $missing += [ <span class="stringliteral">&#39;key&#39;</span>, <span class="stringliteral">&#39;musicianId&#39;</span> ];</div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>            }</div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>            <span class="keywordflow">if</span> (!empty($missing)) {</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>                (</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>                  $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Missing parameters in request &quot;%s/%s&quot;: &quot;%s&quot;.&#39;</span>, [</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>                    $topic, $subTopic, implode(<span class="stringliteral">&#39;&quot;, &quot;&#39;</span>, $missing),</div>
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>            }</div>
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>            $updateStrategy = $data[<span class="stringliteral">&#39;updateStrategy&#39;</span>];</div>
 <div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>            <span class="keywordflow">if</span> (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>                (</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>                  $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown update strategy: &quot;%s&quot;.&#39;</span>, $this-&gt;l-&gt;t($updateStrategy ?? <span class="stringliteral">&#39;empty&#39;</span>))),</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>              );</div>
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>            $fieldId = $data[<span class="stringliteral">&#39;fieldId&#39;</span>];</div>
 <div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>            $field = $this-&gt;getDatabaseRepository(<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities.html">Entities</a>\ProjectParticipantField::class)-&gt;find($fieldId);</div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>            <span class="keywordflow">if</span> (empty($field)) {</div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>                ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to fetch field with id &quot;%s&quot;.&#39;</span>, $fieldId)),</div>
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>              );</div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>            }</div>
@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>                <span class="stringliteral">&#39;musician&#39;</span> =&gt; $data[<span class="stringliteral">&#39;musicianId&#39;</span>],</div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>              ]);</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>              <span class="keywordflow">if</span> (empty($participant)) {</div>
-<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>                <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>                <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>                  ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>                    <span class="stringliteral">&#39;Unable to find the musician with the id &quot;%d&quot; in project &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>                    [ $data[<span class="stringliteral">&#39;musicianId&#39;</span>], $field-&gt;getProject()-&gt;getName(), ])),</div>
@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>            <span class="keywordflow">if</span> (!empty($data[<span class="stringliteral">&#39;key&#39;</span>])) {</div>
 <div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>              $receivable = $field-&gt;getDataOption($data[<span class="stringliteral">&#39;key&#39;</span>]);</div>
 <div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>              <span class="keywordflow">if</span> (empty($receivable)) {</div>
-<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>                <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>                <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>                  ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unable to fetch receivable with key &quot;%s&quot;.&#39;</span>, $data[<span class="stringliteral">&#39;key&#39;</span>])),</div>
 <div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>                );</div>
 <div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>              }</div>
@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span></div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>            $generator = $this-&gt;di(ReceivablesGeneratorFactory::class)-&gt;getGenerator($field, $progressStatus);</div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>            <span class="keywordflow">if</span> (empty($generator)) {</div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>              <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>              <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                ($this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>                  <span class="stringliteral">&#39;Unable to load generator for recurring receivables &quot;%s&quot;.&#39;</span>,</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>                  $field-&gt;getName())),</div>
@@ -609,7 +609,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>            } <span class="keywordflow">catch</span> (Throwable $t) {</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>              $this-&gt;logException($t);</div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>              $this-&gt;entityManager-&gt;rollback();</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>              <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                $this-&gt;l-&gt;t(</div>
 <div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                  <span class="stringliteral">&#39;Unable to update receivable &quot;%1$s@%2$s&quot; for the person &quot;%3$s&quot; using the generator &quot;%4$s&quot;.&#39;</span>, [</div>
 <div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>                    $receivable?-&gt;getLabel() ?? $this-&gt;l-&gt;t(<span class="stringliteral">&#39;unknown&#39;</span>),</div>
@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>      <span class="keywordflow">default</span>:</div>
 <div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>        <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>    }</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>    <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">Exceptions\EnduserNotificationException</a>(</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>    <span class="keywordflow">throw</span> <span class="keyword">new</span> Exceptions\EnduserNotificationException(</div>
 <div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>      ($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown Request &quot;%s/%s&quot;&#39;</span>, [ $topic, $subTopic ])),</div>
 <div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    );</div>
 <div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>  }</div>
@@ -681,7 +681,6 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_project_parti
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_html_ae1c802a41e9a90cf2b9bb1c4fcb84566"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ae1c802a41e9a90cf2b9bb1c4fcb84566">OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant\getParticipantFieldsData</a></div><div class="ttdeci">getParticipantFieldsData()</div><div class="ttdoc">Get participantFieldsData.</div><div class="ttdef"><b>Definition</b> <a href="_project_participant_8php_source.html#l00373">ProjectParticipant.php:373</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html">OCA\CAFEVDB\Database\EntityManager</a></div><div class="ttdoc">Use this as the actual EntityManager in order to be able to construct it without a Factory and to def...</div><div class="ttdef"><b>Definition</b> <a href="_entity_manager_8php_source.html#l00098">EntityManager.php:99</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html">OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit</a></div><div class="ttdoc">Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other &quot;sugar&quot;.</div><div class="ttdef"><b>Definition</b> <a href="_database_2_legacy_2_p_m_e_2_p_h_p_my_edit_8php_source.html#l00053">PHPMyEdit.php:54</a></div></div>
-<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html">OCA\CAFEVDB\Exceptions\EnduserNotificationException</a></div><div class="ttdoc">This exception should provide an error message which informs an end-user about an error.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_exceptions_2_enduser_notification_exception_8php_source.html#l00037">EnduserNotificationException.php:38</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html">OCA\CAFEVDB\PageRenderer\Renderer</a></div><div class="ttdoc">Abstract base HTML renderer.</div><div class="ttdef"><b>Definition</b> <a href="_renderer_8php_source.html#l00030">Renderer.php:31</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">OCA\CAFEVDB\Service\ConfigService</a></div><div class="ttdoc">Configuration do-it-all class.</div><div class="ttdef"><b>Definition</b> <a href="_config_service_8php_source.html#l00068">ConfigService.php:69</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service.html">OCA\CAFEVDB\Service\FuzzyInputService</a></div><div class="ttdoc">Try to correct common human input &quot;errors&quot;, respectively sloppiness.</div><div class="ttdef"><b>Definition</b> <a href="_fuzzy_input_service_8php_source.html#l00041">FuzzyInputService.php:42</a></div></div>

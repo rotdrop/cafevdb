@@ -1,9 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a3d6a26d211a99287459a423d3965f11f":[9,0,0,0,20,41,7],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a4f3cad275077d14c17327a4fdfa380bb":[8,0,0,0,20,41,11],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a4f3cad275077d14c17327a4fdfa380bb":[9,0,0,0,20,41,11],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a84d3cdfaa816a21e50944c7dbd09b432":[8,0,0,0,20,41,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a84d3cdfaa816a21e50944c7dbd09b432":[9,0,0,0,20,41,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#abd3a144f8df4dea56d1ac58da5bc762a":[8,0,0,0,20,41,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#abd3a144f8df4dea56d1ac58da5bc762a":[9,0,0,0,20,41,8],
@@ -249,5 +245,9 @@ var NAVTREEINDEX53 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#acaf8dfbed0c713e9a0e2be9b2e5308a9":[9,0,0,0,22,0,1,22],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#acc3b96bd2e6b9c9b2bf003b830b6039f":[8,0,0,0,22,0,1,34],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#acc3b96bd2e6b9c9b2bf003b830b6039f":[9,0,0,0,22,0,1,34],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad218d3abaa343a67bda2dc669fa2b05d":[8,0,0,0,22,0,1,29]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad218d3abaa343a67bda2dc669fa2b05d":[8,0,0,0,22,0,1,29],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad218d3abaa343a67bda2dc669fa2b05d":[9,0,0,0,22,0,1,29],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad22e004288b7149fe24fb166f4cff9ee":[8,0,0,0,22,0,1,6],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad22e004288b7149fe24fb166f4cff9ee":[9,0,0,0,22,0,1,6],
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#ad69dd4607977cae05ebe19d1ae604fb1":[8,0,0,0,22,0,1,33]
 };
