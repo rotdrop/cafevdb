@@ -253,13 +253,12 @@ class UploadsControllerTest extends TestCase
     $this->fileMimeType = $this->mimeTypeDetector->detectString(self::FILE_CONTENT);
 
     $this->controller = new Controller\UploadsController(
+      appName: $this->mockProvider->appName,
       appStorage: $appStorage,
       l: $this->l,
       logger: $this->mockProvider->getLoggerInterface(),
       request: $request,
-      urlGenerator: $this->urlGenerator,
       userStorage: $userStorage,
-      appName: $this->mockProvider->appName,
     );
   }
 

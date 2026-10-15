@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Exceptions;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Exceptions;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -35,10 +35,10 @@ use OCA\CAFEVDB\Toolkit;
  * Test the Toolkit\Exceptions\DatabaseEntityException class and some of its child
  * classes.
  */
-#[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotUniqueException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseInconsistentValueException::class)]
 #[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityException::class)]
+#[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\CoversClass(Toolkit\Exceptions\DatabaseMissingIdentifierException::class)]
 class DatabaseEntityExceptionTest extends TestCase
 {
