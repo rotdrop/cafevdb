@@ -25,13 +25,23 @@
  * @module
  */
 
+import type { FileStat, ResponseDataDetailed } from 'webdav';
 import type * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { GetValueResult } from './simple-set-value.ts';
 
+import { emit } from '@nextcloud/event-bus';
+import {
+  defaultRootPath,
+  getDefaultPropfind,
+  getClient as getWebDavClient,
+  resultToNode,
+} from '@nextcloud/files/dav';
 import { translate as t } from '@nextcloud/l10n';
 import camelcase from 'camelcase';
 import {
+  CssClasses,
+  EnumFileUploadMode,
   EnumPersonalSettingsKey,
   EnumSettingsGetApp,
   EnumSpecialProjectsAction,
@@ -1284,9 +1294,41 @@ const afterLoad = function(container?: JQuery) {
     const $autofillers = $fieldset.find('input.auto-fill-test') as JQuery<HTMLInputElement>;
     const $autofillersdata = $fieldset.find('input.auto-fill-test-data') as JQuery<HTMLInputElement>;
 
-    if ($('#documenttemplatesfolder').val() === '' || $(`#${ConfigConstants.SHARED_FOLDER}`).val() === '') {
+    if ($(`#${ConfigConstants.DOCUMENT_TEMPLATES_FOLDER}`).val() === '' || $(`#${ConfigConstants.SHARED_FOLDER}`).val() === '') {
       $fieldset.find('input').prop('disabled', true);
     }
+
+    const updateTemplateSettings = function(
+      fileName: string,
+      downloadLink: string,
+      $container: JQuery,
+      $trigger: JQuery,
+    ) {
+      return $.post(
+        setAppUrl($container.data('documentTemplate')),
+        { value: fileName },
+      )
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+          $trigger.removeClass('busy');
+        })
+        .done(function(data: ResponseData<DTO.MessagesResponse>) {
+          if (!Ajax.validateResponse(data, ['messages'])) {
+            $trigger.removeClass('busy');
+            return;
+          }
+          Notification.messages(data.messages);
+          $container.find('.upload-placeholder').val(fileName).hide();
+          $container.find('.downloadlink')
+            .attr('href', downloadLink)
+            .attr('download', fileName)
+            .html(fileName)
+            .show();
+          $container.find('.auto-fill-test').prop('disabled', false).show();
+          $container.find('.delete').prop('disabled', false);
+          $trigger.removeClass('busy');
+        });
+    };
 
     /**
      * @param file TBD.
@@ -1294,16 +1336,12 @@ const afterLoad = function(container?: JQuery) {
      * @param $container TBD.
      *
      * @param $trigger TBD.
-     *
-     * @todo This is the only place which actually uses upload/move,
-     * it should be replace by the things the other parts of the code
-     * use.
      */
-    const moveIntoPlace = function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
+    const moveIntoPlace = async function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
         '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
-            + '/' + $('#documenttemplatesfolder').val()
+            + '/' + $(`#${ConfigConstants.DOCUMENT_TEMPLATES_FOLDER}`).val()
             + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
             + '/' + file.original_name;
 
@@ -1313,7 +1351,7 @@ const afterLoad = function(container?: JQuery) {
           stashedFile: file.tmp_name,
           destinationPath,
           originalFileName: file.original_name,
-          uploadMode: 'copy',
+          uploadMode: EnumFileUploadMode.COPY,
         },
       )
         .fail(function(xhr, status, errorThrown) {
@@ -1328,30 +1366,8 @@ const afterLoad = function(container?: JQuery) {
           Notification.messages(data.messages);
           const fileName = data.fileName;
           const downloadLink = data.downloadLink;
-          $.post(
-            setAppUrl($container.data('documentTemplate')),
-            { value: fileName },
-          )
-            .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-              $trigger.removeClass('busy');
-            })
-            .done(function(data: ResponseData<DTO.MessagesResponse>) {
-              if (!Ajax.validateResponse(data, ['messages'])) {
-                $trigger.removeClass('busy');
-                return;
-              }
-              Notification.messages(data.messages);
-              $container.find('.upload-placeholder').val(fileName).hide();
-              $container.find('.downloadlink')
-                .attr('href', downloadLink)
-                .attr('download', fileName)
-                .html(fileName)
-                .show();
-              $container.find('.auto-fill-test').prop('disabled', false).show();
-              $container.find('.delete').prop('disabled', false);
-              $trigger.removeClass('busy');
-            });
+
+          updateTemplateSettings(fileName, downloadLink, $container, $trigger);
         });
     };
 
@@ -1419,14 +1435,14 @@ const afterLoad = function(container?: JQuery) {
       const $this = $(this);
       const $container = $this.parent();
 
-      $this.addClass('busy');
+      $this.addClass(CssClasses.BUSY);
 
       FileUpload.init({
         url: generateAppUrl(UploadsController.END_POINT_STASH),
         doneCallback(file) {
           moveIntoPlace(file, $container, $this);
         },
-        stopCallback: undefined,
+        stopCallback() { $this.removeClass(CssClasses.BUSY); },
         failCallback(_event: any, _data: any) { $this.removeClass('busy'); },
         dropZone: $container,
         containerSelector: '.document-template-upload-wrapper',
@@ -1435,44 +1451,79 @@ const afterLoad = function(container?: JQuery) {
       });
 
       $('.document-template-upload-wrapper input[type="file"]').trigger('click');
+
       return false;
     });
 
-    $cloudSelectors.on('click', function(_event) {
+    $cloudSelectors.on('click', async function(_event) {
       const $this = $(this);
       const $container = $this.closest('.template-upload');
 
-      Dialogs.filePicker({
-        title: $this.data('placeholder'),
-        callback(path: string|string[]) {
+      const subFolderId = $container.data('documentTemplateSubFolder') || '';
+      const destinationFolder =
+        '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
+        + '/' + $(`#${ConfigConstants.DOCUMENT_TEMPLATES_FOLDER}`).val()
+        + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
+        + '/';
 
-          $this.addClass('busy');
+      try {
+        await Dialogs.filePicker({
+          title: $this.data('placeholder'),
+          type: Dialogs.FilePickerType.CopyMove,
+          target: destinationFolder,
+          async callback(_path, node, type) {
 
-          if (!path) {
-            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-            $this.removeClass('busy');
-            return;
-          }
-          $.post(generateAppUrl(UploadsController.END_POINT_STASH), { cloudPaths: [path] })
-            .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-              $this.removeClass('busy');
-            })
-            .done(function(files) {
-              if (!Array.isArray(files) || files.length !== 1) {
-                Dialogs.alert(
-                  t(appName, 'Unable to copy selected file {file}.', { file: files }),
-                  t(appName, 'Error'),
-                  function() {
-                    $this.removeClass('busy');
-                  },
-                );
-                return;
+            $this.addClass(CssClasses.BUSY);
+
+            const destinationPath = destinationFolder + node.basename;
+            console.debug('DESTINATION PATH', { destinationPath, node, _path, type });
+
+            const webDavClient = getWebDavClient();
+
+            try {
+              switch (type) {
+                case Dialogs.FilePickerType.Move:
+                  await webDavClient.moveFile(
+                    `${defaultRootPath}${node.path}`,
+                    `${defaultRootPath}${destinationPath}`,
+                  );
+                  break;
+                case Dialogs.FilePickerType.Copy: {
+                  await webDavClient.copyFile(
+                    `${defaultRootPath}${node.path}`,
+                    `${defaultRootPath}${destinationPath}`,
+                  );
+                  break;
+                }
               }
-              moveIntoPlace(files[0], $container, $this);
-            });
-        },
-      });
+              const statResult = await webDavClient.stat(`${defaultRootPath}${destinationPath}`, {
+                details: true,
+                data: getDefaultPropfind(),
+              }) as ResponseDataDetailed<FileStat>;
+              const newNode = resultToNode(statResult.data);
+              if (type === Dialogs.FilePickerType.Move) {
+                emit('files:node:updated', newNode);
+              } else {
+                emit('files:node:created', newNode);
+              }
+
+              await updateTemplateSettings(newNode.basename, newNode.source, $container, $this);
+
+            } catch (error) {
+              const message = error instanceof Error ? error.message : t(appName, 'unknown error');
+              const template = type === Dialogs.FilePickerType.Copy
+                ? 'Error while copying node {node}: {message}!'
+                : 'Error while moving node {node}: {message}!';
+              await Dialogs.alert(t(appName, template, { node: node.path, message }), t(appName, 'Error'));
+            }
+          },
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(appName, 'unknown error');
+        Dialogs.alert(t(appName, 'Error during file-selection: {message}!', { message }), t(appName, 'Error'));
+      }
+
+      $this.removeClass(CssClasses.BUSY);
     });
   }
 
