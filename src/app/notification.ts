@@ -117,7 +117,7 @@ function messages(messages: undefined|string|string[], options: ToastOptions = {
       messages = [messages];
     }
     for (const message of messages) {
-      if ('' + message.trim() !== '') {
+      if ('' + message?.trim() !== '') {
         showHtml(message, options);
       }
     }
