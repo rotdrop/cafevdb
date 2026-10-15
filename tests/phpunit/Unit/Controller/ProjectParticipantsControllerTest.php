@@ -38,7 +38,6 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectParticipantsController. */
 #[Attributes\CoversClass(Controller\ProjectParticipantsController::class)]
@@ -49,6 +48,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 class ProjectParticipantsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 
   private const CONTROLLER_CLASS = Controller\ProjectParticipantsController::class;
   private const EXPECTED_ROUTES = [
@@ -67,7 +67,7 @@ class ProjectParticipantsControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
@@ -79,7 +79,7 @@ class ProjectParticipantsControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
+    // $appContainer = $this->mockProvider->getAppContainer();
 
     $this->controller = new Controller\ProjectParticipantsController(
       appName: $this->mockProvider->appName,

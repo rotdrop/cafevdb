@@ -68,7 +68,6 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
-use OCA\RotDrop\Tests\DeprecationException;
 
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
@@ -172,6 +171,7 @@ class EmailFormControllerTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 
   private const EXPECTED_ROUTES = [
     'webform',
@@ -212,7 +212,7 @@ class EmailFormControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations();
 
     $this->generateEventsService();
 

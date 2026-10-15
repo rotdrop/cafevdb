@@ -35,7 +35,6 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use OCP\ProjectParticipantFields\IManager as ProjectParticipantFieldsManager;
 
-use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -49,11 +48,12 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Common\TimeFactoryTrait;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
-use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
 #[Attributes\CoversClass(Controller\ProjectParticipantFieldsController::class)]
@@ -180,11 +180,13 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 class ProjectParticipantFieldsControllerTest extends TestCase
 {
+  use EnableDeprecationsTrait;
   use EntityGeneratorTrait;
   use MockUserStorageTrait;
   use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
+  use TimeFactoryTrait;
 
   private const CONTROLLER_CLASS = Controller\ProjectParticipantFieldsController::class;
   private const EXPECTED_ROUTES = [
@@ -197,8 +199,6 @@ class ProjectParticipantFieldsControllerTest extends TestCase
 
   private Controller\ProjectParticipantFieldsController $controller;
 
-  private TimeFactory $timeFactory;
-
   private Entities\ProjectParticipantField $field;
 
   private static bool $migrationsApplied = false;
@@ -209,40 +209,18 @@ class ProjectParticipantFieldsControllerTest extends TestCase
 
   private static int $fieldId;
 
-  private DateTimeImmutable $now;
-
   private array $postData = [];
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
-    error_reporting(E_ALL);
-    DeprecationException::throwOnDeprecations(
-      exclude: '/'
-      . 'OCP\\\\IConfig\\:\\:(get|set|delete)AppValue'
-      . '|' . 'OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch'
-      . '/',
-    );
+    self::enableDeprecations();
 
     $this->generateCalendarBackend();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $this->now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
-    /** @var TimeFactory $timeFactory */
-    $this->timeFactory = $this->getMockBuilder(TimeFactory::class)->getMock();
-    $this->timeFactory->method('now')->willReturnCallback(fn() => $this->now);
-    $this->timeFactory->method('sleepUntil')->willReturnCallback(function (float $timestamp) {
-      $diff = $timestamp - $this->now->getTimeStamp();
-      if ($diff > 0) {
-        return time_sleep_until(time() + $diff);
-      }
-      return false;
-    });
-
-    $this->timeFactory->expects($this->never())->method('withTimeZone');
-    $this->mockProvider->registerClassInstance(TimeFactory::class, $this->timeFactory, global: true);
+    $this->mockTimeFactory(DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00'));
 
     $this->getUserStorageStub();
     $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);

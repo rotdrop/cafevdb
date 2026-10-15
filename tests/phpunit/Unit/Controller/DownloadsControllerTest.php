@@ -39,7 +39,6 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EntityRepositoryController. */
 #[Attributes\CoversClass(DownloadsController::class)]
@@ -64,7 +63,9 @@ use OCA\RotDrop\Tests\DeprecationException;
 class DownloadsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\MockEntityManagerTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Toolkit\Traits\CheckGrumbleTrait;
 
   private const CONTROLLER_CLASS = DownloadsController::class;
   private const EXPECTED_ROUTES = [ 'get', 'fetch' ];
@@ -74,7 +75,7 @@ class DownloadsControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations('grumble');
 
     $this->getEntityManagerMock();
     $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
@@ -253,14 +254,7 @@ class DownloadsControllerTest extends TestCase
       section: DownloadsController::SECTION_FILECACHE,
       object: self::CACHE_KEY,
     );
-    $this->assertInstanceOf(DataResponse::class, $result);
-    /** @var DataResponse $result */
-    $this->assertEquals(Http::STATUS_BAD_REQUEST, $result->getStatus());
-    $data = $result->getData();
-    $this->assertTrue(is_array($data));
-    foreach (['class', 'file', 'line', 'value', 'message', 'messages'] as $key) {
-      $this->assertArrayHasKey($key, $data);
-    }
+    $this->ensureGrumbleResponse($result);
   }
 
   public const DB_FILES = [
