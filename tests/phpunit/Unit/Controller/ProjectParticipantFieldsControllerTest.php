@@ -376,7 +376,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
   }
 
   /**
-   * This is quas a tearDownAfterClass() but we need some mocked / stubbed
+   * This is quasi a tearDownAfterClass() but we need some mocked / stubbed
    * classes for the entity-manager.
    *
    * @return void
