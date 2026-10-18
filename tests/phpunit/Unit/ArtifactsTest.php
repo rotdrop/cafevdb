@@ -146,6 +146,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
@@ -168,6 +169,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
@@ -177,7 +179,7 @@ class ArtifactsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -203,7 +205,7 @@ class ArtifactsTest extends TestCase
   public function testArtifacts(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $userStorage = $this->getUserStorageStub();
+    $userStorage = $this->getUserStorage();
     $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();

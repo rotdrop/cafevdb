@@ -141,6 +141,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
@@ -163,6 +164,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
@@ -175,7 +177,7 @@ class UploadsControllerTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\GetAppStorageTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
 
   private const CONTROLLER_CLASS = Controller\UploadsController::class;
@@ -210,7 +212,7 @@ class UploadsControllerTest extends TestCase
 
   private IL10N $l;
 
-  private string $appName;
+  protected $appName;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -220,7 +222,7 @@ class UploadsControllerTest extends TestCase
     $this->generateCalendarBackend();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $userStorage = $this->getUserStorageStub();
+    $userStorage = $this->getUserStorage();
     $appStorage = $this->getAppStorage();
 
     /** @var IRequest $request */
@@ -312,7 +314,7 @@ class UploadsControllerTest extends TestCase
       ->setFile(
         new Entities\EncryptedFile(self::BASE_NAME, self::FILE_CONTENT, $this->fileMimeType),
       );
-    $this->databaseDirEntries[self::ORIGINAL_FILE_NAME] = $dbDirEntry;
+    $this->setDatabaseDirEntry($dbDirEntry);
     $this->userStorage->putContent(self::ORIGINAL_FILE_NAME, self::FILE_CONTENT);
     $cloudPaths = [ self::ORIGINAL_FILE_NAME ];
     $response = $this->controller->stash(
@@ -356,7 +358,9 @@ class UploadsControllerTest extends TestCase
       $oldLine = $response->getData()['line'];
     }
     $first = true;
-    $this->userStorage->get(self::ORIGINAL_FILE_NAME);
+    // $this->userStorage->putContent(self::ORIGINAL_FILE_NAME, self::FILE_CONTENT);
+    // generate a directory instead of a file
+    $this->userStorage->ensureFolder(self::ORIGINAL_FILE_NAME);
     foreach ($uploadModes as $uploadMode) {
       $response = $this->controller->stash(
         cloudPaths: $cloudPaths,
@@ -433,7 +437,7 @@ class UploadsControllerTest extends TestCase
     }
 
     // test the permission check,  move must fail if PERMISSION_DELETE is not set
-    $this->setNodePermissions(self::ORIGINAL_FILE_NAME, $file->getPermissions() & ~CloudConstants::PERMISSION_DELETE);
+    $this->setNodePermissions($file, $file->getPermissions() & ~CloudConstants::PERMISSION_DELETE);
     $response = $this->controller->stash(
       cloudPaths: $cloudPaths,
       uploadMode: Controller\EnumFileUploadMode::MOVE,
@@ -470,8 +474,7 @@ class UploadsControllerTest extends TestCase
         new Entities\EncryptedFile(self::BASE_NAME, self::FILE_CONTENT, $this->fileMimeType)
           ->setId(13),
       );
-    $this->databaseDirEntries[self::ORIGINAL_FILE_NAME] = $dbDirEntry;
-    $this->userStorage->putContent(self::ORIGINAL_FILE_NAME, self::FILE_CONTENT);
+    $this->setDatabaseDirEntry($dbDirEntry);
     $cloudPaths = [ self::ORIGINAL_FILE_NAME ];
     $uploadModes = [
       Controller\EnumFileUploadMode::COPY,
@@ -528,7 +531,7 @@ class UploadsControllerTest extends TestCase
           ->setName(dirname(self::ORIGINAL_FILE_NAME))
           ->setParent(new Entities\DatabaseStorageFolder),
       );
-    $this->databaseDirEntries[self::ORIGINAL_FILE_NAME] = $dbDirEntry;
+    $this->setDatabaseDirEntry($dbDirEntry);
     $uploadModes = Controller\EnumFileUploadMode::cases();
     $oldLine = -1;
     foreach ($uploadModes as $uploadMode) {

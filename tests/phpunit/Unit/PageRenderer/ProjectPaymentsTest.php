@@ -177,6 +177,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 class ProjectPaymentsTest extends TestCase
 {
   use GetFormValuesTrait;
@@ -184,7 +186,7 @@ class ProjectPaymentsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
   private PageRenderer\ProjectPayments $renderer;
 
@@ -241,7 +243,7 @@ class ProjectPaymentsTest extends TestCase
 
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
-    $userStorage = $this->getUserStorageStub();
+    $userStorage = $this->getUserStorage();
 
     $projectService = new ProjectService(
       configService: $configService,

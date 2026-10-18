@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
-use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
@@ -154,6 +154,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
@@ -178,11 +179,12 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 class ProjectParticipantFieldsControllerTest extends TestCase
 {
   use EnableDeprecationsTrait;
   use EntityGeneratorTrait;
-  use MockUserStorageTrait;
+  use RootFolderStubTrait;
   use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
@@ -222,7 +224,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
 
     $this->mockTimeFactory(DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00'));
 
-    $this->getUserStorageStub();
+    $this->getUserStorage();
     $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     if (!self::$migrationsApplied) {

@@ -55,13 +55,13 @@ use OCA\CAFEVDB\Storage\Database as DatabaseStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\PageRenderer\GetFormValuesTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\GetAppStorageTrait;
-use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
-use OCA\RotDrop\Tests\DeprecationException;
+use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
 /** Test aspects of the SepaDebitMandatesController */
 #[Attributes\CoversClass(DTO\SepaBankAccount::class)]
@@ -133,7 +133,6 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerClosedEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener::class)]
@@ -180,6 +179,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\Database\Factory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\Database\Storage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
@@ -188,6 +188,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
@@ -201,15 +202,17 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EnsureEntityTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class SepaDebitMandatesControllerTest extends TestCase
 {
+  use EnableDeprecationsTrait;
   use EntityGeneratorTrait;
   use GetAppStorageTrait;
   use GetFormValuesTrait;
-  use MockUserStorageTrait;
+  use RootFolderStubTrait;
   use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
@@ -250,9 +253,7 @@ class SepaDebitMandatesControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    error_reporting(E_ALL);
-    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations();
 
     $this->generateCalendarBackend();
 
@@ -286,7 +287,7 @@ class SepaDebitMandatesControllerTest extends TestCase
     $this->musician = $this->entityManager->find(Entities\Musician::class, self::$musicianId);
     $this->project = $this->entityManager->find(Entities\Project::class, self::$projectId);
 
-    $this->getUserStorageStub();
+    $this->getUserStorage();
     $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $this->getAppStorage();

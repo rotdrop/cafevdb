@@ -51,9 +51,10 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
-use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
@@ -96,6 +97,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -106,11 +108,14 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 class ProjectsControllerTest extends TestCase
 {
+  use EnableDeprecationsTrait;
+  use EnableDeprecationsTrait;
   use GetPMEStubTrait;
-  use MockUserStorageTrait;
+  use RootFolderStubTrait;
   use SetupEventsServiceTrait;
   use TestRoutesAreDefinedTrait;
 
@@ -142,6 +147,8 @@ class ProjectsControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    self::enableDeprecations();
+
     $this->generateEventsService();
 
     $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
@@ -158,7 +165,7 @@ class ProjectsControllerTest extends TestCase
 
     $this->getPHPMyEditStub();
 
-    $this->userStorage = $this->getUserStorageStub();
+    $this->userStorage = $this->getUserStorage();
     $this->mockProvider->registerClassInstance(Storage\UserStorage::class, $this->userStorage, global: true);
 
     $this->urlGenerator = $this->appContainer->get(IURLGenerator::class);
