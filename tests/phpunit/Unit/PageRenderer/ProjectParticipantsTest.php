@@ -334,12 +334,6 @@ class ProjectParticipantsTest extends TestCase
     );
   }
 
-  /** @return void */
-  public function tearDown(): void
-  {
-    restore_error_handler();
-  }
-
   /**
    * This is quas a setupBeforeClass() but we need some mocked / stubbed
    * classes for the entity-manager.
