@@ -157,19 +157,19 @@ class AppStorage
    *
    * @throws InvalidArgumentException
    */
-  public function ensureFile(string $dirName, ?string $fileName = null):ISimpleFile
+  public function ensureFile(string $dirNameOrPath, ?string $fileName = null):ISimpleFile
   {
     try {
-      $file = $this->getFile($dirName, $fileName);
+      $file = $this->getFile($dirNameOrPath, $fileName);
     } catch (NotFoundException) {
       if (empty($fileName)) {
-        $components = array_filter(Util::explode(Constants::PATH_SEP, $dirName));
+        $components = array_filter(Util::explode(Constants::PATH_SEP, $dirNameOrPath));
         if (count($components) != 2) {
           throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
         }
-        list($dirName, $fileName) = $components;
+        list($dirNameOrPath, $fileName) = $components;
       }
-      $folder = $this->ensureFolder($dirName);
+      $folder = $this->ensureFolder($dirNameOrPath);
       $file = $folder->newFile($fileName);
     }
     return $file;
