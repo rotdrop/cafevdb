@@ -107,7 +107,10 @@ trait RootFolderStubTrait
    */
   private function pathCat(string $parent, string $child): string
   {
-    return rtrim($parent, Constants::PATH_SEP) . Constants::PATH_SEP . trim($child, Constants::PATH_SEP);
+    return rtrim(
+      rtrim($parent, Constants::PATH_SEP) . Constants::PATH_SEP . ltrim($child, Constants::PATH_SEP),
+      Constants::PATH_SEP,
+    );
   }
 
   /**

@@ -24,33 +24,34 @@
 
 namespace OCA\CAFEVDB\Storage;
 
-use Throwable;
-use RuntimeException;
+use Deprecated;
 use InvalidArgumentException;
 use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
+use RuntimeException;
+use Throwable;
 
 use OC\Files\Storage\Wrapper\Wrapper as WrapperStorage;
 
-use OCP\IUser;
-use OCP\IUserSession;
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IURLGenerator;
-use Psr\Container\ContainerInterface;
+use OCA\Files_Trashbin\Trash\ITrashItem;
+use OCA\Files_Trashbin\Trash\ITrashManager;
+use OCP\Files\File;
+use OCP\Files\FileInfo;
+use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
-use OCP\Files\File;
-use OCP\Files\Folder;
-use OCP\Files\FileInfo;
-use OCA\Files_Trashbin\Trash\ITrashManager;
-use OCA\Files_Trashbin\Trash\ITrashItem;
 use OCP\Files\NotFoundException as FileNotFoundException;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserSession;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions\Exception;
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Some tweaks to for the user-folder stuff.
@@ -61,7 +62,6 @@ class UserStorage
   use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
 
   const PATH_SEP = Constants::PATH_SEP;
-  const CACHE_DIRECTORY = self::PATH_SEP.'cache';
 
   /** @var IUser */
   protected ?IUser $user;
@@ -101,18 +101,40 @@ class UserStorage
 
   /**
    * @return null|IUser The current user
+   *
+   * @deprecated Use UserStorage::getUser() instead.
    */
+  #[Deprecated('Please use getUser() instead')]
   public function user(): ?IUser
+  {
+    return $this->getUser();
+  }
+
+  /**
+   * @return null|IUser The current user
+   */
+  public function getUser(): ?IUser
   {
     return $this->user;
   }
 
   /**
-   * @return string The current user-id
+   * @return ?string The current user-id
+   *
+   * @deprecated Use UserStorage::getUserId() instead.
    */
-  public function userId(): string
+  #[Deprecated('Please use getUserId() instead')]
+  public function userId(): ?string
   {
-    return $this->user->getUID();
+    return $this->getUserId();
+  }
+
+  /**
+   * @return ?string The current user-id
+   */
+  public function getUserId(): ?string
+  {
+    return $this->user?->getUID();
   }
 
   /**
@@ -133,6 +155,19 @@ class UserStorage
   }
 
   /**
+   * Normalize the path in order to have suitable cache-keys and no special
+   * cases in comparisons.
+   *
+   * @param ?string $path
+   *
+   * @return string
+   */
+  public static function normalizePath(?string $path): string
+  {
+    return \OC\Files\Filesystem::normalizePath($path ?? '');
+  }
+
+  /**
    * @param string|null $path Path to lookup.
    *
    * @param null|string $type Only consider nodes of this type, either
@@ -147,6 +182,7 @@ class UserStorage
    */
   public function get(?string $path, ?string $type = null, bool $useCache = false, bool $throw = false): ?Node
   {
+    $path = self::normalizePath($path);
     try {
       if ($useCache && !empty($this->nodeCache[$path])) {
         $node = $this->nodeCache[$path];
@@ -232,7 +268,7 @@ class UserStorage
    * Return the given $pathOrFolder as a zip archive as binary
    * string. Empty directories will be omitted.
    *
-   * @param string|Folder $pathOrFolder Folder-path or \OCP\Files\Folder instance.
+   * @param string|Folder $pathOrFolder Folder-path or Folder instance.
    *
    * @param int $parentsToStrip The number of parent folders to strip
    * inside the archive. The default is to strip nothing.
@@ -243,7 +279,7 @@ class UserStorage
    */
   public function getFolderArchive($pathOrFolder, int $parentsToStrip = 0, string $format = 'zip'): ?string
   {
-    /** @var \OCP\Files\File $node */
+    /** @var File $node */
     if (!($pathOrFolder instanceof Folder)) {
       $folder = $this->getFolder($pathOrFolder);
     } else {
@@ -411,26 +447,25 @@ class UserStorage
   }
 
   /**
-   * @param string|array $first Paths to cat. May be an array.
+   * @param null|string|array $first Paths to cat. May be an array.
    *
-   * @param null|string $second Optional second component.
+   * @param ?string $second Optional second component.
    *
    * @return string The concatenated paths.
    */
-  public static function pathCat($first, ?string $second = null): string
+  public static function pathCat(null|string|array $first, ?string $second = null): string
   {
     if (is_array($first)) {
       $first = implode(self::PATH_SEP, $first);
     }
+    $first = self::normalizePath($first);
     $first = trim($first, self::PATH_SEP);
-    if (is_array($second)) {
-      $second = implode(self::PATH_SEP, $second);
-    }
+    $second = self::normalizePath($second);
     $second = trim($second, self::PATH_SEP);
     if (empty($second)) {
-      return self::PATH_SEP . (string)$first;
+      return self::PATH_SEP . $first;
     } else {
-      return self::PATH_SEP . (string)$first . self::PATH_SEP . $second;
+      return self::PATH_SEP . $first . self::PATH_SEP . $second;
     }
   }
 
@@ -447,15 +482,16 @@ class UserStorage
    */
   public static function stripParents(string $path, int $depth): string
   {
+    $path = self::normalizePath($path);
     return self::PATH_SEP . implode(self::PATH_SEP, array_slice(Util::explode(self::PATH_SEP, $path), $depth));
   }
 
   /**
-   * @return \OCP\Files\Folder The root-folder
+   * @return ?Folder The root-folder or null if no user has been installed.
    */
-  public function getRoot(): Folder
+  public function getRoot(): ?Folder
   {
-    return $this->rootFolder;
+    return $this->user ? $this->rootFolder : null;
   }
 
   /**
@@ -641,17 +677,6 @@ class UserStorage
   }
 
   /**
-   * @param string $subDirectory Folder name inside cache
-   * subdirectory.
-   *
-   * @return \OCP\Files\Folder The requested cache folder
-   */
-  public function getCacheFolder(string $subDirectory)
-  {
-    return $this->ensureFolder(self::CACHE_DIRECTORY.self::PATH_SEP.$subDirectory);
-  }
-
-  /**
    * Put file content by path. Create $path if it does not exists,
    * otherwise replace its contents by the given data.
    *
@@ -747,7 +772,7 @@ class UserStorage
    *
    * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/index.php/apps/files/ajax/download.php?dir=%2Fcamerata%2Fprojects%2F1997%2FVereinsmitglieder%2Fparticipants%2Fclaus.heine%2FVersicherungsunterlagen&files=Blah&downloadStartSecret=yur5m66p6lm
    *
-   * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
+   * @param string|Node $pathOrNode The file-system path or node.
    *
    * @return null|string The download URL or null.
    *
@@ -757,7 +782,7 @@ class UserStorage
   {
     if (is_string($pathOrNode)) {
       $node = $this->get($pathOrNode, useCache: true, throw: true);
-    } elseif ($pathOrNode instanceof \OCP\Files\Node) {
+    } elseif ($pathOrNode instanceof Node) {
       $node = $pathOrNode;
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
@@ -808,7 +833,7 @@ class UserStorage
       } catch (Throwable $t) {
         throw new FileNotFoundException($this->l->t('Cannot find directory entry "%s".', $pathOrNode), 0, $t);
       }
-    } elseif ($pathOrNode instanceof \OCP\Files\Node) {
+    } elseif ($pathOrNode instanceof Node) {
       $node = $pathOrNode;
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
@@ -832,16 +857,16 @@ class UserStorage
   /**
    * Create a data-uri from the given file.
    *
-   * @param string|\OCP\Files\File $pathOrNode Either a path or a file-system node.
+   * @param string|File $pathOrNode Either a path or a file-system node.
    *
    * @return null|string
    */
   public function createDataUri($pathOrNode): ?string
   {
-    /** @var \OCP\Files\File $node */
+    /** @var File $node */
     if (is_string($pathOrNode)) {
       $node = $this->userFolder->get($pathOrNode);
-    } elseif ($pathOrNode instanceof \OCP\Files\Node) {
+    } elseif ($pathOrNode instanceof Node) {
       $node = $pathOrNode;
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
