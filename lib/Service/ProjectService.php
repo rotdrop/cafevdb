@@ -42,6 +42,7 @@ use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
 
 use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -117,12 +118,13 @@ class ProjectService
 
   /** {@inheritdoc} */
   public function __construct(
+    private IEventDispatcher $eventDispatcher,
+    private MusicianService $musicianService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private Transliterator $transliterator,
+    private UserStorage $userStorage,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private UserStorage $userStorage,
-    private ProjectParticipantFieldsService $participantFieldsService,
-    private MusicianService $musicianService,
-    private IEventDispatcher $eventDispatcher
   ) {
     try {
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
@@ -1124,6 +1126,7 @@ class ProjectService
     switch ($field->getDataType()) {
       case FieldDataType::LIABILITIES:
         $dataTypeSubdir = $this->getLiabilitiesFolderName();
+        // fallthrough
       case FieldDataType::RECEIVABLES:
         $dataTypeSubdir = $dataTypeSubdir ?? $this->getReceivablesFolderName();
         $subDirPrefix =
@@ -2414,7 +2417,7 @@ Whatever.',
     }
 
     if (empty($listId)) {
-      $listId = strtolower($project->getName());
+      $listId = $this->transliterator->transliterate(strtolower($project->getName()));
       $listId .= '.' . $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['domain']);
     }
     $this->logInfo('MAILING LIST ID ' . $listId);
