@@ -187,7 +187,7 @@ class UserStorage
       if ($useCache && !empty($this->nodeCache[$path])) {
         $node = $this->nodeCache[$path];
       } else {
-        $node = empty($path) ? $this->userFolder : $this->userFolder->get($path);
+        $node = empty($path) || $path == self::PATH_SEP ? $this->userFolder : $this->userFolder->get($path);
         $this->nodeCache[$path] = $node;
       }
       if (!empty($type) && $node->getType() != $type) {
@@ -507,7 +507,7 @@ class UserStorage
     try {
       $this->userFolder->get($path)->delete();
       unset($this->nodeCache[$path]);
-    } catch (\OCP\Files\NotFoundException $t) {
+    } catch (FileNotFoundException $t) {
       $this->logInfo("Not deleting non-existing path $path");
     }
   }
@@ -635,7 +635,7 @@ class UserStorage
    *
    * @throws FileNotFoundException If something goes wrong.
    */
-  public function ensureFolder(string $path)
+  public function ensureFolder(string $path): Folder
   {
     try {
       $node = $this->userFolder->get($path);
@@ -693,7 +693,7 @@ class UserStorage
         $file = $this->userFolder->get($path);
         $file->putContent($content);
         $this->nodeCache[$path] = $file;
-      } catch (\OCP\Files\NotFoundException $e) {
+      } catch (FileNotFoundException $e) {
         $this->ensureFolder(dirname($path));
         $file = $this->userFolder->newFile($path, $content);
       }
@@ -709,18 +709,27 @@ class UserStorage
    * @param string $path The file path.
    *
    * @return The file content.
+   *
+   * @throws InvalidArgumentException If $path refers to a folder.
+   *
+   * @throws FileNotFoundException If $path does not refer to an existing node.
+   *
+   * @throws RuntimeException If some other error occurs.
    */
   public function getContent(string $path): string
   {
     // check if file exists and read from it if possible
     try {
-      $file = $this->userFolder->get($path);
+      $file = $this->get($path, throw: true);
       if ($file instanceof File) {
-        $this->nodeCache[$path] = $file;
         return $file->getContent();
-      } else {
-        throw new RuntimeException($this->l->t('Cannot read from folder "%s".', $path));
+      } else /* if ($file instanceof Folder) */ {
+        throw new InvalidArgumentException($this->l->t('Cannot read data-content from a folder "%s".', $path));
       }
+    } catch (InvalidArgumentException $e) {
+      throw $e;
+    } catch (FileNotFoundException $e) {
+      throw $e;
     } catch (Throwable $t) {
       throw new RuntimeException($this->l->t('Unable to get content of file "%s".', $path), $t->getCode(), $t);
     }
@@ -778,14 +787,12 @@ class UserStorage
    *
    * @throws FileNotFoundException
    */
-  public function getDownloadLink($pathOrNode): ?string
+  public function getDownloadLink(string|Node $pathOrNode): ?string
   {
     if (is_string($pathOrNode)) {
       $node = $this->get($pathOrNode, useCache: true, throw: true);
-    } elseif ($pathOrNode instanceof Node) {
+    } else /* if ($pathOrNode instanceof Node) */ {
       $node = $pathOrNode;
-    } else {
-      throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
     // $this->logDebug('NODE '.$node->getPath().' '.$node->getInternalPath());
 
@@ -825,7 +832,7 @@ class UserStorage
    *
    * @return string|null URL to the files app.
    */
-  public function getFilesAppLink($pathOrNode, bool $subDir = false): ?string
+  public function getFilesAppLink(string|Node $pathOrNode, bool $subDir = false): ?string
   {
     if (is_string($pathOrNode)) {
       try {
@@ -833,10 +840,8 @@ class UserStorage
       } catch (Throwable $t) {
         throw new FileNotFoundException($this->l->t('Cannot find directory entry "%s".', $pathOrNode), 0, $t);
       }
-    } elseif ($pathOrNode instanceof Node) {
+    } else /* if ($pathOrNode instanceof Node) */ {
       $node = $pathOrNode;
-    } else {
-      throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
     $nodePath = $node->getPath();
     $this->nodeCache[$nodePath] = $node;
@@ -857,21 +862,19 @@ class UserStorage
   /**
    * Create a data-uri from the given file.
    *
-   * @param string|File $pathOrNode Either a path or a file-system node.
+   * @param string|File $pathOrFile Either a path or a file-system node.
    *
    * @return null|string
    */
-  public function createDataUri($pathOrNode): ?string
+  public function createDataUri(string|File $pathOrFile): ?string
   {
     /** @var File $node */
-    if (is_string($pathOrNode)) {
-      $node = $this->userFolder->get($pathOrNode);
-    } elseif ($pathOrNode instanceof Node) {
-      $node = $pathOrNode;
+    if (is_string($pathOrFile)) {
+      $node = $this->userFolder->get($pathOrFile, type: FileInfo::TYPE_FILE, throw: true);
     } else {
-      throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
+      $node = $pathOrFile;
     }
-    $dataUri = 'data:'.$node->getMimeType().';base64,' . base64_encode($node->getContent());
+    $dataUri = 'data:' . $node->getMimeType() . ';base64,' . base64_encode($node->getContent());
     return $dataUri;
   }
 }
