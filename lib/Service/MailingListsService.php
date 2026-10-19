@@ -30,11 +30,12 @@ use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
 
-use GuzzleHttp\Client as RestClient;
 use GuzzleHttp\Exception\ConnectException;
 
 use OCP\Files\FileInfo;
 use OCP\Files\IRootFolder;
+use OCP\Http\Client\IClient;
+use OCP\Http\Client\IClientService;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -181,13 +182,13 @@ class MailingListsService
   /** @var string
    * Default rest URI
    */
-  private const DEFAULT_REST_URI = 'http://localhost:8001';
+  private const DEFAULT_REST_URI = 'http://localhost:8001/';
 
-  /** @var RestClient */
-  private $restClient;
+  /** @var IClient */
+  private ICLient $restClient;
 
   /** @var array */
-  private $restAuth;
+  private array $restAuth;
 
   /**
    * @var array
@@ -207,10 +208,13 @@ class MailingListsService
   private string $restUri;
 
   /**
+   * @param IClientService $clientService
+   *
    * @param ConfigService $configService Global app configuration service.
    */
   public function __construct(
-    protected ConfigService $configService
+    IClientService $clientService,
+    protected ConfigService $configService,
   ) {
     $this->l = $this->l10n();
 
@@ -218,7 +222,8 @@ class MailingListsService
       ConfigConstants::MAILING_LIST_REST_CONFIG['url'],
       self::DEFAULT_REST_URI,
     );
-    $this->restClient = new RestClient([ 'base_uri' => $this->restUri ]);
+    $this->restUri = rtrim($this->restUri, '/') . '/';
+    $this->restClient = $clientService->newClient();
     $this->restAuth = [
       $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['user']),
       $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['password']),
@@ -262,11 +267,14 @@ class MailingListsService
    */
   public function getServerConfig():?array
   {
+    $this->logInfo('CALL OUT TO ' . $this->restUri . '3.1/system/configuration' . '  ' . print_r($this->restAuth, true));
     $response = $this->restClient->get(
-      '3.1/system/configuration', [
+      $this->restUri . '3.1/system/configuration', [
         'auth' => $this->restAuth,
       ]);
-    return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
+    $body = $response->getBody();
+    $this->logInfo('HEADERS ' . $response->getStatusCode() . ' ' . print_r($response->getHeaders(), true) . ' BODY ' . print_r($body, true));
+    return empty($body) ? null : json_decode($body, true);
   }
 
   /**
@@ -277,10 +285,11 @@ class MailingListsService
   public function getServerVersions(?array &$coreVersion = null):?array
   {
     $response = $this->restClient->get(
-      '3.1/system/versions', [
+      $this->restUri . '3.1/system/versions', [
         'auth' => $this->restAuth,
       ]);
-    $result = empty($response->getBody()) ? null : json_decode($response->getBody(), true);
+    $body = $response->getBody();
+    $result = empty($body) ? null : json_decode($body, true);
     if (!empty($result)) {
       if (preg_match('/([0-9]+)\.([0-9]+)\.([0-9]+)/', $result['mailman_version'], $matches)) {
         $coreVersion['major'] = $matches[1];
@@ -323,13 +332,14 @@ class MailingListsService
   public function getListConfig(string $fqdnName, ?string $resource = null)
   {
     $response = $this->restClient->get(
-      '3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
+      $this->restUri . '3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
         'auth' => $this->restAuth,
       ]);
-    if (empty($response->getBody())) {
+    $body = $response->getBody();
+    if (empty($body)) {
       return null;
     }
-    $response = json_decode($response->getBody(), true);
+    $response = json_decode($body, true);
     if (!empty($resource)) {
       return empty($response[$resource]) ? null : $response[$resource];
     }
@@ -363,7 +373,7 @@ class MailingListsService
       }
     }
     /* $response = */ $this->restClient->patch(
-      '3.1/lists/' . $fqdnName . '/config', [
+      $this->restUri . '3.1/lists/' . $fqdnName . '/config', [
         'json' => $config,
         'auth' => $this->restAuth,
       ]);
@@ -379,7 +389,7 @@ class MailingListsService
   {
     try {
       $response = $this->restClient->get(
-        '3.1/lists/' . $fqdnName, [
+        $this->restUri . '3.1/lists/' . $fqdnName, [
           'auth' => $this->restAuth,
         ]);
     } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -388,7 +398,8 @@ class MailingListsService
       }
       throw $e;
     }
-    return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
+    $body = $response->getBody();
+    return empty($body) ? null : json_decode($body, true);
   }
 
   /**
@@ -406,7 +417,7 @@ class MailingListsService
     if (strpos($fqdnName, '@') === false) {
       $fqdnName[strpos($fqdnName, '.')] = '@';
     }
-    /* $response = */ $this->restClient->post('3.1/lists', [
+    /* $response = */ $this->restClient->post($this->restUri . '3.1/lists', [
       'json' => [
         'fqdn_listname' => $fqdnName,
         'style_name' => $style,
@@ -430,7 +441,7 @@ class MailingListsService
     if (empty($listId)) {
       return false;
     }
-    /* $response = */ $this->restClient->delete('3.1/lists/' . $listId, [
+    /* $response = */ $this->restClient->delete($this->restUri . '3.1/lists/' . $listId, [
       'auth' => $this->restAuth,
     ]);
     return true;
@@ -471,7 +482,7 @@ class MailingListsService
       $displayName = $newDisplayName;
     }
     /* $response = */ $this->restClient->patch(
-      '3.1/lists/' . $listId . '/config', [
+      $this->restUri . '3.1/lists/' . $listId . '/config', [
         'json' => [
           self::LIST_CONFIG_DISPLAY_NAME => $displayName,
           self::LIST_CONFIG_ACCEPTABLE_ALIASES => $acceptableAliases,
@@ -611,7 +622,7 @@ class MailingListsService
     if ($uri === null) {
       // delete
       try {
-        /* $response = */ $this->restClient->delete('3.1/lists/' . $listId . '/uris/' . $template, [
+        /* $response = */ $this->restClient->delete($this->restUri . '3.1/lists/' . $listId . '/uris/' . $template, [
           'auth' => $this->restAuth,
         ]);
       } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -623,7 +634,7 @@ class MailingListsService
         }
       }
     } else {
-      /* $response = */ $this->restClient->patch('3.1/lists/' . $listId . '/uris', [
+      /* $response = */ $this->restClient->patch($this->restUri . '3.1/lists/' . $listId . '/uris', [
         'json' => [
         $template => $uri,
         ],
@@ -704,14 +715,15 @@ class MailingListsService
     ];
 
     $response = $this->restClient->post(
-      '3.1/members/find', [
+      $this->restUri . '3.1/members/find', [
         'json' => $post,
         'auth' => $this->restAuth,
       ]);
-    if (empty($response->getBody())) {
+    $body = $response->getBody();
+    if (empty($body)) {
       return null;
     }
-    $response = json_decode($response->getBody(), true);
+    $response = json_decode($body, true);
 
     $result = [];
     foreach (($response['entries'] ?? []) as $entry) {
@@ -745,13 +757,14 @@ class MailingListsService
     }
 
     $response = $this->restClient->get(
-      '3.1/lists/' . $listId . '/requests', [
+      $this->restUri . '3.1/lists/' . $listId . '/requests', [
         'auth' => $this->restAuth,
       ]);
-    if (empty($response->getBody())) {
+    $body = $response->getBody();
+    if (empty($body)) {
       return false;
     }
-    $response = json_decode($response->getBody(), true);
+    $response = json_decode($body, true);
     $result = [];
     foreach (($response['entries'] ?? []) as $listRequest) {
       if ($listRequest['email'] === $subscriptionAddress) {
@@ -795,7 +808,7 @@ class MailingListsService
         $postData['reason'] = $reason;
       }
       /* $response = */ $this->restClient->post(
-        '3.1/lists/' . $listId . '/requests/' . $token, [
+        $this->restUri . '3.1/lists/' . $listId . '/requests/' . $token, [
           'json' => $postData,
           'auth' => $this->restAuth,
         ]);
@@ -900,7 +913,7 @@ class MailingListsService
         $subscriptionData[$key] = 'False';
       }
     }
-    /* $response = */ $this->restClient->post('3.1/members', [
+    /* $response = */ $this->restClient->post($this->restUri . '3.1/members', [
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
@@ -985,10 +998,12 @@ class MailingListsService
         $unsubscriptionData[$key] = 'False';
       }
     }
-    /* $result = */ $this->restClient->delete($selfLink, [
-      'auth' => $this->restAuth,
-      'json' => $unsubscriptionData,
-    ]);
+    /* $result = */ $this->restClient->delete(
+      $this->restUri . $selfLink, [
+        'auth' => $this->restAuth,
+        'json' => $unsubscriptionData,
+      ],
+    );
     if ($silent) {
       // undo
       $this->setListConfig($listId, self::SEND_GOODBYE_MESSAGE, true);
@@ -1019,13 +1034,14 @@ class MailingListsService
       return null;
     }
 
-    $response = $this->restClient->get($selfLink . '/preferences', [
+    $response = $this->restClient->get($this->restUri . $selfLink . '/preferences', [
       'auth' => $this->restAuth,
     ]);
-    if (empty($response->getBody())) {
+    $body = $response->getBody();
+    if (empty($body)) {
       return null;
     }
-    $response = json_decode($response->getBody(), true);
+    $response = json_decode($body, true);
     if (empty($response[self::MEMBER_DELIVERY_STATUS])) {
       $response[self::MEMBER_DELIVERY_STATUS] = self::DELIVERY_STATUS_ENABLED;
     }
@@ -1060,7 +1076,7 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    /* $response = */ $this->restClient->patch($selfLink . '/preferences', [
+    /* $response = */ $this->restClient->patch($this->restUri . $selfLink . '/preferences', [
       'json' => $preferences,
       'auth' => $this->restAuth,
     ]);
@@ -1084,15 +1100,16 @@ class MailingListsService
 
     $criteria['list_id'] = $listId;
 
-    $response = $this->restClient->post('3.1/members/find', [
+    $response = $this->restClient->post($this->restUri . '3.1/members/find', [
       'json' => $criteria,
       'auth' => $this->restAuth,
     ]);
 
-    if (empty($response->getBody())) {
+    $body = $response->getBody();
+    if (empty($body)) {
       return null;
     }
-    $response = json_decode($response->getBody(), true);
+    $response = json_decode($body, true);
 
     $response['entries'] = $response['entries'] ?? [];
 
@@ -1135,7 +1152,7 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    /* $response = */ $this->restClient->patch($selfLink, [
+    /* $response = */ $this->restClient->patch($this->restUri . $selfLink, [
       'json' => $data,
       'auth' => $this->restAuth,
     ]);
