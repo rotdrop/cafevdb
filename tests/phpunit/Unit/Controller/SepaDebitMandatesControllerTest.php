@@ -644,9 +644,10 @@ class SepaDebitMandatesControllerTest extends TestCase
    */
   #[Attributes\Depends('testMandateFormBlank')]
   #[Attributes\Depends('testMandateStore')]
-  #[Attributes\Depends('testMandateStoreWithHardCopy')]
   #[Attributes\Depends('testMandateStoreWithCloudCopyHardCopy')]
+  #[Attributes\Depends('testMandateStoreWithCloudLinkHardCopy')]
   #[Attributes\Depends('testMandateStoreWithCloudMoveHardCopy')]
+  #[Attributes\Depends('testMandateStoreWithUploadHardCopy')]
   #[Attributes\Depends('testRoutesAreDefined')]
   public function testUnapplyMigrations(): void
   {

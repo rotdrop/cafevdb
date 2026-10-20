@@ -690,7 +690,6 @@ class ProjectAssociatesTest extends TestCase
   #[Attributes\Depends('testRenderUpdate')]
   #[Attributes\Depends('testRenderUpdateApply')]
   #[Attributes\Depends('testRenderUpdateApplyAddInstrument')]
-  #[Attributes\Depends('testRenderUpdateApplyAddVoice')]
   #[Attributes\Depends('testRenderUpdateApplyRemoveInstrument')]
   #[Attributes\Depends('testRenderView')]
   public function testUnapplyMigrations(): void

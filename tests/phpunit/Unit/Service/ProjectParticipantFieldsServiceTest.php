@@ -146,7 +146,7 @@ class ProjectParticipantFieldsServiceTest extends TestCase
   /** @return void */
   #[Attributes\Depends('testSetup')]
   #[Attributes\Depends('testCreateField')]
-  #[Attributes\Depends('isSupportedType')]
+  #[Attributes\Depends('testIsSupportedType')]
   public function testUnapplyMigrations(): void
   {
     $this->unapplyMigrations();
