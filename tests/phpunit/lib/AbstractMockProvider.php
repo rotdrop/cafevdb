@@ -442,6 +442,9 @@ abstract class AbstractMockProvider
 
     $instance = $this->createStub(IRequest::class);
     $instance->method('getPathInfo')->willReturn('/apps/' . $this->appName . '/blahblah');
+    $instance->method('getServerHost')->willReturn('cloud.example.tld');
+    $instance->method('getServerProtocol')->willReturn('https');
+    $instance->method('getHttpProtocol')->willReturn('HTTP/2');
 
     $this->instances[$className] = $instance;
 
