@@ -593,10 +593,11 @@ trait ConfigTrait
 
     /** @var Transliterator $transliterator */
     $transliterator = $this->appContainer()->get(Transliterator::class);
-    $transliterator->generateUserIdSlug(
+    $slug = $transliterator->generateUserIdSlug(
       compact('surName', 'firstName', 'nickName'),
       $this->appLocale(),
     );
+    return $slug;
   }
 
   /** @return int */
