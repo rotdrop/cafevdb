@@ -48,6 +48,7 @@ use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
 
 use OCA\CAFEVDB\Common\TimeFactory;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller;
@@ -347,10 +348,11 @@ class EmailFormControllerTest extends TestCase
     $this->projectService = new Service\ProjectService(
       configService: $this->configService,
       entityManager: $this->entityManager,
-      userStorage: $this->userStorage,
-      participantFieldsService: $projectParticipantFieldsService,
-      musicianService: $musiciansService,
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      musicianService: $musiciansService,
+      participantFieldsService: $projectParticipantFieldsService,
+      transliterator: $this->appContainer->get(Transliterator::class),
+      userStorage: $this->userStorage,
     );
     $mockProvider->registerClassInstance(Service\ProjectService::class, $this->projectService);
 

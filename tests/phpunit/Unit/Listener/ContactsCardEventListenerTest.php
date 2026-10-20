@@ -42,6 +42,7 @@ use OCA\DAV\Events\CardDeletedEvent;
 use OCA\DAV\Events\CardMovedEvent;
 use OCA\DAV\Events\CardUpdatedEvent;
 
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Listener\ContactsCardEventListener as TestedClass;
@@ -257,10 +258,11 @@ class ContactsCardEventListenerTest extends TestCase
     $projectService = new ProjectService(
       configService: $configService,
       entityManager: $this->entityManager,
-      userStorage: $this->userStorage,
-      participantFieldsService: $participantFieldsService,
-      musicianService: $this->appContainer->get(MusicianService::class),
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      musicianService: $this->appContainer->get(MusicianService::class),
+      participantFieldsService: $participantFieldsService,
+      transliterator: $this->appContainer->get(Transliterator::class),
+      userStorage: $this->userStorage,
     );
     $this->mockProvider->registerClassInstance(ProjectService::class, $projectService, global: true);
 

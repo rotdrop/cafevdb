@@ -38,6 +38,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
 
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Controller\DTO\ProjectValidationResponse;
 use OCA\CAFEVDB\Controller\EnumProjectValidationTopic;
 use OCA\CAFEVDB\Controller\ProjectsController;
@@ -223,10 +224,11 @@ class ProjectsControllerTest extends TestCase
     $projectService = new ProjectService(
       configService: $this->configService,
       entityManager: $this->entityManager,
-      userStorage: $this->userStorage,
-      participantFieldsService: $projectParticipantFieldsService,
-      musicianService: $musiciansService,
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      musicianService: $musiciansService,
+      participantFieldsService: $projectParticipantFieldsService,
+      transliterator: $this->appContainer->get(Transliterator::class),
+      userStorage: $this->userStorage,
     );
     $this->mockProvider->registerClassInstance(ProjectService::class, $projectService);
 

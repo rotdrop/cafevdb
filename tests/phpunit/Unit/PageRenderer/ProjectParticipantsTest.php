@@ -36,6 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\TimeFactory;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -305,10 +306,11 @@ class ProjectParticipantsTest extends TestCase
     $projectService = new ProjectService(
       configService: $configService,
       entityManager: $this->entityManager,
-      userStorage: $this->userStorage,
-      participantFieldsService: $participantFieldsService,
-      musicianService: $appContainer->get(MusicianService::class),
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      musicianService: $appContainer->get(MusicianService::class),
+      participantFieldsService: $participantFieldsService,
+      transliterator: $this->appContainer->get(Transliterator::class),
+      userStorage: $this->userStorage,
     );
     $this->mockProvider->registerClassInstance(ProjectService::class, $projectService, global: true);
 
