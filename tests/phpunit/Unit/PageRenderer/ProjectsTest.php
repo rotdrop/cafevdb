@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Listener;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
@@ -77,6 +78,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
@@ -188,7 +190,10 @@ class ProjectsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    self::enableDeprecations(extraExclude: 'OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch');
+    self::enableDeprecations(
+      extraExclude: 'Passing CURLOPT_HTTP_VERSION'
+        . '|OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch',
+    );
 
     $this->generateCalendarBackend();
 
@@ -478,6 +483,19 @@ class ProjectsTest extends TestCase
   #[Attributes\Depends('testInsert')]
   public function testChange(): void
   {
+    $cloudUserConnectorService = $this
+      ->getMockBuilder(CloudUserConnectorService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->mockProvider->registerClassInstance(
+      CloudUserConnectorService::class,
+      $cloudUserConnectorService,
+      global: true,
+    );
+    $cloudUserConnectorService
+      ->expects($this->exactly(1))
+      ->method('synchronizeCloud');
+
     $repository = $this->entityManager->getRepository(Entities\Project::class);
     /** @var Entities\Entity $entity */
     $entity = $repository->findOneBy(['name' => self::BEFORE_INSERT_TRIGGER_NEWVALS['name']]);

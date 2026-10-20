@@ -51,6 +51,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\CoversClass(GnuCashConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\DoNothingProgressStatus::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]

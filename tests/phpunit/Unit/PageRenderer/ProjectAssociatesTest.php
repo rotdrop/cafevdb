@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -237,7 +238,7 @@ class ProjectAssociatesTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    self::enableDeprecations();
+    self::enableDeprecations(extraExclude: 'Passing CURLOPT_HTTP_VERSION');
 
     $countInstruments = count(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::INSTRUMENTS);
     foreach (Entities\ProjectInstrument::NON_INSTRUMENTS as $nonInstrumentName) {
@@ -594,6 +595,19 @@ class ProjectAssociatesTest extends TestCase
   #[Attributes\Depends('testRenderUpdate')]
   public function testRenderUpdateApply(): void
   {
+    $cloudUserConnectorService = $this
+      ->getMockBuilder(CloudUserConnectorService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->mockProvider->registerClassInstance(
+      CloudUserConnectorService::class,
+      $cloudUserConnectorService,
+      global: true,
+    );
+    $cloudUserConnectorService
+      ->expects($this->atMost(1))
+      ->method('synchronizeCloud');
+
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
     $project = $this->entityManager->find(Entities\Project::class, self::$projectId);

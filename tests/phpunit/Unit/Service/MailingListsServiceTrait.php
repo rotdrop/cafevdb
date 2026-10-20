@@ -43,7 +43,7 @@ trait MailingListsServiceTrait
 
   private MailingListsService $mailingListsService;
 
-  /** @return RestClient */
+  /** @return IClientService */
   private function getMailManRestServiceStub(): IClientService
   {
     $this->clientService = $this->createStub(IClientService::class);

@@ -68,6 +68,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\HumanDateTime::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\DownloadsShareResponse::class)]
