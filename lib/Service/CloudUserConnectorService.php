@@ -601,10 +601,6 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   /**
    * Clear the backend cache, for use in controllers, back-reportings messages.
    *
-   * @param null|RequestService $requestService
-   *
-   * @param null|array $messages
-   *
    * @return void
    */
   private function clearUserBackendCache():void
