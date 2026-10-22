@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test the SepaBulkTransactionsService */
@@ -94,6 +95,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 class FinanceServiceTest extends TestCase
 {
+  use EnableDeprecationsTrait;
   use SetupEventsServiceTrait;
 
   private FinanceService $financeService;
@@ -101,6 +103,8 @@ class FinanceServiceTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    self::enableDeprecations();
+
     $this->generateEventsService();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
