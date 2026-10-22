@@ -212,6 +212,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function setField(?ProjectParticipantField $field): self
   {
     $this->field = $field;
+    if ($field) {
+      $field->addFieldDatum($this);
+    }
 
     return $this;
   }
@@ -237,8 +240,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     $this->dataOption = $dataOption;
     if ($dataOption) {
-      $this->field = $dataOption->getField();
+      $this->setField($dataOption->getField());
       $this->optionKey = $dataOption->getKey();
+      $dataOption->addDatum($this);
     }
 
     return $this;
@@ -404,7 +408,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (!$this->payments->contains($payment)) {
       $this->payments->add($payment);
     }
-    if ($payment->getReceivable() != $this) {
+    if ($payment->getReceivable() !== $this) {
       $payment->setReceivable($this);
     }
 

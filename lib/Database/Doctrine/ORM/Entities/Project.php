@@ -431,6 +431,23 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * @param ProjectParticipantField $field
+   *
+   * @return self
+   */
+  public function addParticipantField(ProjectParticipantField $field): self
+  {
+    if (!$this->participantFields->contains($field)) {
+      $this->participantFields->add($field);
+    }
+    if ($field->getProject() !== $this) {
+      $field->setProject($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Get participantFields.
    *
    * @param string|Types\EnumParticipationContext $participationContext

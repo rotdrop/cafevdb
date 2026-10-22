@@ -180,6 +180,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function setField(mixed $field): ProjectParticipantFieldDataOption
   {
     $this->field = $field;
+    $field->addDataOption($this);
 
     return $this;
   }
@@ -307,6 +308,23 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getData(): ?string
   {
     return $this->data ?? null;
+  }
+
+  /**
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    if (!$this->fieldData->contains($datum)) {
+      $this->fieldData->add($datum);
+    }
+    if ($datum->getDataOption() !== $this) {
+      $datum->setDataOption($this);
+    }
+
+    return $this;
   }
 
   /**

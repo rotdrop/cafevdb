@@ -215,13 +215,14 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param null|int|Project $project
+   * @param nProject $project
    *
    * @return ProjectParticipantField
    */
-  public function setProject(mixed $project):ProjectParticipantField
+  public function setProject(Project $project): ProjectParticipantField
   {
     $this->project = $project;
+    $project->addParticipantField($this);
 
     return $this;
   }
@@ -270,6 +271,9 @@ class ProjectParticipantField implements \ArrayAccess
   public function addDataOption(ProjectParticipantFieldDataOption $option): self
   {
     $this->dataOptions->set($option->getKey(), $option);
+    if ($option->getField() !== $this) {
+      $option->setField($this);
+    }
 
     return $this;
   }
@@ -372,6 +376,23 @@ class ProjectParticipantField implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return $self
+   */
+  public function addFieldDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    if (!$this->fieldData->contains($datum)) {
+      $this->fieldData->add($datum);
+    }
+    if ($datum->getField() !== $this) {
+      $datum->setField($this);
+    }
+
+    return $this;
   }
 
   /**

@@ -112,13 +112,17 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set compositePayment.
    *
-   * @param null|int|CompositePayment $compositePayment
+   * @param CompositePayment $compositePayment
    *
    * @return ProjectPayment
    */
-  public function setCompositePayment(mixed $compositePayment): ProjectPayment
+  public function setCompositePayment(CompositePayment $compositePayment): ProjectPayment
   {
     $this->compositePayment = $compositePayment;
+    if ($this->balanceDocumentsFolder === null) {
+      $this->setBalanceDocumentsFolder($compositePayment->getBalanceDocumentsFolder());
+    }
+    $compositePayment->addProjectPayment($this);
 
     return $this;
   }
@@ -130,7 +134,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function getCompositePayment(): ?CompositePayment
   {
-    return $this->compositePayment;
+    return $this->compositePayment ?? null;
   }
 
   /**
@@ -300,6 +304,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     }
 
     $this->receivable = $receivable;
+    $receivable->addPayment($this);
+    $participant = $receivable->getProjectParticipant();
+    if ($participant) {
+      $this->setProjectParticipant($participant);
+    }
+    $option = $receivable->getDataOption();
+    if ($option) {
+      $this->setReceivableOption($option);
+    }
 
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
