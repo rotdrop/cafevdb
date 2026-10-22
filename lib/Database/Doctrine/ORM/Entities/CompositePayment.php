@@ -28,12 +28,14 @@ use Closure;
 use DateTimeInterface;
 use UnexpectedValueException;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Common\CamelCaseString;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as AppORM;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -190,6 +192,23 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setProjectPayments(Collection $projectPayments): CompositePayment
   {
     $this->projectPayments = $projectPayments;
+
+    return $this;
+  }
+
+  /**
+   * @param ProjectPayment $projectPayment
+   *
+   * @return self
+   */
+  public function addProjectPayment(ProjectPayment $projectPayment): self
+  {
+    if (!$this->projectPayments->contains($projectPayment)){
+      $this->projectPayments->add($projectPayment);
+    }
+    if ($projectPayment->getCompositePayment() !== $this) {
+      $projectPayment->setCompositePayment($this);
+    }
 
     return $this;
   }
@@ -697,18 +716,61 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * particluar subjects result from
    * ProjectParticipantFieldDatum::paymentReference().
    *
-   * @param null|Closure $transliterate A transliteration routine with the
-   * signature function(string $x): string. It defaults to the identity if not
-   * specified.
+   * @param int $maxLength Maximum length allowed, longer subjects will be
+   * "compressed".
    *
-   * @return string
+   * @param null|Closure $transliterate A transliteration routine with the
+   * signature function(string $x): string. It defaults to the identity fn($x)
+   * => $x if null.
+   *
+   * @return array
    */
-  public function generateSubject(?Closure $transliterate = null): string
-  {
-    if (empty($transliterate)) {
-      $transliterate = fn(string $x) => $x;
-    }
+  public function generateSubject(
+    int $maxLength = self::SUBJECT_FIELD_LENGTH,
+    ?Closure $transliterate = null,
+  ): string {
+    $transliterate = $transliterate ?? fn(string $x) => $x;
 
+    $parts = $this->generateSubjectParts();
+
+    $subject = $transliterate($parts['prefix'] .
+      self::SUBJECT_PREFIX_SEPARATOR .
+      implode(
+        self::SUBJECT_GROUP_SEPARATOR,
+        array_map(
+          function(array $part) {
+            return $subject = $part['prefix'] .
+              (!empty($part['postfix'])
+               ? self::SUBJECT_OPTION_SEPARATOR . implode(self::SUBJECT_ITEM_SEPARATOR, $part['postfix'])
+               : '');
+          },
+          $parts['processed'],
+        ),
+      ));
+    if (strlen($subject) > $maxLength) {
+      $camelCaseString = \OCP\Server::get(CamelCaseString::class);
+      $subject = substr(
+        $camelCaseString->shorten($subject, $maxLength, minLen: 4),
+        0,
+        $maxLength,
+      );
+    }
+    return $subject;
+  }
+
+  /**
+   * Automatic subject generation from receivables and linked
+   * DatabaseStorageFolder's. The routine applies the supplied
+   * transliteration routine such that the result only contains valid
+   * characters for a potential bank transaction data-set. It also tries to
+   * group and compactify payments which carry the same prefix assuming the
+   * particluar subjects result from
+   * ProjectParticipantFieldDatum::paymentReference().
+   *
+   * @return array
+   */
+  public function generateSubjectParts(): array
+  {
     $projectName = $this->project->getName();
     $projectYear = $this->project->getYear();
     if (substr($projectName, -4) == (string)$projectYear) {
@@ -718,8 +780,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $yearSeparator = '-';
     }
 
-    $projectName = Util::dashesToCamelCase(
-      $transliterate(strtolower(Util::camelCaseToDashes($projectName, separator: ' '))),
+    $projectName = CamelCaseString::dashesToCamelCase(
+      strtolower(CamelCaseString::camelCaseToDashes($projectName, separator: ' ')),
       capitalizeFirstCharacter: true,
       dashes: ' ',
     );
@@ -776,9 +838,15 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     }
 
     $subjects = $this->projectPayments
-      ->map(fn(ProjectPayment $payment) => $transliterate($payment->getSubject()))
+      ->map(fn(ProjectPayment $payment) => $payment->getSubject())
       ->toArray();
     natsort($subjects);
+
+    $purposeArray = [
+      'prefix' => $subjectPrefix,
+      'originalSubjects' => $subjects,
+      'processed' => [],
+    ];
 
     // try to compactify the composite subject by attempting to group similar subjects
     $oldPrefix = false;
@@ -789,31 +857,54 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
         function(string $part) {
           // This should remain human-readable, therefore "camel-casing"
           // should only be performed on "real words".
-          $part = Util::normalizeSpaces($part);
+          $part = trim(Util::normalizeSpaces($part));
           $words = explode(' ', $part);
           $result = '';
           $prevIsWord = true;
+          // print_r($words);
           foreach ($words as $word) {
             // Difficult, sequences of 4 digits may as well form part of important booking ids.
-            // $word = preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $word);
-            if (preg_match('/^[a-zA-Z-_]+$/', $word)) {
-              $word = Util::dashesToCamelCase($word, capitalizeFirstCharacter: true, dashes: '-_');
+            // $word = preg_replace('/(?<!\d)\d{2}(\d{2})(?!\d)/u', '\1', $word);
+
+            // Another attempt: DD:DD(:DD) -- treat it as an unimportant
+            // time-stamp and remove it altogether.
+            // $word = preg_replace('/\s+\d{2}:\d{2}(:\d{2})?/', '', $word);
+            $word = preg_replace('/^\\d{2}:\\d{2}(:\\d{2})?$/u', '', $word);
+            $isWord = preg_match('/^(?:\p{L}|[-_])+$/u', $word);
+            // echo 'WORD "' . $word . '" IS WORD ' . (int)$isWord . ' PREV IS WORD ' . (int)$prevIsWord . PHP_EOL;
+            if ($isWord) {
+              $word = CamelCaseString::dashesToCamelCase($word, capitalizeFirstCharacter: true, dashes: '-_');
               if (!$prevIsWord) {
                 $result .= ' ';
               }
               $prevIsWord = true;
+            } elseif ($word === '') {
+              // unchanged
             } else {
               $result .= ' ';
               $prevIsWord = false;
             }
             $result .= $word;
           }
+          // echo 'RESULT "' . $result . '"' . PHP_EOL;
           return $result;
         },
-        Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED),
+        Util::explode(
+          trim(self::SUBJECT_OPTION_SEPARATOR),
+          $subject,
+          Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED,
+          limit: 2,
+        ),
       );
+      // print_r($parts);
       $prefix = $parts[0];
       if (count($parts) < 2 || $oldPrefix != $prefix) {
+        if ($oldPrefix !== false) {
+          $purposeArray['processed'][] = [
+            'prefix' => $oldPrefix,
+            'postfix' => array_unique($postfix),
+          ];
+        }
         $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, array_unique($postfix));
         if (strlen($purpose) > 0) {
           $purpose .= self::SUBJECT_GROUP_SEPARATOR;
@@ -823,6 +914,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
           $purpose .= self::SUBJECT_OPTION_SEPARATOR;
           $oldPrefix = $prefix;
         } else {
+          $purposeArray['processed'][] = [
+            'prefix' => $prefix,
+            'postfix' => [],
+          ];
           $oldPrefix = false;
         }
         $postfix = [];
@@ -831,35 +926,32 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
         $postfix = array_merge($postfix, array_splice($parts, 1));
       }
     }
-    if (!empty($postfix)) {
-      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, array_unique($postfix));
-    }
-    $purpose = $transliterate(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
-
-    $subject = $subjectPrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
-
-    if (strlen($subject) > self::SUBJECT_FIELD_LENGTH) {
-      $subject = substr(
-        Util::shortenCamelCaseString($subject, self::SUBJECT_FIELD_LENGTH, minLen: 4),
-        0,
-        self::SUBJECT_FIELD_LENGTH,
-      );
+    if ($oldPrefix !== false) {
+      $purposeArray['processed'][] = [
+        'prefix' => $oldPrefix,
+        'postfix' => array_unique($postfix),
+      ];
     }
 
-    return $subject;
+    return $purposeArray;
   }
 
   /**
    * Update the stored payment-subject by calling
    * CompositePayment::generateSubject().
    *
+   * @param int $maxLength Maximum length allowed, longer subjects will be
+   * "compressed".
+   *
    * @param null|Closure $transliterate See generateSubject().
    *
    * @return CompositePayment
    */
-  public function updateSubject(?Closure $transliterate = null): CompositePayment
-  {
-    $this->subject = $this->generateSubject($transliterate);
+  public function updateSubject(
+    int $maxLength = self::SUBJECT_FIELD_LENGTH,
+    ?Closure $transliterate = null,
+  ): CompositePayment {
+    $this->subject = $this->generateSubject(maxLength: $maxLength, transliterate: $transliterate);
     return $this;
   }
 

@@ -625,7 +625,10 @@ class SepaBulkTransactionService
 
     $compositePayment
       ->setAmount($totalAmount)
-      ->updateSubject(fn($x) => $this->sepaTransliterator->translit($x));
+      ->updateSubject(
+        maxLength: FinanceService::SEPA_PURPOSE_LENGTH,
+        transliterator: fn($x) => $this->sepaTransliterator->translit($x),
+      );
 
     return $compositePayment;
   }
@@ -817,11 +820,16 @@ class SepaBulkTransactionService
    * @return Entities\SepaBulkTransaction Just the argument $bulkTransaction
    * in case of success.
    */
-  public function updateBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $flush = false):Entities\SepaBulkTransaction
-  {
+  public function updateBulkTransaction(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    bool $flush = false,
+  ): Entities\SepaBulkTransaction {
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($bulkTransaction->getPayments() as $compositePayment) {
-      $compositePayment->updateSubject(fn(string $x) => $this->sepaTransliterator->tranlit($x));
+      $compositePayment->updateSubject(
+        maxLength: FinanceService::SEPA_PURPOSE_LENGTH,
+        transliterator: fn(string $x) => $this->sepaTransliterator->translit($x),
+      );
     }
 
     if ($flush) {
