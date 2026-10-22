@@ -146,6 +146,7 @@ class SepaBulkTransactionService
     private EventsService $eventsService,
     private FinanceService $financeService,
     private IDateTimeFormatter $dateTimeFormatter,
+    private SepaTransliterator $sepaTransliterator,
     private TimeFactory $timeFactory,
     protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
@@ -624,7 +625,7 @@ class SepaBulkTransactionService
 
     $compositePayment
       ->setAmount($totalAmount)
-      ->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
+      ->updateSubject(fn($x) => $this->sepaTransliterator->translit($x));
 
     return $compositePayment;
   }
@@ -820,7 +821,7 @@ class SepaBulkTransactionService
   {
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($bulkTransaction->getPayments() as $compositePayment) {
-      $compositePayment->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
+      $compositePayment->updateSubject(fn(string $x) => $this->sepaTransliterator->tranlit($x));
     }
 
     if ($flush) {

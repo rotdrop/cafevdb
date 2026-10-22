@@ -73,12 +73,7 @@ class FinanceService
   const VALARM_FROM_END = EventsService::VALARM_FROM_END;
 
   const ENTITY = Entities\SepaDebitMandate::class;
-  /**
-   * @var string
-   *
-   * The must-be-supported character set as regular expression.
-   */
-  const SEPA_CHARSET = "a-zA-Z0-9 \/?:().,'+-";
+
   const SEPA_PURPOSE_LENGTH = 4*35;
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
   const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
@@ -94,21 +89,16 @@ class FinanceService
     'christmas-next-day'      => '12-26',
   ];
 
-  public const SEPA_TRANSLIT_EXTRA = [
-    '[{' => '(',
-    '}]' => ')',
-    ';' => '/',
-  ];
-
   /** @var Repositories\SepaDebitMandatesRepository */
   private $mandatesRepository;
 
   /** {@inheritdoc} */
   public function __construct(
-    protected ConfigService $configService,
-    protected EntityManager $entityManager,
     private EventsService $eventsService,
     private OrganizationalRolesService $rolesService,
+    private SepaTransliterator $sepaTransliterator,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
   ) {
     $this->l = $this->l10n();
 
@@ -977,43 +967,6 @@ class FinanceService
   }
 
   /**
-   * Convert an UTF-8 encoded string to something simpler, with
-   * transliteration of special characters. I may not be necesary any
-   * more, but at least at the beginning of the SEPA affair at least
-   * some banks were at least very restrictive concerning the allowed
-   * characters.
-   *
-   * @param string $string String to convert.
-   *
-   * @param null|string $locale
-   *
-   * @return string
-   */
-  public function sepaTranslit(string $string, ?string $locale = null):string
-  {
-    return str_replace(
-      array_keys(self::SEPA_TRANSLIT_EXTRA),
-      array_values(self::SEPA_TRANSLIT_EXTRA),
-      $this->transliterate($string, $locale)
-    );
-  }
-
-  /**
-   * Validate whether the given string conforms to a very restricted
-   * character set. I may not be necesary any more, but at least at
-   * the beginning of the SEPA affair at least some banks were at
-   * least very restrictive concerning the allowed characters.
-   *
-   * @param string $string The string to validate.
-   *
-   * @return bool The validation result.
-   */
-  public function validateSepaString(string $string):bool
-  {
-    return !preg_match('@[^'.self::SEPA_CHARSET.']@', $string);
-  }
-
-  /**
    * The "SEPA mandat reference" must be unique per mandate, consist
    * more or less of alpha-numeric characters and has a maximum length
    * of 35 characters. We choose the format
@@ -1049,7 +1002,7 @@ class FinanceService
     $mandate->setProject($project);
 
     $projectId = $project['id'];
-    $projectName = $this->sepaTranslit($project['name']);
+    $projectName = $this->sepaTransliterator->translit($project['name']);
 
     $projectYear = substr($projectName, -4);
     if (is_numeric($projectYear)) {
@@ -1067,8 +1020,8 @@ class FinanceService
     $sequence = $mandate->getSequence();
 
     $musicianId = $musician['id'];
-    $firstName = $this->sepaTranslit($musician['firstName']);
-    $surName = $this->sepaTranslit($musician['surName']);
+    $firstName = $this->sepaTransliterator->translit($musician['firstName']);
+    $surName = $this->sepaTransliterator->translit($musician['surName']);
 
     $format = empty($projectYear)
             ? '%04x-%04x-%\'X1.1s%\'X1.1s-%-\'X19.19s%.0s+%02d'
@@ -1408,7 +1361,7 @@ class FinanceService
 
     // Verify that bankAccountOwner conforms to the brain-damaged
     // SEPA charset. Thank you so much. Banks.
-    if (!$this->validateSepaString($account->getBankAccountOwner())) {
+    if (!$this->sepaTransliterator->validate($account->getBankAccountOwner())) {
       throw new InvalidArgumentException($this->l->t('Illegal characters in bank account owner field.'));
     }
 
