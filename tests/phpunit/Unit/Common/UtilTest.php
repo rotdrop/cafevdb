@@ -143,6 +143,135 @@ class UtilTest extends TestCase
     restore_error_handler();
   }
 
+  private const EXPLODE_DFLT_DELIM = ':';
+  private const EXPLODE_LIMIT_TESTS = [
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b', 'c'],
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b', 'c'],
+      'limit' => 0,
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b', 'c'],
+      'limit' => -1,
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b', 'c'],
+      'limit' => 3,
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b', 'c'],
+      'limit' => 1000,
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a', 'b:c'],
+      'limit' => 2,
+    ],
+    [
+      'input' => 'a:b:c',
+      'expected' => ['a:b:c'],
+      'limit' => 1,
+    ],
+  ];
+
+  /** @return void */
+  public function testExplodeLimit(): void
+  {
+    foreach (self::EXPLODE_LIMIT_TESTS as $test) {
+      $output = Util::explode(
+        delim: $test['delim'] ?? self::EXPLODE_DFLT_DELIM,
+        string: $test['input'] ?? null,
+        flags: $test['flags'] ?? Util::EXPLODE_DEFAULT_FLAGS,
+        escape: $test['escape'] ?? Util::EXPLODE_DEFAULT_ESCAPE,
+        limit: $test['limit'] ?? Util::EXPLODE_DEFAULT_LIMIT,
+      );
+      $this->assertEquals(
+        $test['expected'],
+        $output,
+        print_r($test, true),
+      );
+    }
+  }
+
+  private const EXPLODE_ESCAPE_TESTS = [
+    [
+      'input' => 'a:b\\:c',
+      'expected' => ['a', 'b:c'],
+    ],
+    [
+      'input' => 'a:b\\:c',
+      'expected' => ['a', 'b\\', 'c'],
+      'escape' => '@',
+    ],
+    [
+      'input' => 'a:b@:c',
+      'expected' => ['a', 'b:c'],
+      'escape' => '@',
+    ],
+    [
+      'input' => 'a:b\\:c',
+      'expected' => ['a', 'b\\', 'c'],
+      'flags' => Util::EXPLODE_DEFAULT_FLAGS & ~Util::ESCAPED,
+    ],
+  ];
+
+  /** @return void */
+  public function testExplodeEscape(): void
+  {
+    foreach (self::EXPLODE_ESCAPE_TESTS as $test) {
+      $output = Util::explode(
+        delim: $test['delim'] ?? self::EXPLODE_DFLT_DELIM,
+        string: $test['input'] ?? null,
+        flags: $test['flags'] ?? Util::EXPLODE_DEFAULT_FLAGS,
+        escape: $test['escape'] ?? Util::EXPLODE_DEFAULT_ESCAPE,
+        limit: $test['limit'] ?? Util::EXPLODE_DEFAULT_LIMIT,
+      );
+      $this->assertEquals(
+        $test['expected'],
+        $output,
+        print_r($test, true),
+      );
+    }
+  }
+
+  private const EXPLODE_EMPTY_FIELDS_TESTS = [
+    [
+      'input' => 'a:b::c',
+      'expected' => ['a', 'b', 'c'],
+    ],
+    [
+      'input' => 'a:b::c',
+      'expected' => ['a', 'b', '', 'c'],
+      'flags' => Util::EXPLODE_DEFAULT_FLAGS & ~Util::OMIT_EMPTY_FIELDS,
+    ],
+  ];
+
+  /** @return void */
+  public function testExplodeEmptyFields(): void
+  {
+    foreach (self::EXPLODE_EMPTY_FIELDS_TESTS as $test) {
+      $output = Util::explode(
+        delim: $test['delim'] ?? self::EXPLODE_DFLT_DELIM,
+        string: $test['input'] ?? null,
+        flags: $test['flags'] ?? Util::EXPLODE_DEFAULT_FLAGS,
+        escape: $test['escape'] ?? Util::EXPLODE_DEFAULT_ESCAPE,
+        limit: $test['limit'] ?? Util::EXPLODE_DEFAULT_LIMIT,
+      );
+      $this->assertEquals(
+        $test['expected'],
+        $output,
+        print_r($test, true),
+      );
+    }
+  }
+
   private const ARRAY_MERGE_DATA = [
     [
       // ordinary merge, non-recursive

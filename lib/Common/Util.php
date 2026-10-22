@@ -250,8 +250,12 @@ class Util
     }
   }
 
+  public const EXPLODE_DEFAULT_FLAGS = self::OMIT_EMPTY_FIELDS|self::ESCAPED;
+  public const EXPLODE_DEFAULT_ESCAPE = '\\';
+  public const EXPLODE_DEFAULT_LIMIT = -1;
+
   /**
-   * A preg_explode() wrapper with some extra features.
+   * A preg_split() wrapper with some extra features.
    *
    * @param string $delim The delimiter string.
    *
@@ -265,10 +269,17 @@ class Util
    *
    * @param string $escape The escape character when self::ESCAPED is set.
    *
+   * @param int $limit {@see preg_split}.
+   *
    * @return array
    */
-  public static function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
-  {
+  public static function explode(
+    string $delim,
+    ?string $string,
+    int $flags = self::EXPLODE_DEFAULT_FLAGS,
+    string $escape = self::EXPLODE_DEFAULT_ESCAPE,
+    int $limit = self::EXPLODE_DEFAULT_LIMIT,
+  ): array {
     if (empty($flags)) {
       return explode($delim, $string ?? '');
     }
@@ -280,8 +291,8 @@ class Util
           preg_split(
             '/' . $trimExpr . preg_quote($escape, '/') . '.' . '(*SKIP)(*FAIL)|' . preg_quote($delim, '/') . $trimExpr . '/s',
             $string ?? '',
-            -1,
-            $pregFlags,
+            limit: $limit,
+            flags: $pregFlags,
           ),
           $delim,
           $escape);
