@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -283,7 +283,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    * Remove the given file from the list of supporting documents.
    *
    * This also decrements the link count of the file and removes $this from
-   * the collection of document containes of the encrypted file entity.
+   * the collection of document contains of the encrypted file entity.
    *
    * @param EncryptedFile $file
    *
