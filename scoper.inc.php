@@ -127,5 +127,12 @@ return [
       }
       return str_replace('use Doctrine', 'use OCA\\CAFEVDB\\Wrapped\\Doctrine', $content);
     },
+    // \Org\Heigl\Hyphenator
+    function(string $filePath, string $prefix, string $content): string {
+      if (!str_contains($filePath, 'vendor-wrapped/org_heigl/hyphenator/src')) {
+        return $content;
+      }
+      return str_replace("'\\Org\Heigl\\Hyphenator", "'\\OCA\\CAFEVDB\\Wrapped\\Org\Heigl\\Hyphenator", $content);
+    }
   ],
 ];

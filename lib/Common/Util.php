@@ -561,41 +561,6 @@ class Util
   }
 
   /**
-   * Shorten the given string by iteratively reducing the size of its
-   * camel-case components until it fits into the given length.
-   *
-   * @param string $string The string to shorten.
-   *
-   * @param integer $limit The target length.
-   *
-   * @param integer $minLen Defaults to 2. Components smaller than this will not
-   * be shortened. This also means that the target-length may not be reached.
-   *
-   * @return string
-   */
-  public static function shortenCamelCaseString(string $string, int $limit, int $minLen = 2):string
-  {
-    $excess = strlen($string) - $limit;
-    if ($excess > 0) {
-      $parts = explode(' ', Util::camelCaseToDashes($string, ' '));
-      // \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
-      do {
-        $shortened = false;
-        foreach ($parts as &$part) {
-          if (strlen($part)  > $minLen) {
-            $part = substr($part, 0, -1);
-            $excess --;
-            $shortened = true;
-          }
-        }
-      } while ($excess > 0 && $shortened);
-      $string = Util::dashesToCamelCase(implode(' ', $parts), capitalizeFirstCharacter: true, dashes: ' ');
-    }
-
-    return $string;
-  }
-
-  /**
    * Dumps a string into a traditional hex dump for programmers,
    * in a format similar to the output of the BSD command hexdump -C file.
    * The default result is a string.
