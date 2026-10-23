@@ -38,8 +38,6 @@ use OCP\IConfig;
  */
 class WordSplitterService
 {
-  private const APP_NAME = 'cafevdb';
-
   /** Maximum time in seconds to wait for the service to accept connections. */
   private const STARTUP_TIMEOUT = 60; // dictionary load can be slow
 
@@ -58,9 +56,10 @@ class WordSplitterService
   public function __construct(
     private IConfig $config,
     private IClientService $clientService,
+    private string $appName,
   ) {
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
-    $this->socket = $config->getAppValue(self::APP_NAME, 'splitter_socket', '')
+    $this->socket = $config->getAppValue($this->appName, 'splitter_socket', '')
       ?: $this->appDataDir() . '/german-word-splitter.sock';
   }
 
@@ -78,7 +77,7 @@ class WordSplitterService
   {
     $dir = rtrim($this->config->getSystemValue('datadirectory'), '/')
          . '/appdata_' . $this->config->getSystemValue('instanceid')
-         . '/' . self::APP_NAME;
+         . '/' . $this->appName;
     if (!is_dir($dir) && !@mkdir($dir, 0770, true) && !is_dir($dir)) {
       throw new RuntimeException("Cannot create app-data directory $dir");
     }
