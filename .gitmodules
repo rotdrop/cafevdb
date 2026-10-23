@@ -43,3 +43,6 @@
 	path = 3rdparty/vuejs-router
 	url = git@github.com:rotdrop/vuejs-router.git
 	branch = production/cafevdb
+[submodule "python/compound-word-splitting"]
+	path = python/compound-word-splitting
+	url = git@github.com:rotdrop/python-microservice-german-word-splitting.git
