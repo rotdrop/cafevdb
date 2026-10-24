@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the Entities\CompositePayment entity. */
 #[Attributes\CoversClass(Entities\CompositePayment::class)]
@@ -83,6 +84,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
@@ -93,6 +95,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use WordSplitterServiceTrait;
 
   private FinanceService $financeService;
 
@@ -105,6 +108,7 @@ class CompositePaymentTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     $appContainer = $this->mockProvider->getAppContainer();
 
