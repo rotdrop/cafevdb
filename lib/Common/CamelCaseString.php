@@ -4,6 +4,7 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
+ * @author GitHub Copilot <223556219+Copilot@users.noreply.github.com>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
