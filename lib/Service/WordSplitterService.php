@@ -33,8 +33,9 @@ use OCP\IConfig;
 /**
  * Client for the german-word-splitter Python microservice.
  *
- * Starts the service on demand, listening on a Unix domain socket in the
- * app-data folder, and talks to it through Nextcloud's HTTP client.
+ * Uses the system-wide service when available, otherwise starts an app-local
+ * service on a Unix domain socket in the app-data folder.
+ * Talks to the service through Nextcloud's HTTP client.
  */
 class WordSplitterService
 {
