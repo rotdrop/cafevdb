@@ -24,12 +24,7 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use Locale;
-
-use OCA\CAFEVDB\Wrapped\Org\Heigl\Hyphenator\Hyphenator;
-use OCA\CAFEVDB\Wrapped\Org\Heigl\Hyphenator\Tokenizer as HyphenatorTokenizer;
-use OCA\CAFEVDB\Wrapped\Org\Heigl\Hyphenator\Options as HyphenatorOptions;
-use OCA\CAFEVDB\Service\L10N\AppL10N;
+use OCA\CAFEVDB\Service\WordSplitterService;
 
 /** General static utility routines. */
 class CamelCaseString
@@ -40,38 +35,11 @@ class CamelCaseString
   }
 
   /**
-   * @param Hyphenator $hyphenator
-   *
-   * @param string $appLocale
+   * @param WordSplitterService $wordSplitterService
    */
   public function __construct(
-    /** @var Hyphenator\Hyphenator */
-    private Hyphenator $hyphenator,
-    /** @var string */
-    private string $appLocale,
-  ) {
-    $options = new HyphenatorOptions()
-      ->setHyphen(' ')
-      ->setDefaultLocale(Locale::canonicalize($appLocale))
-      ->setFilters('NonStandard')
-      // ->setFilters('Simple, CustomMarkup')
-      ->setTokenizers(['Whitespace', 'Punctuation'])
-      ;
-    $this->hyphenator->setOptions($options);
-  }
-
-  /**
-   * @param int $minLen
-   *
-   * @return void
-   */
-  private function setHyphenatorOptions(int $minLen): void
-  {
-    $this->hyphenator->getOptions()
-      ->setRightMin($minLen)
-      ->setLeftMin($minLen)
-      ->setWordMin(2 * $minLen + 1);
-  }
+    private WordSplitterService $wordSplitterService,
+  ) {}
 
   /**
    * Shorten the given string by iteratively reducing the size of its
@@ -90,7 +58,6 @@ class CamelCaseString
   {
     $excess = strlen($string) - $limit;
     if ($excess > 0) {
-      $this->setHyphenatorOptions($minLen);
       $parts = explode(' ', self::camelCaseToDashes($string, ' '));
       $parts = array_merge(...array_map(
         function(string $word) {
@@ -98,13 +65,7 @@ class CamelCaseString
           if (!$isWord) {
             return [$word];
           }
-          $splits = array_map(fn(string $x) => explode(' ', $x), $this->hyphenator->hyphenate($word));
-          if (empty($splits)) {
-            return [$word];
-          }
-          $dist = array_map(fn(array $x) => abs(strlen($x[0]) - strlen($x[1])), $splits);
-          $argMinDist = array_search(min($dist), $dist);
-          return $splits[$argMinDist];
+          return $this->wordSplitterService->split($word, 'german_compound_splitter');
         },
         $parts,
       ));
