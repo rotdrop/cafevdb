@@ -151,7 +151,7 @@ class WordSplitterService
     }
 
     $deadline = time() + self::STARTUP_TIMEOUT;
-    while (!$this->isUp()) {
+    while (!$this->isUp($this->socket)) {
       if (time() > $deadline) {
         throw new RuntimeException('Splitter did not start in time.');
       }
