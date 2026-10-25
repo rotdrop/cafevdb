@@ -378,11 +378,11 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get subject.
    *
-   * @return null|string
+   * @return ?string
    */
   public function getSubject(): ?string
   {
-    return $this->subject;
+    return $this->subject ?? null;
   }
 
   /**
@@ -943,7 +943,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @param int $maxLength Maximum length allowed, longer subjects will be
    * "compressed".
    *
-   * @param null|Closure $transliterate See generateSubject().
+   * @param ?Closure $transliterate See generateSubject().
    *
    * @return CompositePayment
    */
@@ -951,7 +951,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     int $maxLength = self::SUBJECT_FIELD_LENGTH,
     ?Closure $transliterate = null,
   ): CompositePayment {
-    $this->subject = $this->generateSubject(maxLength: $maxLength, transliterate: $transliterate);
+    $this->setSubject($this->generateSubject(maxLength: $maxLength, transliterate: $transliterate));
+
     return $this;
   }
 
