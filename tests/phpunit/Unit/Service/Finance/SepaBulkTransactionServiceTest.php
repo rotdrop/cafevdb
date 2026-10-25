@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
@@ -47,6 +48,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\CoversClass(SepaBulkTransactionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -69,6 +71,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
@@ -99,26 +102,27 @@ class SepaBulkTransactionServiceTest extends TestCase
   {
     $this->generateProjectParticipant();
 
-    /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $configService = $mockProvider->getConfigService();
+    $configService = $this->mockProvider->getConfigService();
 
     $eventsService = $this->createStub(EventsService::class);
     $organizationalRolesService = $this->createStub(OrganizationalRolesService::class);
+    $appContainer = $this->mockProvider->getAppContainer();
 
     $this->financeService = new FinanceService(
       configService: $configService,
       entityManager: $this->entityManager,
       eventsService: $eventsService,
       rolesService: $organizationalRolesService,
+      sepaTransliterator: $appContainer->get(SepaTransliterator::class),
     );
 
-    $appContainer = $mockProvider->getAppContainer();
+    $appContainer = $this->mockProvider->getAppContainer();
 
-    $logger = $mockProvider->getLoggerInterface();
+    $logger = $this->mockProvider->getLoggerInterface();
 
-    $l10n = $mockProvider->getL10N();
+    $l10n = $this->mockProvider->getL10N();
 
     $this->mockTimeFactory();
 
@@ -131,6 +135,7 @@ class SepaBulkTransactionServiceTest extends TestCase
       financeService: $this->financeService,
       l: $l10n,
       logger: $logger,
+      sepaTransliterator: $appContainer->get(SepaTransliterator::class),
       timeFactory: $this->timeFactory,
     );
   }
@@ -151,7 +156,7 @@ class SepaBulkTransactionServiceTest extends TestCase
       $this->participant,
       [$receivableOption],
     );
-    $expected = 'TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Uemlaeuetess';
+    $expected = 'TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 uemlaeuetessWeitereUemlaeuetess';
     $this->assertEquals($expected, $compositePayment->getSubject());
   }
 }

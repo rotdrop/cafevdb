@@ -444,9 +444,6 @@ trait EntityGeneratorTrait
       ->setDataOption($option)
       ->setProjectParticipant($this->participant)
       ->setOptionValue(RationalNumber::fromDecimal('12.23'));
-    $option->getFieldData()->set($this->musician->getId(), $datum);
-    $field->getFieldData()->add($datum);
-    $this->participant->addParticipantFieldDatum($datum);
 
     $this->entities[Entities\ProjectParticipantFieldDatum::class] = $datum;
 
@@ -899,8 +896,8 @@ trait EntityGeneratorTrait
       }
       $datum = new Entities\ProjectParticipantFieldDatum()
         ->setField($fields[$row['field_id']])
-        ->setProjectParticipant($this->participant)
         ->setDataOption($fieldOption)
+        ->setProjectParticipant($this->participant)
         ->setSupportingDocument($document)
         ;
       unset($row['field_id']);

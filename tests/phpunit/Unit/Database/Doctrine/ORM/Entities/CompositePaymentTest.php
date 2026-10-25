@@ -194,7 +194,9 @@ class CompositePaymentTest extends TestCase
     $compositePayment = $this->generateCompositePayment(fn(string $x) => $this->sepaTransliterator->translit($x));
     $compositePayment
       ->setBalanceDocumentsFolder($folder)
-      ->updateSubject(fn(string $x) => $this->sepaTransliterator->translit($x))
+      ->updateSubject(
+        transliterate: fn(string $x) => $this->sepaTransliterator->translit($x),
+      )
       ;
     $this->assertEquals(
       'TestProject99-5 / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 uemlaeuetessWeitereUemlaeuetess',
@@ -225,7 +227,7 @@ class CompositePaymentTest extends TestCase
     );
     $this->assertLessThanOrEqual(FinanceService::SEPA_PURPOSE_LENGTH, strlen($subject));
     $this->assertEquals(
-      'TestProj99-19/UnkoBeit:Regu/UnkoErst:Edek09.09.,Edek11.09.LeerVs.Milc,Edek12.09.,EinkEdek08.09.,EinkGetrFris08.09.,EinkREWE08.09.,Fris11.09.',
+      'TestProj99-19/UnkoBeit:Regu/UnkoStat:Edek09.09.,Edek11.09.LeerVs.Milc,Edek12.09.,EinkEdek08.09.,EinkGetrFris08.09.,EinkREWE08.09.,Fris11.09.',
       $subject,
     );
   }

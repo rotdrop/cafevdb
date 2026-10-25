@@ -46,6 +46,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 /** Test aspects of the EntityArrayAdapter */
 #[Attributes\CoversClass(EntityArrayAdapter::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -267,8 +268,8 @@ class EntityArrayAdapterTest extends TestCase
     try {
       $ctor->invokeArgs($this->entityArrayAdapter, [
         'entity' => 'blah',
-        'root' => $this->entityArrayAdapter,
         'flatIdentifier' => null,
+        'root' => $this->entityArrayAdapter,
       ]);
     } catch (InvalidArgumentException $e) {
       // empty
@@ -284,15 +285,15 @@ class EntityArrayAdapterTest extends TestCase
     "deleted": null,
     "invoices": [],
     "musician": {
-        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-        "entityClassName": "Musician"
+        "entityClassName": "Musician",
+        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
     },
     "participantFieldsData": {
         "entityClassName": "ProjectParticipantFieldDatum",
         "entities": {
             "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                "entityClassName": null
+                "entityClassName": null,
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
             }
         }
     },
@@ -301,14 +302,14 @@ class EntityArrayAdapterTest extends TestCase
         "entityClassName": "CompositePayment",
         "entities": [
             {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": null
+                "entityClassName": null,
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             }
         ]
     },
     "project": {
-        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-        "entityClassName": "Project"
+        "entityClassName": "Project",
+        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
     },
     "projectInstruments": [],
     "registration": false,
@@ -338,8 +339,8 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "MusicianEmailAddress",
             "entities": {
                 "john.doe@nowhere.tld": {
-                    "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '"
                 }
             }
         },
@@ -367,8 +368,8 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "CompositePayment",
             "entities": [
                 {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 }
             ]
         },
@@ -382,8 +383,8 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "ProjectParticipantFieldDatum",
             "entities": {
                 "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                 }
             }
         },
@@ -391,8 +392,8 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "ProjectParticipant",
             "entities": {
                 "' . self::FAKED_ENTITY_ID . '": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 }
             }
         },
@@ -403,12 +404,12 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "SepaBankAccount",
             "entities": [
                 {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1"
                 },
                 {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
                 }
             ]
         },
@@ -427,30 +428,38 @@ class EntityArrayAdapterTest extends TestCase
             "__DEPTH__": 0,
             "created": null,
             "dataOption": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                "entityClassName": "ProjectParticipantFieldDataOption"
+                "entityClassName": "ProjectParticipantFieldDataOption",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
             },
             "deleted": null,
             "deposit": null,
             "field": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "ProjectParticipantField"
+                "entityClassName": "ProjectParticipantField",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
             "invoiceItems": [],
             "musician": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "Musician"
+                "entityClassName": "Musician",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
             "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
             "optionValue": "12.23",
-            "payments": [],
+            "payments": {
+                "entityClassName": "ProjectPayment",
+                "entities": [
+                    {
+                        "entityClassName": null,
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                    }
+                ]
+            },
             "project": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "Project"
+                "entityClassName": "Project",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
             "projectParticipant": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "ProjectParticipant"
+                "entityClassName": "ProjectParticipant",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
             },
             "supportingDocument": null,
             "updated": null
@@ -460,45 +469,45 @@ class EntityArrayAdapterTest extends TestCase
     "payments": [
         {
             "__DEPTH__": 0,
-            "amount": "12.23",
+            "amount": "-12.23",
             "balanceDocumentsFolder": null,
             "created": null,
             "dateOfReceipt": null,
             "donationReceipt": null,
             "id": ' . self::FAKED_ENTITY_ID . ',
             "musician": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "Musician"
+                "entityClassName": "Musician",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
             "notificationMessageId": null,
             "preNotificationEmail": null,
             "project": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "Project"
+                "entityClassName": "Project",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
             "projectParticipant": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "ProjectParticipant"
+                "entityClassName": "ProjectParticipant",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
             },
             "projectPayments": {
                 "entityClassName": "ProjectPayment",
                 "entities": [
                     {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                        "entityClassName": null
+                        "entityClassName": null,
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                     }
                 ]
             },
             "sepaBankAccount": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
-                "entityClassName": "SepaBankAccount"
+                "entityClassName": "SepaBankAccount",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
             },
             "sepaDebitMandate": null,
             "sepaTransaction": {
-                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                "entityClassName": "SepaBankTransfer"
+                "entityClassName": "SepaBankTransfer",
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
             },
-            "subject": "TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+            "subject": "TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß",
             "supportingDocument": null,
             "updated": null
         }
@@ -512,7 +521,7 @@ class EntityArrayAdapterTest extends TestCase
             "entities": [
                 {
                     "entityClassName": null,
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 }
             ]
         },
@@ -524,15 +533,31 @@ class EntityArrayAdapterTest extends TestCase
         "invoices": [],
         "mailingListId": null,
         "name": "TestProject2099",
-        "participantFields": [],
-        "participantFieldsData": [],
+        "participantFields": {
+            "entityClassName": "ProjectParticipantField",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                }
+            ]
+        },
+        "participantFieldsData": {
+            "entityClassName": "ProjectParticipantFieldDatum",
+            "entities": [
+                {
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                }
+            ]
+        },
         "participantInstruments": [],
         "participants": {
             "entityClassName": "ProjectParticipant",
             "entities": {
                 "' . self::FAKED_ENTITY_ID . '": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": null
+                    "entityClassName": null,
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 }
             }
         },
@@ -541,7 +566,7 @@ class EntityArrayAdapterTest extends TestCase
             "entities": [
                 {
                     "entityClassName": null,
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 }
             ]
         },
@@ -585,8 +610,8 @@ class EntityArrayAdapterTest extends TestCase
                 "address": "john.doe@nowhere.tld",
                 "created": "2024-01-01T00:00:00.000000Z",
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "updated": "2024-01-01T00:00:00.000000Z"
             }
@@ -614,45 +639,45 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [
             {
                 "__DEPTH__": 0,
-                "amount": "12.23",
+                "amount": "-12.23",
                 "balanceDocumentsFolder": null,
                 "created": null,
                 "dateOfReceipt": null,
                 "donationReceipt": null,
                 "id": ' . self::FAKED_ENTITY_ID . ',
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "notificationMessageId": null,
                 "preNotificationEmail": null,
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectParticipant": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "ProjectParticipant"
+                    "entityClassName": "ProjectParticipant",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectPayments": {
                     "entityClassName": "ProjectPayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "sepaBankAccount": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
-                    "entityClassName": "SepaBankAccount"
+                    "entityClassName": "SepaBankAccount",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
                 },
                 "sepaDebitMandate": null,
                 "sepaTransaction": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "SepaBankTransfer"
+                    "entityClassName": "SepaBankTransfer",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
-                "subject": "TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "subject": "TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß",
                 "supportingDocument": null,
                 "updated": null
             }
@@ -668,30 +693,38 @@ class EntityArrayAdapterTest extends TestCase
                 "__DEPTH__": 0,
                 "created": null,
                 "dataOption": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                    "entityClassName": "ProjectParticipantFieldDataOption"
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                 },
                 "deleted": null,
                 "deposit": null,
                 "field": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "ProjectParticipantField"
+                    "entityClassName": "ProjectParticipantField",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "invoiceItems": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                 "optionValue": "12.23",
-                "payments": [],
+                "payments": {
+                    "entityClassName": "ProjectPayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectParticipant": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "ProjectParticipant"
+                    "entityClassName": "ProjectParticipant",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 },
                 "supportingDocument": null,
                 "updated": null
@@ -705,15 +738,15 @@ class EntityArrayAdapterTest extends TestCase
                 "deleted": null,
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "participantFieldsData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -722,14 +755,14 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectInstruments": [],
                 "registration": false,
@@ -750,8 +783,8 @@ class EntityArrayAdapterTest extends TestCase
                 "iban": "DE02700100800030876808",
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "payments": [],
                 "sepaDebitMandates": [],
@@ -768,15 +801,15 @@ class EntityArrayAdapterTest extends TestCase
                 "iban": "DE02120300000000202051",
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "payments": {
-                   "entityClassName": "CompositePayment",
+                    "entityClassName": "CompositePayment",
                     "entities": [
                         {
                             "entityClassName": null,
-                            "flatIdentifier": "9999"
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -807,21 +840,21 @@ class EntityArrayAdapterTest extends TestCase
                 "deleted": null,
                 "deposit": null,
                 "field": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "ProjectParticipantField"
+                    "entityClassName": "ProjectParticipantField",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "fieldData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
                 "invoiceItems": [],
                 "key": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                "label": "ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "label": "Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß",
                 "limit": null,
                 "payments": [],
                 "tooltip": null,
@@ -836,23 +869,23 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipantFieldDataOption",
                     "entities": {
                         "00000000-0000-0000-0000-000000000000": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':00000000-0000-0000-0000-000000000000",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':00000000-0000-0000-0000-000000000000"
                         },
                         "027db41d-4f5b-45be-a956-c70095dab48d": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d"
                         },
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
                 "dataType": "liabilities",
                 "defaultValue": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d",
-                    "entityClassName": "ProjectParticipantFieldDataOption"
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d"
                 },
                 "deleted": null,
                 "depositDueDate": null,
@@ -863,8 +896,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     ]
                 },
@@ -874,8 +907,8 @@ class EntityArrayAdapterTest extends TestCase
                 "participantAccess": "none",
                 "participationContext": "unrestricted",
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectEvent": null,
                 "tab": null,
@@ -900,8 +933,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "MusicianEmailAddress",
                     "entities": {
                         "john.doe@nowhere.tld": {
-                            "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
@@ -929,8 +962,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -944,8 +977,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -953,8 +986,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipant",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
@@ -965,12 +998,12 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "SepaBankAccount",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1"
                         },
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
                         }
                     ]
                 },
@@ -986,7 +1019,42 @@ class EntityArrayAdapterTest extends TestCase
             },
             "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
             "optionValue": "12.23",
-            "payments": [],
+            "payments": [
+                {
+                    "__DEPTH__": 0,
+                    "amount": "-12.23",
+                    "balanceDocumentsFolder": null,
+                    "compositePayment": {
+                        "entityClassName": "CompositePayment",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                    },
+                    "created": null,
+                    "id": ' . self::FAKED_ENTITY_ID . ',
+                    "isDonation": false,
+                    "musician": {
+                        "entityClassName": "Musician",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                    },
+                    "project": {
+                        "entityClassName": "Project",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                    },
+                    "projectParticipant": {
+                        "entityClassName": "ProjectParticipant",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
+                    },
+                    "receivable": {
+                        "entityClassName": "ProjectParticipantFieldDatum",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                    },
+                    "receivableOption": {
+                        "entityClassName": "ProjectParticipantFieldDataOption",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                    },
+                    "subject": "Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß",
+                    "updated": null
+                }
+            ],
             "project": {
                 "__DEPTH__": 0,
                 "applications": [],
@@ -996,7 +1064,7 @@ class EntityArrayAdapterTest extends TestCase
                     "entities": [
                         {
                             "entityClassName": null,
-                            "flatIdentifier": "9999"
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -1008,27 +1076,43 @@ class EntityArrayAdapterTest extends TestCase
                 "invoices": [],
                 "mailingListId": null,
                 "name": "TestProject2099",
-                "participantFields": [],
-                "participantFieldsData": [],
+                "participantFields": {
+                    "entityClassName": "ProjectParticipantField",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                        }
+                    ]
+                },
                 "participantInstruments": [],
                 "participants": {
                     "entityClassName": "ProjectParticipant",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
                 "payments": {
-            "entityClassName": "ProjectPayment",
-            "entities": [
-                {
-                    "entityClassName": null,
-                    "flatIdentifier": "9999"
-                }
-            ]
-        },
+                    "entityClassName": "ProjectPayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
                 "registrationCalendarEvent": null,
                 "registrationDeadline": null,
                 "registrationStartDate": null,
@@ -1046,15 +1130,15 @@ class EntityArrayAdapterTest extends TestCase
                 "deleted": null,
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "participantFieldsData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -1063,14 +1147,14 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectInstruments": [],
                 "registration": false,
@@ -1084,7 +1168,7 @@ class EntityArrayAdapterTest extends TestCase
     "payments": [
         {
             "__DEPTH__": 1,
-            "amount": "12.23",
+            "amount": "-12.23",
             "balanceDocumentsFolder": null,
             "created": null,
             "dateOfReceipt": null,
@@ -1108,8 +1192,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "MusicianEmailAddress",
                     "entities": {
                         "john.doe@nowhere.tld": {
-                            "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
@@ -1137,8 +1221,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -1152,8 +1236,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -1161,8 +1245,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipant",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
@@ -1173,12 +1257,12 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "SepaBankAccount",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1"
                         },
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
                         }
                     ]
                 },
@@ -1203,7 +1287,7 @@ class EntityArrayAdapterTest extends TestCase
                     "entities": [
                         {
                             "entityClassName": null,
-                            "flatIdentifier": "9999"
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -1215,27 +1299,43 @@ class EntityArrayAdapterTest extends TestCase
                 "invoices": [],
                 "mailingListId": null,
                 "name": "TestProject2099",
-                "participantFields": [],
-                "participantFieldsData": [],
+                "participantFields": {
+                    "entityClassName": "ProjectParticipantField",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                        }
+                    ]
+                },
                 "participantInstruments": [],
                 "participants": {
                     "entityClassName": "ProjectParticipant",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
                 "payments": {
-            "entityClassName": "ProjectPayment",
-            "entities": [
-                {
-                    "entityClassName": null,
-                    "flatIdentifier": "9999"
-                }
-            ]
-        },
+                    "entityClassName": "ProjectPayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
                 "registrationCalendarEvent": null,
                 "registrationDeadline": null,
                 "registrationStartDate": null,
@@ -1253,15 +1353,15 @@ class EntityArrayAdapterTest extends TestCase
                 "deleted": null,
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "participantFieldsData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -1270,14 +1370,14 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectInstruments": [],
                 "registration": false,
@@ -1286,36 +1386,36 @@ class EntityArrayAdapterTest extends TestCase
             "projectPayments": [
                 {
                     "__DEPTH__": 0,
-                    "amount": "12.23",
+                    "amount": "-12.23",
                     "balanceDocumentsFolder": null,
                     "compositePayment": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                        "entityClassName": "CompositePayment"
+                        "entityClassName": "CompositePayment",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                     },
                     "created": null,
                     "id": ' . self::FAKED_ENTITY_ID . ',
                     "isDonation": false,
                     "musician": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                        "entityClassName": "Musician"
+                        "entityClassName": "Musician",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                     },
                     "project": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                        "entityClassName": "Project"
+                        "entityClassName": "Project",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                     },
                     "projectParticipant": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
-                        "entityClassName": "ProjectParticipant"
+                        "entityClassName": "ProjectParticipant",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                     },
                     "receivable": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                        "entityClassName": "ProjectParticipantFieldDatum"
+                        "entityClassName": "ProjectParticipantFieldDatum",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                     },
                     "receivableOption": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                        "entityClassName": "ProjectParticipantFieldDataOption"
+                        "entityClassName": "ProjectParticipantFieldDataOption",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                     },
-                    "subject": "Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                    "subject": "Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß",
                     "updated": null
                 }
             ],
@@ -1329,15 +1429,15 @@ class EntityArrayAdapterTest extends TestCase
                 "iban": "DE02120300000000202051",
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "payments": {
-                   "entityClassName": "CompositePayment",
+                    "entityClassName": "CompositePayment",
                     "entities": [
                         {
                             "entityClassName": null,
-                            "flatIdentifier": "9999"
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
@@ -1359,8 +1459,8 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": {
                         "' . self::FAKED_ENTITY_ID . '": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     }
                 },
@@ -1374,7 +1474,7 @@ class EntityArrayAdapterTest extends TestCase
                 "submitDate": null,
                 "updated": null
             },
-            "subject": "TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+            "subject": "TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß",
             "supportingDocument": null,
             "updated": null
         }
@@ -1386,45 +1486,45 @@ class EntityArrayAdapterTest extends TestCase
         "compositePayments": [
             {
                 "__DEPTH__": 0,
-                "amount": "12.23",
+                "amount": "-12.23",
                 "balanceDocumentsFolder": null,
                 "created": null,
                 "dateOfReceipt": null,
                 "donationReceipt": null,
-                "id": 9999,
+                "id": ' . self::FAKED_ENTITY_ID . ',
                 "musician": {
                     "entityClassName": "Musician",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "notificationMessageId": null,
                 "preNotificationEmail": null,
                 "project": {
                     "entityClassName": "Project",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectParticipant": {
                     "entityClassName": "ProjectParticipant",
-                    "flatIdentifier": "9999:9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectPayments": {
                     "entityClassName": "ProjectPayment",
                     "entities": [
                         {
                             "entityClassName": null,
-                            "flatIdentifier": "9999"
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "sepaBankAccount": {
                     "entityClassName": "SepaBankAccount",
-                    "flatIdentifier": "9999:2"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2"
                 },
                 "sepaDebitMandate": null,
                 "sepaTransaction": {
                     "entityClassName": "SepaBankTransfer",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
-                "subject": "TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "subject": "TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß",
                 "supportingDocument": null,
                 "updated": null
             }
@@ -1437,8 +1537,102 @@ class EntityArrayAdapterTest extends TestCase
         "invoices": [],
         "mailingListId": null,
         "name": "TestProject2099",
-        "participantFields": [],
-        "participantFieldsData": [],
+        "participantFields": [
+            {
+                "__DEPTH__": 0,
+                "balancingAccount": null,
+                "dataOptions": {
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "entities": {
+                        "00000000-0000-0000-0000-000000000000": {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':00000000-0000-0000-0000-000000000000"
+                        },
+                        "027db41d-4f5b-45be-a956-c70095dab48d": {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d"
+                        },
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                        }
+                    }
+                },
+                "dataType": "liabilities",
+                "defaultValue": {
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d"
+                },
+                "deleted": null,
+                "depositDueDate": null,
+                "displayOrder": null,
+                "dueDate": "2099-01-01T00:00:00.000000Z",
+                "encrypted": false,
+                "fieldData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                        }
+                    ]
+                },
+                "id": ' . self::FAKED_ENTITY_ID . ',
+                "multiplicity": "recurring",
+                "name": "Forderungen",
+                "participantAccess": "none",
+                "participationContext": "unrestricted",
+                "project": {
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                },
+                "projectEvent": null,
+                "tab": null,
+                "tooltip": null
+            }
+        ],
+        "participantFieldsData": [
+            {
+                "__DEPTH__": 0,
+                "created": null,
+                "dataOption": {
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                },
+                "deleted": null,
+                "deposit": null,
+                "field": {
+                    "entityClassName": "ProjectParticipantField",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                },
+                "invoiceItems": [],
+                "musician": {
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                },
+                "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                "optionValue": "12.23",
+                "payments": {
+                    "entityClassName": "ProjectPayment",
+                    "entities": [
+                        {
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                        }
+                    ]
+                },
+                "project": {
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
+                },
+                "projectParticipant": {
+                    "entityClassName": "ProjectParticipant",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
+                },
+                "supportingDocument": null,
+                "updated": null
+            }
+        ],
         "participantInstruments": [],
         "participants": {
             "' . self::FAKED_ENTITY_ID . '": {
@@ -1448,15 +1642,15 @@ class EntityArrayAdapterTest extends TestCase
                 "deleted": null,
                 "invoices": [],
                 "musician": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Musician"
+                    "entityClassName": "Musician",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "participantFieldsData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                         }
                     }
                 },
@@ -1465,14 +1659,14 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "CompositePayment",
                     "entities": [
                         {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                            "entityClassName": null
+                            "entityClassName": null,
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                         }
                     ]
                 },
                 "project": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
-                    "entityClassName": "Project"
+                    "entityClassName": "Project",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectInstruments": [],
                 "registration": false,
@@ -1482,36 +1676,36 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [
             {
                 "__DEPTH__": 0,
-                "amount": "12.23",
+                "amount": "-12.23",
                 "balanceDocumentsFolder": null,
                 "compositePayment": {
                     "entityClassName": "CompositePayment",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "created": null,
-                "id": 9999,
+                "id": ' . self::FAKED_ENTITY_ID . ',
                 "isDonation": false,
                 "musician": {
                     "entityClassName": "Musician",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "project": {
                     "entityClassName": "Project",
-                    "flatIdentifier": "9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '"
                 },
                 "projectParticipant": {
                     "entityClassName": "ProjectParticipant",
-                    "flatIdentifier": "9999:9999"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '"
                 },
                 "receivable": {
                     "entityClassName": "ProjectParticipantFieldDatum",
-                    "flatIdentifier": "9999:9999:9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                 },
                 "receivableOption": {
                     "entityClassName": "ProjectParticipantFieldDataOption",
-                    "flatIdentifier": "9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86"
                 },
-                "subject": "Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "subject": "Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß",
                 "updated": null
             }
         ],
@@ -1531,6 +1725,8 @@ class EntityArrayAdapterTest extends TestCase
 }',
   ];
 
+  private const JSON_OPTIONS = JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;
+
   /** @return void */
   public function testSerialization(): void
   {
@@ -1541,19 +1737,23 @@ class EntityArrayAdapterTest extends TestCase
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
       // echo "DEPTH " . $depth . PHP_EOL;
       // echo json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR) . PHP_EOL;
+      $encodedData = json_encode($this->entityArrayAdapter, self::JSON_OPTIONS);
       $this->assertEqualsCanonicalizing(
-        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()], flags: $decodeFlags),
-        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR), flags: $decodeFlags),
+        json_decode(self::SERIALIZED_ENTITY[$depth], flags: $decodeFlags),
+        json_decode($encodedData, flags: $decodeFlags),
       );
+      unset($encodedData);
     }
     // tests also "un-deepen"
     foreach (array_keys(array_reverse(self::SERIALIZED_ENTITY, preserve_keys: true)) as $depth) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
+      $encodedData = json_encode($this->entityArrayAdapter, self::JSON_OPTIONS);
       $this->assertEqualsCanonicalizing(
-        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()], flags: $decodeFlags),
-        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR), flags: $decodeFlags),
+        json_decode(self::SERIALIZED_ENTITY[$depth], flags: $decodeFlags),
+        json_decode($encodedData, flags: $decodeFlags),
       );
+      unset($encodedData);
     }
   }
 }

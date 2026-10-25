@@ -80,6 +80,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractFileSystemUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
@@ -169,6 +170,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ImagesService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
@@ -504,7 +506,7 @@ class ProjectParticipantsTest extends TestCase
     'PME_data_Musicians:deleted' => '',
     'PME_data_Musicians:cloud_account_disabled' => ['1'],
     'PME_data_ProjectParticipantFieldsDataOptions@1:label' => [
-      'ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
+      'Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß',
       'Voreinstellung',
     ],
     'PME_data_ProjectParticipantFieldsData@1:option_value' => [

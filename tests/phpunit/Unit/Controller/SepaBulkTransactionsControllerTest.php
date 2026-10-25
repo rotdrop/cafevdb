@@ -58,6 +58,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 /** Test aspects of the SepaBulkTransactionsController. */
 #[Attributes\CoversClass(Controller\SepaBulkTransactionsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\DoNothingProgressStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
@@ -168,6 +169,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService\EventDataDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]

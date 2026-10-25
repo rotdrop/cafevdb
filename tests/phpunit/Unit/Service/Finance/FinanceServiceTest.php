@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -55,6 +56,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\CoversClass(VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -78,6 +80,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::Class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
@@ -156,11 +159,14 @@ class FinanceServiceTest extends TestCase
 
     $this->entityManager->expects($this->atLeastOnce())->method('getRepository');
 
+    $appContainer = $this->mockProvider->getAppContainer();
+
     $this->financeService = new FinanceService(
       configService: $this->configService,
       entityManager: $this->entityManager,
       eventsService: $this->eventsService,
       rolesService: $organizationalRolesService,
+      sepaTransliterator: $appContainer->get(SepaTransliterator::class),
     );
   }
 
@@ -168,22 +174,6 @@ class FinanceServiceTest extends TestCase
   public function testConstruction(): void
   {
     // $this->expectNotToPerformAssertions();
-  }
-
-  /** @return void */
-  public function testSepaTranslit(): void
-  {
-    $result = $this->financeService->sepaTranslit(implode('', array_keys(FinanceService::SEPA_TRANSLIT_EXTRA)));
-    $this->assertEquals(implode('', array_values(FinanceService::SEPA_TRANSLIT_EXTRA)), $result);
-  }
-
-  /** @return void */
-  public function testValidateSepaString(): void
-  {
-    $good = $this->financeService->validateSepaString('BlahBlah' . implode('', array_values(FinanceService::SEPA_TRANSLIT_EXTRA)));
-    $this->assertEquals(true, $good);
-    $bad = $this->financeService->validateSepaString(implode('', array_keys(FinanceService::SEPA_TRANSLIT_EXTRA)));
-    $this->assertEquals(false, $bad);
   }
 
   /** @return void */

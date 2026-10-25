@@ -103,4 +103,14 @@ class SepaTransliteratorTest extends TestCase
     $this->assertEquals($expected, $output);
     $this->assertTrue($this->transliterator->validate($output));
   }
+
+  /** @return void */
+  public function testValidate(): void
+  {
+    $good = $this->transliterator->validate('BlahBlah' . implode('', array_values(SepaTransliterator::TRANSLIT_EXTRA)));
+    $this->assertEquals(true, $good);
+    $bad = $this->transliterator->validate(implode('', array_keys(SepaTransliterator::TRANSLIT_EXTRA)));
+    $this->assertEquals(false, $bad);
+  }
+
 }

@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\AppStorage;
@@ -161,6 +162,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\FuzzyInputService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
@@ -306,6 +308,7 @@ class SepaDebitMandatesControllerTest extends TestCase
       financeService: $this->appContainer->get(FinanceService::class),
       fuzzyInputService: $this->appContainer->get(FuzzyInputService::class),
       projectService: $this->createStub(ProjectService::class),
+      sepaTransliterator: $this->appContainer->get(SepaTransliterator::class),
       storageFactory: new StorageFactory($this->mockProvider->getConfigService()),
       timeFactory: $this->timeFactory,
     );
