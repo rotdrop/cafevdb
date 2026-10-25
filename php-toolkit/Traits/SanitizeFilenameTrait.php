@@ -35,8 +35,6 @@ use OCA\RotDrop\Toolkit\Exceptions;
  */
 trait SanitizeFilenameTrait
 {
-  use LoggerTrait;
-
   protected ContainerInterface $appContainer;
 
   protected IL10N $l;

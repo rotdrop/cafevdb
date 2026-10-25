@@ -31,8 +31,9 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use Psr\Container\ContainerInterface;
+use OCP\IDateTimeZone;
 use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
@@ -55,6 +56,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  */
 class SepaBulkTransactionService
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
@@ -163,7 +165,11 @@ class SepaBulkTransactionService
     ?DateTimeInterface $submitDate,
   ):void {
 
-    $now = (new DateTimeImmutable)->setTime(0, 0, 0);
+    // $submitDate is in UTC but means the current date in local time.
+    /** @var IDateTimeZone $dateTimeZone */
+    $dateTimeZone = $this->appContainer->get(IDateTimeZone::class);
+    $now = (new DateTimeImmutable)->setTimezone($dateTimeZone->getTimeZone());
+    $now = self::convertToTimezoneDate($now, $submitDate->getTimezone());
 
     $bulkTransaction->setSubmitDate($submitDate);
 

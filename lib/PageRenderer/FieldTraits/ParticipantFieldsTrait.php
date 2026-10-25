@@ -508,6 +508,7 @@ trait ParticipantFieldsTrait
                     $fieldOption = $field->getDataOption($optionKey);
                   }
 
+                  $fieldDataType = $field->getDataType();
                   $pathChain = [
                     'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                     'documentsFolders' => $this->getDocumentsFolderName(),

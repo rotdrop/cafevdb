@@ -212,7 +212,7 @@ class DocumentStorageUploadController extends Controller
           }
           $originalFilePath = $file['original_name'] ?? null;
           if ($file['upload_mode']) {
-            $uploadMode = $file['upload_mode'];
+            $uploadMode = EnumFileUploadMode::get($file['upload_mode']);
           }
         } else {
           $originalFilePath = $cloudFile;
@@ -279,6 +279,8 @@ class DocumentStorageUploadController extends Controller
 
           $storage = $this->getStorage($section, $topic, $entity);
 
+          $this->logInfo('UPLOAD MODE "' . $uploadMode->value . '" ENTITY ' . (int)empty($fileEntity) . ' ' . get_class($storage));
+
           switch ($uploadMode) {
             case EnumFileUploadMode::MOVE:
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
@@ -293,6 +295,7 @@ class DocumentStorageUploadController extends Controller
               /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
               $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
               $mimeType = $mimeTypeDetector->detectString($fileContent);
+
 
               if (!empty($fileEntity) && $fileEntity->getNumberOfLinks() > 1 && $conflict == EnumAddDocumentConflictAction::REPLACE) {
                 // if the file has multiple links then it is probably
@@ -410,7 +413,7 @@ class DocumentStorageUploadController extends Controller
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $actualConflict,
-          'messages' => [$message],
+          'messages' => array_filter([$message]),
         ]);
 
         return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
@@ -585,7 +588,7 @@ class DocumentStorageUploadController extends Controller
    *
    * @param DatabaseStorage $storage
    *
-   * @param string $conflict
+   * @param EnumAddDocumentConflictAction $conflict
    *
    * @return Entities\DatabaseStorageFile
    *
@@ -596,7 +599,7 @@ class DocumentStorageUploadController extends Controller
     Entities\EncryptedFile $fileEntity,
     mixed $entity,
     DatabaseStorage $storage,
-    string $conflict,
+    EnumAddDocumentConflictAction $conflict,
   ):Entities\DatabaseStorageFile {
     switch (true) {
       case ($entity instanceof Entities\CompositePayment):
@@ -604,7 +607,7 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
@@ -613,13 +616,13 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
       case ($entity instanceof Entities\Invoice):
         /** @var Entities\Invoice $entity */
-        $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+        $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
         $entity->setWrittenInvoice($fileNodeEntity);
         return $fileNodeEntity;
       case ($entity instanceof Entities\TaxExemptionNotice):
@@ -627,7 +630,7 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setWrittenNotice($fileNodeEntity);
         }
         return $fileNodeEntity;

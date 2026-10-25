@@ -3907,7 +3907,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return null;
     }
     if ($response->getStatusCode() != Http::STATUS_OK) {
-      $this->logInfo('REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
+      $this->logInfo('STATUS CODE ' . $response->getStatusCode() . ' REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
     }
     return $response->getStatusCode();
   }
@@ -5774,7 +5774,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if ($httpStatusCode >= 200 && $httpStatusCode < 400) {
         $thisLinkGood = true;
       } else {
-        $this->logError('LINK BAD "' . $href . '"');
+        $this->logError('LINK BAD "' . $href . '" STATUS: ' . $httpStatusCode);
       }
       $linkStatus[] = [
         'url' => $href,
