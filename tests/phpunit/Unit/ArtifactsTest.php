@@ -48,6 +48,7 @@ use OCA\RotDrop\Tests\DeprecationException;
  * copied to the test-suite of the companion app and are just loaded there
  * verbatim into the test database.
  */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(CloudUserConnectorService::class)]
 #[Attributes\CoversClass(EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

@@ -38,6 +38,7 @@ use OCA\RotDrop\Tests\DatabaseProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Consistency test for the DuplicateMusician DTO. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(TestedDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]

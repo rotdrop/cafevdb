@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /** Test aspects of the ProjectParticipantFieldsService class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

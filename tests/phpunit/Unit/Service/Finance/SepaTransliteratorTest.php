@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 
 /** Test the SepaTransliterator. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]

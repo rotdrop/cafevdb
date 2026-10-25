@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the BackgroundJobController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\BackgroundJobController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

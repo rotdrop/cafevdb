@@ -36,6 +36,7 @@ use OCA\CAFEVDB\EmailForm\EnumMemberSubstitutionKey as TranslatableEnum;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test consistency of the enum with constants from ConfigConstants */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(TranslatableEnum::class)]
 #[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]

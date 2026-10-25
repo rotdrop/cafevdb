@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EventsService class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Common\DatabaseProgressStatus::class)]
 #[Attributes\CoversClass(Common\PlainFileProgressStatus::class)]
 #[Attributes\CoversClass(Service\ProgressStatusService::class)]

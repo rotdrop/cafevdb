@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the InstrumentInsuranceController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\InstrumentInsuranceController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

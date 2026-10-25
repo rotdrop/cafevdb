@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
 /** Test aspects of the EventsService which need a real database in the background. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

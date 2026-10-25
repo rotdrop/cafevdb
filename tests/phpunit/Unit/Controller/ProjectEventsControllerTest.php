@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test aspects of the ProjectEventsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(ProjectEventsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]

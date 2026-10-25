@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the ProjectParticipantsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\ProjectParticipantsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

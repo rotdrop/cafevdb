@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
 /** Test aspects of all migrations. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000002::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000003::class)]

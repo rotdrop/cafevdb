@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the BlogController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\BlogController::class)]
 
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]

@@ -45,6 +45,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test aspects of the GnuCashConnectorService */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(AppStorage::class)]
 #[Attributes\CoversClass(Finance\AbstractReceivablesGenerator::class)]
 #[Attributes\CoversClass(Finance\FinanceService::class)]

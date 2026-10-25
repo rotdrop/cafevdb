@@ -60,6 +60,7 @@ use OCA\CAFEVDB\Toolkit;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test the ProjectsController class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EventsService::class)]
 #[Attributes\CoversClass(ProjectsController::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]

@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
 use OCA\CAFEVDB\Toolkit\Constants;
 
 /** Test consistency of the enum with constants from ConfigConstants */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(AppInfoService::class)]
 class AppInfoServiceTest extends TestCase
 {

@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the InstrumentFamilies page renderer. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
 #[Attributes\CoversClass(PageRenderer\InstrumentFamilies::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]

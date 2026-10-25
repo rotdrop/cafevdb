@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the Entities\CompositePayment entity. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Entities\CompositePayment::class)]
 #[Attributes\CoversClass(Entities\Musician::class)]
 #[Attributes\CoversClass(Entities\Project::class)]

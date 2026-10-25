@@ -54,6 +54,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test aspects of the UploadsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\UploadsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

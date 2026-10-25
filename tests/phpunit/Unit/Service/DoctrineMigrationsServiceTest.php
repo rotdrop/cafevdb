@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 
 /** Test aspects of the DoctrineMigrationsService class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DoctrineMigrationsListener::class)]
 #[Attributes\CoversClass(DoctrineMigrationsService::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]

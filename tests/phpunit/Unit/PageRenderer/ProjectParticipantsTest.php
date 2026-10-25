@@ -59,6 +59,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test aspects of the ProjectParticipants page renderer. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PHPMyEdit::class)]
 #[Attributes\CoversClass(PageRenderer\AllMusicians::class)]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]

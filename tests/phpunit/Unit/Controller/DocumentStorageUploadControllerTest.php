@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
 
 /** Test aspects of the DocumentStorageUploadController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\DocumentStorageUploadController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

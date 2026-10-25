@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the LoginNameSlug\generate() function. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(UndoableRunQueue::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

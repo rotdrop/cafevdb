@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the LoginNameSlug\generate() function. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 class GenericUndoableTest extends TestCase
 {

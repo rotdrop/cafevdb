@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the Instrument and InstrumentFamily entity. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Entities\Instrument::class)]
 #[Attributes\CoversClass(Entities\InstrumentFamily::class)]
 #[Attributes\CoversClass(Entities\Musician::class)]

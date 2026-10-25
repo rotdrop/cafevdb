@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
 #[Attributes\CoversClass(PageRenderer\Instruments::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]

@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /** Test aspects of the config-service .*/
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]

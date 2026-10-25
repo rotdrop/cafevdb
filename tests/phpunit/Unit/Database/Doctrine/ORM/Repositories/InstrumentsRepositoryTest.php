@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
 
 /** Test aspects of the ORM InstrumentsRepository. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(InstrumentsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

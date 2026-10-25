@@ -56,6 +56,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\ProjectParticipantFieldsController::class)]
 #[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetDefaultValue::class)]
 #[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetResponse::class)]

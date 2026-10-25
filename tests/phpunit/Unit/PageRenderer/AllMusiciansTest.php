@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation as DoctrineDeprecation
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PHPMyEdit::class)]
 #[Attributes\CoversClass(PageRenderer\AllMusicians::class)]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]

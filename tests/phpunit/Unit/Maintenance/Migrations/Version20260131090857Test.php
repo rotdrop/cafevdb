@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test attaching the registration events as ProjectEvent entity to the projects. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260130130553::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260131090857::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]

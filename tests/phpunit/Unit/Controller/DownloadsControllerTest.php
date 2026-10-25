@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the EntityRepositoryController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DownloadsController::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Storage\DatabaseStorageUtil::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]

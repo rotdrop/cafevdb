@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the UserStorage class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
