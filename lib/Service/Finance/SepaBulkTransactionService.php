@@ -627,7 +627,7 @@ class SepaBulkTransactionService
       ->setAmount($totalAmount)
       ->updateSubject(
         maxLength: FinanceService::SEPA_PURPOSE_LENGTH,
-        transliterator: fn($x) => $this->sepaTransliterator->translit($x),
+        transliterate: fn($x) => $this->sepaTransliterator->translit($x),
       );
 
     return $compositePayment;
@@ -828,7 +828,7 @@ class SepaBulkTransactionService
     foreach ($bulkTransaction->getPayments() as $compositePayment) {
       $compositePayment->updateSubject(
         maxLength: FinanceService::SEPA_PURPOSE_LENGTH,
-        transliterator: fn(string $x) => $this->sepaTransliterator->translit($x),
+        transliterate: fn(string $x) => $this->sepaTransliterator->translit($x),
       );
     }
 
