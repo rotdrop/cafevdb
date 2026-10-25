@@ -141,6 +141,7 @@ class CamelCaseStringTest extends TestCase
   public function testMinimumComponentLengthIsRespected(): void
   {
     $this->wordSplitterService
+      ->expects($this->exactly(4))
       ->method('split')
       ->willReturnCallback(fn(string $word): array => [$word]);
 
