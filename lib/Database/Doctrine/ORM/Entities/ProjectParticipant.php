@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use InvalidArgumentException;
+
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -381,11 +383,18 @@ class ProjectParticipant implements \ArrayAccess
    * @param ProjectParticipantFieldDatum $datum
    *
    * @return self
+   *
+   * @throws InvalidArgumentException
    */
   public function addParticipantFieldDatum(ProjectParticipantFieldDatum $datum): self
   {
+    $key = $datum->getOptionKey();
+    if ($key === null) {
+      throw new InvalidArgumentException('Given field datum has no option key.');
+    }
     $this->participantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
     $this->musician->addProjectParticipantFieldDatum($datum);
+    $this->project->addParticipantFieldsDatum($datum);
 
     return $this;
   }

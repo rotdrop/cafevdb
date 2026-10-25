@@ -510,6 +510,23 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addParticipantFieldsDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    if (!$this->participantFieldsData->contains($datum)) {
+      $this->participantFieldsData->add($datum);
+    }
+    if (!$datum->getField() === $this) {
+      $datum->setField($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Get participants.
    *
    * @param string|ParticipationContext $participationContext Defaults to

@@ -187,6 +187,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if ($projectParticipant === null) {
       $this->field = null;
       $this->dataOption = null;
+    } else {
+      $projectParticipant->addParticipantFieldDatum($this);
+      $this->dataOption?->addDatum($this);
     }
 
     return $this;
@@ -314,11 +317,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get optionKey.
    *
-   * @return UuidInterface
+   * @return ?UuidInterface
    */
-  public function getOptionKey()
+  public function getOptionKey(): ?UuidInterface
   {
-    return $this->optionKey;
+    return $this->optionKey ?? null;
   }
 
   /**
@@ -484,8 +487,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
     $datum = (new ProjectParticipantFieldDatum)
       ->setField($field)
-      ->setProjectParticipant($participant)
-      ->setDataOption($defaultValue);
+      ->setDataOption($defaultValue)
+      ->setProjectParticipant($participant);
     switch ($field->getMultiplicity()) {
       case FieldMultiplicity::RECURRING:
       case FieldMultiplicity::SIMPLE:

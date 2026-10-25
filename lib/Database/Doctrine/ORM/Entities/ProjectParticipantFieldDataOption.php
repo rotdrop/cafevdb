@@ -219,6 +219,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     if (empty($key)) {
       throw new Exceptions\DatabaseException("UUID DATA: ".$key);
     }
+    $this->field?->addDataOption($this);
     $this->key = $key;
 
     return $this;
@@ -317,13 +318,16 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   public function addDatum(ProjectParticipantFieldDatum $datum): self
   {
-    if (!$this->fieldData->contains($datum)) {
-      $this->fieldData->add($datum);
+    $musicianId= $datum->getMusician()?->getId();
+    if ($musicianId !== null && !$this->fieldData->get($musicianId)) {
+      $this->fieldData->set($musicianId, $datum);
     }
     if ($datum->getDataOption() !== $this) {
       $datum->setDataOption($this);
     }
-
+    if ($datum->getField() !== $this->field) {
+      $this->field?->addFieldDatum($datum);
+    }
     return $this;
   }
 

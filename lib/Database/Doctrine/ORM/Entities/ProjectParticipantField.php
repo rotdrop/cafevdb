@@ -270,6 +270,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function addDataOption(ProjectParticipantFieldDataOption $option): self
   {
+    $this->dataOptions->removeElement($option);
     $this->dataOptions->set($option->getKey(), $option);
     if ($option->getField() !== $this) {
       $option->setField($this);
@@ -391,6 +392,7 @@ class ProjectParticipantField implements \ArrayAccess
     if ($datum->getField() !== $this) {
       $datum->setField($this);
     }
+    $datum->getDataOption()?->addDatum($datum);
 
     return $this;
   }
