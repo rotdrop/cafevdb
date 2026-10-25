@@ -72,11 +72,9 @@ trait WordSplitterServiceTrait
   {
     $splits = array_merge(self::WORD_SPLITTER_FAKE_SPLITS, $splits);
 
-    // TEMPORARY: fail tests which register the splitter without ever using it,
-    // in order to find out which tests really need it.
-    $clientService = $this->createMock(IClientService::class);
+    $clientService = $this->createStub(IClientService::class);
     $client = $this->createStub(IClient::class);
-    $clientService->expects($this->atLeastOnce())->method('newClient')->willReturn($client);
+    $clientService->method('newClient')->willReturn($client);
 
     $client->method('post')->willReturnCallback(
       function(string $url, array $options = []) use ($splits): IResponse {
@@ -108,13 +106,26 @@ trait WordSplitterServiceTrait
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     /** @var IConfig $config */
     $config = $this->mockProvider->getCloudConfig();
-    $config->setAppValue($this->mockProvider->appName, 'splitter_socket', $this->wordSplitterSocket);
+    $config->setAppValue($this->mockProvider->appName, 'splitter_socket', '');
 
-    return new WordSplitterService(
-      config: $config,
-      clientService: $this->getWordSplitterEndPointStub($splits),
-      appName: $this->mockProvider->appName,
+    // Partial mock: everything is the original code, only appDataDir() is
+    // replaced and must be used in order to locate the splitter socket.
+    $clientService = $this->getWordSplitterEndPointStub($splits);
+    $service = $this->getMockBuilder(WordSplitterService::class)
+      ->onlyMethods(['appDataDir'])
+      ->disableOriginalConstructor()
+      ->getMock();
+    $service->expects($this->atLeastOnce())
+      ->method('appDataDir')
+      ->willReturn(dirname($this->wordSplitterSocket));
+    (new \ReflectionMethod(WordSplitterService::class, '__construct'))->invoke(
+      $service,
+      $config,
+      $clientService,
+      $this->mockProvider->appName,
     );
+
+    return $service;
   }
 
   /**
@@ -141,7 +152,9 @@ trait WordSplitterServiceTrait
     if (is_resource($this->wordSplitterSocketServer)) {
       return;
     }
-    $this->wordSplitterSocket = sys_get_temp_dir() . '/word-splitter-' . uniqid('', true) . '.sock';
+    $dir = sys_get_temp_dir() . '/word-splitter-' . uniqid('', true);
+    mkdir($dir, 0700, true);
+    $this->wordSplitterSocket = $dir . '/german-word-splitter.sock';
     $this->wordSplitterSocketServer = stream_socket_server('unix://' . $this->wordSplitterSocket);
     $this->assertNotFalse($this->wordSplitterSocketServer);
   }
@@ -156,6 +169,9 @@ trait WordSplitterServiceTrait
     $this->wordSplitterSocketServer = null;
     if ($this->wordSplitterSocket !== null && file_exists($this->wordSplitterSocket)) {
       unlink($this->wordSplitterSocket);
+    }
+    if ($this->wordSplitterSocket !== null && is_dir(dirname($this->wordSplitterSocket))) {
+      rmdir(dirname($this->wordSplitterSocket));
     }
     $this->wordSplitterSocket = null;
   }

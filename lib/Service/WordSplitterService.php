@@ -84,7 +84,7 @@ class WordSplitterService
    *
    * @SuppressWarnings(PHPMD.ErrorControlOperator)
    */
-  private function appDataDir(): string
+  protected function appDataDir(): string
   {
     $dir = rtrim($this->config->getSystemValue('datadirectory'), '/')
          . '/appdata_' . $this->config->getSystemValue('instanceid')
