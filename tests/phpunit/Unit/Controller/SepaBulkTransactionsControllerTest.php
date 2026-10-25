@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
@@ -197,6 +198,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -220,6 +222,7 @@ class SepaBulkTransactionsControllerTest extends TestCase
   use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
+  use WordSplitterServiceTrait;
 
   private const CONTROLLER_CLASS = Controller\SepaBulkTransactionsController::class;
   private const EXPECTED_ROUTES = [
@@ -257,6 +260,7 @@ class SepaBulkTransactionsControllerTest extends TestCase
     $this->generateCalendarBackend();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     $this->getUserStorage();
     $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
