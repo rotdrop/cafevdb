@@ -30,6 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the Entities\CompositePayment entity. */
 #[Attributes\CoversClass(Entities\EncryptedFile::class)]
@@ -59,13 +60,16 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class EncryptedFileTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use WordSplitterServiceTrait;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
+    $this->registerWordSplitterService();
     $this->generateProjectParticipant();
     // /** @var MockProvider $mockProvider */
     // $mockProvider = MockProvider::create($this);

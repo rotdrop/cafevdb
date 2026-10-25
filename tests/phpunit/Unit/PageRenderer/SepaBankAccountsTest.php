@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the SepaBankAccounts page renderer. */
@@ -184,9 +185,11 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class SepaBankAccountsTest extends TestCase
 {
   use GetFormValuesTrait;
+  use WordSplitterServiceTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
@@ -217,6 +220,7 @@ class SepaBankAccountsTest extends TestCase
     $this->generateCalendarBackend();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     $this->now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
     /** @var TimeFactory $timeFactory */

@@ -38,6 +38,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\RotDrop\Tests\DatabaseProvider;
@@ -123,9 +124,11 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class EntityArrayAdapterTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use WordSplitterServiceTrait;
 
   private EntityArrayAdapter $entityArrayAdapter;
 
@@ -134,6 +137,7 @@ class EntityArrayAdapterTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    $this->registerWordSplitterService();
     error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 

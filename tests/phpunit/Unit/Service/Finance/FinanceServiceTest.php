@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the SepaBulkTransactionsService */
 #[Attributes\CoversClass(CalDavService::class)]
@@ -96,10 +97,12 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class FinanceServiceTest extends TestCase
 {
   use EnableDeprecationsTrait;
   use SetupEventsServiceTrait;
+  use WordSplitterServiceTrait;
 
   private FinanceService $financeService;
 
@@ -111,6 +114,7 @@ class FinanceServiceTest extends TestCase
     $this->generateEventsService();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     // $this->configService = $this->mockProvider->getConfigService();
     // $this->entityManager = $this->createStub(EntityManager::class);

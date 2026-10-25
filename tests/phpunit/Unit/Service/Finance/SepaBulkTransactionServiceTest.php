@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Common\TimeFactoryTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the SepaBulkTransactionsService */
 #[Attributes\CoversClass(SepaBulkTransactionService::class)]
@@ -88,10 +89,12 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class SepaBulkTransactionServiceTest extends TestCase
 {
   use EntityGeneratorTrait;
   use TimeFactoryTrait;
+  use WordSplitterServiceTrait;
 
   private FinanceService $financeService;
 
@@ -103,6 +106,7 @@ class SepaBulkTransactionServiceTest extends TestCase
     $this->generateProjectParticipant();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     $configService = $this->mockProvider->getConfigService();
 

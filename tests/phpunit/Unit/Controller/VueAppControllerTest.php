@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 #[Attributes\CoversClass(VueAppController::class)]
 /**
@@ -154,12 +155,14 @@ use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class VueAppControllerTest extends TestCase
 {
   use EnableDeprecationsTrait;
   use EntityGeneratorTrait;
   use RootFolderStubTrait;
   use TestRoutesAreDefinedTrait;
+  use WordSplitterServiceTrait;
 
   private const CONTROLLER_CLASS = VueAppController::class;
   private const EXPECTED_ROUTES = [
@@ -183,6 +186,7 @@ class VueAppControllerTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->registerWordSplitterService();
 
     $this->userStorage = $this->getUserStorage();
     $mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);

@@ -72,9 +72,11 @@ trait WordSplitterServiceTrait
   {
     $splits = array_merge(self::WORD_SPLITTER_FAKE_SPLITS, $splits);
 
-    $clientService = $this->createStub(IClientService::class);
+    // TEMPORARY: fail tests which register the splitter without ever using it,
+    // in order to find out which tests really need it.
+    $clientService = $this->createMock(IClientService::class);
     $client = $this->createStub(IClient::class);
-    $clientService->method('newClient')->willReturn($client);
+    $clientService->expects($this->atLeastOnce())->method('newClient')->willReturn($client);
 
     $client->method('post')->willReturnCallback(
       function(string $url, array $options = []) use ($splits): IResponse {
@@ -103,8 +105,10 @@ trait WordSplitterServiceTrait
   {
     $this->openWordSplitterSocket();
 
-    $config = $this->createStub(IConfig::class);
-    $config->method('getAppValue')->willReturn($this->wordSplitterSocket);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    /** @var IConfig $config */
+    $config = $this->mockProvider->getCloudConfig();
+    $config->setAppValue($this->mockProvider->appName, 'splitter_socket', $this->wordSplitterSocket);
 
     return new WordSplitterService(
       config: $config,

@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the entity serializer with fake entities. */
 #[Attributes\CoversClass(EntitySerializer\CollectionEntityReference::class)]
@@ -119,9 +120,11 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class EntitySerializerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use WordSplitterServiceTrait;
 
   private EntityManager $entityManager;
 
@@ -130,6 +133,7 @@ class EntitySerializerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    $this->registerWordSplitterService();
     self::$uuidIndex = 0;
 
     /** @var MockProvider $mockProvider */
