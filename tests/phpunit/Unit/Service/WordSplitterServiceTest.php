@@ -39,7 +39,13 @@ class WordSplitterServiceTest extends TestCase
 {
   private mixed $socketServer;
 
+  private mixed $systemSocketServer;
+
   private string $socket;
+
+  private string $systemSocket;
+
+  private string $appDataRoot;
 
   /** {@inheritdoc} */
   protected function setUp(): void
@@ -47,6 +53,10 @@ class WordSplitterServiceTest extends TestCase
     $this->socket = sys_get_temp_dir() . '/word-splitter-' . uniqid('', true) . '.sock';
     $this->socketServer = stream_socket_server('unix://' . $this->socket);
     $this->assertNotFalse($this->socketServer);
+    $this->systemSocket = sys_get_temp_dir() . '/word-splitter-system-' . uniqid('', true) . '.sock';
+    $this->systemSocketServer = stream_socket_server('unix://' . $this->systemSocket);
+    $this->assertNotFalse($this->systemSocketServer);
+    $this->appDataRoot = sys_get_temp_dir() . '/word-splitter-data-' . uniqid('', true);
   }
 
   /** {@inheritdoc} */
@@ -57,6 +67,18 @@ class WordSplitterServiceTest extends TestCase
     }
     if (file_exists($this->socket)) {
       unlink($this->socket);
+    }
+    if (is_resource($this->systemSocketServer)) {
+      fclose($this->systemSocketServer);
+    }
+    if (file_exists($this->systemSocket)) {
+      unlink($this->systemSocket);
+    }
+    $appDataDir = $this->appDataRoot . '/appdata_word-splitter-test/testapp';
+    if (is_dir($appDataDir)) {
+      rmdir($appDataDir);
+      rmdir(dirname($appDataDir));
+      rmdir($this->appDataRoot);
     }
   }
 
@@ -112,6 +134,29 @@ class WordSplitterServiceTest extends TestCase
     $this->assertSame(['Handschuh'], $service->split('Handschuh', 'german_compound_splitter'));
   }
 
+  public function testSplitUsesRunningSystemServiceWithoutStartingAppService(): void
+  {
+    $client = $this->createMock(IClient::class);
+    $response = $this->createStub(IResponse::class);
+    $response->method('getBody')->willReturn('{"components":["Haus","Tür"]}');
+
+    $client->expects($this->once())
+      ->method('post')
+      ->with(
+        'http://localhost/split',
+        $this->callback(function(array $options): bool {
+          return $options['curl'][CURLOPT_UNIX_SOCKET_PATH] === $this->systemSocket;
+        }),
+      )
+      ->willReturn($response);
+
+    $service = $this->createService($client, true);
+    (new \ReflectionProperty($service, 'systemSocket'))->setValue($service, $this->systemSocket);
+    (new \ReflectionProperty($service, 'bin'))->setValue($service, '/nonexistent/german-word-splitter');
+
+    $this->assertSame(['Haus', 'Tür'], $service->split('Haustür'));
+  }
+
   public function testSplitWrapsHttpClientFailures(): void
   {
     $client = $this->createMock(IClient::class);
@@ -126,10 +171,14 @@ class WordSplitterServiceTest extends TestCase
     $service->split('Handschuh');
   }
 
-  private function createService(IClient $client): WordSplitterService
+  private function createService(IClient $client, bool $useDefaultSocket = false): WordSplitterService
   {
     $config = $this->createStub(IConfig::class);
-    $config->method('getAppValue')->willReturn($this->socket);
+    $config->method('getAppValue')->willReturn($useDefaultSocket ? '' : $this->socket);
+    $config->method('getSystemValue')->willReturnMap([
+      ['datadirectory', $this->appDataRoot],
+      ['instanceid', 'word-splitter-test'],
+    ]);
 
     $clientService = $this->createStub(IClientService::class);
     $clientService->method('newClient')->willReturn($client);

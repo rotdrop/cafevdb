@@ -33,19 +33,29 @@ use OCP\IConfig;
 /**
  * Client for the german-word-splitter Python microservice.
  *
- * Starts the service on demand, listening on a Unix domain socket in the
- * app-data folder, and talks to it through Nextcloud's HTTP client.
+ * Uses the system-wide service when available, otherwise starts an app-local
+ * service on a Unix domain socket in the app-data folder.
+ * Talks to the service through Nextcloud's HTTP client.
  */
 class WordSplitterService
 {
   /** Maximum time in seconds to wait for the service to accept connections. */
   private const STARTUP_TIMEOUT = 60; // dictionary load can be slow
 
+  /** Default socket path of the system-wide german-word-splitter service. */
+  private const SYSTEM_SOCKET = '/run/german-word-splitter/german-word-splitter.sock';
+
   /** @var string Absolute path of the service executable. */
   private string $bin;
 
   /** @var string Absolute path of the Unix domain socket. */
   private string $socket;
+
+  /** @var string Socket path of the system-wide service. */
+  private string $systemSocket = self::SYSTEM_SOCKET;
+
+  /** @var bool Whether the app-specific socket was explicitly configured. */
+  private bool $allowSystemSocket;
 
   /**
    * @param IConfig $config Nextcloud configuration access.
@@ -59,8 +69,9 @@ class WordSplitterService
     private string $appName,
   ) {
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
-    $this->socket = $config->getAppValue($this->appName, 'splitter_socket', '')
-      ?: $this->appDataDir() . '/german-word-splitter.sock';
+    $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
+    $this->allowSystemSocket = $configuredSocket === '';
+    $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
   }
 
   /**
@@ -91,9 +102,9 @@ class WordSplitterService
    *
    * @SuppressWarnings(PHPMD.ErrorControlOperator)
    */
-  private function isUp(): bool
+  private function isUp(string $socket): bool
   {
-    $fp = @stream_socket_client('unix://' . $this->socket, $errno, $errstr, 1);
+    $fp = @stream_socket_client('unix://' . $socket, $errno, $errstr, 1);
     if ($fp === false) {
       return false;
     }
@@ -114,7 +125,11 @@ class WordSplitterService
    */
   private function ensureStarted(): void
   {
-    if ($this->isUp()) {
+    if ($this->allowSystemSocket && $this->isUp($this->systemSocket)) {
+      $this->socket = $this->systemSocket;
+      return;
+    }
+    if ($this->isUp($this->socket)) {
       return;
     }
     if (!is_executable($this->bin)) {
@@ -122,16 +137,22 @@ class WordSplitterService
     }
     $lock = fopen(sys_get_temp_dir() . '/german-word-splitter.lock', 'c');
     flock($lock, LOCK_EX); // serialize concurrent launches
-    if (!$this->isUp()) {
+    $systemServiceUp = $this->allowSystemSocket && $this->isUp($this->systemSocket);
+    if ($systemServiceUp) {
+      $this->socket = $this->systemSocket;
+    } elseif (!$this->isUp($this->socket)) {
       @unlink($this->socket); // remove a stale socket file
       exec('env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
         . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &');
     }
     flock($lock, LOCK_UN);
     fclose($lock);
+    if ($systemServiceUp) {
+      return;
+    }
 
     $deadline = time() + self::STARTUP_TIMEOUT;
-    while (!$this->isUp()) {
+    while (!$this->isUp($this->socket)) {
       if (time() > $deadline) {
         throw new RuntimeException('Splitter did not start in time.');
       }
