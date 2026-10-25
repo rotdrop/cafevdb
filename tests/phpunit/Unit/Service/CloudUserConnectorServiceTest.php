@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Toolkit\Service\RequestService;
  * latter has not yet been fully set up but that will be the way to go in the
  * future.
  */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]

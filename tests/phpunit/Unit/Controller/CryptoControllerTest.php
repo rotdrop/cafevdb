@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the CryptoController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(CryptoController::class)]
 #[Attributes\CoversClass(IBANMetaData::class)]
 #[Attributes\CoversClass(UnsealedData::class)]

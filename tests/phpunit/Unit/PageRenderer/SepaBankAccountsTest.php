@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the SepaBankAccounts page renderer. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]
 #[Attributes\CoversClass(PageRenderer\Registration::class)]
 #[Attributes\CoversClass(PageRenderer\SepaBankAccounts::class)]

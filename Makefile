@@ -602,6 +602,12 @@ dophpunit: $(PHPUNIT)
 #	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: dophpunit
 
+# Run the tests which do not need an installed Nextcloud instance.
+phpunit-standalone: $(PHPUNIT)
+	PHPUNIT_STANDALONE=1 $(PHP) $(PHPUNIT) -c phpunit.xml --no-coverage\
+ --exclude-group nextcloud --display-all-issues
+.PHONY: phpunit-standalone
+
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
 $(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phing/phing-build.xml.in $(MAKEFILE_DEP)

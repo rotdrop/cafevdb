@@ -35,6 +35,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the HistoryService class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(HistoryService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]

@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
 use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test the EntityRepositoryController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EntityRepositoryController::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

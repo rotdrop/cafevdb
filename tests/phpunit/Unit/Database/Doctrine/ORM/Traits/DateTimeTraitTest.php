@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\Carbon as WrappedCarbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as WrappedCarbonImmutable;
 
 /** TestClass in order to access the trait methods. */
+#[Attributes\Group('nextcloud')]
 class TestClass
 {
   use DateTimeTrait {

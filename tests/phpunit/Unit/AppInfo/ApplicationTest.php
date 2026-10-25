@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\UnitOfWork;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /** Test aspects of the application class, in particular service registrations. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Application::class)]
 #[Attributes\Coverslass(\OCA\CAFEVDB\Database\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

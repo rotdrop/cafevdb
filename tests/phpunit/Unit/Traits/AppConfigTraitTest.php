@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Traits\UserPreferencesTrait;
 /**
  * Test the AppConfigTrait and the UserPreferencesTrait.
  */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversTrait(AppConfigTrait::class)]
 #[Attributes\CoversTrait(UserPreferencesTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

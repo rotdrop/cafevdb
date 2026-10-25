@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(VueAppController::class)]
 /**
  * Test aspects of the VueAppController. The tests trigger at least the

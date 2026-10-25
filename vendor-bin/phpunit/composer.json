@@ -4,6 +4,7 @@
   },
   "sort-packages": true,
   "require-dev": {
+    "nextcloud/ocp": "dev-master",
     "phpunit/phpunit": "^13.0.5"
   },
   "autoload-dev": {
@@ -13,5 +14,7 @@
       "OCA\\RotDrop\\Tests\\": "../../tests/phpunit/lib/",
       "OCA\\RotDrop\\Toolkit\\": "../../php-toolkit/"
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

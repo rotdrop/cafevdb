@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002 as InitialInstrumen
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the BiDirectionalL10N service. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]

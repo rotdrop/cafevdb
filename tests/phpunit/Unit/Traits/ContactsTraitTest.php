@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Traits\ContactsTrait;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 // phpcs:disable
+#[Attributes\Group('nextcloud')]
 class Instance
 {
   use ContactsTrait {

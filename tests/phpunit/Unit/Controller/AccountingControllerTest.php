@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AccountingControllerController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\AccountingController::class)]
 #[Attributes\CoversClass(Controller\DTO\AutocompleteGnuCashAccountsResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\GnuCashAccountsAutocompleteData::class)]

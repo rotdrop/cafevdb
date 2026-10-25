@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the entity serializer with fake entities. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EntitySerializer\CollectionEntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReferenceCollection::class)]

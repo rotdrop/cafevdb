@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the CSV export for AqBanking. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Service\Finance\AqBankingBulkTransactionExporter::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer::class)]
 #[Attributes\CoversMethod(Service\Finance\AqBankingBulkTransactionExporter::class, 'fileData')]

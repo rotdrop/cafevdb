@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the SepaBulkTransactionsService */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(CalDavService::class)]
 #[Attributes\CoversClass(EventsService::class)]
 #[Attributes\CoversClass(FinanceService::class)]

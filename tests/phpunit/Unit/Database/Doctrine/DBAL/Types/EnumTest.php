@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /** Test some aspects of the enums. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Types\EnumAttachmentOrigin::class)]
 #[Attributes\CoversClass(Types\EnumVCalendarType::class)]
 #[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]

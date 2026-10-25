@@ -65,6 +65,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\GetAppStorageTrait;
 use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
 /** Test aspects of the SepaDebitMandatesController */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DTO\SepaBankAccount::class)]
 #[Attributes\CoversClass(DTO\SepaDebitMandate::class)]
 #[Attributes\CoversClass(SepaDebitMandatesController::class)]

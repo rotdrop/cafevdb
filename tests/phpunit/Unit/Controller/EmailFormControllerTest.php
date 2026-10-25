@@ -70,6 +70,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementDataEventAttachments::class)]

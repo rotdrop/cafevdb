@@ -24,37 +24,21 @@
 
 namespace OCA\CAFEVDB\Tests;
 
-date_default_timezone_set('UTC');
+/*
+ * Dispatch between the two test modes:
+ *
+ * - Nextcloud mode: the app is installed inside a Nextcloud server tree,
+ *   the server's test bootstrap is available.
+ * - Standalone mode: only the composer dependencies (including the
+ *   nextcloud/ocp stubs) are available. Tests tagged with the PHPUnit group
+ *   "nextcloud" must be excluded, see "make phpunit-standalone".
+ *
+ * Standalone mode is selected explicitly with PHPUNIT_STANDALONE=1 or
+ * implicitly if no Nextcloud server tree is found.
+ */
+$serverBootstrap = __DIR__ . '/../../../../tests/bootstrap.php';
+$standalone = filter_var(getenv('PHPUNIT_STANDALONE'), FILTER_VALIDATE_BOOLEAN)
+  || !file_exists($serverBootstrap);
+define('PHPUNIT_STANDALONE', $standalone);
 
-putenv('TEST_DONT_LOAD_APPS=1');
-require_once __DIR__ . '/../../../../tests/bootstrap.php';
-
-require_once __DIR__ . "/../../vendor/autoload.php";
-require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
-
-define('ROT_DROP_PHPUNIT', true);
-define('PHPUNIT_NC_APP_NAME', \OCA\CAFEVDB\AppInfo\Application::getAppName());
-define('PHPUNIT_NC_APP_NAMESPACE', \OCA\CAFEVDB::class);
-define('PHPUNIT_NC_MOCKED_APPS', [\OCA\CAFEVDB::class, \OCA\BAV::class]);
-define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
-define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
-
-$wantedApps = [
-  \PHPUNIT_NC_APP_NAME,
-  \OCA\CAFEVDB\AppInfo\Application::getMembersAppName(),
-  'files',
-  'files_sharing',
-];
-
-$appManager = \OCP\Server::get(\OCP\App\IAppManager::class);
-foreach ($wantedApps as $app) {
-  $appManager->loadApp($app);
-}
-
-$databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);
-
-// stop and cleanup potentially running db-servers
-register_shutdown_function([$databaseProvider, 'stopServer']);
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once $standalone ? __DIR__ . '/bootstrap-standalone.php' : __DIR__ . '/bootstrap-nextcloud.php';

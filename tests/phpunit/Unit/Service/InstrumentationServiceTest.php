@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EventsService class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]

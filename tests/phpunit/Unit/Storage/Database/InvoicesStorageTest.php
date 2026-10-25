@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the invoices storage. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DatabaseStorage\InvoicesStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

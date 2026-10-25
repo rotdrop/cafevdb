@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait;
 
 /** Test the DateTimeTrait which manufactures dates from any arguments. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversTrait(AutoIncrementTrait::class)]
 class AutoIncrementTraitTest extends TestCase
 {

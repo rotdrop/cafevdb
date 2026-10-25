@@ -48,6 +48,7 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the PersonalSettingsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\PersonalSettingsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

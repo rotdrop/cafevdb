@@ -47,6 +47,7 @@ use OCP\IRequest;
 use OC\AppFramework\Middleware\OCSMiddleware;
 
 /** Test the MusiciansController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(MusiciansController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]

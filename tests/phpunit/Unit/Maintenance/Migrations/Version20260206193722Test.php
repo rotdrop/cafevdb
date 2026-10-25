@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test integer overflow for Unix epoche after 2028. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]

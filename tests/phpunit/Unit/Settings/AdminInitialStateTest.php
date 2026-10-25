@@ -42,6 +42,7 @@ use Psr\Container\ContainerInterface;
 /**
  * Test the initial state DTO of the admin settings.
  */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(AdminInitialState::class)]
 #[Attributes\CoversClass(FontFileNames::class)]
 class AdminInitialStateTest extends TestCase

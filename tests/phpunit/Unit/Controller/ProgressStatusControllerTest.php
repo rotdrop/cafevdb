@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the EntityRepositoryController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Common\PlainFileProgressStatus::class)]
 #[Attributes\CoversClass(Controller\DTO\MessagesResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\ProgressResponse::class)]

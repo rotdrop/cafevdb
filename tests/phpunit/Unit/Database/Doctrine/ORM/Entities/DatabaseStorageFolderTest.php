@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit;
 
 /** Test aspects of the DatabaseStorageFolder entity. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Entities\DatabaseStorageDirEntry::class)]
 #[Attributes\CoversClass(Entities\DatabaseStorageFile::class)]
 #[Attributes\CoversClass(Entities\DatabaseStorageFolder::class)]

@@ -56,6 +56,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ContactsCardEventListener class. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(ContactsService::class)]
 #[Attributes\CoversClass(ProjectService::class)]
 #[Attributes\CoversClass(TestedClass::class)]

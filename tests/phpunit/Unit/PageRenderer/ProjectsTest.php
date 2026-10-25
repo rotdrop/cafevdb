@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
 /** Test aspects of the AllMusicians page renderer. */
 #[Attributes\CoversClass(Entities\Project::class)]

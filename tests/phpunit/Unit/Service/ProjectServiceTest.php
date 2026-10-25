@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** Test aspects of the config-service .*/
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(ProjectService::class)]
 class ProjectServiceTest extends TestCase
 {

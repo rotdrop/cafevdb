@@ -39,6 +39,7 @@ use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AdminSettingsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\AdminSettingsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]

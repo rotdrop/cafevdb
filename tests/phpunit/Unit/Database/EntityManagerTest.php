@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
 /** Test the entity serializer with fake entities. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EntityManager::class)]
 #[Attributes\CoversMethod(EntityManager::class, 'bound')]
 #[Attributes\CoversMethod(EntityManager::class, 'connected')]

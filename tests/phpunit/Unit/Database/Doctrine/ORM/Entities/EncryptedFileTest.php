@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the Entities\CompositePayment entity. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Entities\EncryptedFile::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]

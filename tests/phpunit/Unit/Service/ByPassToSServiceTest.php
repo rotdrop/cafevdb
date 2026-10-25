@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ByPassToSService . */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Service\ByPassToSService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Cloud\Entities\TOSException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DomainNameService::class)]

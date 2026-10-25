@@ -57,6 +57,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the SepaBulkTransactionsController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Controller\SepaBulkTransactionsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]

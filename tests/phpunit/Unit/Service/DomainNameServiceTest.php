@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the DomainNameService class.  */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(DomainNameService::class)]
 class DomainNameServiceTest extends TestCase
 {

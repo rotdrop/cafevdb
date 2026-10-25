@@ -45,6 +45,7 @@ use OCA\RotDrop\Tests\DatabaseProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EntityArrayAdapter */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(EntityArrayAdapter::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]

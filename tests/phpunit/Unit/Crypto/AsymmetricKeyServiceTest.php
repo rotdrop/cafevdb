@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EncryptionController. */
+#[Attributes\Group('nextcloud')]
 #[Attributes\CoversClass(Crypto\AsymmetricKeyService::class)]
 #[Attributes\CoversClass(Crypto\CloudAsymmetricKeyStorage::class)]
 #[Attributes\CoversClass(Crypto\HaliteAsymmetricCryptor::class)]
