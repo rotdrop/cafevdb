@@ -108,7 +108,6 @@ class CompositePaymentTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $this->registerWordSplitterService();
 
     $appContainer = $this->mockProvider->getAppContainer();
 
@@ -211,6 +210,8 @@ class CompositePaymentTest extends TestCase
   /** @return void */
   public function testSubjectGenerationWithManyItems(): void
   {
+    $this->registerWordSplitterService();
+
     $compositePayment = $this->generateMultiItemPayment();
 
     $subject = $compositePayment->generateSubject();
@@ -231,7 +232,7 @@ class CompositePaymentTest extends TestCase
     );
     $this->assertLessThanOrEqual(FinanceService::SEPA_PURPOSE_LENGTH, strlen($subject));
     $this->assertEquals(
-      'TestProj99-19/UnkoBeit:Regu/UnkoStat:Edek09.09.,Edek11.09.LeerVs.Milc,Edek12.09.,EinkEdek08.09.,EinkGetrFris08.09.,EinkREWE08.09.,Fris11.09.',
+      'TestProj99-19/Unko:Regu/UnkoErst:Edek09.09.,Edek11.09.LeerVs.Milc,Edek12.09.,EinkEdek08.09.,EinkGetrFris08.09.,EinkREWE08.09.,Fris11.09.Leer',
       $subject,
     );
   }
