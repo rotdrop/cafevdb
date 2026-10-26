@@ -43,8 +43,8 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo\Service\RPC as WebPagesRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
+use OCA\CAFEVDB\Service\WebPagesRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the PersonalSettingsController. */

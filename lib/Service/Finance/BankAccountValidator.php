@@ -26,15 +26,16 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use Psr\Container\ContainerInterface;
 
+use OCA\BAV\Service\BAV;
+
 /**
  * Thin adapter around the German bank account validator of the BAV app. The
- * BAV classes are resolved lazily by name, so that this class can be mocked
- * or stubbed without the BAV app being installed.
+ * BAV class is only referenced via ::class, which does not trigger
+ * autoloading, so that this class can be mocked or stubbed without the BAV
+ * app being installed.
  */
 class BankAccountValidator
 {
-  public const BAV_CLASS = 'OCA\\BAV\\Service\\BAV';
-
   /** {@inheritdoc} */
   public function __construct(
     private ContainerInterface $appContainer,
@@ -44,7 +45,7 @@ class BankAccountValidator
   /** @return object The BAV service. */
   private function bav(): object
   {
-    return $this->appContainer->get(self::BAV_CLASS);
+    return $this->appContainer->get(BAV::class);
   }
 
   /**

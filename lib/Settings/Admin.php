@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\FontService;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
 
 /** Admin settings class. */
 #[TSAttributes\TypeScript]
