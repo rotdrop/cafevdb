@@ -54,7 +54,8 @@ use OCP\IUserSession;
 use OCP\Security\IHasher;
 use Psr\Log\LoggerInterface;
 
-use OCA\BAV\Service\BAV as BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAgency;
 
 use OCA\RotDrop\Tests\AbstractMockProvider;
 use OCA\RotDrop\Tests\Logger;
@@ -467,7 +468,7 @@ class MockProvider extends AbstractMockProvider
    * involved and would result in a round-trip to the Deutsche Bundesbank and
    * excessive database operations.
    *
-   * @return BAV
+   * @return BankAccountValidator
    */
   public function getBankAccountValidator(): BankAccountValidator
   {
@@ -486,26 +487,14 @@ class MockProvider extends AbstractMockProvider
         function(string $blz) {
           foreach (self::$ibanInfo as $bankInfo) {
             if ($bankInfo['blz'] == $blz) {
-              return new class($bankInfo) {
-                /** @param array $bankInfo */
-                public function __construct(private array $bankInfo) {
-                }
-                /** @return string */
-                public function getBIC() {
-                  return $this->bankInfo['bic'];
-                }
-                /** @return string */
-                public function getName() {
-                  return $this->bankInfo['bank'];
-                }
-                /** @return string */
-                public function getCity() {
-                  return $this->bankInfo['city'];
-                }
-              };
+              return new BankAgency(
+                bic: $bankInfo['bic'],
+                name: $bankInfo['bank'],
+                city: $bankInfo['city'],
+              );
             }
           }
-          return null;
+          throw new RuntimeException('Unknown bank: ' . $blz);
         });
     $instance->method('isValidBank')
       ->willReturnCallback(

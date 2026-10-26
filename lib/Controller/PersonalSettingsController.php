@@ -41,7 +41,7 @@ use OCP\AppFramework\Http\DataResponse;
 use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 
-use OCA\BAV\Service\BAV as BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Attributes;
