@@ -26,6 +26,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
 use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
@@ -72,11 +73,9 @@ trait WordSplitterServiceTrait
   {
     $splits = array_merge(self::WORD_SPLITTER_FAKE_SPLITS, $splits);
 
-    // TEMPORARY: fail tests which register the splitter without ever using it,
-    // in order to find out which tests really need it.
-    $clientService = $this->createMock(IClientService::class);
+    $clientService = $this->createStub(IClientService::class);
     $client = $this->createStub(IClient::class);
-    $clientService->expects($this->atLeastOnce())->method('newClient')->willReturn($client);
+    $clientService->method('newClient')->willReturn($client);
 
     $client->method('post')->willReturnCallback(
       function(string $url, array $options = []) use ($splits): IResponse {
@@ -118,6 +117,38 @@ trait WordSplitterServiceTrait
   }
 
   /**
+   * Generate a mock of WordSplitterService which splits words using the fake
+   * dictionary, without any socket or HTTP client involved.
+   *
+   * @param array<string, string[]> $splits Additional fake splits, keys are
+   * lower-case words.
+   *
+   * @param null|InvocationOrder $expectation Expectation on the calls to
+   * split(), e.g. $this->atLeastOnce() or $this->never(). If null, a plain
+   * stub without any expectation is generated, otherwise a mock with the
+   * given matcher attached to split().
+   *
+   * @return WordSplitterService&\PHPUnit\Framework\MockObject\MockObject|WordSplitterService&\PHPUnit\Framework\MockObject\Stub
+   */
+  private function getWordSplitterServiceMock(
+    array $splits = [],
+    ?InvocationOrder $expectation = null,
+  ): WordSplitterService {
+    $splits = array_merge(self::WORD_SPLITTER_FAKE_SPLITS, $splits);
+    $callback = fn(string $word, string $method = 'charsplit'): array => $splits[mb_strtolower($word)] ?? [$word];
+
+    if ($expectation === null) {
+      $mock = $this->createStub(WordSplitterService::class);
+      $mock->method('split')->willReturnCallback($callback);
+    } else {
+      $mock = $this->createMock(WordSplitterService::class);
+      $mock->expects($expectation)->method('split')->willReturnCallback($callback);
+    }
+
+    return $mock;
+  }
+
+  /**
    * Install the faked word-splitter into the app- and server containers such
    * that everything depending on it (e.g. CamelCaseString) never talks to the
    * real service.
@@ -130,7 +161,7 @@ trait WordSplitterServiceTrait
   private function registerWordSplitterService(array $splits = []): WordSplitterService
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $service = $this->getWordSplitterService($splits);
+    $service = $this->getWordSplitterServiceMock($splits, $this->atLeastOnce());
     $this->mockProvider->registerClassInstance(WordSplitterService::class, $service, global: true);
     return $service;
   }
