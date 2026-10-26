@@ -1,4 +1,7 @@
 include:
+  - coverage/_js
+  - coverage/_css
+  - coverage/_classes
   - _css
   - _js
   - _icons
