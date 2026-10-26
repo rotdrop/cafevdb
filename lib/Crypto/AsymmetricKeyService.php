@@ -28,7 +28,6 @@ use DateTime;
 use Throwable;
 
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Config\IUserConfig;
@@ -154,17 +153,9 @@ class AsymmetricKeyService
       $oldKeyPair = self::$keyPairs[$ownerId] ?? null;
       if (empty($oldKeyPair) && $ownerId == $this->getSessionUserId()) {
         try {
-          $loginPassword = $this->getLoginPassword($ownerId);
-        } catch (CredentialsUnavailableException $t) {
-          $this->logException($t, 'Unable to retrieve existing encryption key pair without login credentials for "' . $ownerId . '".');
-          $loginPassword = null;
-        }
-        if (!empty($loginPassword)) {
-          try {
-            $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
-          } catch (Throwable $t) {
-            $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
-          }
+          $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+        } catch (Throwable $t) {
+          $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
         }
       }
 
