@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Service;
 
 use Psr\Container\ContainerInterface;
 
+use OCA\DokuWiki\Service\AuthDokuWiki;
+
 /**
  * Thin adapter around the XML-RPC client of the DokuWiki app. The DokuWiki
  * classes are resolved lazily by name, so that this class can be mocked or
@@ -33,8 +35,6 @@ use Psr\Container\ContainerInterface;
  */
 class WikiRPC
 {
-  public const APP_CLASS = 'OCA\\DokuWiki\\Service\\AuthDokuWiki';
-
   public const ON_ERROR_THROW = 'throw';
   public const ON_ERROR_RETURN = 'return';
 
@@ -57,7 +57,7 @@ class WikiRPC
   /** @return object The DokuWiki RPC service. */
   private function rpc(): object
   {
-    return $this->rpc ??= $this->appContainer->get(self::APP_CLASS);
+    return $this->rpc ??= $this->appContainer->get(AuthDokuWiki::class);
   }
 
   /**

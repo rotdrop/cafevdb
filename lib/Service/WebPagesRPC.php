@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Service;
 
 use Psr\Container\ContainerInterface;
 
+use OCA\Redaxo\Service\RPC;
+
 /**
  * Thin adapter around the RPC client of the Redaxo app. The Redaxo classes
  * are resolved lazily by name, so that this class can be mocked or stubbed
@@ -33,8 +35,6 @@ use Psr\Container\ContainerInterface;
  */
 class WebPagesRPC
 {
-  public const APP_CLASS = 'OCA\\Redaxo\\Service\\RPC';
-
   public const ON_ERROR_THROW = 'throw';
   public const ON_ERROR_RETURN = 'return';
 
@@ -49,7 +49,7 @@ class WebPagesRPC
   /** @return object The Redaxo RPC service. */
   private function rpc(): object
   {
-    return $this->rpc ??= $this->appContainer->get(self::APP_CLASS);
+    return $this->rpc ??= $this->appContainer->get(RPC::class);
   }
 
   /**
