@@ -1,5 +1,6 @@
 var NAVTREEINDEX54 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html#aaa4d63f35d4d463ec5961fa42a35e9be":[9,0,0,0,22,0,0,2],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html":[8,0,0,0,22,0,1],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html":[9,0,0,0,22,0,1],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html#a00e6ac005ea913859f01cd8ec7d5cbe4":[8,0,0,0,22,0,1,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX54 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a5f42b9146bcd5e088f0fbcde2f30ca07":[9,0,0,0,22,0,6,18],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a61376e0a39cf487bb169d02e86d5239a":[8,0,0,0,22,0,6,30],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a61376e0a39cf487bb169d02e86d5239a":[9,0,0,0,22,0,6,30],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a6adbf5f98e24ede0698c3c8cabf43067":[8,0,0,0,22,0,6,37],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a6adbf5f98e24ede0698c3c8cabf43067":[9,0,0,0,22,0,6,37]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_invoices_storage.html#a6adbf5f98e24ede0698c3c8cabf43067":[8,0,0,0,22,0,6,37]
 };

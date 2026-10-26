@@ -1,5 +1,6 @@
 var NAVTREEINDEX78 =
 {
+"php-toolkit_2_common_2_rational_number_8php_source.html":[10,0,1,3,4],
 "php-toolkit_2_console_2_console_output_8php_source.html":[10,0,1,5,0],
 "php-toolkit_2_constants_8php_source.html":[10,0,1,15],
 "php-toolkit_2_controller_2_entity_repository_controller_trait_8php_source.html":[10,0,1,6,0],

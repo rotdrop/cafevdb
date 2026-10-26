@@ -41001,6 +41001,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-IMAP-AddressList.html#property_addresses"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\ConvertAddresses",
+            "name": "ConvertAddresses",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\ConvertAddresses\u003A\u003AhordeToString\u0028\u0029",
+            "name": "hordeToString",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToString"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\ConvertAddresses\u003A\u003AhordeToAssoc\u0028\u0029",
+            "name": "hordeToAssoc",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToAssoc"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\ConvertAddresses\u003A\u003AhordeListToStringArray\u0028\u0029",
+            "name": "hordeListToStringArray",
+            "summary": "Convert\u0020horde\u0020mail\u0020address\u0020list\u0020to\u0020array\u0020of\u0020strings",
+            "url": "classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeListToStringArray"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\ConvertAddresses\u003A\u003AconvertAddressList\u0028\u0029",
+            "name": "convertAddressList",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_convertAddressList"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAP\\IMAPMessage",
             "name": "IMAPMessage",
             "summary": "",

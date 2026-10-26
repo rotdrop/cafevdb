@@ -1,5 +1,6 @@
 var NAVTREEINDEX70 =
 {
+"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a46c711e89e8d61b11d07cd051a539435":[9,0,0,1,1,3,4,16],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a47e4e04b354beffdf126d8754feff817":[8,0,0,1,1,3,4,14],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a47e4e04b354beffdf126d8754feff817":[9,0,0,1,1,3,4,14],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a5c28e7857c5e62c5f1428c161e9a8c7b":[8,0,0,1,1,3,4,21],
@@ -248,6 +249,5 @@ var NAVTREEINDEX70 =
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_collection.html#aedd764a40b47ff6fabf993c461833228":[9,0,0,1,1,5,1,0,3,0],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html":[8,0,0,1,1,6,1,0,4],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html":[9,0,0,1,1,5,1,0,4],
-"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html#a03af6452b3ff02618dfef97106d6f30c":[8,0,0,1,1,6,1,0,4,1],
-"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html#a03af6452b3ff02618dfef97106d6f30c":[9,0,0,1,1,5,1,0,4,1]
+"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_o_r_m_1_1_entity_serializer_1_1_entity_reference_identifier.html#a03af6452b3ff02618dfef97106d6f30c":[8,0,0,1,1,6,1,0,4,1]
 };

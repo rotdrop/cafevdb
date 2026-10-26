@@ -1,5 +1,6 @@
 var NAVTREEINDEX69 =
 {
+"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html#a5c28e7857c5e62c5f1428c161e9a8c7b":[9,0,0,1,1,3,1,20],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html#a5d3202a690d5ecee47e704b6dc3f47fc":[8,0,0,1,1,3,1,29],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html#a5d3202a690d5ecee47e704b6dc3f47fc":[9,0,0,1,1,3,1,29],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary.html#a6b66f97e1d33da2893c723169117842c":[8,0,0,1,1,3,1,40],
@@ -248,6 +249,5 @@ var NAVTREEINDEX69 =
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a42fc8aa8ab20f32f34b911187f0c0efb":[9,0,0,1,1,3,4,15],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a45eaba64c92c3d85f1253eeb14d93ec8":[8,0,0,1,1,3,4,10],
 "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a45eaba64c92c3d85f1253eeb14d93ec8":[9,0,0,1,1,3,4,10],
-"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a46c711e89e8d61b11d07cd051a539435":[8,0,0,1,1,3,4,16],
-"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a46c711e89e8d61b11d07cd051a539435":[9,0,0,1,1,3,4,16]
+"class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_common_1_1_rational_number.html#a46c711e89e8d61b11d07cd051a539435":[8,0,0,1,1,3,4,16]
 };

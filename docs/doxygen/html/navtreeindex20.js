@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a860ca58f7b2332d44f16da17c9345fe1":[8,0,0,0,8,1,2,0,30,48],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a860ca58f7b2332d44f16da17c9345fe1":[9,0,0,0,8,1,2,0,30,48],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a87e0a5474b9500b0d65c98c87e553d75":[8,0,0,0,8,1,2,0,30,47],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a87e0a5474b9500b0d65c98c87e553d75":[9,0,0,0,8,1,2,0,30,47],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a4ecba685bc5be4068e1c24e871b2f2b5":[8,0,0,0,8,1,2,0,35,91],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a4ecba685bc5be4068e1c24e871b2f2b5":[9,0,0,0,8,1,2,0,35,91],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a503cb718f19deb2360c22110ba3fe1f3":[8,0,0,0,8,1,2,0,35,8],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a503cb718f19deb2360c22110ba3fe1f3":[9,0,0,0,8,1,2,0,35,8],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a50fcef04f17ffeb002082b4e4d54193a":[8,0,0,0,8,1,2,0,35,100]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a503cb718f19deb2360c22110ba3fe1f3":[9,0,0,0,8,1,2,0,35,8]
 };

@@ -123,7 +123,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <abbr title="\OCA\Mail\Model\ConvertAddresses">ConvertAddresses</abbr>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html"><abbr title="\OCA\CAFEVDB\Service\IMAP\ConvertAddresses">ConvertAddresses</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -575,6 +575,31 @@
     <a class="" href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#method_setTo">setTo()</a>
     <span>
                                 &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_convertAddressList">convertAddressList()</a>
+    <span>
+                                &nbsp;: array    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeListToStringArray">hordeListToStringArray()</a>
+    <span>
+                                &nbsp;: string[]    </span>
+</dt>
+<dd>Convert horde mail address list to array of strings</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToAssoc">hordeToAssoc()</a>
+    <span>
+                                &nbsp;: array    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToString">hordeToString()</a>
+    <span>
+                                &nbsp;: string    </span>
 </dt>
 
     </dl>
@@ -3532,6 +3557,203 @@
     
     
 </article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertAddressList">
+        convertAddressList()
+        <a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_convertAddressList" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/IMAP/ConvertAddresses.php"><a href="files/lib-service-imap-convertaddresses.html"><abbr title="lib/Service/IMAP/ConvertAddresses.php">ConvertAddresses.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">48</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Service/IMAP/ConvertAddresses.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">convertAddressList</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Envelope">Horde_Imap_Client_Data_Envelope</abbr>|<abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List">Horde_Mail_Rfc822_List</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$envelope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$envelope</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Envelope">Horde_Imap_Client_Data_Envelope</abbr>|<abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List">Horde_Mail_Rfc822_List</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_hordeListToStringArray">
+        hordeListToStringArray()
+        <a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeListToStringArray" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/IMAP/ConvertAddresses.php"><a href="files/lib-service-imap-convertaddresses.html"><abbr title="lib/Service/IMAP/ConvertAddresses.php">ConvertAddresses.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">36</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/lib/Service/IMAP/ConvertAddresses.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Convert horde mail address list to array of strings</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">hordeListToStringArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List">Horde_Mail_Rfc822_List</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$list</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string[]</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$list</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List">Horde_Mail_Rfc822_List</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string[]</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_hordeToAssoc">
+        hordeToAssoc()
+        <a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToAssoc" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/IMAP/ConvertAddresses.php"><a href="files/lib-service-imap-convertaddresses.html"><abbr title="lib/Service/IMAP/ConvertAddresses.php">ConvertAddresses.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">23</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#source-view.23" class="phpdocumentor-element-found-in__source" data-line="23" data-modal="source-view" data-src="files/lib/Service/IMAP/ConvertAddresses.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">hordeToAssoc</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address">Horde_Mail_Rfc822_Address</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$address</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$address</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address">Horde_Mail_Rfc822_Address</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_hordeToString">
+        hordeToString()
+        <a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToString" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/IMAP/ConvertAddresses.php"><a href="files/lib-service-imap-convertaddresses.html"><abbr title="lib/Service/IMAP/ConvertAddresses.php">ConvertAddresses.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">19</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#source-view.19" class="phpdocumentor-element-found-in__source" data-line="19" data-modal="source-view" data-src="files/lib/Service/IMAP/ConvertAddresses.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">hordeToString</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address">Horde_Mail_Rfc822_Address</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$address</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$address</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address">Horde_Mail_Rfc822_Address</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
             </section>
 
         <div class="phpdocumentor-modal" id="source-view">
@@ -3719,6 +3941,10 @@
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#method_setReplyTo">setReplyTo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#method_setSubject">setSubject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-IMAPMessage.html#method_setTo">setTo()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_convertAddressList">convertAddressList()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeListToStringArray">hordeListToStringArray()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToAssoc">hordeToAssoc()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-IMAP-ConvertAddresses.html#method_hordeToString">hordeToString()</a></li>
                                     </ul>
             </li>
                     </ul>

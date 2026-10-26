@@ -1,5 +1,6 @@
 var NAVTREEINDEX31 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html#a95ed4e335bd2a4544efa815fd91dab4a":[8,0,0,0,11,2,1],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html#a95ed4e335bd2a4544efa815fd91dab4a":[9,0,0,0,11,2,1],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html#abe26969af3e9dc074ff570e80b1661be":[8,0,0,0,11,2,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html#abe26969af3e9dc074ff570e80b1661be":[9,0,0,0,11,2,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX31 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_config_locked_exception.html":[8,0,0,0,12,4],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_config_locked_exception.html":[9,0,0,0,12,4],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html":[8,0,0,0,12,5],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html":[9,0,0,0,12,5],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_exists_exception.html":[8,0,0,0,12,6]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html":[9,0,0,0,12,5]
 };

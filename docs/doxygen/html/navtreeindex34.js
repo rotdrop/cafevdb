@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#aa279e84c7c48b54a8e835bb00d2d40a9":[8,0,0,0,15,0,0,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#aa279e84c7c48b54a8e835bb00d2d40a9":[9,0,0,0,15,1,0,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ab6f35bf773b3e078c9f9acd8e4f8de84":[8,0,0,0,15,0,0,9],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ab6f35bf773b3e078c9f9acd8e4f8de84":[9,0,0,0,15,1,0,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#abe18704ee0189ac55323c93db488770c":[8,0,0,0,19,6,32],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#abe18704ee0189ac55323c93db488770c":[9,0,0,0,19,5,32],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ac0dc476ffd5d2b3416d34bbf211bdd90":[8,0,0,0,19,6,36],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ac0dc476ffd5d2b3416d34bbf211bdd90":[9,0,0,0,19,5,36],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#acfda9d67a37260363aee8f4eacda0641":[8,0,0,0,19,6,19]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ac0dc476ffd5d2b3416d34bbf211bdd90":[9,0,0,0,19,5,36]
 };

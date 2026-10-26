@@ -1,5 +1,6 @@
 var NAVTREEINDEX77 =
 {
+"namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a6d8014a727b31297a625dc1a748d1fb4":[8,0,0,0,25,107],
 "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a711b32acbac8d6e5019df0087ccf7fdb":[8,0,0,0,25,39],
 "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a753a0c5fa9ab0a7aad9e5626571a35f0":[8,0,0,0,25,36],
 "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a76cac93e2db9f7f0050f62a9e986c427":[8,0,0,0,25,32],
@@ -248,6 +249,5 @@ var NAVTREEINDEX77 =
 "php-toolkit_2_common_2_abstract_decimal_rational_8php_source.html":[10,0,1,3,0],
 "php-toolkit_2_common_2_decimal_rational_monetary_8php_source.html":[10,0,1,3,1],
 "php-toolkit_2_common_2_decimal_rational_p2_s2_8php_source.html":[10,0,1,3,2],
-"php-toolkit_2_common_2_decimal_rational_p4_s4_8php_source.html":[10,0,1,3,3],
-"php-toolkit_2_common_2_rational_number_8php_source.html":[10,0,1,3,4]
+"php-toolkit_2_common_2_decimal_rational_p4_s4_8php_source.html":[10,0,1,3,3]
 };

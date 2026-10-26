@@ -1,5 +1,6 @@
 var NAVTREEINDEX32 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_exists_exception.html":[8,0,0,0,12,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_exists_exception.html":[9,0,0,0,12,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_exists_exception.html#a63adaf4edb8c2820aa64242deaa1cd22":[8,0,0,0,12,6,0],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_exists_exception.html#a63adaf4edb8c2820aa64242deaa1cd22":[9,0,0,0,12,6,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX32 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a52f2ee9ff2009eabb9bad8143673d5f7":[8,0,0,0,14,22,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a52f2ee9ff2009eabb9bad8143673d5f7":[9,0,0,0,14,22,6],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a98992b6a25f637de0e2245a25cbbb8c8":[8,0,0,0,14,22,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a98992b6a25f637de0e2245a25cbbb8c8":[9,0,0,0,14,22,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a9ff31a4d446ccad592e233b113ed4f0c":[8,0,0,0,14,22,2]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html#a98992b6a25f637de0e2245a25cbbb8c8":[9,0,0,0,14,22,0]
 };

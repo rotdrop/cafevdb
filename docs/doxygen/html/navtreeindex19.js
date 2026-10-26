@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html#a5bef5f4118e86b67c88113bfb37c46e1":[8,0,0,0,8,1,2,0,22,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html#a5bef5f4118e86b67c88113bfb37c46e1":[9,0,0,0,8,1,2,0,22,8],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html#a911cc2dc4cd7360f15d28069b74ce98f":[8,0,0,0,8,1,2,0,22,13],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html#a911cc2dc4cd7360f15d28069b74ce98f":[9,0,0,0,8,1,2,0,22,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a836f5f9d1a116dd9868cc9a095992d70":[8,0,0,0,8,1,2,0,30,33],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a836f5f9d1a116dd9868cc9a095992d70":[9,0,0,0,8,1,2,0,30,33],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a8413454e6ddfb601e6585d9b45fc121b":[8,0,0,0,8,1,2,0,30,39],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a8413454e6ddfb601e6585d9b45fc121b":[9,0,0,0,8,1,2,0,30,39],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a860ca58f7b2332d44f16da17c9345fe1":[8,0,0,0,8,1,2,0,30,48]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a8413454e6ddfb601e6585d9b45fc121b":[9,0,0,0,8,1,2,0,30,39]
 };
