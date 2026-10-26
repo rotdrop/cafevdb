@@ -23,6 +23,7 @@ if [ -n "$WRAPPER_NS" ]; then
     for NS in "${WRAPPED_NAMESPACES[@]}"; do
         WRAPPER_REPLACEMENTS+=('s/use '"$NS"'/use OCA\\'"$NS_PREFIX"'\\'"$WRAPPER_NS"'\\'"$NS"'/g')
     done
+    WRAPPER_REPLACEMENTS+=('s/extends \\Doctrine/extends \\OCA\\'"$NS_PREFIX"'\\'"$WRAPPER_NS"'\\Doctrine/g')
 fi
 
 if [ -z "$DST_DIR" ] || [ -z "$NS_PREFIX" ]; then

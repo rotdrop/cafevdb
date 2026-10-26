@@ -119,10 +119,14 @@ jobs:
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make dev-setup-php
 
-      - name: Enable app
+      - name: Enable members app
         working-directory: server
-        run: php occ app:enable ${{ env.APP_NAME }}
+        run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
 
       - name: Run PHPUnit unit suite
         working-directory: server/apps/${{ env.APP_NAME }}
         run: vendor-bin/phpunit/vendor/bin/phpunit -c phpunit.xml --testsuite unit
+
+      - name: Enable app
+        working-directory: server
+        run: php occ app:enable ${{ env.APP_NAME }}
