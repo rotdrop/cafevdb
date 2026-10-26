@@ -116,6 +116,9 @@ jobs:
           tools: composer:v2
           ini-values: apc.enable_cli=1, memory_limit=1G
 
+      - name: Install w3m for Html2Text tests
+        run: sudo apt-get install -y --no-install-recommends w3m
+
       - name: Install Nextcloud (sqlite)
         working-directory: server
         run: |
