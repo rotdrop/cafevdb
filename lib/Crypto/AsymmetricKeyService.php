@@ -152,13 +152,10 @@ class AsymmetricKeyService
 
       $oldKeyPair = self::$keyPairs[$ownerId] ?? null;
       if (empty($oldKeyPair) && $ownerId == $this->getSessionUserId()) {
-        $loginPassword = $this->getLoginPassword($ownerId);
-        if (!empty($loginPassword)) {
-          try {
-            $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
-          } catch (Throwable $t) {
-            $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
-          }
+        try {
+          $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+        } catch (Throwable $t) {
+          $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
         }
       }
 

@@ -35,16 +35,20 @@ require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 define('ROT_DROP_PHPUNIT', true);
 define('PHPUNIT_NC_APP_NAME', \OCA\CAFEVDB\AppInfo\Application::getAppName());
 define('PHPUNIT_NC_APP_NAMESPACE', \OCA\CAFEVDB::class);
-define('PHPUNIT_NC_MOCKED_APPS', [\OCA\CAFEVDB::class, \OCA\BAV::class]);
+define('PHPUNIT_NC_MOCKED_APPS', [\OCA\CAFEVDB::class]);
 define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
 define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
 $wantedApps = [
   \PHPUNIT_NC_APP_NAME,
-  \OCA\CAFEVDB\AppInfo\Application::getMembersAppName(),
   'files',
   'files_sharing',
 ];
+
+// the members app is an optional companion which is not necessarily installed
+if (class_exists(\OCA\CAFeVDBMembers\AppInfo\Application::class)) {
+  $wantedApps[] = \OCA\CAFEVDB\AppInfo\Application::getMembersAppName();
+}
 
 $appManager = \OCP\Server::get(\OCP\App\IAppManager::class);
 foreach ($wantedApps as $app) {

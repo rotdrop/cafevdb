@@ -61,8 +61,6 @@ use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -107,7 +105,7 @@ class ProjectService
   /** @var WikiRPC */
   private $wikiRPCInstance;
 
-  /** @var OCA\Redaxo\Service\RPC */
+  /** @var WebPagesRPC */
   private $webPagesRPCInstance;
 
   /** @var ProjectsRepository */

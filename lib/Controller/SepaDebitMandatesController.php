@@ -39,7 +39,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
-use OCA\BAV\Service\BAV as BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;

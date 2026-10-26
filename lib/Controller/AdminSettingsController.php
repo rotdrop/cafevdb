@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
 
 /** AJAX end-points for admin setttings. */
 #[PhpToTypeScript\TypeScript]

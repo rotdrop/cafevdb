@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AdminSettingsController. */

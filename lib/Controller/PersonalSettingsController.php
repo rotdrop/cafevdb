@@ -41,7 +41,7 @@ use OCP\AppFramework\Http\DataResponse;
 use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 
-use OCA\BAV\Service\BAV as BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Attributes;
@@ -70,8 +70,8 @@ use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo\Service\RPC as WebPagesRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
+use OCA\CAFEVDB\Service\WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */

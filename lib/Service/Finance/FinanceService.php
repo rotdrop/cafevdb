@@ -33,8 +33,6 @@ use UnexpectedValueException;
 use Cmixin\BusinessDay;
 use PHP_IBAN;
 
-use OCA\BAV\Service\BAV as BankAccountValidator;
-
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
