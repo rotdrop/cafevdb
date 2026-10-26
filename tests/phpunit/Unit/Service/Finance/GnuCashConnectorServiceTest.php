@@ -42,7 +42,6 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
-use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test aspects of the GnuCashConnectorService */
 #[Attributes\CoversClass(AppStorage::class)]
@@ -111,10 +110,8 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class GnuCashConnectorServiceTest extends TestCase
 {
-  use WordSplitterServiceTrait;
 
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockProjectsRepositoryTrait;
@@ -143,7 +140,6 @@ class GnuCashConnectorServiceTest extends TestCase
     $this->getUserStorage();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $this->registerWordSplitterService();
     $this->encryptionService = $this->mockProvider->getEncryptionService();
 
     $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);

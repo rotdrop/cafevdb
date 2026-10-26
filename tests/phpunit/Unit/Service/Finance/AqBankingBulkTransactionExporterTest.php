@@ -39,7 +39,6 @@ use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the CSV export for AqBanking. */
 #[Attributes\CoversClass(Service\Finance\AqBankingBulkTransactionExporter::class)]
@@ -52,7 +51,6 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -83,6 +81,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -97,7 +96,6 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 class AqBankingBulkTransactionExporterTest extends TestCase
 {
   use EntityGeneratorTrait;
-  use WordSplitterServiceTrait;
 
   private const CONFIG_MOCK = [
     ConfigConstants::BANK_ACCOUNT_OWNER => 'Örchester e.V.',
@@ -113,7 +111,6 @@ class AqBankingBulkTransactionExporterTest extends TestCase
     $this->generateProjectParticipant();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-    $this->registerWordSplitterService();
 
     $configService = $this->mockProvider->getConfigService();
 
