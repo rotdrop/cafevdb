@@ -49,6 +49,8 @@ use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\WebPagesRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
@@ -245,7 +247,7 @@ class ProjectsTest extends TestCase
       $musicianService,
     );
 
-    $service = \OCA\Redaxo\Service\RPC::class;
+    $service = WebPagesRPC::class;
     $cmsRpc = $this->createStub($service);
     $mockProvider->registerClassInstance($service, $cmsRpc, global: false);
     $cmsRpc->method('addArticle')->willReturnCallback(
@@ -262,7 +264,7 @@ class ProjectsTest extends TestCase
     );
     $cmsRpc->method('articlesByName')->willReturn([]);
 
-    $service = \OCA\DokuWiki\Service\AuthDokuWiki::class;
+    $service = WikiRPC::class;
     $wikiRpc = $this->createStub($service);
     $mockProvider->registerClassInstance($service, $wikiRpc, global: false);
     $wikiRpc->method('getPage')->willReturn('some string');

@@ -33,7 +33,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use OCA\DokuWiki\Service\AuthDokuWiki;
+use OCA\CAFEVDB\Service\WikiRPC;
 
 use OCA\CAFEVDB\Service\ProjectService;
 
@@ -70,8 +70,8 @@ class WikiOverview extends Command
       return $result;
     }
 
-    /** @var AuthDokuWiki $wikiRPC */
-    $wikiRPC = $this->appContainer->get(AuthDokuWiki::class);
+    /** @var WikiRPC $wikiRPC */
+    $wikiRPC = $this->appContainer->get(WikiRPC::class);
     if (!$wikiRPC->login($this->userId, $this->userPassword)) {
       return 1;
     }
