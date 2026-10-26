@@ -127,13 +127,13 @@ jobs:
         working-directory: server
         run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
 
-      - name: Run PHPUnit unit suite
-        working-directory: server/apps/${{ env.APP_NAME }}
-        run: vendor-bin/phpunit/vendor/bin/phpunit -c phpunit.xml --testsuite unit
-
       - name: Enable app
         working-directory: server
         run: php occ app:enable ${{ env.APP_NAME }}
+
+      - name: Run PHPUnit unit suite
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: vendor-bin/phpunit/vendor/bin/phpunit -c phpunit.xml --testsuite unit
 
       - uses: actions/setup-node@v4
         with:
