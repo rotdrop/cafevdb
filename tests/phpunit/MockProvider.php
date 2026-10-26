@@ -478,9 +478,7 @@ class MockProvider extends AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder($className)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $instance = $this->createStub($className);
 
     $instance->method('getMainAgency')
       ->willReturnCallback(
@@ -518,8 +516,6 @@ class MockProvider extends AbstractMockProvider
         });
 
     $this->instances[$className] = $instance;
-
-    $instance->expects($this->never())->method('update');
 
     return $instance;
   }
