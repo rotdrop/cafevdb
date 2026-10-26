@@ -1,0 +1,172 @@
+name: API docs
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
+# Pushing to gh-pages needs write access.
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+env:
+  NC_REPO: rotdrop/nextcloud-server
+  NC_BRANCH: cjh-stable35
+  APP_NAME: cafevdb
+  MEMBERS_APP_NAME: cafevdbmembers
+  MEMBERS_APP_REPO: rotdrop/cafevdb-members
+  MEMBERS_APP_BRANCH: stable35
+  PHPDOC_VERSION: '3.10.0'
+
+jobs:
+  gh-pages:
+    runs-on: ubuntu-latest
+    # The tag glob above is not a regex: rule out suffixes like v1.2.3-rc1.
+    if: github.event_name == 'workflow_dispatch' || (!contains(github.ref_name, '-') && !contains(github.ref_name, '+'))
+    env:
+      PHP_VERSION: '8.5'
+      MARIADB_MAJOR: '12'
+    steps:
+      - name: Use https for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Checkout modified Nextcloud server
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NC_REPO }}
+          ref: ${{ env.NC_BRANCH }}
+          submodules: recursive
+          path: server
+
+      - name: Checkout app
+        uses: actions/checkout@v4
+        with:
+          path: server/apps/${{ env.APP_NAME }}
+          submodules: recursive
+
+      - name: Checkout gh-pages branch where the Makefile expects it
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: server/apps/${{ env.APP_NAME }}/build/artifacts/doc/gh-pages
+          fetch-depth: 2
+
+      - name: Checkout members app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MEMBERS_APP_REPO }}
+          ref: ${{ env.MEMBERS_APP_BRANCH }}
+          token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
+          path: server/apps/${{ env.MEMBERS_APP_NAME }}
+          submodules: recursive
+
+      - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl ca-certificates apt-transport-https
+          sudo install -d /etc/apt/keyrings
+          sudo curl -fsSL -o /etc/apt/keyrings/mariadb-keyring.pgp \
+            https://mariadb.org/mariadb_release_signing_key.pgp
+          MARIADB_VERSION="$(curl -fsSL https://downloads.mariadb.org/rest-api/mariadb/ \
+            | jq -r --arg m "${MARIADB_MAJOR}." \
+              '[.major_releases[] | select(.release_id | startswith($m)) | select(.release_status | IN("Stable","RC"))][0].release_id')"
+          [ -n "$MARIADB_VERSION" ] && [ "$MARIADB_VERSION" != null ] || { echo "no MariaDB ${MARIADB_MAJOR}.x series found"; exit 1; }
+          codename="$(lsb_release -cs)"
+          echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://archive.mariadb.org/mariadb-${MARIADB_VERSION}/repo/ubuntu ${codename} main" \
+            | sudo tee /etc/apt/sources.list.d/mariadb.list
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mariadb-server mariadb-client
+          sudo systemctl enable --now mariadb
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ctype, curl, dom, gd, iconv, intl, json, mbstring, openssl, pdo_sqlite, posix, sqlite3, xml, zip, apcu, bcmath, gmp, imagick, fileinfo
+          tools: composer:v2
+          ini-values: apc.enable_cli=1, memory_limit=1G
+
+      - name: Install doc tools
+        run: |
+          sudo apt-get install -y --no-install-recommends doxygen graphviz libxml-xpath-perl
+          sudo mkdir -p /opt/phpDocumentor/bin
+          sudo curl -fsSL -o /opt/phpDocumentor/bin/phpdoc \
+            "https://github.com/phpDocumentor/phpDocumentor/releases/download/v${PHPDOC_VERSION}/phpDocumentor.phar"
+          sudo chmod +x /opt/phpDocumentor/bin/phpdoc
+
+      - name: Install Nextcloud (sqlite)
+        working-directory: server
+        run: |
+          composer install --no-interaction --no-progress
+          php occ maintenance:install --database=sqlite \
+            --admin-user=admin --admin-pass=admin --no-interaction
+          php occ config:system:set debug --value=true --type=boolean
+
+      - name: Install app PHP dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: make dev-setup-php
+
+      - name: Install members app PHP dependencies
+        working-directory: server/apps/${{ env.MEMBERS_APP_NAME }}
+        run: make dev-setup-php
+
+      - name: Enable apps
+        working-directory: server
+        run: |
+          php occ app:enable ${{ env.MEMBERS_APP_NAME }}
+          php occ app:enable ${{ env.APP_NAME }}
+
+      - name: Configure app database and apply migrations
+        working-directory: server
+        run: |
+          db_password="$(openssl rand -hex 24)"
+          cafevdb_user="cafevdb-ci"
+          cafevdb_group="cafevdb_ci"
+          user_password="$(openssl rand -hex 24)"
+          sudo mariadb <<SQL
+          CREATE DATABASE cafevdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER 'cafevdb'@'%' IDENTIFIED BY '${db_password}';
+          GRANT ALL PRIVILEGES ON cafevdb.* TO 'cafevdb'@'%';
+          SQL
+          php occ group:add "${cafevdb_group}"
+          OC_PASS="${user_password}" php occ user:add --password-from-env "${cafevdb_user}"
+          php occ group:adduser "${cafevdb_group}" "${cafevdb_user}"
+          php occ config:app:set "${APP_NAME}" dbname --value=cafevdb
+          php occ config:app:set "${APP_NAME}" dbuser --value=cafevdb
+          php occ config:app:set "${APP_NAME}" dbpassword --value="${db_password}"
+          php occ config:app:set "${APP_NAME}" dbserver --value=127.0.0.1
+          php occ config:app:set "${APP_NAME}" userGroup --value="${cafevdb_group}"
+          password_file="apps/${APP_NAME}/.clipassword"
+          printf %s "${user_password}" > "$password_file"
+          chmod 600 "$password_file"
+          php occ "${APP_NAME}:database:migrate" -v \
+            --user="${cafevdb_user}" --password-file="${password_file}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/apps/${{ env.APP_NAME }}/package-lock.json
+
+      - name: Install app JavaScript dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          npm ci
+          # Keep the locked versions: make would otherwise run "npm update".
+          touch package-lock.json
+
+      - name: Build the app (needed for the generated sources below build/)
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: CAFEVDB_USER=cafevdb-ci make selectize build
+
+      - name: Generate API docs and push to gh-pages
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          trap 'rm -f .clipassword' EXIT
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          CAFEVDB_USER=cafevdb-ci make gh-pages
