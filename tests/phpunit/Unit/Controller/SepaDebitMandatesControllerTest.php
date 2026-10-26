@@ -161,6 +161,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\BankAgency::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\FuzzyInputService::class)]
