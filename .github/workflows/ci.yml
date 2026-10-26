@@ -153,7 +153,11 @@ jobs:
 
       - name: Install app JavaScript dependencies
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: npm ci
+        run: |
+          npm ci
+          # Keep the locked versions: make would otherwise run "npm update"
+          # because package.json is newer than package-lock.json after checkout.
+          touch package-lock.json
 
       - name: Run Vitest suite
         working-directory: server/apps/${{ env.APP_NAME }}
