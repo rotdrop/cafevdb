@@ -16,6 +16,9 @@ env:
   MEMBERS_APP_NAME: cafevdbmembers
   MEMBERS_APP_REPO: rotdrop/cafevdb-members
   MEMBERS_APP_BRANCH: stable35
+  BAV_APP_NAME: bav
+  BAV_APP_REPO: rotdrop/nextcloud-app-bav
+  BAV_APP_BRANCH: master
 
 jobs:
   vitest:
@@ -36,7 +39,7 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
     env:
-      PHP_VERSION: '8.4'
+      PHP_VERSION: '8.5'
       MARIADB_MAJOR: '12'
     steps:
       - name: Use https for submodules
@@ -63,6 +66,14 @@ jobs:
           ref: ${{ env.MEMBERS_APP_BRANCH }}
           token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
           path: server/apps/${{ env.MEMBERS_APP_NAME }}
+          submodules: recursive
+
+      - name: Checkout BAV app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.BAV_APP_REPO }}
+          ref: ${{ env.BAV_APP_BRANCH }}
+          path: server/apps/${{ env.BAV_APP_NAME }}
           submodules: recursive
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
@@ -118,6 +129,14 @@ jobs:
           # the Makefile needs xpath to read the scoped namespace from info.xml
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make dev-setup-php
+
+      - name: Install BAV app PHP dependencies
+        working-directory: server/apps/${{ env.BAV_APP_NAME }}
+        run: make dev-setup-php
+
+      - name: Enable BAV app
+        working-directory: server
+        run: php occ app:enable ${{ env.BAV_APP_NAME }}
 
       - name: Enable members app
         working-directory: server
