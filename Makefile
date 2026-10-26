@@ -429,24 +429,30 @@ MIGRATION_CLASSES = $(basename $(notdir $(wildcard $(ABSSRCDIR)/lib/Maintenance/
 #@ not exist, MEMBERS_REPO_URL (branch MEMBERS_BRANCH) is cloned there first.
 #@ With MEMBERS_PUSH=1 the commit is pushed to the remote (e.g. in CI, put
 #@ credentials into MEMBERS_REPO_URL). Only run explicitly. If the SQL dumps do
-#@ not exist or lack a migration from lib/Maintenance/Migrations/, only the ArtifactsTest of the PHPUnit suite is run to generate them.
+#@ not exist or lack a migration from lib/Maintenance/Migrations/,
+#@ only the ArtifactsTest of the PHPUnit suite is run to generate them. It is an
+#@ error if a migration is still missing after that.
 members-test-data:
-	@regenerate=0; \
+	@missing() { \
+ for migration in $(MIGRATION_CLASSES); do \
+  grep -q "$$migration" '$(APP_DUMP)' || { echo "$$migration"; return 0; }; \
+ done; return 1; }; \
+regenerate=0; \
 if ! [ -f '$(CLOUD_CONNECTOR_DUMP)' ] || ! [ -f '$(APP_DUMP)' ]; then \
  regenerate=1; \
-else \
- for migration in $(MIGRATION_CLASSES); do \
-  if ! grep -q "$$migration" '$(APP_DUMP)'; then \
-   echo "Migration $$migration is missing in $(APP_DUMP)."; regenerate=1; break; \
-  fi; \
- done; \
+elif m=$$(missing); then \
+ echo "Migration $$m is missing in $(APP_DUMP)."; regenerate=1; \
 fi; \
 if [ $$regenerate = 1 ]; then \
  echo "Test artifacts missing or outdated in $(TEST_ARTIFACTS_DIR), running the ArtifactsTest."; \
  $(MAKE) $(PHPUNIT) && $(PHP) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter 'ArtifactsTest' || exit 1; \
+ if ! [ -f '$(CLOUD_CONNECTOR_DUMP)' ] || ! [ -f '$(APP_DUMP)' ]; then \
+  echo "ArtifactsTest did not produce the SQL dumps in $(TEST_ARTIFACTS_DIR)." 1>&2; exit 1; \
+ fi; \
+ if m=$$(missing); then \
+  echo "Migration $$m is still missing in $(APP_DUMP) after regenerating it." 1>&2; exit 1; \
+ fi; \
 fi
-	@[ -f '$(CLOUD_CONNECTOR_DUMP)' ] && [ -f '$(APP_DUMP)' ] || { \
- echo "ArtifactsTest did not produce the SQL dumps in $(TEST_ARTIFACTS_DIR)." 1>&2; exit 1; }
 	@if ! [ -d '$(MEMBERS_APP_DIR)/.git' ]; then \
  git clone --branch '$(MEMBERS_BRANCH)' '$(MEMBERS_REPO_URL)' '$(MEMBERS_APP_DIR)' || exit 1; \
 fi
