@@ -268,9 +268,7 @@ APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 
-# fixup the php-toolkit and replace "use Doctrine\" by our scoped version
 app-toolkit-stamp: $(APP_TOOLKIT_DEST)/README.md $(MAKEFILE_DEP)
-	find $(APP_TOOLKIT_DEST)/Doctrine -name "*.php" -exec sed -i -e 's/use Doctrine\\/use $(WRAPPER_NAMESPACE)\\Doctrine\\/g' -e 's/extends \\Doctrine/extends \\$(WRAPPER_NAMESPACE)\\Doctrine/g' {} \;
 	date > $@
 
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
