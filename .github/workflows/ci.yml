@@ -132,7 +132,7 @@ jobs:
 
       - name: Install BAV app PHP dependencies
         working-directory: server/apps/${{ env.BAV_APP_NAME }}
-        run: make dev-setup-php
+        run: make dev-setup
 
       - name: Enable BAV app
         working-directory: server
