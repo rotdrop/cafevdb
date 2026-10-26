@@ -92,17 +92,13 @@ und rechts ausgerichteten Text.',
 ├───┼───┼───┤
 │a31│a32│a33│
 └───┴───┴───┘',
-      'php' => 'a11
- 		a12
- 		a13
-
- 		a21
- 		a22
- 		a23
-
- 		a31
- 		a32
- 		a33',
+      'php' => '┌───┬───┬───┐
+│a11│a12│a13│
+├───┼───┼───┤
+│a21│a22│a23│
+├───┼───┼───┤
+│a31│a32│a33│
+└───┴───┴───┘',
     ],
   ];
 
@@ -191,5 +187,34 @@ und rechts ausgerichteten Text.',
     $this->assertStringContainsString('a', $text);
     $this->assertStringContainsStringIgnoringCase('b', $text);
     $this->assertStringNotContainsString('<', $text);
+  }
+
+  /**
+   * Column spans, line breaks in cells, nested tables and escaping of
+   * console formatting characters in the PHP fallback.
+   *
+   * @return void
+   */
+  public function testFallbackTableRendering(): void
+  {
+    $this->useConverter('php');
+    $html = '<p>x</p><table><tr><th colspan="2">Head</th></tr>'
+      . '<tr><td>a<br>bb</td><td align="right">&Ouml;</td></tr>'
+      . '<tr><td><table><tr><td>in</td></tr></table></td><td>&lt;i&gt;</td></tr></table><p>end</p>';
+    $expected = 'x
+
+┌────────┐
+│Head    │
+├────┬───┤
+│a   │  Ö│
+│bb  │   │
+├────┼───┤
+│┌──┐│<i>│
+││in││   │
+│└──┘│   │
+└────┴───┘
+
+end';
+    $this->assertSame($expected, Html2Text::convert($html));
   }
 }
