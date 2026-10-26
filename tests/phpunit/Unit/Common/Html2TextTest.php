@@ -41,7 +41,8 @@ class Html2TextTest extends TestCase
 <blockquote>
 <p>und ein Blockzitat</p>
 </blockquote>
-<p style="text-align: right;">und rechts ausgerichteten Text.</p>' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift
+<p style="text-align: right;">und rechts ausgerichteten Text.</p>' => [
+      'w3m' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift
 und Kursivschrift und
 
 Zeilenumbrüche und
@@ -52,6 +53,38 @@ Text
     und ein Blockzitat
 
 und rechts ausgerichteten Text.',
+      'lynx' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift und Kursivschrift und
+
+Zeilenumbrüche und
+vorformatierten
+Text
+
+und ein Blockzitat
+
+und rechts ausgerichteten Text.',
+      'elinks' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält
+   Fettschrift und Kursivschrift und
+
+   Zeilenumbrüche und
+
+ vorformatierten
+ Text
+
+   > und ein Blockzitat
+
+                                              und rechts ausgerichteten Text.',
+      'php' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält
+FETTSCHRIFT und _Kursivschrift _und
+
+Zeilenumbrüche und
+
+vorformatierten
+Text
+
+> und ein Blockzitat
+
+und rechts ausgerichteten Text.',
+    ],
     '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 33.3115%;"><col style="width: 33.3115%;"><col style="width: 33.3115%;"></colgroup>
 <tbody>
 <tr>
@@ -71,13 +104,36 @@ und rechts ausgerichteten Text.',
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>' => '┌───┬───┬───┐
+<p>&nbsp;</p>' => [
+      'w3m' => '┌───┬───┬───┐
 │a11│a12│a13│
 ├───┼───┼───┤
 │a21│a22│a23│
 ├───┼───┼───┤
 │a31│a32│a33│
 └───┴───┴───┘',
+      'lynx' => 'a11 a12 a13
+a21 a22 a23
+a31 a32 a33',
+      'elinks' => '┌─────┬─────┬─────┐
+   │ a11 │ a12 │ a13 │
+   ├─────┼─────┼─────┤
+   │ a21 │ a22 │ a23 │
+   ├─────┼─────┼─────┤
+   │ a31 │ a32 │ a33 │
+   └─────┴─────┴─────┘',
+      'php' => 'a11
+ 		a12
+ 		a13
+
+ 		a21
+ 		a22
+ 		a23
+
+ 		a31
+ 		a32
+ 		a33',
+    ],
   ];
 
   /** @return void */
@@ -101,13 +157,34 @@ und rechts ausgerichteten Text.',
     return $finder;
   }
 
-  /** @return void */
-  public function testConversion(): void
+  /**
+   * @param string $converter
+   *
+   * @return void
+   */
+  #[Attributes\DataProvider('converterProvider')]
+  public function testConversion(string $converter): void
   {
-    foreach (self::HTML_TEXTS as $htmlText => $plainText) {
-      $text = Html2Text::convert($htmlText);
-      $this->assertEquals($plainText, $text);
+    $this->useConverter($converter);
+    foreach (self::HTML_TEXTS as $htmlText => $plainTexts) {
+      $this->assertSame($plainTexts[$converter], Html2Text::convert($htmlText));
     }
+  }
+
+  /**
+   * Skip the test if the converter is not installed, otherwise hide all
+   * other converters. 'php' hides all external converters.
+   *
+   * @param string $converter
+   *
+   * @return void
+   */
+  private function useConverter(string $converter): void
+  {
+    if ($converter !== 'php' && (new ExecutableFinder)->find($converter) === null) {
+      $this->markTestSkipped($converter . ' is not installed.');
+    }
+    Html2Text::setExecutableFinder($this->stubFinder($converter));
   }
 
   /**
@@ -118,13 +195,9 @@ und rechts ausgerichteten Text.',
   #[Attributes\DataProvider('converterProvider')]
   public function testSingleConverter(string $converter): void
   {
-    if ($converter !== 'php' && (new ExecutableFinder)->find($converter) === null) {
-      $this->markTestSkipped($converter . ' is not installed.');
-    }
-    // 'php' hides all external converters, so the composer class is used.
-    Html2Text::setExecutableFinder($this->stubFinder($converter));
+    $this->useConverter($converter);
     $text = Html2Text::convert('<p>Hello&nbsp;<strong>W&ouml;rld</strong></p><p>Second</p>');
-    $this->assertStringContainsString('Hello W' . "\u{f6}" . 'rld', $text);
+    $this->assertStringContainsStringIgnoringCase('Hello W' . "\u{f6}" . 'rld', $text);
     $this->assertStringContainsString('Second', $text);
     $this->assertSame($text, trim($text));
   }
@@ -148,7 +221,7 @@ und rechts ausgerichteten Text.',
     Html2Text::setExecutableFinder($finder);
     $text = Html2Text::convert('<p>a <b>b</b></p>');
     $this->assertStringContainsString('a', $text);
-    $this->assertStringContainsString('b', $text);
+    $this->assertStringContainsStringIgnoringCase('b', $text);
     $this->assertStringNotContainsString('<', $text);
   }
 }
