@@ -29,7 +29,6 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 
 /** Test the Entities\SepaBankTransaction entity. */
 #[Attributes\CoversClass(Entities\SepaBulkTransaction::class)]
@@ -69,18 +68,15 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 class SepaBulkTransactionTest extends TestCase
 {
   use EntityGeneratorTrait;
-  use WordSplitterServiceTrait;
 
   private Entities\SepaBulkTransaction $transaction;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->registerWordSplitterService();
     $this->generateProjectParticipant();
     $this->transaction = $this->generateSepaBankTransfer();
   }

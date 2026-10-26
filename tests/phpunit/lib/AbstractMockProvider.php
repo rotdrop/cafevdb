@@ -42,6 +42,7 @@ use OCP\Config\IUserConfig;
 use OCP\Config\ValueType;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\ITempManager;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUser;
@@ -783,6 +784,10 @@ abstract class AbstractMockProvider
     );
     $instance->method('getSystemValue')->willReturnCallback(
       function(string $key, mixed $default = null): mixed {
+        if ($key === 'datadirectory' && !isset($this->systemConfigValues[$key])) {
+          // removed on PHP shutdown by the temp manager
+          $this->systemConfigValues[$key] = \OCP\Server::get(ITempManager::class)->getTemporaryFolder();
+        }
         return $this->systemConfigValues[$key] ??
           $this->cloudConfigGet(EnumConfigSection::SYSTEM, $key) ??
           $default;
