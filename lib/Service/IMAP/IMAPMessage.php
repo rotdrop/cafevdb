@@ -45,7 +45,7 @@ use function in_array;
 
 class IMAPMessage implements JsonSerializable
 {
-  use \OCA\Mail\Model\ConvertAddresses;
+  use ConvertAddresses;
 
   /** @var string[] */
   private array $flags;
