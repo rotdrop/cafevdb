@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** CSS classes shared between the legacy templates, scss and typescript. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ComposerCssClasses
 {
   public const EMPTY_SELECTION = 'empty-selection';

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /** Encryption/Decryption AJAX end-points. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class CryptoController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 /**
  * Endpoint for returning the config-check results.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ConfigCheckController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

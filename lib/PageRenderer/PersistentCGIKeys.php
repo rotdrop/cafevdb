@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Provide some constants to enforce consistency and avoid typos. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class PersistentCGIKeys
 {
   public const TABLE = 'table';

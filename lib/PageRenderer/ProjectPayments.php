@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use BadFunctionCallException;
 use Exception;
@@ -49,7 +50,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for Instruments table. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;

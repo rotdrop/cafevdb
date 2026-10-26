@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class EmailFormController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

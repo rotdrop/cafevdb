@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * DTO for receivables statistics during recomputation.
@@ -40,7 +40,7 @@ class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
      *
      * Amounts keyed by musician ids.
      */
-    #[TSAttributes\LiteralTypeScriptType('{ [musicianId: number]: number }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [musicianId: number]: number }')]
     public readonly array $amounts,
     public readonly int $added,
     public readonly int $removed,
@@ -51,7 +51,7 @@ class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
      *
      * Musician name keyed by musician id.
      */
-    #[TSAttributes\LiteralTypeScriptType('{ [musicianId: number]: string }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [musicianId: number]: string }')]
     public readonly array $musicians,
     /**
      * @var array<string, string>

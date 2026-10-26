@@ -25,7 +25,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use InvalidArgumentException;
 
@@ -62,7 +62,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** UI entry point providing the non-Vue front pages. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class LegacyPageController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

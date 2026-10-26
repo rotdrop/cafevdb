@@ -25,7 +25,8 @@ namespace OCA\RotDrop\Toolkit\Common;
 use OutOfBoundsException;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\DtoTransformer;
 
 use OCA\RotDrop\Toolkit\Constants;
 
@@ -33,8 +34,8 @@ use OCA\RotDrop\Toolkit\Constants;
  * Just like RationalNumber, but the jsonSerialize() implementation yields a
  * decimal number string with the given scale and maximum precision.
  */
-#[TSAttributes\TypeScript]
-#[TSAttributes\LiteralTypeScriptType('string')]
+#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\LiteralTypeScriptType('string')]
 #[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
 class DecimalRationalP4S4 extends AbstractDecimalRational
 {

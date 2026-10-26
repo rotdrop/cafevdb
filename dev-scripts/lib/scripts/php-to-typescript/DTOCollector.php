@@ -24,9 +24,6 @@ namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 
-use Spatie\TypeScriptTransformer\Collectors\DefaultCollector;
-use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 

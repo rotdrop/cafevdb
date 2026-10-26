@@ -25,7 +25,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** AJAX endpoint for generating the main page of the app. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;

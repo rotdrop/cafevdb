@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
 
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
  * Define some constants in order to avoid typos and to enforce consistent
  * naming.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class DataConstants
 {
   public const RENDERER_PREFIX_TAG = 'template:';

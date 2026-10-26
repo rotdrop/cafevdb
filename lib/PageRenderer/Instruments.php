@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IRequest;
 
@@ -38,7 +39,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class Instruments extends PMETableViewBase
 {
   use FieldTraits\ProjectModeNavigationItemTrait;

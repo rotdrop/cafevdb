@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
@@ -45,7 +45,7 @@ trait AutoIncrementTrait
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  #[TSAttributes\LiteralTypeScriptType('number')]
+  #[PhpToTypeScript\LiteralTypeScriptType('number')]
   protected ?int $id = null;
 
   /**

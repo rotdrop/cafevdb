@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IRequest;
 
@@ -40,7 +41,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** TBD. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class SepaBulkTransactions extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;

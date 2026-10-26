@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateInterval;
 use DateTimeImmutable;
@@ -68,7 +68,7 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IL10N;
 
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 /** Blog renderer class, rendering is done through legacy templates.*/
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class Blog extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

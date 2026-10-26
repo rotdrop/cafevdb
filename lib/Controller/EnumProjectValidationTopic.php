@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Allowed post-params for '/projects/participant-fields/property/get' */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumProjectValidationTopic: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTime;
 
@@ -45,7 +46,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Render the instrument insurances of the club-members. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class InstrumentInsurances extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

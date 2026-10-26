@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Service\DTO\FontFileNames;
 use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
@@ -33,12 +33,12 @@ use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
 class AdminInitialState extends AbstractDTO
 {
   /** @var array<string, FontFileNames> */
-  #[TSAttributes\LiteralTypeScriptType("Partial<typeof Service.FontService.FONT_FILE_NAMES>")]
+  #[PhpToTypeScript\LiteralTypeScriptType("Partial<typeof Service.FontService.FONT_FILE_NAMES>")]
   public readonly array $officeFonts;
 
   /** {@inheritdoc} */
   public function __construct(
-    #[TSAttributes\LiteralTypeScriptType('typeof Service.AuthorizationService.GROUP_SUFFIX_LIST')]
+    #[PhpToTypeScript\LiteralTypeScriptType('typeof Service.AuthorizationService.GROUP_SUFFIX_LIST')]
     public readonly array $authorizationGroupSuffixes,
     public readonly string $cloudUserBackend,
     public readonly bool $haveCloudUserBackendConfig,

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Constants;
 
 /** Office font-file locator, in particular for PhpOffice. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class FontService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

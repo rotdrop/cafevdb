@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX backends for legacy PME table stuff. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class PmeTableController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

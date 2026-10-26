@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Psr\Log\LoggerInterface;
 
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\ProblemReportService;
 /**
  * AJAX endpoints for reporting "frontend" errors, i.e. errors the user was confronted with.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProblemReportController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

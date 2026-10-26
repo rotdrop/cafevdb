@@ -24,11 +24,8 @@ namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 
-use Spatie\TypeScriptTransformer\Collectors\DefaultCollector;
 use Spatie\TypeScriptTransformer\Exceptions\InvalidTransformerGiven;
-use Spatie\TypeScriptTransformer\Exceptions\TransformerNotFound;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
@@ -87,7 +84,7 @@ class DatabaseEntityCollector extends DefaultCollector
   }
 
   /** {@inheritdoc} */
-  protected function resolveTypeViaTransformer(ClassTypeReflector $reflector): null|TransformedType|TypesCollection
+  protected function resolveTypeViaTransformer(ClassTypeReflector $reflector): ?TransformedType
   {
     $transformerClass = DatabaseEntityTransformer::class;
     $reflectionClass = $reflector->getReflectionClass();

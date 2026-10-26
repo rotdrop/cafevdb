@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 

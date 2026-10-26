@@ -22,7 +22,7 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * The metadata generator must generate the metadata in "our" namespace.
@@ -32,19 +32,19 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
-#[TSAttributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityReferenceCollection extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    #[TSAttributes\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\LiteralTypeScriptType('K')]
     public readonly string $entityClassName,
     /**
      * @var Collection<string, EntityReference>
      *
      * The array key is whatever has been specified by "indexBy".
      */
-    #[TSAttributes\LiteralTypeScriptType('{ [index: string|number]: ' . CollectionEntityReference::class . '<keyof ' . ORM::class . '.EntityMetadata.EntityMap> }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [index: string|number]: ' . CollectionEntityReference::class . '<keyof ' . ORM::class . '.EntityMetadata.EntityMap> }')]
     public readonly array $entities,
   ) {
   }

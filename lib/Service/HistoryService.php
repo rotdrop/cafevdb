@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -40,7 +40,7 @@ use OCP\IRequest;
  * been persisted to the database. This already can be done explicitly, but as
  * of now not automatically.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;

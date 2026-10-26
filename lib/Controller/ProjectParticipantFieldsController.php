@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTime;
 use RuntimeException;
@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Service\ProjectService;
  *
  * @see Entities\ProjectParticipantField
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProjectParticipantFieldsController extends Controller
 {
   use GetPrefixParamsTrait;

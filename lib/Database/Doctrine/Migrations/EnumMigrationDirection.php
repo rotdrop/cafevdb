@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
 
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\TypeScript;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\Direction;
 

@@ -22,7 +22,7 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * The metadata generator must generate the metadata in "our" namespace.
@@ -34,13 +34,13 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
  * identifier. The difference to the CollectionEntityReference is that the
  * entityClassName is not allowed to be null.
  */
-#[TSAttributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityReference extends EntityReferenceIdentifier
 {
   /** {@inheritdoc} */
   public function __construct(
     string $flatIdentifier,
-    #[TSAttributes\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\LiteralTypeScriptType('K')]
     public readonly string $entityClassName,
   ) {
     parent::__construct(flatIdentifier: $flatIdentifier);

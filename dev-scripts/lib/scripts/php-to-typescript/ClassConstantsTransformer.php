@@ -32,7 +32,6 @@ use Spatie\TypeScriptTransformer\Attributes\Hidden;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
-use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
 /** Transform class constants to TypeScript constants. */
 class ClassConstantsTransformer implements Transformer
@@ -45,7 +44,7 @@ class ClassConstantsTransformer implements Transformer
   }
 
   /** {@inheritdoc} */
-  public function transform(ReflectionClass $class, string $name): null|TransformedType|TypesCollection
+  public function transform(ReflectionClass $class, string $name): ?TransformedType
   {
     if (!$this->canTransform($class)) {
       return null;
@@ -80,11 +79,11 @@ class ClassConstantsTransformer implements Transformer
         $collection[$namespacedClassName . '.' . $constant->getName()] = $constantType;
       }
 
-      return $collection;
+      return new TransformedTypeSet($class, $collection);
     } else {
       $properties = $this->transformConstantsToProperties($class);
 
-      return TransformedType::create(
+      return TransformedTypeOrConstant::create(
         $class,
         $name,
         "{" . PHP_EOL . $properties . "}",

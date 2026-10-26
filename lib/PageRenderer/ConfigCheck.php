@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Constants;
 
 /** Dummy config-check renderer */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ConfigCheck extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

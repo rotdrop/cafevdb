@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Actions for the special projects (executive board and members project. */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSpecialProjectsAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

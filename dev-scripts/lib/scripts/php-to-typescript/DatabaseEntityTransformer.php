@@ -27,9 +27,6 @@ use ReflectionProperty;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Structures\TypesCollection;
-use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
-use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
 /**
  * Transform database entities, including and in particular their private and
@@ -89,20 +86,27 @@ class DatabaseEntityTransformer extends DtoTransformer
   }
 
   /** {@inheritdoc} */
-  public function transform(ReflectionClass $class, string $name): null|TransformedType|TypesCollection
+  public function transform(ReflectionClass $class, string $name): ?TransformedType
   {
     $oldNullableOptional = $this->config->shouldConsiderNullAsOptional();
     $this->config->nullToOptional(false); // the properties are guaranteed to be there, so ...
     $dtoType = parent::transform($class, $name);
     $this->config->nullToOptional($oldNullableOptional);
 
-    $collection = $this->classConstantsTransformer->transform($class, 'Constants\\' . $name);
-    if ($collection) {
-      $collection[$class->getName()] = $dtoType;
-      return $collection;
+    $constantsType = $this->classConstantsTransformer->transform($class, 'Constants\\' . $name);
+    if ($constantsType === null) {
+      return $dtoType;
     }
 
-    return $dtoType;
+    if ($constantsType instanceof TransformedTypeSet) {
+      $set = $constantsType;
+    } else {
+      $set = new TransformedTypeSet($class);
+      $set->types[$class->getName() . '.Constants'] = $constantsType;
+    }
+    $set->types[$class->getName()] = $dtoType;
+
+    return $set;
   }
 
   /** {@inheritdoc} */

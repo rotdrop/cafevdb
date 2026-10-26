@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Operation topics understood by SepaBulkTransactionsController::composer().
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSepaBulkTransactionsTopic: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

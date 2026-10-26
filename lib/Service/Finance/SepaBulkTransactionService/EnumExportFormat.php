@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Supported export formats. */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumExportFormat: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage the web-pages via the CMS. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProjectWebPagesController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

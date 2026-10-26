@@ -22,7 +22,7 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * The metadata generator must generate the metadata in "our" namespace.
@@ -32,13 +32,13 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
-#[TSAttributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class CollectionEntityReference extends EntityReferenceIdentifier
 {
   /** {@inheritdoc} */
   public function __construct(
     string $flatIdentifier,
-    #[TSAttributes\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\LiteralTypeScriptType('K')]
     public readonly ?string $entityClassName = null,
   ) {
     parent::__construct(flatIdentifier: $flatIdentifier);

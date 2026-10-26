@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Fetch one or multiple tooltip via AJAX. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ToolTipsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -22,7 +22,11 @@
 
 namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\TypeResolver;
+use Spatie\TypeScriptTransformer\Exceptions\InvalidDefaultTypeReplacer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
+use Spatie\TypeScriptTransformer\Writers\Writer;
 
 /**
  * Extend the default configuration class and add further options.
@@ -36,6 +40,88 @@ class TransformerConfig extends TypeScriptTransformerConfig
   private array $scopedNamespaces = [];
 
   private string $appNamespace = 'RotDrop';
+
+  private array $autoDiscoverExcludePaths = [];
+
+  private ?string $autoDiscoverExcludeRegExp = null;
+
+  private array $defaultInlineTypeReplacements = [];
+
+  private array $collectorClasses = [DefaultCollector::class];
+
+  /** {@inheritdoc} */
+  public static function create(): static
+  {
+    return new static();
+  }
+
+  /**
+   * Exclude all files with a path starting with one of the given prefixes.
+   *
+   * @param string ...$paths
+   *
+   * @return static
+   */
+  public function autoDiscoverExcludePaths(string ...$paths): static
+  {
+    $this->autoDiscoverExcludePaths = array_merge($this->autoDiscoverExcludePaths, $paths);
+
+    return $this;
+  }
+
+  /**
+   * Exclude all files with a path matching the given regular expression.
+   *
+   * @param string $regExp
+   *
+   * @return static
+   */
+  public function autoDiscoverExcludeRegExp(string $regExp): static
+  {
+    $this->autoDiscoverExcludeRegExp = $regExp;
+
+    return $this;
+  }
+
+  /** @return array */
+  public function getAutoDiscoverExcludePaths(): array
+  {
+    return $this->autoDiscoverExcludePaths;
+  }
+
+  /** @return null|string */
+  public function getAutoDiscoverExcludeRegExp(): ?string
+  {
+    return $this->autoDiscoverExcludeRegExp;
+  }
+
+  /**
+   * The parent class always appends the upstream default collector, so keep
+   * track of the collectors ourselves in order to append our own variant.
+   *
+   * {@inheritdoc}
+   */
+  public function collectors(array $collectors): static
+  {
+    $this->collectorClasses = array_merge($collectors, [DefaultCollector::class]);
+
+    return $this;
+  }
+
+  /** {@inheritdoc} */
+  public function getCollectors(): array
+  {
+    return array_map(
+      fn (string $collector) => new $collector($this),
+      $this->collectorClasses,
+    );
+  }
+
+  /** {@inheritdoc} */
+  public function getWriter(): Writer
+  {
+    return new TypeDefinitionWriter();
+  }
 
   /**
    * Set the app-namespace.
@@ -83,6 +169,13 @@ class TransformerConfig extends TypeScriptTransformerConfig
     return $this;
   }
 
+  /**
+   * Define replacements which are inlined at the place of use.
+   *
+   * @param array $replacements
+   *
+   * @return static
+   */
   public function defaultInlineTypeReplacements(array $replacements): static
   {
     if ($this->scopedNamespacePrefix !== null) {
@@ -96,8 +189,32 @@ class TransformerConfig extends TypeScriptTransformerConfig
         }
       }
     }
-    parent::defaultInlineTypeReplacements($replacements);
+    $this->defaultInlineTypeReplacements = $replacements;
     return $this;
+  }
+
+  /**
+   * Like getDefaultTypeReplacements() for the inline replacements.
+   *
+   * @return array
+   */
+  public function getDefaultInlineTypeReplacements(): array
+  {
+    $typeResolver = new TypeResolver();
+
+    $replacements = [];
+
+    foreach ($this->defaultInlineTypeReplacements as $class => $replacement) {
+      if (!class_exists($class) && !interface_exists($class)) {
+        throw InvalidDefaultTypeReplacer::classDoesNotExist($class);
+      }
+
+      $replacements[$class] = $replacement instanceof Type
+        ? $replacement
+        : $typeResolver->resolve($replacement);
+    }
+
+    return $replacements;
   }
 
   public function defaultTypeReplacements(array $replacements): static

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX end-points for project participants */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class ProjectParticipantsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

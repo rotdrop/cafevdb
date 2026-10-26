@@ -22,7 +22,7 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * The metadata generator must generate the metadata in "our" namespace.
@@ -32,7 +32,7 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
 /**
  * A collection of entities without duplicates.
  */
-#[TSAttributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityResponse extends \OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
@@ -45,10 +45,10 @@ class EntityResponse extends \OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
      * which fields are set, while if K only "contains" a single entity name
      * then this field must not be unset.
      */
-    #[TSAttributes\LiteralTypeScriptType('{ [e in K]: K extends e ? string[] : undefined|string[] }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [e in K]: K extends e ? string[] : undefined|string[] }')]
     public readonly array $entities,
     /** @var array<string, array<string, object> > */
-    #[TSAttributes\LiteralTypeScriptType('{ [e in K]: { [id: string]: ' . ORM::class . '.EntityMetadata.EntityDto<e> } }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [e in K]: { [id: string]: ' . ORM::class . '.EntityMetadata.EntityDto<e> } }')]
     public readonly array $repositories,
   ) {
   }

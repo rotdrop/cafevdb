@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** All the names used by the legacy email composer form template. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class RecipientsFilterCgiKeys
 {
   public const ANNOUNCEMENTS_MAILING_LIST = RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY;

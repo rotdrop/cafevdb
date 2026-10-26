@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Toolkit\Constants as ToolkitConstants;
 
 /** General constants for the app. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class Constants extends ToolkitConstants
 {
   const README_NAME = 'README.md';

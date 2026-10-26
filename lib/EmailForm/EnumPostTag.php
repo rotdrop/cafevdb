@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Some constants also used in the frontend code. */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumPostTag: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

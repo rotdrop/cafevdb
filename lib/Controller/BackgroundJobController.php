@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\BackgroundJob\CleanupFilesCache;
  * Run background-jobs triggered by AJAX pings from the front-end. The idea
  * here is that these jobs are running with an authenticated user.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

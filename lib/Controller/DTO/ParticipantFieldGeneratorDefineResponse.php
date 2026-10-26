@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 
@@ -40,10 +40,10 @@ class ParticipantFieldGeneratorDefineResponse extends MessagesResponse
     public readonly string $value,
     public readonly string $slug,
     /** @var array<string, bool|string> */
-    #[TSAttributes\LiteralTypeScriptType('{ [K in (typeof ' . IRecurringReceivablesGenerator::class . '.OPERATION_SLUGS)[number]]: boolean|string }')]
+    #[PhpToTypeScript\LiteralTypeScriptType('{ [K in (typeof ' . IRecurringReceivablesGenerator::class . '.OPERATION_SLUGS)[number]]: boolean|string }')]
     public readonly array $operationLabels,
     /** @var array<string> */
-    #[TSAttributes\LiteralTypeScriptType('(typeof ' . IRecurringReceivablesGenerator::class . '.UPDATE_STRATEGIES)[number][]')]
+    #[PhpToTypeScript\LiteralTypeScriptType('(typeof ' . IRecurringReceivablesGenerator::class . '.UPDATE_STRATEGIES)[number][]')]
     public readonly array $availableUpdateStrategies,
   ) {
     parent::__construct($messages);

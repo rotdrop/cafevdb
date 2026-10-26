@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Database;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Constants as AppConstants;
 
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Constants as AppConstants;
  * Define some database specific constants like the desired character set and
  * collation
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class Constants extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\Constants
 {
   public const CHARACTER_SET = 'utf8mb4';

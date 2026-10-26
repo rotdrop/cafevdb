@@ -34,7 +34,7 @@ use OCP\Files\FileInfo;
  * ancient Nextcloud version.
  */
 #[TSAttributes\TypeScriptTransformer(PhpToTypeScript\DatabaseEntityTransformer::class)]
-#[TSAttributes\TemplateParameters(
+#[PhpToTypeScript\TemplateParameters(
   "FileType extends '" . FileInfo::TYPE_FILE . "'|'" . FileInfo::TYPE_FOLDER . "'"
     . " = "
     . "'" . FileInfo::TYPE_FILE . "'|'" . FileInfo::TYPE_FOLDER . "'"
@@ -54,7 +54,7 @@ class LegacyFileInfo extends AbstractDTO
     public readonly int $lastmod,
     public readonly string $mime,
     public readonly int $size,
-    #[TSAttributes\LiteralTypeScriptType('FileType')]
+    #[PhpToTypeScript\LiteralTypeScriptType('FileType')]
     public readonly string $type,
     public readonly bool $hasPreview,
     public readonly int $permissions,

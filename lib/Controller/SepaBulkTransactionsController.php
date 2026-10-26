@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX backend for managing bank bulk transactions. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class SepaBulkTransactionsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

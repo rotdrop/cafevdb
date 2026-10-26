@@ -31,6 +31,9 @@ class TransformedTypeOrConstant extends TransformedType
 {
   public ?string $namespaceName = null;
 
+  /** @var null|string[] Template parameters of the generated type. */
+  public ?array $templateTypes = null;
+
   /** {@inheritdoc} */
   public function getNamespaceSegments(): array
   {
@@ -57,7 +60,15 @@ class TransformedTypeOrConstant extends TransformedType
       return "const {$this->name} = {$this->transformed}"
         . ($this->trailingSemicolon ? ';' : '');
     }
-    return parent::toString();
+    if (empty($this->templateTypes) || $this->keyword === 'enum') {
+      return parent::toString();
+    }
+    $name = $this->name . '<' . implode(', ', $this->templateTypes) . '>';
+    $output = match ($this->keyword) {
+      'interface' => "interface {$name} {$this->transformed}",
+      default => "type {$name} = {$this->transformed}",
+    };
+    return $output . ($this->trailingSemicolon ? ';' : '');
   }
 
   /** {@inheritdoc} */
@@ -72,6 +83,7 @@ class TransformedTypeOrConstant extends TransformedType
     ?array $templateTypes = null,
   ): self {
     $instance = new self($class, $name, $transformed, $missingSymbols ?? new MissingSymbolsCollection(), $inline, $keyword, $trailingSemicolon);
+    $instance->templateTypes = $templateTypes;
     return $instance;
   }
 }

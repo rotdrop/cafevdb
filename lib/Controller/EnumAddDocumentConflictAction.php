@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Conflict resolution actions for DatabaseStorageFolder::add().
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
 enum EnumAddDocumentConflictAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
