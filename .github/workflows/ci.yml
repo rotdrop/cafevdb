@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master, main, 'cjh-*' ]
+    branches: [ master, main, nextcloud35, 'cjh-*' ]
   pull_request:
   workflow_dispatch:
 
@@ -112,7 +112,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: ctype, curl, dom, gd, iconv, intl, json, mbstring, openssl, pdo_sqlite, posix, sqlite3, xml, zip, apcu, bcmath, gmp, imagick, fileinfo
-          coverage: none
+          coverage: xdebug
           tools: composer:v2
           ini-values: apc.enable_cli=1, memory_limit=1G
 
@@ -169,7 +169,7 @@ jobs:
 
       - name: Run PHPUnit unit suite
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: vendor-bin/phpunit/vendor/bin/phpunit -c phpunit.xml --testsuite unit
+        run: make phpunit PHPCOVERAGE='-d xdebug.mode=coverage'
 
       - uses: actions/setup-node@v4
         with:
@@ -184,3 +184,61 @@ jobs:
       - name: Run Vitest suite
         working-directory: server/apps/${{ env.APP_NAME }}
         run: make selectize jstest
+
+      - name: Upload PHPUnit coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/phpunit/code-coverage/
+          if-no-files-found: error
+
+  publish-coverage:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
+    needs: phpunit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download PHPUnit coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: coverage-report
+
+      - name: Publish coverage report and update Pages index
+        run: |
+          mkdir -p gh-pages/docs/coverage
+          rsync -a --delete coverage-report/ gh-pages/docs/coverage/
+          python3 - <<'PY'
+          from pathlib import Path
+
+          readme = Path("gh-pages/docs/README.md")
+          contents = readme.read_text()
+          section = """<!-- coverage-report-start -->
+          ## Code coverage
+
+          - [PHPUnit coverage report](coverage/index.html)
+          <!-- coverage-report-end -->"""
+          start = "<!-- coverage-report-start -->"
+          end = "<!-- coverage-report-end -->"
+          if start in contents and end in contents:
+              before, remainder = contents.split(start, 1)
+              _, after = remainder.split(end, 1)
+              contents = before.rstrip() + "\n\n" + section + after
+          else:
+              contents = contents.rstrip() + "\n\n" + section + "\n"
+          readme.write_text(contents)
+          PY
+          git -C gh-pages config user.name "github-actions[bot]"
+          git -C gh-pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C gh-pages add docs/README.md docs/coverage
+          if ! git -C gh-pages diff --cached --quiet; then
+            git -C gh-pages commit -m "Publish PHPUnit coverage report"
+            git -C gh-pages push origin HEAD:gh-pages
+          fi
