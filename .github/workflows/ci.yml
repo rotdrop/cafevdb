@@ -14,7 +14,7 @@ env:
   NC_BRANCH: cjh-stable35
   APP_NAME: cafevdb
   MEMBERS_APP_NAME: cafevdbmembers
-  MEMBERS_APP_REPO: rotdrop/cafevdbmembers
+  MEMBERS_APP_REPO: rotdrop/cafevdb-members
   MEMBERS_APP_BRANCH: stable35
 
 jobs:
