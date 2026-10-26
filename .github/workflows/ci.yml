@@ -217,7 +217,17 @@ jobs:
           PY
           git -C gh-pages config user.name "github-actions[bot]"
           git -C gh-pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C gh-pages add docs/README.md docs/coverage
+          # Jekyll skips underscore-prefixed dirs (_css, _js, _icons) of the
+          # PHPUnit report unless explicitly included.
+          config=gh-pages/docs/_config.yml
+          if ! grep -q '_css' "$config" 2>/dev/null; then
+            if grep -q '^include:' "$config" 2>/dev/null; then
+              sed -i 's/^include:.*/&\n  - _css\n  - _js\n  - _icons/' "$config"
+            else
+              printf 'include:\n  - _css\n  - _js\n  - _icons\n' >> "$config"
+            fi
+          fi
+          git -C gh-pages add docs/README.md docs/coverage docs/_config.yml
           if ! git -C gh-pages diff --cached --quiet; then
             git -C gh-pages commit -m "Publish PHPUnit coverage report"
             git -C gh-pages push origin HEAD:gh-pages
