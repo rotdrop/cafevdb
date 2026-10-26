@@ -8,4 +8,5 @@
 ## Code coverage
 
 - [PHPUnit coverage report](coverage/index.html)
+- [Vitest coverage report](coverage-js/index.html)
 <!-- coverage-report-end -->
