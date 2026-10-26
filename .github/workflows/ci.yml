@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main, 'cjh-*' ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  NC_REPO: rotdrop/nextcloud-server
+  NC_BRANCH: cjh-stable35
+  APP_NAME: cafevdb
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use https for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  phpunit:
+    runs-on: ubuntu-latest
+    env:
+      PHP_VERSION: '8.4'
+      MARIADB_MAJOR: '12'
+    steps:
+      - name: Use https for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Checkout modified Nextcloud server
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NC_REPO }}
+          ref: ${{ env.NC_BRANCH }}
+          submodules: recursive
+          path: server
+
+      - name: Checkout app
+        uses: actions/checkout@v4
+        with:
+          path: server/apps/${{ env.APP_NAME }}
+          submodules: recursive
+
+      - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl ca-certificates apt-transport-https
+          sudo install -d /etc/apt/keyrings
+          sudo curl -fsSL -o /etc/apt/keyrings/mariadb-keyring.pgp \
+            https://mariadb.org/mariadb_release_signing_key.pgp
+          # newest series (e.g. 12.2) of the pinned major version, stable or RC
+          MARIADB_VERSION="$(curl -fsSL https://downloads.mariadb.org/rest-api/mariadb/ \
+            | jq -r --arg m "${MARIADB_MAJOR}." \
+              '[.major_releases[] | select(.release_id | startswith($m)) | select(.release_status | IN("Stable","RC"))][0].release_id')"
+          [ -n "$MARIADB_VERSION" ] && [ "$MARIADB_VERSION" != null ] || { echo "no MariaDB ${MARIADB_MAJOR}.x series found"; exit 1; }
+          echo "Using MariaDB series ${MARIADB_VERSION}"
+          codename="$(lsb_release -cs)"
+          echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://archive.mariadb.org/mariadb-${MARIADB_VERSION}/repo/ubuntu ${codename} main" \
+            | sudo tee /etc/apt/sources.list.d/mariadb.list
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mariadb-server mariadb-client
+          # DatabaseProvider starts its own private server instance
+          sudo systemctl disable --now mariadb || true
+          for b in mariadb-install-db mariadbd-safe mariadb mariadb-dump; do
+            command -v "$b" || { echo "missing $b"; exit 1; }
+          done
+          mariadb --version
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ctype, curl, dom, gd, iconv, intl, json, mbstring, openssl, pdo_sqlite, posix, sqlite3, xml, zip, apcu, bcmath, gmp, imagick, fileinfo
+          coverage: none
+          tools: composer:v2
+          ini-values: apc.enable_cli=1, memory_limit=1G
+
+      - name: Install Nextcloud (sqlite)
+        working-directory: server
+        run: |
+          composer install --no-interaction --no-progress
+          php occ maintenance:install --database=sqlite \
+            --admin-user=admin --admin-pass=admin --no-interaction
+          php occ config:system:set debug --value=true --type=boolean
+
+      - name: Install app PHP dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
+          make dev-setup-php
+
+      - name: Enable app
+        working-directory: server
+        run: php occ app:enable ${{ env.APP_NAME }}
+
+      - name: Run PHPUnit unit suite
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: vendor/bin/phpunit -c phpunit.xml --testsuite unit
