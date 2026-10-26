@@ -172,6 +172,13 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/phpunit/code-coverage/
           if-no-files-found: error
 
+      - name: Upload Vitest coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-coverage
+          path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/vitest/coverage/
+          if-no-files-found: error
+
   publish-coverage:
     if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
     needs: phpunit
@@ -191,10 +198,18 @@ jobs:
           name: phpunit-coverage
           path: coverage-report
 
+      - name: Download Vitest coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: vitest-coverage
+          path: vitest-coverage-report
+
       - name: Publish coverage report and update Pages index
         run: |
           mkdir -p gh-pages/docs/coverage
           rsync -a --delete coverage-report/ gh-pages/docs/coverage/
+          mkdir -p gh-pages/docs/coverage-js
+          rsync -a --delete vitest-coverage-report/ gh-pages/docs/coverage-js/
           python3 - <<'PY'
           from pathlib import Path
 
@@ -204,6 +219,7 @@ jobs:
           ## Code coverage
 
           - [PHPUnit coverage report](coverage/index.html)
+          - [Vitest coverage report](coverage-js/index.html)
           <!-- coverage-report-end -->"""
           start = "<!-- coverage-report-start -->"
           end = "<!-- coverage-report-end -->"
@@ -217,7 +233,17 @@ jobs:
           PY
           git -C gh-pages config user.name "github-actions[bot]"
           git -C gh-pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C gh-pages add docs/README.md docs/coverage
+          # Jekyll skips underscore-prefixed dirs (_css, _js, _icons) of the
+          # PHPUnit report unless explicitly included.
+          config=gh-pages/docs/_config.yml
+          if ! grep -q '_css' "$config" 2>/dev/null; then
+            if grep -q '^include:' "$config" 2>/dev/null; then
+              sed -i 's/^include:.*/&\n  - _css\n  - _js\n  - _icons/' "$config"
+            else
+              printf 'include:\n  - _css\n  - _js\n  - _icons\n' >> "$config"
+            fi
+          fi
+          git -C gh-pages add docs/README.md docs/coverage docs/coverage-js docs/_config.yml
           if ! git -C gh-pages diff --cached --quiet; then
             git -C gh-pages commit -m "Publish PHPUnit coverage report"
             git -C gh-pages push origin HEAD:gh-pages
