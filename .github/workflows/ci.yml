@@ -142,7 +142,8 @@ jobs:
           password_file="apps/${APP_NAME}/.clipassword"
           printf %s "${user_password}" > "$password_file"
           chmod 600 "$password_file"
-          CAFEVDB_USER="${cafevdb_user}" php "apps/${APP_NAME}/dev-scripts/orm-cmd.php" migrations:migrate --no-interaction
+          php occ "${APP_NAME}:database:migrate" -v \
+            --user="${cafevdb_user}" --password-file="${password_file}"
 
       - uses: actions/setup-node@v4
         with:
