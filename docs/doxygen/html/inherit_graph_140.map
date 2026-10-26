@@ -1,7 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,96,57"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_record_modification_times.html" title="Register some extra mime&#45;types, in particuluar in order to have custom folder icons for the database ..." alt="" coords="144,5,313,32"/>
-<area shape="poly" id="edge538_Node000000_Node000001" title=" " alt="" coords="111,33,146,30,141,32,112,38"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_register_mime_types.html" title="Register some extra mime&#45;types, in particuluar in order to have custom folder icons for the database ..." alt="" coords="160,56,297,83"/>
-<area shape="poly" id="edge539_Node000000_Node000002" title=" " alt="" coords="111,50,162,59,157,60,111,55"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html" title="Generate recurring receivables and manifest them as recurring Entities\ProjectParticipantField entity..." alt="" coords="5,97,216,124"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html" title="Base class for the specific receivable generators." alt="" coords="264,97,463,124"/>
+<area shape="poly" id="edge507_Node000000_Node000001" title=" " alt="" coords="231,108,266,110,261,111,232,113"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="511,5,723,32"/>
+<area shape="poly" id="edge508_Node000001_Node000002" title=" " alt="" coords="404,87,454,64,510,41,552,32,547,33,512,47,456,69,406,92"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="511,56,723,99"/>
+<area shape="poly" id="edge509_Node000001_Node000003" title=" " alt="" coords="478,93,513,91,508,92,479,98"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="514,123,720,165"/>
+<area shape="poly" id="edge510_Node000001_Node000004" title=" " alt="" coords="478,123,517,130,511,131,479,128"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_periodic_receivables_generator.html" title="Always generate a new payment request." alt="" coords="518,189,716,216"/>
+<area shape="poly" id="edge511_Node000001_Node000005" title=" " alt="" coords="405,129,456,153,512,175,553,189,547,189,510,180,454,157,404,134"/>
 </map>

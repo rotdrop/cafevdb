@@ -43,8 +43,8 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo\Service\RPC as WebPagesRPC;
+use OCA\CAFEVDB\Service\WikiRPC;
+use OCA\CAFEVDB\Service\WebPagesRPC;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of

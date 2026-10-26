@@ -128,29 +128,33 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('bootstrap_8php
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>define(<span class="stringliteral">&#39;ROT_DROP_PHPUNIT&#39;</span>, <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>define(<span class="stringliteral">&#39;PHPUNIT_NC_APP_NAME&#39;</span>, \OCA\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b.html">CAFEVDB</a>\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info.html">AppInfo</a>\<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#adcdcb6c6ecc3b321ba8dfbb15524f675">Application::getAppName</a>());</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>define(<span class="stringliteral">&#39;PHPUNIT_NC_APP_NAMESPACE&#39;</span>, \OCA\CAFEVDB::class);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>define(<span class="stringliteral">&#39;PHPUNIT_NC_MOCKED_APPS&#39;</span>, [\OCA\CAFEVDB::class, \OCA\BAV::class]);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>define(<span class="stringliteral">&#39;PHPUNIT_NC_MOCKED_APPS&#39;</span>, [\OCA\CAFEVDB::class]);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>define(<span class="stringliteral">&#39;PHPUNIT_APPDIR&#39;</span>, realpath(\OCA\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b.html">CAFEVDB</a>\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit.html">Toolkit</a>\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service.html">Service</a>\AppInfoService::getAppFolderPath()));</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>define(<span class="stringliteral">&#39;PHPUNIT_ARTIFACTS&#39;</span>, PHPUNIT_APPDIR . <span class="stringliteral">&#39;/build/artifacts/tests/phpunit&#39;</span>);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>$wantedApps = [</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  \PHPUNIT_NC_APP_NAME,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#ad02fafdc9c9cbb2741d430052730d5c4">\OCA\CAFEVDB\AppInfo\Application::getMembersAppName</a>(),</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="stringliteral">&#39;files&#39;</span>,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="stringliteral">&#39;files_sharing&#39;</span>,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>];</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>$appManager = \OCP\Server::get(\OCP\App\IAppManager::class);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keywordflow">foreach</span> ($wantedApps as $app) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  $appManager-&gt;loadApp($app);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>$databaseProvider = \OCP\Server::get(\OCA\RotDrop\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests.html">Tests</a>\DatabaseProvider::class);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">// stop and cleanup potentially running db-servers</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>register_shutdown_function([$databaseProvider, <span class="stringliteral">&#39;stopServer&#39;</span>]);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>error_reporting(E_ALL);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>ini_set(<span class="stringliteral">&#39;display_errors&#39;</span>, 1);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="stringliteral">&#39;files&#39;</span>,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="stringliteral">&#39;files_sharing&#39;</span>,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>];</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// the members app is an optional companion which is not necessarily installed</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keywordflow">if</span> (class_exists(\OCA\CAFeVDBMembers\<a class="code hl_namespace" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info.html">AppInfo</a>\Application::class)) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  $wantedApps[] = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#ad02fafdc9c9cbb2741d430052730d5c4">\OCA\CAFEVDB\AppInfo\Application::getMembersAppName</a>();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>$appManager = \OCP\Server::get(\OCP\App\IAppManager::class);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keywordflow">foreach</span> ($wantedApps as $app) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  $appManager-&gt;loadApp($app);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>$databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// stop and cleanup potentially running db-servers</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>register_shutdown_function([$databaseProvider, <span class="stringliteral">&#39;stopServer&#39;</span>]);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>error_reporting(E_ALL);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>ini_set(<span class="stringliteral">&#39;display_errors&#39;</span>, 1);</div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application_html_ad02fafdc9c9cbb2741d430052730d5c4"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#ad02fafdc9c9cbb2741d430052730d5c4">OCA\CAFEVDB\AppInfo\Application\getMembersAppName</a></div><div class="ttdeci">static getMembersAppName()</div><div class="ttdoc">Reads off the app-name from the info.xml file.</div><div class="ttdef"><b>Definition</b> <a href="_application_8php_source.html#l00120">Application.php:120</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application_html_adcdcb6c6ecc3b321ba8dfbb15524f675"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_app_info_1_1_abstract_application.html#adcdcb6c6ecc3b321ba8dfbb15524f675">OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication\getAppName</a></div><div class="ttdeci">static getAppName()</div><div class="ttdoc">Reads off the app-name from the info.xml file.</div><div class="ttdef"><b>Definition</b> <a href="lib_2_toolkit_2_app_info_2_abstract_application_8php_source.html#l00067">AbstractApplication.php:67</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_html"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info.html">OCA\CAFEVDB\AppInfo</a></div><div class="ttdoc">Orchestra member, musician and project management application.</div><div class="ttdef"><b>Definition</b> <a href="_application_8php_source.html#l00025">Application.php:25</a></div></div>

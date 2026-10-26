@@ -1,5 +1,6 @@
 var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command =
 [
+    [ "DatabaseMigrate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_migrate.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_migrate" ],
     [ "DatabaseSanitizers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers" ],
     [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage" ],
     [ "ExecutiveBoard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board" ],

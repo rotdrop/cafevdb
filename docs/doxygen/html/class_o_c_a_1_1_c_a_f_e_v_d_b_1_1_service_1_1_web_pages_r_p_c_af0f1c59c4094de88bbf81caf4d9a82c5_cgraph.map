@@ -1,0 +1,6 @@
+<map id="moveArticle" name="moveArticle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,96,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_web_pages_r_p_c.html#aa0b4e744ac9059ae4ac7fdc6d13bbffe" title=" " alt="" coords="144,29,183,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,40,131,42,126,43,96,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="143,28,140,20,142,11,150,5,163,3,177,5,186,14,180,13,175,10,163,8,152,10,146,14,145,20,148,30"/>
+</map>

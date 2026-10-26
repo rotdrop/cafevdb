@@ -34,6 +34,7 @@ var annotated_dup =
           [ "UpdateAppMTimes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_update_app_m_times.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_update_app_m_times" ]
         ] ],
         [ "Command", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command.html", [
+          [ "DatabaseMigrate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_migrate.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_migrate" ],
           [ "DatabaseSanitizers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers" ],
           [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage" ],
           [ "ExecutiveBoard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board" ],
@@ -656,6 +657,8 @@ var annotated_dup =
             ] ],
             [ "AbstractReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator" ],
             [ "AqBankingBulkTransactionExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter" ],
+            [ "BankAccountValidator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_account_validator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_account_validator" ],
+            [ "BankAgency", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_agency.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_agency" ],
             [ "DoNothingReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator" ],
             [ "FinanceService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service" ],
             [ "GnuCashBulkTransactionBalancingItemsExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter" ],
@@ -723,6 +726,8 @@ var annotated_dup =
           [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service" ],
           [ "UserEncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_user_encryption_service.html", null ],
           [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ],
+          [ "WebPagesRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_web_pages_r_p_c.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_web_pages_r_p_c" ],
+          [ "WikiRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_wiki_r_p_c.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_wiki_r_p_c" ],
           [ "WordSplitterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service" ]
         ] ],
         [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings.html", [

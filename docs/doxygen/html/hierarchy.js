@@ -163,6 +163,8 @@ var hierarchy =
       ] ]
     ] ],
     [ "AuthorizationService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html", null ],
+    [ "BankAccountValidator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_account_validator.html", null ],
+    [ "BankAgency", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_bank_agency.html", null ],
     [ "BaseLoggableListener", null, [
       [ "GedmoLoggableListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_loggable_listener.html", null ]
     ] ],
@@ -179,6 +181,7 @@ var hierarchy =
     [ "CloudAccountsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html", null ],
     [ "CloudUserConnectorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html", null ],
     [ "Command", null, [
+      [ "DatabaseMigrate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_migrate.html", null ],
       [ "DatabaseSanitizers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html", null ],
       [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html", null ],
       [ "ExecutiveBoard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html", null ],
@@ -1210,5 +1213,7 @@ var hierarchy =
     ] ],
     [ "VarDumper", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_var_dumper.html", null ],
     [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", null ],
+    [ "WebPagesRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_web_pages_r_p_c.html", null ],
+    [ "WikiRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_wiki_r_p_c.html", null ],
     [ "WordSplitterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html", null ]
 ];

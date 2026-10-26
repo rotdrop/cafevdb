@@ -1,6 +1,7 @@
 var dir_0ff164efcd794d03b196bcf3d2ed306b =
 [
     [ "AuthenticatedCommandTrait.php", "lib_2_command_2_authenticated_command_trait_8php_source.html", null ],
+    [ "DatabaseMigrate.php", "_database_migrate_8php_source.html", null ],
     [ "DatabaseSanitizers.php", "_database_sanitizers_8php_source.html", null ],
     [ "DatabaseStorage.php", "_command_2_database_storage_8php_source.html", null ],
     [ "ExecutiveBoard.php", "_executive_board_8php_source.html", null ],

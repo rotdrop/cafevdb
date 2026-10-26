@@ -1,0 +1,6 @@
+<map id="ping" name="ping">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,51,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_web_pages_r_p_c.html#aa0b4e744ac9059ae4ac7fdc6d13bbffe" title=" " alt="" coords="99,29,138,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,40,86,42,81,44,51,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="102,28,99,20,101,12,107,5,118,3,130,5,137,14,131,13,127,10,118,8,110,10,105,14,104,20,106,30"/>
+</map>
