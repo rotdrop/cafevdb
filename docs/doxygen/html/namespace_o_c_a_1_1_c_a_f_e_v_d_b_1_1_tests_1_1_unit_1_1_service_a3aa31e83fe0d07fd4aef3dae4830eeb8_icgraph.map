@@ -1,0 +1,7 @@
+<map id="getWordSplitterServiceMock" name="getWordSplitterServiceMock">
+<area shape="rect" id="Node000001" title="Generate a mock of WordSplitterService which splits words using the fake dictionary,..." alt="" coords="233,29,419,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="364,14,352,10,326,8,302,10,288,15,285,20,292,30,287,28,280,21,285,11,300,5,326,3,354,5,370,15"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#a1d27171d345b729ae4494e642de03134" title="Install the faked word&#45;splitter into the app&#45; and server containers such that everything depending on..." alt="" coords="5,29,185,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="215,43,185,45,185,40,220,43"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="134,15,122,10,95,8,71,10,58,15,54,20,61,29,56,29,49,21,54,11,70,5,95,3,123,5,139,14"/>
+</map>

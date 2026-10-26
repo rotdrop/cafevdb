@@ -136,7 +136,25 @@ Collaboration diagram for Html2TextTest:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a65d9188588007543fdd0eb0904388ab9" id="r_a65d9188588007543fdd0eb0904388ab9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a65d9188588007543fdd0eb0904388ab9">testConversion</a> ()</td></tr>
+<tr class="memitem:a0c06eca3cd043d4aed010701c06313f0" id="r_a0c06eca3cd043d4aed010701c06313f0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a0c06eca3cd043d4aed010701c06313f0">testConversion</a> (string $converter)</td></tr>
+<tr class="memitem:a8026f6de5c12a50343311c1e8cd12fca" id="r_a8026f6de5c12a50343311c1e8cd12fca"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8026f6de5c12a50343311c1e8cd12fca">testSingleConverter</a> (string $converter)</td></tr>
+<tr class="memitem:a3d0f59cc5c3f95a6e4f2c1b7fe702673" id="r_a3d0f59cc5c3f95a6e4f2c1b7fe702673"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3d0f59cc5c3f95a6e4f2c1b7fe702673">testFallbackWithoutExternalConverters</a> ()</td></tr>
+<tr class="memitem:a4d0e8d35d0c3927dac45232aaaaf4bb2" id="r_a4d0e8d35d0c3927dac45232aaaaf4bb2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4d0e8d35d0c3927dac45232aaaaf4bb2">testFallbackTableRendering</a> ()</td></tr>
+<tr class="memdesc:a4d0e8d35d0c3927dac45232aaaaf4bb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Column spans, line breaks in cells, nested tables and escaping of console formatting characters in the PHP fallback.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a92d6a62005f2dc3080178681986ed194" id="r_a92d6a62005f2dc3080178681986ed194"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a92d6a62005f2dc3080178681986ed194">converterProvider</a> ()</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a80fe3d17e658907fc75346a0ec9d6fc7" id="r_a80fe3d17e658907fc75346a0ec9d6fc7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a80fe3d17e658907fc75346a0ec9d6fc7">tearDown</a> ()</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aa6d73a9ef47d5e5cf0e6e2cbacc6661e" id="r_aa6d73a9ef47d5e5cf0e6e2cbacc6661e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa6d73a9ef47d5e5cf0e6e2cbacc6661e">stubFinder</a> (string $only)</td></tr>
+<tr class="memitem:a7a90b68144cdf152f987f3bedf2ea6f0" id="r_a7a90b68144cdf152f987f3bedf2ea6f0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7a90b68144cdf152f987f3bedf2ea6f0">useConverter</a> (string $converter)</td></tr>
+<tr class="memdesc:a7a90b68144cdf152f987f3bedf2ea6f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip the test if the converter is not installed, otherwise hide all other converters.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -145,16 +163,175 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Test the Html2Text class. </p>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00034">34</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00035">35</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a65d9188588007543fdd0eb0904388ab9" name="a65d9188588007543fdd0eb0904388ab9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65d9188588007543fdd0eb0904388ab9">&#9670;&#160;</a></span>testConversion()</h2>
+<a id="a92d6a62005f2dc3080178681986ed194" name="a92d6a62005f2dc3080178681986ed194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92d6a62005f2dc3080178681986ed194">&#9670;&#160;</a></span>converterProvider()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">converterProvider </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00172">172</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+</div>
+</div>
+<a id="aa6d73a9ef47d5e5cf0e6e2cbacc6661e" name="aa6d73a9ef47d5e5cf0e6e2cbacc6661e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6d73a9ef47d5e5cf0e6e2cbacc6661e">&#9670;&#160;</a></span>stubFinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">stubFinder </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$only</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$only</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ExecutableFinder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00116">116</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_html2_text_test_8php_source.html#l00148">useConverter()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_aa6d73a9ef47d5e5cf0e6e2cbacc6661e_icgraph.svg" width="471" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a80fe3d17e658907fc75346a0ec9d6fc7" name="a80fe3d17e658907fc75346a0ec9d6fc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80fe3d17e658907fc75346a0ec9d6fc7">&#9670;&#160;</a></span>tearDown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tearDown </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00106">106</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+</div>
+</div>
+<a id="a0c06eca3cd043d4aed010701c06313f0" name="a0c06eca3cd043d4aed010701c06313f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c06eca3cd043d4aed010701c06313f0">&#9670;&#160;</a></span>testConversion()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">testConversion </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$converter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$converter</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00132">132</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_html2_text_test_8php_source.html#l00148">useConverter()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_a0c06eca3cd043d4aed010701c06313f0_cgraph.svg" width="398" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a4d0e8d35d0c3927dac45232aaaaf4bb2" name="a4d0e8d35d0c3927dac45232aaaaf4bb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d0e8d35d0c3927dac45232aaaaf4bb2">&#9670;&#160;</a></span>testFallbackTableRendering()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">testFallbackTableRendering </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Column spans, line breaks in cells, nested tables and escaping of console formatting characters in the PHP fallback. </p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00198">198</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_html2_text_test_8php_source.html#l00148">useConverter()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_a4d0e8d35d0c3927dac45232aaaaf4bb2_cgraph.svg" width="471" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a3d0f59cc5c3f95a6e4f2c1b7fe702673" name="a3d0f59cc5c3f95a6e4f2c1b7fe702673"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d0f59cc5c3f95a6e4f2c1b7fe702673">&#9670;&#160;</a></span>testFallbackWithoutExternalConverters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">testFallbackWithoutExternalConverters </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -163,7 +340,91 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00083">83</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00181">181</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+</div>
+</div>
+<a id="a8026f6de5c12a50343311c1e8cd12fca" name="a8026f6de5c12a50343311c1e8cd12fca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8026f6de5c12a50343311c1e8cd12fca">&#9670;&#160;</a></span>testSingleConverter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">testSingleConverter </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$converter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$converter</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00162">162</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_html2_text_test_8php_source.html#l00148">useConverter()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_a8026f6de5c12a50343311c1e8cd12fca_cgraph.svg" width="426" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a7a90b68144cdf152f987f3bedf2ea6f0" name="a7a90b68144cdf152f987f3bedf2ea6f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a90b68144cdf152f987f3bedf2ea6f0">&#9670;&#160;</a></span>useConverter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">useConverter </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$converter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Skip the test if the converter is not installed, otherwise hide all other converters. </p>
+<p>'php' hides all external converters.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$converter</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00148">148</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_html2_text_test_8php_source.html#l00116">stubFinder()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_html2_text_test_8php_source.html#l00132">testConversion()</a>, <a class="el" href="_html2_text_test_8php_source.html#l00198">testFallbackTableRendering()</a>, and <a class="el" href="_html2_text_test_8php_source.html#l00162">testSingleConverter()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_a7a90b68144cdf152f987f3bedf2ea6f0_cgraph.svg" width="240" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test_a7a90b68144cdf152f987f3bedf2ea6f0_icgraph.svg" width="340" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -188,7 +449,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00036">36</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_test_8php_source.html#l00037">37</a> of file <a class="el" href="_html2_text_test_8php_source.html">Html2TextTest.php</a>.</p>
 
 </div>
 </div>

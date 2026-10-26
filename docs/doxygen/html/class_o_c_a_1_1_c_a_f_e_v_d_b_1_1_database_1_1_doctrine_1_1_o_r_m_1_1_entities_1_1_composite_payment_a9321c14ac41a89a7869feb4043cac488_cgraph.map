@@ -1,0 +1,7 @@
+<map id="updateSubject" name="updateSubject">
+<area shape="rect" id="Node000001" title="Update the stored payment&#45;subject by calling CompositePayment\generateSubject()." alt="" coords="5,31,110,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a2a0d4ec8e1487ad5f0e00de75b8636ef" title="Automatic subject generation from receivables and linked DatabaseStorageFolder&#39;s." alt="" coords="158,5,273,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,33,145,29,140,31,111,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a3bf78a815e53a0b9effb9467601f3fe4" title="Set subject." alt="" coords="174,56,257,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,50,161,60,155,61,110,55"/>
+</map>

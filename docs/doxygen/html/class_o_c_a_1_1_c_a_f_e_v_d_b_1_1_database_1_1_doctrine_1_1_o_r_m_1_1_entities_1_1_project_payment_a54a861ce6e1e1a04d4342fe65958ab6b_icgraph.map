@@ -1,5 +1,10 @@
 <map id="setReceivableOption" name="setReceivableOption">
-<area shape="rect" id="Node000001" title="Set receivableOption." alt="" coords="276,29,418,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#aba8c128ee2d0a2c38c42721e06774428" title="Add a project payment and make sure the owning side is also updated." alt="" coords="5,5,228,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,43,228,45,228,40,263,42"/>
+<area shape="rect" id="Node000001" title="Set receivableOption." alt="" coords="519,67,661,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#aba8c128ee2d0a2c38c42721e06774428" title="Add a project payment and make sure the owning side is also updated." alt="" coords="249,5,471,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="501,66,471,63,471,58,506,66"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a2d19d53b87c2858af94e5caffe240a7e" title="Set receivable." alt="" coords="308,104,412,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="507,94,413,112,412,106,501,94"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aba8c128ee2d0a2c38c42721e06774428" title="Add a project payment and make sure the owning side is also updated." alt="" coords="5,80,201,155"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="289,126,201,129,201,123,294,125"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="216,106,310,109,304,110,216,111"/>
 </map>

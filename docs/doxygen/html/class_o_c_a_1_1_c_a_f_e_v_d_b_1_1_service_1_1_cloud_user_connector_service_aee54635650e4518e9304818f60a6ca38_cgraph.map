@@ -1,0 +1,5 @@
+<map id="configureCloudUserBackend" name="configureCloudUserBackend">
+<area shape="rect" id="Node000001" title="Hijack the user&#45;sql backend by flushing pre&#45;computed values into its config&#45;space." alt="" coords="5,5,193,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a452c1bc56f4ae1f83153341f0e9948c6" title="Clear the backend cache, for use in controllers, back&#45;reportings messages." alt="" coords="241,5,407,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,16,228,19,222,19,193,21"/>
+</map>

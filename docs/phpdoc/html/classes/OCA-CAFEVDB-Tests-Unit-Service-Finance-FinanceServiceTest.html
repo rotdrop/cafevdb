@@ -125,7 +125,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait">SetupEventsServiceTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait">EnableDeprecationsTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait">SetupEventsServiceTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -136,9 +136,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Test the SepaBulkTransactionsService</p>
@@ -199,6 +199,14 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Toolkit\Common\RationalNumber::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\CamelCaseString::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -383,6 +391,14 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Service\EncryptionService::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Service\Finance\SepaTransliterator::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -617,6 +633,12 @@
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_tearDown">tearDown()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testConstruction">testConstruction()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -659,19 +681,7 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testSepaTranslit">testSepaTranslit()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSepaAccount">testValidateSepaAccount()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSepaString">testValidateSepaString()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -681,6 +691,13 @@
     <span>
                                 &nbsp;: void    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_enableDeprecations">enableDeprecations()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Enable throwing Doctrine deprecations.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_eventMatrixTest">eventMatrixTest()</a>
@@ -710,9 +727,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">238</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -741,9 +758,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">243</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -978,9 +995,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1133,9 +1150,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1143,6 +1160,41 @@
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">setup</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_tearDown">
+        tearDown()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_tearDown" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-enabledeprecationstrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php">EnableDeprecationsTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">55</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">tearDown</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1169,9 +1221,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1204,9 +1256,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">289</span>
+    <span class="phpdocumentor-element-found-in__line">283</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1239,9 +1291,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">298</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1274,9 +1326,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">277</span>
+    <span class="phpdocumentor-element-found-in__line">271</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.277" class="phpdocumentor-element-found-in__source" data-line="277" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1309,9 +1361,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">186</span>
+    <span class="phpdocumentor-element-found-in__line">180</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.180" class="phpdocumentor-element-found-in__source" data-line="180" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1344,9 +1396,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">255</span>
+    <span class="phpdocumentor-element-found-in__line">249</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1379,50 +1431,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">testMakeIban</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_testSepaTranslit">
-        testSepaTranslit()
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testSepaTranslit" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">170</span>
-
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">testSepaTranslit</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1449,50 +1466,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">201</span>
+    <span class="phpdocumentor-element-found-in__line">195</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.201" class="phpdocumentor-element-found-in__source" data-line="201" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">testValidateSepaAccount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_testValidateSepaString">
-        testValidateSepaString()
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSepaString" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">177</span>
-
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">testValidateSepaString</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1519,9 +1501,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php"><a href="files/tests-phpunit-unit-service-finance-financeservicetest.html"><abbr title="tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php">FinanceServiceTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">268</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/tests/phpunit/Unit/Service/Finance/FinanceServiceTest.php.txt"></a>
     </aside>
 
     
@@ -1534,6 +1516,52 @@
     
     
     
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_enableDeprecations">
+        enableDeprecations()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_enableDeprecations" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-enabledeprecationstrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php">EnableDeprecationsTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/EnableDeprecationsTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Enable throwing Doctrine deprecations.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">enableDeprecations</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extraExclude</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$extraExclude</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
         
@@ -1725,6 +1753,7 @@
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_generateEventsService">generateEventsService()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_setup">setup()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_tearDown">tearDown()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testConstruction">testConstruction()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testFinanceEvent">testFinanceEvent()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testFinanceTask">testFinanceTask()</a></li>
@@ -1732,10 +1761,9 @@
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testGenerateSepaMandateReference">testGenerateSepaMandateReference()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testGetIbanInfo">testGetIbanInfo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testMakeIban">testMakeIban()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testSepaTranslit">testSepaTranslit()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSepaAccount">testValidateSepaAccount()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSepaString">testValidateSepaString()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-Finance-FinanceServiceTest.html#method_testValidateSWIFT">testValidateSWIFT()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_enableDeprecations">enableDeprecations()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupEventsServiceTrait.html#method_eventMatrixTest">eventMatrixTest()</a></li>
                                     </ul>
             </li>

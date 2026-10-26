@@ -1,0 +1,8 @@
+<map id="getBalanceDocumentsFolder" name="getBalanceDocumentsFolder">
+<area shape="rect" id="Node000001" title="Get balanceDocumentsFolder." alt="" coords="492,21,681,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#ab3e37f847769704baa78ecb0578be043" title="Set compositePayment." alt="" coords="189,5,444,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="473,35,444,37,444,32,479,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a7bbb04d993160b8b39ff259d9a00b420" title=" " alt="" coords="5,21,141,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,44,141,45,141,40,176,43"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="156,23,191,25,186,26,157,29"/>
+</map>

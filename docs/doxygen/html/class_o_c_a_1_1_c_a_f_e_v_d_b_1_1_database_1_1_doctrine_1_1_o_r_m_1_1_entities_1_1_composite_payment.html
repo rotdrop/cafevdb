@@ -140,6 +140,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a095c5d389db211932136b53f25f39685"><td class="mdescLeft">&#160;</td><td class="mdescRight">{}  <br /></td></tr>
 <tr class="memitem:a61115cd785cc38ff0da476ace4ba19d6" id="r_a61115cd785cc38ff0da476ace4ba19d6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a61115cd785cc38ff0da476ace4ba19d6">setProjectPayments</a> (Collection $projectPayments)</td></tr>
 <tr class="memdesc:a61115cd785cc38ff0da476ace4ba19d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set projectPayments.  <br /></td></tr>
+<tr class="memitem:a7bbb04d993160b8b39ff259d9a00b420" id="r_a7bbb04d993160b8b39ff259d9a00b420"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7bbb04d993160b8b39ff259d9a00b420">addProjectPayment</a> (<a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html">ProjectPayment</a> $projectPayment)</td></tr>
 <tr class="memitem:a5c6cf3286dd89e5d46f9cc6d31ee0a8a" id="r_a5c6cf3286dd89e5d46f9cc6d31ee0a8a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5c6cf3286dd89e5d46f9cc6d31ee0a8a">getProjectPayments</a> ()</td></tr>
 <tr class="memdesc:a5c6cf3286dd89e5d46f9cc6d31ee0a8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get projectPayments.  <br /></td></tr>
 <tr class="memitem:a665b88c310e4272f43d75be8b398d5e4" id="r_a665b88c310e4272f43d75be8b398d5e4"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a665b88c310e4272f43d75be8b398d5e4">setAmount</a> (int|float|string|<a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_common_1_1_rational_number.html">RationalNumber</a> $amount)</td></tr>
@@ -207,8 +208,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a51e18c47775a07cdbc9c5b382721a156" id="r_a51e18c47775a07cdbc9c5b382721a156"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a51e18c47775a07cdbc9c5b382721a156">getNonDonationAmount</a> ()</td></tr>
 <tr class="memitem:a3c2ff973c8290eb2c118e988a759ceb9" id="r_a3c2ff973c8290eb2c118e988a759ceb9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3c2ff973c8290eb2c118e988a759ceb9">getDonations</a> ()</td></tr>
 <tr class="memitem:ac07dca6d494513ebd67d4e8111dd27f7" id="r_ac07dca6d494513ebd67d4e8111dd27f7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac07dca6d494513ebd67d4e8111dd27f7">getNonDonations</a> ()</td></tr>
-<tr class="memitem:a860ca58f7b2332d44f16da17c9345fe1" id="r_a860ca58f7b2332d44f16da17c9345fe1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a860ca58f7b2332d44f16da17c9345fe1">updateSubject</a> (?Closure $transliterate=null)</td></tr>
-<tr class="memdesc:a860ca58f7b2332d44f16da17c9345fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the stored payment-subject by calling CompositePayment::generateSubject().  <br /></td></tr>
+<tr class="memitem:a2a0d4ec8e1487ad5f0e00de75b8636ef" id="r_a2a0d4ec8e1487ad5f0e00de75b8636ef"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2a0d4ec8e1487ad5f0e00de75b8636ef">generateSubject</a> (int $maxLength=self::SUBJECT_FIELD_LENGTH, ?Closure $transliterate=null,)</td></tr>
+<tr class="memdesc:a2a0d4ec8e1487ad5f0e00de75b8636ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Automatic subject generation from receivables and linked DatabaseStorageFolder's.  <br /></td></tr>
+<tr class="memitem:a9321c14ac41a89a7869feb4043cac488" id="r_a9321c14ac41a89a7869feb4043cac488"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9321c14ac41a89a7869feb4043cac488">updateSubject</a> (int $maxLength=self::SUBJECT_FIELD_LENGTH, ?Closure $transliterate=null,)</td></tr>
+<tr class="memdesc:a9321c14ac41a89a7869feb4043cac488"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the stored payment-subject by calling CompositePayment::generateSubject().  <br /></td></tr>
 <tr class="memitem:a093be5e60d25d1dc7b624f67b1ed40c7" id="r_a093be5e60d25d1dc7b624f67b1ed40c7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a093be5e60d25d1dc7b624f67b1ed40c7">getReceivablesDueDate</a> ()</td></tr>
 <tr class="memdesc:a093be5e60d25d1dc7b624f67b1ed40c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the maximum due-date of all underlying receivables.  <br /></td></tr>
 <tr class="memitem:ad402d8679325bc514874370f02b5c2ac" id="r_ad402d8679325bc514874370f02b5c2ac"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad402d8679325bc514874370f02b5c2ac">jsonSerialize</a> ()</td></tr>
@@ -260,7 +263,7 @@ Private Attributes</h2></td></tr>
 table" in order to avoid ManyToMany and add some stuff.</p>
 <p>So: there are no other per-person payments, each payment thus is tied to a person and a project. For "unprojected payments" either the club members project has to be used or the executive board project. External parties also have first to be added to a project as "associates", then they are also "Musician" entities (thow the name is misleading) and then can be used as ordinary participants for payments. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00061">61</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00063">63</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a095c5d389db211932136b53f25f39685" name="a095c5d389db211932136b53f25f39685"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a095c5d389db211932136b53f25f39685">&#9670;&#160;</a></span>__construct()</h2>
@@ -279,9 +282,9 @@ table" in order to avoid ManyToMany and add some stuff.</p>
 
 <p>{} </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00176">176</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00178">178</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00214">setAmount()</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00233">setAmount()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -308,7 +311,47 @@ Here is the call graph for this function:</div>
 
 <p>{} </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00887">887</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00980">980</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+
+</div>
+</div>
+<a id="a7bbb04d993160b8b39ff259d9a00b420" name="a7bbb04d993160b8b39ff259d9a00b420"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bbb04d993160b8b39ff259d9a00b420">&#9670;&#160;</a></span>addProjectPayment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">addProjectPayment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html">ProjectPayment</a></td>          <td class="paramname"><span class="paramname"><em>$projectPayment</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">ProjectPayment</td><td class="paramname">$projectPayment</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>self </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00204">204</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00135">ProjectPayment\getCompositePayment()</a>, and <a class="el" href="_project_payment_8php_source.html#l00119">ProjectPayment\setCompositePayment()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_project_payment_8php_source.html#l00119">ProjectPayment\setCompositePayment()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a7bbb04d993160b8b39ff259d9a00b420_cgraph.svg" width="100%" height="448"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a7bbb04d993160b8b39ff259d9a00b420_icgraph.svg" width="450" height="70"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -328,13 +371,56 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Count the number of donations contained in this composite. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00641">641</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00660">660</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00281">ProjectPayment\getIsDonation()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00285">ProjectPayment\getIsDonation()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_af9bb8cdde9e144dc9719fc4b299678e9_cgraph.svg" width="375" height="70"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a2a0d4ec8e1487ad5f0e00de75b8636ef" name="a2a0d4ec8e1487ad5f0e00de75b8636ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a0d4ec8e1487ad5f0e00de75b8636ef">&#9670;&#160;</a></span>generateSubject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generateSubject </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$maxLength</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::SUBJECT_FIELD_LENGTH</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?Closure</td>          <td class="paramname"><span class="paramname"><em>$transliterate</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Automatic subject generation from receivables and linked DatabaseStorageFolder's. </p>
+<p>The routine applies the supplied transliteration routine such that the result only contains valid characters for a potential bank transaction data-set. It also tries to group and compactify payments which carry the same prefix assuming the particluar subjects result from ProjectParticipantFieldDatum::paymentReference().</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$maxLength</td><td>Maximum length allowed, longer subjects will be "compressed".</td></tr>
+    <tr><td class="paramtype">null&#160;|&#160;Closure</td><td class="paramname">$transliterate</td><td>A transliteration routine with the signature function(string $x): string. It defaults to the identity fn($x) =&gt; $x if null.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00728">728</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00097">$subject</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00950">updateSubject()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a2a0d4ec8e1487ad5f0e00de75b8636ef_icgraph.svg" width="279" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -357,9 +443,9 @@ Here is the call graph for this function:</div>
 <p>Get amount. </p>
 <dl class="section return"><dt>Returns</dt><dd>MonetaryNumberType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00226">226</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00245">245</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00086">$amount</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00088">$amount</a>.</p>
 
 </div>
 </div>
@@ -381,7 +467,14 @@ Here is the call graph for this function:</div>
 <p>Get balanceDocumentsFolder. </p>
 <dl class="section return"><dt>Returns</dt><dd>?DatabaseStorageFolder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00633">633</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00652">652</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_project_payment_8php_source.html#l00119">ProjectPayment\setCompositePayment()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a9c0d8ff97922cc054ac3aa2394beaf1f_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 
 </div>
 </div>
@@ -403,7 +496,7 @@ Here is the call graph for this function:</div>
 <p>Get dateOfReceipt. </p>
 <dl class="section return"><dt>Returns</dt><dd>\DateTime|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00340">340</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00359">359</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -425,7 +518,7 @@ Here is the call graph for this function:</div>
 <p>Get debitNote. </p>
 <dl class="section return"><dt>Returns</dt><dd>SepaDebitNote|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00388">388</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00407">407</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -445,9 +538,9 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>MonetaryNumberType The sum of all contained donation parts. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00652">652</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00671">671</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00230">ProjectPayment\getAmount()</a>, and <a class="el" href="_project_payment_8php_source.html#l00281">ProjectPayment\getIsDonation()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00234">ProjectPayment\getAmount()</a>, and <a class="el" href="_project_payment_8php_source.html#l00285">ProjectPayment\getIsDonation()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -474,7 +567,7 @@ Here is the call graph for this function:</div>
 <p>Get donationReceipt. </p>
 <dl class="section return"><dt>Returns</dt><dd>null|string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00547">547</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00566">566</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -494,9 +587,9 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Collection The ProjectPayment entities which are donations. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00678">678</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00697">697</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00281">ProjectPayment\getIsDonation()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00285">ProjectPayment\getIsDonation()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -523,7 +616,7 @@ Here is the call graph for this function:</div>
 <p>Get musician. </p>
 <dl class="section return"><dt>Returns</dt><dd>Musician </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00265">265</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00284">284</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_musician_8php_source.html#l01277">Musician\addPayment()</a>.</p>
 <div class="dynheader">
@@ -550,9 +643,9 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>MonetaryNumberType The sum of all contained non-donation parts. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00665">665</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00684">684</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00230">ProjectPayment\getAmount()</a>, and <a class="el" href="_project_payment_8php_source.html#l00281">ProjectPayment\getIsDonation()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00234">ProjectPayment\getAmount()</a>, and <a class="el" href="_project_payment_8php_source.html#l00285">ProjectPayment\getIsDonation()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -577,9 +670,9 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Collection The ProjectPayment entities which aren't donations. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00686">686</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00705">705</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00281">ProjectPayment\getIsDonation()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00285">ProjectPayment\getIsDonation()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -606,9 +699,9 @@ Here is the call graph for this function:</div>
 <p>Get notificationMessageId. </p>
 <dl class="section return"><dt>Returns</dt><dd>null|string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00487">487</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00506">506</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00134">$notificationMessageId</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00136">$notificationMessageId</a>.</p>
 
 </div>
 </div>
@@ -630,9 +723,9 @@ Here is the call graph for this function:</div>
 <p>Get preNotificationEmail. </p>
 <dl class="section return"><dt>Returns</dt><dd>null|SentEmail </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00523">523</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00542">542</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00141">$preNotificationEmail</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00143">$preNotificationEmail</a>.</p>
 
 </div>
 </div>
@@ -654,9 +747,9 @@ Here is the call graph for this function:</div>
 <p>Get project. </p>
 <dl class="section return"><dt>Returns</dt><dd>Project </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00290">290</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00309">309</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_project_8php_source.html#l00668">Project\addCompositePayment()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_project_8php_source.html#l00702">Project\addCompositePayment()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -683,9 +776,9 @@ Here is the caller graph for this function:</div>
 <p>Get projectParticipant. </p>
 <dl class="section return"><dt>Returns</dt><dd>ProjectParticipant </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00316">316</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00335">335</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_project_participant_8php_source.html#l00457">ProjectParticipant\addPayment()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_project_participant_8php_source.html#l00466">ProjectParticipant\addPayment()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -712,7 +805,7 @@ Here is the caller graph for this function:</div>
 <p>Get projectPayments. </p>
 <dl class="section return"><dt>Returns</dt><dd>Collection </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00202">202</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00221">221</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -734,9 +827,9 @@ Here is the caller graph for this function:</div>
 <p>Return the maximum due-date of all underlying receivables. </p>
 <dl class="section return"><dt>Returns</dt><dd>DateTimeInterface </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00871">871</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00964">964</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00319">ProjectPayment\getReceivable()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00332">ProjectPayment\getReceivable()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -763,9 +856,9 @@ Here is the call graph for this function:</div>
 <p>Get sepaBankAccount. </p>
 <dl class="section return"><dt>Returns</dt><dd>SepaBankAccount|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00413">413</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00432">432</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00113">$sepaBankAccount</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00115">$sepaBankAccount</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_bank_account_8php_source.html#l00310">SepaBankAccount\addPayment()</a>.</p>
 <div class="dynheader">
@@ -794,9 +887,9 @@ Here is the caller graph for this function:</div>
 <p>Get sepaDebitMandate. </p>
 <dl class="section return"><dt>Returns</dt><dd>SepaDebitMandate|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00438">438</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00457">457</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00121">$sepaDebitMandate</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00123">$sepaDebitMandate</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_debit_mandate_8php_source.html#l00445">SepaDebitMandate\addPayment()</a>.</p>
 <div class="dynheader">
@@ -825,7 +918,7 @@ Here is the caller graph for this function:</div>
 <p>Get sepaTransaction. </p>
 <dl class="section return"><dt>Returns</dt><dd>SepaTransaction|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00463">463</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00482">482</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -845,11 +938,9 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Get subject. </p>
-<dl class="section return"><dt>Returns</dt><dd>null|string </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>?string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00364">364</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
-
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00095">$subject</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00383">383</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -871,9 +962,9 @@ Here is the caller graph for this function:</div>
 <p>Get supportingDocument. </p>
 <dl class="section return"><dt>Returns</dt><dd>null|DatabaseStorageFile </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00581">581</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00600">600</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00164">$supportingDocument</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00166">$supportingDocument</a>.</p>
 
 </div>
 </div>
@@ -894,7 +985,7 @@ Here is the caller graph for this function:</div>
 
 <p>{} </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00881">881</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00974">974</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -922,11 +1013,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>self </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00214">214</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00233">233</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00086">$amount</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00088">$amount</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00176">__construct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00178">__construct()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -959,7 +1050,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00328">328</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00347">347</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1078,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00376">376</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00395">395</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1106,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00535">535</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00554">554</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1043,9 +1134,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00252">252</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00271">271</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_musician_8php_source.html#l01277">Musician\addPayment()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00302">setProjectParticipant()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_musician_8php_source.html#l01277">Musician\addPayment()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00321">setProjectParticipant()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1078,9 +1169,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00475">475</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00494">494</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00134">$notificationMessageId</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00136">$notificationMessageId</a>.</p>
 
 </div>
 </div>
@@ -1108,9 +1199,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00499">499</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00518">518</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00141">$preNotificationEmail</a>, <a class="el" href="_sent_email_8php_source.html#l00164">SentEmail\getMessageId()</a>, <a class="el" href="_sent_email_8php_source.html#l00308">SentEmail\getSubject()</a>, and <a class="el" href="_sent_email_8php_source.html#l00511">SentEmail\setCompositePayment()</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00143">$preNotificationEmail</a>, <a class="el" href="_sent_email_8php_source.html#l00164">SentEmail\getMessageId()</a>, <a class="el" href="_sent_email_8php_source.html#l00308">SentEmail\getSubject()</a>, and <a class="el" href="_sent_email_8php_source.html#l00511">SentEmail\setCompositePayment()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1143,9 +1234,9 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00277">277</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00296">296</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_project_8php_source.html#l00668">Project\addCompositePayment()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00302">setProjectParticipant()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_project_8php_source.html#l00702">Project\addCompositePayment()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00321">setProjectParticipant()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1178,11 +1269,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00302">302</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00321">321</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00252">setMusician()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00277">setProject()</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00271">setMusician()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00296">setProject()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_project_participant_8php_source.html#l00457">ProjectParticipant\addPayment()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_project_participant_8php_source.html#l00466">ProjectParticipant\addPayment()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1220,7 +1311,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00190">190</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00192">192</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1248,9 +1339,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00400">400</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00419">419</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00113">$sepaBankAccount</a>, and <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_bank_account_8php_source.html#l00310">SepaBankAccount\addPayment()</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00115">$sepaBankAccount</a>, and <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_bank_account_8php_source.html#l00310">SepaBankAccount\addPayment()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_bank_account_8php_source.html#l00310">SepaBankAccount\addPayment()</a>.</p>
 <div class="dynheader">
@@ -1290,9 +1381,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00425">425</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00444">444</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00121">$sepaDebitMandate</a>, and <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_debit_mandate_8php_source.html#l00445">SepaDebitMandate\addPayment()</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00123">$sepaDebitMandate</a>, and <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_debit_mandate_8php_source.html#l00445">SepaDebitMandate\addPayment()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_database_2_doctrine_2_o_r_m_2_entities_2_sepa_debit_mandate_8php_source.html#l00445">SepaDebitMandate\addPayment()</a>.</p>
 <div class="dynheader">
@@ -1332,7 +1423,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00450">450</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00469">469</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1360,9 +1451,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00352">352</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00371">371</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00095">$subject</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00097">$subject</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00950">updateSubject()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a3bf78a815e53a0b9effb9467601f3fe4_icgraph.svg" width="247" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1390,9 +1488,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00559">559</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00578">578</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00164">$supportingDocument</a>.</p>
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00166">$supportingDocument</a>.</p>
 
 </div>
 </div>
@@ -1414,9 +1512,9 @@ Here is the caller graph for this function:</div>
 <p>Return the sum of the amounts of the individual payments, which should sum up to $this-&gt;amount, of course. </p>
 <dl class="section return"><dt>Returns</dt><dd>MonetaryNumberType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00237">237</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00256">256</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00230">ProjectPayment\getAmount()</a>.</p>
+<p class="reference">References <a class="el" href="_project_payment_8php_source.html#l00234">ProjectPayment\getAmount()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1425,8 +1523,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a860ca58f7b2332d44f16da17c9345fe1" name="a860ca58f7b2332d44f16da17c9345fe1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a860ca58f7b2332d44f16da17c9345fe1">&#9670;&#160;</a></span>updateSubject()</h2>
+<a id="a9321c14ac41a89a7869feb4043cac488" name="a9321c14ac41a89a7869feb4043cac488"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9321c14ac41a89a7869feb4043cac488">&#9670;&#160;</a></span>updateSubject()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1434,8 +1532,12 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">updateSubject </td>
           <td>(</td>
-          <td class="paramtype">?Closure</td>          <td class="paramname"><span class="paramname"><em>$transliterate</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$maxLength</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::SUBJECT_FIELD_LENGTH</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">?Closure</td>          <td class="paramname"><span class="paramname"><em>$transliterate</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1443,13 +1545,21 @@ Here is the call graph for this function:</div>
 <p>Update the stored payment-subject by calling CompositePayment::generateSubject(). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">null&#160;|&#160;Closure</td><td class="paramname">$transliterate</td><td>See generateSubject().</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$maxLength</td><td>Maximum length allowed, longer subjects will be "compressed".</td></tr>
+    <tr><td class="paramtype">?Closure</td><td class="paramname">$transliterate</td><td>See generateSubject().</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CompositePayment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00860">860</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00950">950</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_composite_payment_8php_source.html#l00728">generateSubject()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00371">setSubject()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment_a9321c14ac41a89a7869feb4043cac488_cgraph.svg" width="279" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1478,9 +1588,9 @@ Here is the call graph for this function:</div>
 <p>This must equal the sum of the self:$projectPayments collection.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo</a></b></dt><dd>If this is always the sum and thus can be computed, why then this field? </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00086">86</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00088">88</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00226">getAmount()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00214">setAmount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00245">getAmount()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00233">setAmount()</a>.</p>
 
 </div>
 </div>
@@ -1504,7 +1614,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00167">167</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00169">169</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1528,7 +1638,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00089">89</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00091">91</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1552,7 +1662,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00149">149</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00151">151</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1580,9 +1690,9 @@ Here is the call graph for this function:</div>
 <p>However, the connectivity between the sent-emails table and the CompositePayments table unfortunately is as of yet broken, so we keep stray notification message ids as is and add a new association which is filled with the existing entities in a migration step.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo</a></b></dt><dd>Check why this is not a relation to the SentEmail entity. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00134">134</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00136">136</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00487">getNotificationMessageId()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00475">setNotificationMessageId()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00506">getNotificationMessageId()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00494">setNotificationMessageId()</a>.</p>
 
 </div>
 </div>
@@ -1608,9 +1718,9 @@ Here is the call graph for this function:</div>
 
 <p>Pre notification email sent out to the recipients. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00141">141</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00143">143</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00523">getPreNotificationEmail()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00499">setPreNotificationEmail()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00542">getPreNotificationEmail()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00518">setPreNotificationEmail()</a>.</p>
 
 </div>
 </div>
@@ -1634,7 +1744,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00145">145</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00147">147</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1658,7 +1768,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00154">154</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00156">156</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1684,9 +1794,9 @@ Here is the call graph for this function:</div>
 
 <p>The bank account used for this payment. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00113">113</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00115">115</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00413">getSepaBankAccount()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00400">setSepaBankAccount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00432">getSepaBankAccount()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00419">setSepaBankAccount()</a>.</p>
 
 </div>
 </div>
@@ -1712,9 +1822,9 @@ Here is the call graph for this function:</div>
 
 <p>The debit-mandate used for this payment, if any. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00121">121</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00123">123</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00438">getSepaDebitMandate()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00425">setSepaDebitMandate()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00457">getSepaDebitMandate()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00444">setSepaDebitMandate()</a>.</p>
 
 </div>
 </div>
@@ -1738,7 +1848,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00105">105</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00107">107</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1764,9 +1874,9 @@ Here is the call graph for this function:</div>
 
 <p>Subject of the bank transaction. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00095">95</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00097">97</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00364">getSubject()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00352">setSubject()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00728">generateSubject()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00371">setSubject()</a>.</p>
 
 </div>
 </div>
@@ -1794,9 +1904,9 @@ Here is the call graph for this function:</div>
 <p>In case an additional overview document needs to be added in addition to the individual supporting documents of the project payments.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000017">Todo</a></b></dt><dd>Support more than one supporting document. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00164">164</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00166">166</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00581">getSupportingDocument()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00559">setSupportingDocument()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_composite_payment_8php_source.html#l00600">getSupportingDocument()</a>, and <a class="el" href="_composite_payment_8php_source.html#l00578">setSupportingDocument()</a>.</p>
 
 </div>
 </div>
@@ -1812,7 +1922,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00095">95</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00097">97</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1828,7 +1938,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00095">95</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00097">97</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1844,7 +1954,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00095">95</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00097">97</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1860,7 +1970,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00095">95</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00097">97</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1876,7 +1986,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00167">167</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00169">169</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1892,7 +2002,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00167">167</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00169">169</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +2018,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00076">76</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00078">78</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1924,7 +2034,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00072">72</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00074">74</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1940,7 +2050,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00073">73</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00075">75</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1956,7 +2066,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00074">74</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00076">76</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1972,7 +2082,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00070">70</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00072">72</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>
@@ -1988,7 +2098,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00071">71</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_payment_8php_source.html#l00073">73</a> of file <a class="el" href="_composite_payment_8php_source.html">CompositePayment.php</a>.</p>
 
 </div>
 </div>

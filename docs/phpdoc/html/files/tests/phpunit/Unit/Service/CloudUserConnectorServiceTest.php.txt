@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\App\IAppManager;
+use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 
 use OCA\RotDrop\Tests\DatabaseProvider;
@@ -39,6 +40,7 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+use OCA\CAFEVDB\Toolkit\Service\RequestService;
 
 /**
  * Test aspects of the CloudUserConnectorService.
@@ -51,6 +53,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
@@ -110,6 +113,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\RequestService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
@@ -122,6 +126,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 class CloudUserConnectorServiceTest extends TestCase
 {
   use SetupMigrationTrait;
+  use UserSqlRequestsTrait;
 
   private string $appName;
 
@@ -164,14 +169,20 @@ class CloudUserConnectorServiceTest extends TestCase
 
     $this->encryptionService = $this->mockProvider->getEncryptionService();
 
+    $appContainer = $this->mockProvider->getAppContainer();
+
+    $httpClientService = $this->getUserSqlEndPointStub();
+    $this->mockProvider->registerClassInstance(IClientService::class, $httpClientService, global: true);
+
     $this->cloudUserConnectorService = new CloudUserConnectorService(
+      appContainer: $appContainer,
+      appManager: $this->appManager,
       appName: $this->appName,
-      appContainer: $this->mockProvider->getAppContainer(),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
       cloudConfig: $this->cloudConfig,
       encryptionService: $this->mockProvider->getEncryptionService(),
-      appManager: $this->appManager,
+      l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
+      requestService: $appContainer->get(RequestService::class),
     );
   }
 
@@ -255,6 +266,13 @@ class CloudUserConnectorServiceTest extends TestCase
       ),
     );
     $this->assertFalse($this->cloudUserConnectorService->haveCloudUserBackendConfig());
+  }
+
+  /** @return void */
+  public function testConfigureCloudUserBackend(): void
+  {
+    $this->testWriteUserSqlConfig();
+    $this->cloudUserConnectorService->configureCloudUserBackend(erase: false);
   }
 
   /** @return void */

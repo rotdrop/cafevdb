@@ -1,0 +1,7 @@
+<map id="addParticipantField" name="addParticipantField">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,138,105"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a5cb158509764d3c0103ece1443f4ee12" title="Get project." alt="" coords="186,5,364,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,76,173,67,168,69,130,81"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a1416519f7adc9edc6d2941bf430220d9" title="Set project." alt="" coords="186,104,364,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,103,173,115,168,117,129,109"/>
+</map>

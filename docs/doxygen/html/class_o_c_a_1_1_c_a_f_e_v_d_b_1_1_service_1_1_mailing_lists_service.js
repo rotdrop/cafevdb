@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aa112e69f9313a73ec7816756ef2933de", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a8555b1b71fb1ea8519ec6dfef9d95b38", null ],
     [ "addEmailAlias", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a7256e710e9b1bc7d7a4aa0f6d693f6ac", null ],
     [ "combinedVersion", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2", null ],
     [ "configureAnnouncementsList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ac0fc337a82c29e5a7fe80ec82cba5cea", null ],

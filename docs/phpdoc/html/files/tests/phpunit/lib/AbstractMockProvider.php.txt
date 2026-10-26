@@ -42,6 +42,7 @@ use OCP\Config\IUserConfig;
 use OCP\Config\ValueType;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\ITempManager;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUser;
@@ -442,6 +443,9 @@ abstract class AbstractMockProvider
 
     $instance = $this->createStub(IRequest::class);
     $instance->method('getPathInfo')->willReturn('/apps/' . $this->appName . '/blahblah');
+    $instance->method('getServerHost')->willReturn('cloud.example.tld');
+    $instance->method('getServerProtocol')->willReturn('https');
+    $instance->method('getHttpProtocol')->willReturn('HTTP/2');
 
     $this->instances[$className] = $instance;
 
@@ -780,6 +784,10 @@ abstract class AbstractMockProvider
     );
     $instance->method('getSystemValue')->willReturnCallback(
       function(string $key, mixed $default = null): mixed {
+        if ($key === 'datadirectory' && !isset($this->systemConfigValues[$key])) {
+          // removed on PHP shutdown by the temp manager
+          $this->systemConfigValues[$key] = \OCP\Server::get(ITempManager::class)->getTemporaryFolder();
+        }
         return $this->systemConfigValues[$key] ??
           $this->cloudConfigGet(EnumConfigSection::SYSTEM, $key) ??
           $default;

@@ -140,8 +140,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa67a23ec02863327db161002ef51fac5" id="r_aa67a23ec02863327db161002ef51fac5"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#aa67a23ec02863327db161002ef51fac5">htmlToMarkDown</a> (?string $html)</td></tr>
 <tr class="memdesc:aa67a23ec02863327db161002ef51fac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the given HTML string to markdown.  <br /></td></tr>
 <tr class="memitem:a709d772c597d8bc18d170300a8cabbb7" id="r_a709d772c597d8bc18d170300a8cabbb7"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a709d772c597d8bc18d170300a8cabbb7">arraySliceKeys</a> (mixed $array, mixed $keys=null)</td></tr>
-<tr class="memitem:a0bef3dc2eedd594dab3a84b15d183c36" id="r_a0bef3dc2eedd594dab3a84b15d183c36"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a0bef3dc2eedd594dab3a84b15d183c36">explode</a> (string $delim, ?string $string, int $flags=self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape='\\')</td></tr>
-<tr class="memdesc:a0bef3dc2eedd594dab3a84b15d183c36"><td class="mdescLeft">&#160;</td><td class="mdescRight">A preg_explode() wrapper with some extra features.  <br /></td></tr>
+<tr class="memitem:ac35c91a89890a92661cdb4ccea9d0f94" id="r_ac35c91a89890a92661cdb4ccea9d0f94"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#ac35c91a89890a92661cdb4ccea9d0f94">explode</a> (string $delim, ?string $string, int $flags=self::EXPLODE_DEFAULT_FLAGS, string $escape=self::EXPLODE_DEFAULT_ESCAPE, int $limit=self::EXPLODE_DEFAULT_LIMIT,)</td></tr>
+<tr class="memdesc:ac35c91a89890a92661cdb4ccea9d0f94"><td class="mdescLeft">&#160;</td><td class="mdescRight">A preg_split() wrapper with some extra features.  <br /></td></tr>
 <tr class="memitem:a9d61dd42fc39a8ffa123b80bab2bf94f" id="r_a9d61dd42fc39a8ffa123b80bab2bf94f"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a9d61dd42fc39a8ffa123b80bab2bf94f">implode</a> (string $delim, array $array, int $flags=self::ESCAPED, string $escape='\\')</td></tr>
 <tr class="memdesc:a9d61dd42fc39a8ffa123b80bab2bf94f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter-part to self::explode().  <br /></td></tr>
 <tr class="memitem:a733456b8dde51667bb86ef79e08597a7" id="r_a733456b8dde51667bb86ef79e08597a7"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a733456b8dde51667bb86ef79e08597a7">escapeDelimiter</a> ($value, string $delim, string $escape='\\')</td></tr>
@@ -160,8 +160,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8af14a0c92cecfc7a80fa5ce94f4ec86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locale-aware "human readable" file-size.  <br /></td></tr>
 <tr class="memitem:a4f816f5acbf9d4c0aea1f8d8a5e83d2d" id="r_a4f816f5acbf9d4c0aea1f8d8a5e83d2d"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a4f816f5acbf9d4c0aea1f8d8a5e83d2d">strftime</a> (string $format, ?int $timestamp=null, ?string $tz=null, ?string $locale=null)</td></tr>
 <tr class="memdesc:a4f816f5acbf9d4c0aea1f8d8a5e83d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format the right way (tm).  <br /></td></tr>
-<tr class="memitem:ae7d345a0cb6a0cc4e54913f819db998d" id="r_ae7d345a0cb6a0cc4e54913f819db998d"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#ae7d345a0cb6a0cc4e54913f819db998d">shortenCamelCaseString</a> (string $string, int $limit, int $minLen=2)</td></tr>
-<tr class="memdesc:ae7d345a0cb6a0cc4e54913f819db998d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorten the given string by iteratively reducing the size of its camel-case components until it fits into the given length.  <br /></td></tr>
 <tr class="memitem:a77dcbf8345d8d173550c859774518f20" id="r_a77dcbf8345d8d173550c859774518f20"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a77dcbf8345d8d173550c859774518f20">hexDump</a> (string $string, ?array $options=null)</td></tr>
 <tr class="memdesc:a77dcbf8345d8d173550c859774518f20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps a string into a traditional hex dump for programmers, in a format similar to the output of the BSD command hexdump -C file.  <br /></td></tr>
 <tr class="memitem:a62e9094de93176fae4478b7eae96d61f" id="r_a62e9094de93176fae4478b7eae96d61f"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a62e9094de93176fae4478b7eae96d61f">unsetValue</a> (array &amp;$hayStack, mixed $value)</td></tr>
@@ -179,6 +177,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a78d07b92a5a763fb1082e1d49c28ef47" id="r_a78d07b92a5a763fb1082e1d49c28ef47"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a78d07b92a5a763fb1082e1d49c28ef47">TRIM</a> = 2</td></tr>
 <tr class="memitem:a417da5237858101069d8521b5ed4617d" id="r_a417da5237858101069d8521b5ed4617d"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a417da5237858101069d8521b5ed4617d">ESCAPED</a> = 4</td></tr>
 <tr class="memitem:a52c8e64459da22878f6434c61303644c" id="r_a52c8e64459da22878f6434c61303644c"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a52c8e64459da22878f6434c61303644c">FILE_EXTENSIONS_BY_MIME_TYPE</a></td></tr>
+<tr class="memitem:ab184195ced38090f620aafbe82bbbb63" id="r_ab184195ced38090f620aafbe82bbbb63"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#ab184195ced38090f620aafbe82bbbb63">EXPLODE_DEFAULT_FLAGS</a> = self::OMIT_EMPTY_FIELDS|self::ESCAPED</td></tr>
+<tr class="memitem:a9466bbd15e79e5e455311f972aa1c238" id="r_a9466bbd15e79e5e455311f972aa1c238"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a9466bbd15e79e5e455311f972aa1c238">EXPLODE_DEFAULT_ESCAPE</a> = '\\'</td></tr>
+<tr class="memitem:aec69080aa09de60cec48595589e8471f" id="r_aec69080aa09de60cec48595589e8471f"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#aec69080aa09de60cec48595589e8471f">EXPLODE_DEFAULT_LIMIT</a> = -1</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-static-methods" class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -425,7 +426,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array The cloned event. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00669">669</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00645">645</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -472,19 +473,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string|array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00329">329</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a733456b8dde51667bb86ef79e08597a7_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00340">340</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
-<a id="a0bef3dc2eedd594dab3a84b15d183c36" name="a0bef3dc2eedd594dab3a84b15d183c36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0bef3dc2eedd594dab3a84b15d183c36">&#9670;&#160;</a></span>explode()</h2>
+<a id="ac35c91a89890a92661cdb4ccea9d0f94" name="ac35c91a89890a92661cdb4ccea9d0f94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac35c91a89890a92661cdb4ccea9d0f94">&#9670;&#160;</a></span>explode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -505,12 +499,17 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$flags</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::OMIT_EMPTY_FIELDS|self::ESCAPED</span>, </td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$flags</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::EXPLODE_DEFAULT_FLAGS</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$escape</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'\\'</span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$escape</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::EXPLODE_DEFAULT_ESCAPE</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$limit</em></span><span class="paramdefsep"> = </span><span class="paramdefval">self::EXPLODE_DEFAULT_LIMIT</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -520,7 +519,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>A preg_explode() wrapper with some extra features. </p>
+<p>A preg_split() wrapper with some extra features. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$delim</td><td>The delimiter string.</td></tr>
@@ -532,25 +531,27 @@ Here is the caller graph for this function:</div>
 </ul>
 </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$escape</td><td>The escape character when self::ESCAPED is set.</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$limit</td><td>{</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd>preg_split}.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00270">270</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00276">276</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00348">unescapeDelimiter()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00276">explode()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_p_m_e_table_view_base_8php_source.html#l01455">PMETableViewBase\beforeInsertDoInsertAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01574">ProjectParticipants\beforeUpdateCheckParticipationStatus()</a>, <a class="el" href="_p_m_e_table_view_base_8php_source.html#l00849">PMETableViewBase\beforeUpdateDoUpdateAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01641">ProjectParticipants\beforeUpdateEnsureInstrumentationNumbers()</a>, <a class="el" href="_project_participants_8php_source.html#l01509">ProjectParticipants\beforeUpdateRemoveDependentVoices()</a>, <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>, <a class="el" href="_common_2_util_8php_source.html#l00386">explodeIndexed()</a>, <a class="el" href="_common_2_util_8php_source.html#l00428">explodeIndexedMulti()</a>, <a class="el" href="_common_2_util_8php_source.html#l00068">fileExtensionFromMimeType()</a>, <a class="el" href="_project_instrumentation_numbers_8php_source.html#l00138">ProjectInstrumentationNumbers\render()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00565">shortenCamelCaseString()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_p_m_e_table_view_base_8php_source.html#l01455">PMETableViewBase\beforeInsertDoInsertAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01574">ProjectParticipants\beforeUpdateCheckParticipationStatus()</a>, <a class="el" href="_p_m_e_table_view_base_8php_source.html#l00849">PMETableViewBase\beforeUpdateDoUpdateAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01641">ProjectParticipants\beforeUpdateEnsureInstrumentationNumbers()</a>, <a class="el" href="_project_participants_8php_source.html#l01509">ProjectParticipants\beforeUpdateRemoveDependentVoices()</a>, <a class="el" href="_common_2_util_8php_source.html#l00276">explode()</a>, <a class="el" href="_common_2_util_8php_source.html#l00397">explodeIndexed()</a>, <a class="el" href="_common_2_util_8php_source.html#l00439">explodeIndexedMulti()</a>, <a class="el" href="_common_2_util_8php_source.html#l00068">fileExtensionFromMimeType()</a>, and <a class="el" href="_project_instrumentation_numbers_8php_source.html#l00138">ProjectInstrumentationNumbers\render()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a0bef3dc2eedd594dab3a84b15d183c36_cgraph.svg" width="255" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_ac35c91a89890a92661cdb4ccea9d0f94_cgraph.svg" width="78" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a0bef3dc2eedd594dab3a84b15d183c36_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_ac35c91a89890a92661cdb4ccea9d0f94_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -618,15 +619,15 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00386">386</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00397">397</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00276">explode()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_p_m_e_table_view_base_8php_source.html#l01455">PMETableViewBase\beforeInsertDoInsertAll()</a>, and <a class="el" href="_p_m_e_table_view_base_8php_source.html#l00849">PMETableViewBase\beforeUpdateDoUpdateAll()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a224e0cc0562d0f2642f19e9f8fb03596_cgraph.svg" width="415" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a224e0cc0562d0f2642f19e9f8fb03596_cgraph.svg" width="238" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -692,15 +693,15 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00428">428</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00439">439</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00276">explode()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_p_m_e_table_view_base_8php_source.html#l01455">PMETableViewBase\beforeInsertDoInsertAll()</a>, <a class="el" href="_p_m_e_table_view_base_8php_source.html#l00849">PMETableViewBase\beforeUpdateDoUpdateAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01641">ProjectParticipants\beforeUpdateEnsureInstrumentationNumbers()</a>, and <a class="el" href="_project_participants_8php_source.html#l01509">ProjectParticipants\beforeUpdateRemoveDependentVoices()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a1c7326cf6f827db64c27bbb89f64dd7d_cgraph.svg" width="443" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a1c7326cf6f827db64c27bbb89f64dd7d_cgraph.svg" width="266" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -742,11 +743,11 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00068">68</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00276">explode()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a67a5fbebd2af7e58f4533e7256e11556_cgraph.svg" width="490" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a67a5fbebd2af7e58f4533e7256e11556_cgraph.svg" width="312" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -788,7 +789,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00727">727</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00703">703</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -833,13 +834,13 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>mixed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00604">604</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00580">580</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00321">implode()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a77dcbf8345d8d173550c859774518f20_cgraph.svg" width="366" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a77dcbf8345d8d173550c859774518f20_cgraph.svg" width="203" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -977,7 +978,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00502">502</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00513">513</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -1035,20 +1036,20 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00310">310</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00321">321</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00329">escapeDelimiter()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00321">implode()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00604">hexDump()</a>, <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>, <a class="el" href="_common_2_util_8php_source.html#l00452">implodeIndexedMulti()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00565">shortenCamelCaseString()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00580">hexDump()</a>, <a class="el" href="_common_2_util_8php_source.html#l00321">implode()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00463">implodeIndexedMulti()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a9d61dd42fc39a8ffa123b80bab2bf94f_cgraph.svg" width="240" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a9d61dd42fc39a8ffa123b80bab2bf94f_cgraph.svg" width="78" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a9d61dd42fc39a8ffa123b80bab2bf94f_icgraph.svg" width="558" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a9d61dd42fc39a8ffa123b80bab2bf94f_icgraph.svg" width="531" height="104"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1096,15 +1097,15 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00452">452</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00463">463</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00321">implode()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_project_participants_8php_source.html#l01509">ProjectParticipants\beforeUpdateRemoveDependentVoices()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_ac076b416133f71e89ae0c7732436300d_cgraph.svg" width="430" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_ac076b416133f71e89ae0c7732436300d_cgraph.svg" width="266" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -1146,7 +1147,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00475">475</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00486">486</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -1254,60 +1255,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ae7d345a0cb6a0cc4e54913f819db998d" name="ae7d345a0cb6a0cc4e54913f819db998d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7d345a0cb6a0cc4e54913f819db998d">&#9670;&#160;</a></span>shortenCamelCaseString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">shortenCamelCaseString </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$string</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$limit</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$minLen</em></span><span class="paramdefsep"> = </span><span class="paramdefval">2</span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Shorten the given string by iteratively reducing the size of its camel-case components until it fits into the given length. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$string</td><td>The string to shorten.</td></tr>
-    <tr><td class="paramtype">integer</td><td class="paramname">$limit</td><td>The target length.</td></tr>
-    <tr><td class="paramtype">integer</td><td class="paramname">$minLen</td><td>Defaults to 2. Components smaller than this will not be shortened. This also means that the target-length may not be reached.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00565">565</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
-
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>, and <a class="el" href="_common_2_util_8php_source.html#l00310">implode()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_ae7d345a0cb6a0cc4e54913f819db998d_cgraph.svg" width="470" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
 <a id="a4f816f5acbf9d4c0aea1f8d8a5e83d2d" name="a4f816f5acbf9d4c0aea1f8d8a5e83d2d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f816f5acbf9d4c0aea1f8d8a5e83d2d">&#9670;&#160;</a></span>strftime()</h2>
 
@@ -1357,11 +1304,11 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string|false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00536">536</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00547">547</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00536">strftime()</a>.</p>
+<p class="reference">References <a class="el" href="_common_2_util_8php_source.html#l00547">strftime()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00536">strftime()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00547">strftime()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1417,7 +1364,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00704">704</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00680">680</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -1464,14 +1411,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string|array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00348">348</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_common_2_util_8php_source.html#l00270">explode()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_a33027424113469f92dd6e70bcd90953f_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00359">359</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>
@@ -1512,7 +1452,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int The number of array slots that have been unset. As the values need not be unique this can be any non-negative integer. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00651">651</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00627">627</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_p_m_e_table_view_base_8php_source.html#l01455">PMETableViewBase\beforeInsertDoInsertAll()</a>, <a class="el" href="_invoices_8php_source.html#l02217">Invoices\beforeInsertSanitizeFields()</a>, <a class="el" href="_project_payments_8php_source.html#l01898">ProjectPayments\beforeInsertSanitizeFields()</a>, <a class="el" href="_p_m_e_table_view_base_8php_source.html#l00849">PMETableViewBase\beforeUpdateDoUpdateAll()</a>, <a class="el" href="_project_participants_8php_source.html#l01509">ProjectParticipants\beforeUpdateRemoveDependentVoices()</a>, <a class="el" href="_donation_receipts_8php_source.html#l00845">DonationReceipts\beforeUpdateSanitizeFields()</a>, <a class="el" href="_project_payments_8php_source.html#l01737">ProjectPayments\beforeUpdateSanitizeFields()</a>, <a class="el" href="_sepa_bank_accounts_8php_source.html#l01156">SepaBankAccounts\beforeUpdateSanitizeFields()</a>, <a class="el" href="_project_participant_fields_8php_source.html#l00211">ProjectParticipantFields\render()</a>, and <a class="el" href="_p_m_e_table_view_base_8php_source.html#l02604">PMETableViewBase\unsetRequestValue()</a>.</p>
 <div class="dynheader">
@@ -1561,6 +1501,54 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00051">51</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+
+</div>
+</div>
+<a id="a9466bbd15e79e5e455311f972aa1c238" name="a9466bbd15e79e5e455311f972aa1c238"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9466bbd15e79e5e455311f972aa1c238">&#9670;&#160;</a></span>EXPLODE_DEFAULT_ESCAPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const EXPLODE_DEFAULT_ESCAPE = '\\'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00254">254</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+
+</div>
+</div>
+<a id="ab184195ced38090f620aafbe82bbbb63" name="ab184195ced38090f620aafbe82bbbb63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab184195ced38090f620aafbe82bbbb63">&#9670;&#160;</a></span>EXPLODE_DEFAULT_FLAGS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const EXPLODE_DEFAULT_FLAGS = self::OMIT_EMPTY_FIELDS|self::ESCAPED</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00253">253</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
+
+</div>
+</div>
+<a id="aec69080aa09de60cec48595589e8471f" name="aec69080aa09de60cec48595589e8471f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec69080aa09de60cec48595589e8471f">&#9670;&#160;</a></span>EXPLODE_DEFAULT_LIMIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const EXPLODE_DEFAULT_LIMIT = -1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_common_2_util_8php_source.html#l00255">255</a> of file <a class="el" href="_common_2_util_8php_source.html">Util.php</a>.</p>
 
 </div>
 </div>

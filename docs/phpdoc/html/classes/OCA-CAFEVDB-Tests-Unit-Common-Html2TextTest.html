@@ -132,9 +132,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Test the Html2Text class</p>
@@ -194,10 +194,56 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_converterProvider">converterProvider()</a>
+    <span>
+                                &nbsp;: array    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testConversion">testConversion()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackTableRendering">testFallbackTableRendering()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Column spans, line breaks in cells, nested tables and escaping of
+console formatting characters in the PHP fallback.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackWithoutExternalConverters">testFallbackWithoutExternalConverters()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testSingleConverter">testSingleConverter()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_tearDown">tearDown()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_stubFinder">stubFinder()</a>
+    <span>
+                                &nbsp;: <abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_useConverter">useConverter()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Skip the test if the converter is not installed, otherwise hide all
+other converters. &#039;php&#039; hides all external converters.</dd>
 
     </dl>
 
@@ -220,9 +266,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
     </aside>
 
     
@@ -237,7 +283,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;und ein Blockzitat&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p style=&quot;text-align: right;&quot;&gt;und rechts ausgerichteten Text.&lt;/p&gt;&#039; =&gt; &#039;Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift
+&lt;p style=&quot;text-align: right;&quot;&gt;und rechts ausgerichteten Text.&lt;/p&gt;&#039; =&gt; [&#039;w3m&#039; =&gt; &#039;Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift
 und Kursivschrift und
 
 Zeilenumbrüche und
@@ -247,7 +293,17 @@ Text
 
     und ein Blockzitat
 
-und rechts ausgerichteten Text.&#039;, &#039;&lt;table style=&quot;border-collapse: collapse; width: 100%;&quot; border=&quot;1&quot;&gt;&lt;colgroup&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;/colgroup&gt;
+und rechts ausgerichteten Text.&#039;, &#039;php&#039; =&gt; &#039;Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält
+FETTSCHRIFT und _Kursivschrift _und
+
+Zeilenumbrüche und
+
+vorformatierten
+Text
+
+&gt; und ein Blockzitat
+
+und rechts ausgerichteten Text.&#039;], &#039;&lt;table style=&quot;border-collapse: collapse; width: 100%;&quot; border=&quot;1&quot;&gt;&lt;colgroup&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;col style=&quot;width: 33.3115%;&quot;&gt;&lt;/colgroup&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;a11&lt;/td&gt;
@@ -266,13 +322,19 @@ und rechts ausgerichteten Text.&#039;, &#039;&lt;table style=&quot;border-collap
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&amp;nbsp;&lt;/p&gt;&#039; =&gt; &#039;┌───┬───┬───┐
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;&#039; =&gt; [&#039;w3m&#039; =&gt; &#039;┌───┬───┬───┐
 │a11│a12│a13│
 ├───┼───┼───┤
 │a21│a22│a23│
 ├───┼───┼───┤
 │a31│a32│a33│
-└───┴───┴───┘&#039;]</span>
+└───┴───┴───┘&#039;, &#039;php&#039; =&gt; &#039;┌───┬───┬───┐
+│a11│a12│a13│
+├───┼───┼───┤
+│a21│a22│a23│
+├───┼───┼───┤
+│a31│a32│a33│
+└───┴───┴───┘&#039;]]</span>
 </code>
 
 
@@ -296,6 +358,45 @@ und rechts ausgerichteten Text.&#039;, &#039;&lt;table style=&quot;border-collap
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_converterProvider">
+        converterProvider()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_converterProvider" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">172</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">converterProvider</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_testConversion">
@@ -306,21 +407,307 @@ und rechts ausgerichteten Text.&#039;, &#039;&lt;table style=&quot;border-collap
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">testConversion</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">testConversion</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$converter</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$converter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="method_testConversion_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testConversion_attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\DataProvider">DataProvider</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;converterProvider&#039;
+    </dd>
+    </dl>
+                    </section>
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testFallbackTableRendering">
+        testFallbackTableRendering()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackTableRendering" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">198</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Column spans, line breaks in cells, nested tables and escaping of
+console formatting characters in the PHP fallback.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testFallbackTableRendering</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
     
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testFallbackWithoutExternalConverters">
+        testFallbackWithoutExternalConverters()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackWithoutExternalConverters" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">181</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.181" class="phpdocumentor-element-found-in__source" data-line="181" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testFallbackWithoutExternalConverters</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_testSingleConverter">
+        testSingleConverter()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testSingleConverter" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">161</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">testSingleConverter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$converter</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$converter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="method_testSingleConverter_attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testSingleConverter_attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\DataProvider">DataProvider</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;converterProvider&#039;
+    </dd>
+    </dl>
+                    </section>
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_tearDown">
+        tearDown()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_tearDown" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">106</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">tearDown</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_stubFinder">
+        stubFinder()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_stubFinder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">116</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">stubFinder</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$only</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$only</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_useConverter">
+        useConverter()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_useConverter" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Common/Html2TextTest.php"><a href="files/tests-phpunit-unit-common-html2texttest.html"><abbr title="tests/phpunit/Unit/Common/Html2TextTest.php">Html2TextTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">148</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/tests/phpunit/Unit/Common/Html2TextTest.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Skip the test if the converter is not installed, otherwise hide all
+other converters. &#039;php&#039; hides all external converters.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">useConverter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$converter</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$converter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
     
 
         
@@ -449,7 +836,14 @@ und rechts ausgerichteten Text.&#039;, &#039;&lt;table style=&quot;border-collap
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_converterProvider">converterProvider()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testConversion">testConversion()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackTableRendering">testFallbackTableRendering()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testFallbackWithoutExternalConverters">testFallbackWithoutExternalConverters()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_testSingleConverter">testSingleConverter()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_tearDown">tearDown()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_stubFinder">stubFinder()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Common-Html2TextTest.html#method_useConverter">useConverter()</a></li>
                                     </ul>
             </li>
                     </ul>

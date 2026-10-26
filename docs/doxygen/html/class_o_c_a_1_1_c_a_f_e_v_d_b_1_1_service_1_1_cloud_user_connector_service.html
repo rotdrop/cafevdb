@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('class_o_c_a_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a113153dc8f3fc6d7cdefa33d94053529" id="r_a113153dc8f3fc6d7cdefa33d94053529"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a113153dc8f3fc6d7cdefa33d94053529">__construct</a> (private string $appName, protected ContainerInterface $appContainer, protected ILogger $logger, private IL10N $l, private IConfig $cloudConfig, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html">EncryptionService</a> $encryptionService, private IAppManager $appManager,)</td></tr>
+<tr class="memitem:af098e065990c507d9b72d3847061dc35" id="r_af098e065990c507d9b72d3847061dc35"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#af098e065990c507d9b72d3847061dc35">__construct</a> (private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html">EncryptionService</a> $encryptionService, private IAppManager $appManager, private IConfig $cloudConfig, private IL10N $l, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html">RequestService</a> $requestService, private string $appName, protected ContainerInterface $appContainer, protected ILogger $logger,)</td></tr>
 <tr class="memitem:ab9908b4a2aaa00954cc55cac5d5ad1b2" id="r_ab9908b4a2aaa00954cc55cac5d5ad1b2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab9908b4a2aaa00954cc55cac5d5ad1b2">checkRequirements</a> (?string $dataBaseName)</td></tr>
 <tr class="memdesc:ab9908b4a2aaa00954cc55cac5d5ad1b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the requirements for this affair, in particular whether the user_sql backend is enabled, and return an error with status and hints.  <br /></td></tr>
 <tr class="memitem:a93f6d9da1bc4c1797b708227e1a1d40f" id="r_a93f6d9da1bc4c1797b708227e1a1d40f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a93f6d9da1bc4c1797b708227e1a1d40f">updateUserSqlViews</a> (?string $dataBaseName)</td></tr>
@@ -135,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac82adab72318c73cb5c69f91bde1782e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the user-sql views.  <br /></td></tr>
 <tr class="memitem:a738d301bd56cac033014f9e648939e42" id="r_a738d301bd56cac033014f9e648939e42"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a738d301bd56cac033014f9e648939e42">writeUserSqlConfig</a> (?string $dataBaseName=null, bool $delete=false)</td></tr>
 <tr class="memdesc:a738d301bd56cac033014f9e648939e42"><td class="mdescLeft">&#160;</td><td class="mdescRight">For the moment this just fills in our own app-config.  <br /></td></tr>
+<tr class="memitem:aee54635650e4518e9304818f60a6ca38" id="r_aee54635650e4518e9304818f60a6ca38"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aee54635650e4518e9304818f60a6ca38">configureCloudUserBackend</a> (bool $erase=false)</td></tr>
+<tr class="memdesc:aee54635650e4518e9304818f60a6ca38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hijack the user-sql backend by flushing pre-computed values into its config-space.  <br /></td></tr>
 <tr class="memitem:aace684f0b8c77b94c50d856b0e172007" id="r_aace684f0b8c77b94c50d856b0e172007"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aace684f0b8c77b94c50d856b0e172007">synchronizeCloud</a> ()</td></tr>
 <tr class="memdesc:aace684f0b8c77b94c50d856b0e172007"><td class="mdescLeft">&#160;</td><td class="mdescRight">In particular flush potential data-caches after changing data of the orchestra app.  <br /></td></tr>
 <tr class="memitem:a8a293b86b415db5c17994d462e546752" id="r_a8a293b86b415db5c17994d462e546752"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8a293b86b415db5c17994d462e546752">haveCloudUserBackendConfig</a> ()</td></tr>
@@ -180,6 +182,8 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a671fba0b17a311cf25f00baf8fa06912" id="r_a671fba0b17a311cf25f00baf8fa06912"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a671fba0b17a311cf25f00baf8fa06912">checkAndGetCloudDbUser</a> ()</td></tr>
 <tr class="memitem:a1a19b48267e2ba917d0226da1acdcb25" id="r_a1a19b48267e2ba917d0226da1acdcb25"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a1a19b48267e2ba917d0226da1acdcb25">generateUserSqlConfig</a> (?string $dataBaseName=null, bool $withDbAuth=true)</td></tr>
 <tr class="memdesc:a1a19b48267e2ba917d0226da1acdcb25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a config array for the user_sql app "as of now".  <br /></td></tr>
+<tr class="memitem:a452c1bc56f4ae1f83153341f0e9948c6" id="r_a452c1bc56f4ae1f83153341f0e9948c6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a452c1bc56f4ae1f83153341f0e9948c6">clearUserBackendCache</a> ()</td></tr>
+<tr class="memdesc:a452c1bc56f4ae1f83153341f0e9948c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the backend cache, for use in controllers, back-reportings messages.  <br /></td></tr>
 <tr class="memitem:afd669fc5c9519ec4df86f83338241f86" id="r_afd669fc5c9519ec4df86f83338241f86"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afd669fc5c9519ec4df86f83338241f86">generateMusicianPersonalizedViewsStatements</a> (?string $dataBaseName)</td></tr>
 <tr class="memdesc:afd669fc5c9519ec4df86f83338241f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the (My-)SQL statements for defining the personalized single-row musician views.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -200,8 +204,8 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00057">57</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a113153dc8f3fc6d7cdefa33d94053529" name="a113153dc8f3fc6d7cdefa33d94053529"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a113153dc8f3fc6d7cdefa33d94053529">&#9670;&#160;</a></span>__construct()</h2>
+<a id="af098e065990c507d9b72d3847061dc35" name="af098e065990c507d9b72d3847061dc35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af098e065990c507d9b72d3847061dc35">&#9670;&#160;</a></span>__construct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,6 +213,31 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">__construct </td>
           <td>(</td>
+          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html">EncryptionService</a></td>          <td class="paramname"><span class="paramname"><em>$encryptionService</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">private IAppManager</td>          <td class="paramname"><span class="paramname"><em>$appManager</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">private IConfig</td>          <td class="paramname"><span class="paramname"><em>$cloudConfig</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">private IL10N</td>          <td class="paramname"><span class="paramname"><em>$l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html">RequestService</a></td>          <td class="paramname"><span class="paramname"><em>$requestService</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">private string</td>          <td class="paramname"><span class="paramname"><em>$appName</em></span>, </td>
         </tr>
         <tr>
@@ -219,27 +248,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">protected ILogger</td>          <td class="paramname"><span class="paramname"><em>$logger</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">private IL10N</td>          <td class="paramname"><span class="paramname"><em>$l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">private IConfig</td>          <td class="paramname"><span class="paramname"><em>$cloudConfig</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html">EncryptionService</a></td>          <td class="paramname"><span class="paramname"><em>$encryptionService</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">private IAppManager</td>          <td class="paramname"><span class="paramname"><em>$appManager</em></span>&#160;)</td>
+          <td class="paramtype">protected ILogger</td>          <td class="paramname"><span class="paramname"><em>$logger</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -280,9 +289,9 @@ Private Attributes</h2></td></tr>
 </dl>
 <p>\DatabaseCloudConnectorViewException </p>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00265">265</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00266">266</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00677">generateMusicianPersonalizedViewsStatements()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l01104">removeMusicianPersonalizedViews()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l01055">updateMusicianPersonalizedViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00351">updateUserSqlViews()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00666">generateMusicianPersonalizedViewsStatements()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l01093">removeMusicianPersonalizedViews()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l01044">updateMusicianPersonalizedViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00352">updateUserSqlViews()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -319,7 +328,80 @@ Here is the caller graph for this function:</div>
 <div class="line">]</div>
 </div><!-- fragment --> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00293">293</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00294">294</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+
+</div>
+</div>
+<a id="a452c1bc56f4ae1f83153341f0e9948c6" name="a452c1bc56f4ae1f83153341f0e9948c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a452c1bc56f4ae1f83153341f0e9948c6">&#9670;&#160;</a></span>clearUserBackendCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">clearUserBackendCache </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear the backend cache, for use in controllers, back-reportings messages. </p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00601">601</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00553">configureCloudUserBackend()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00612">synchronizeCloud()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service_a452c1bc56f4ae1f83153341f0e9948c6_icgraph.svg" width="412" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="aee54635650e4518e9304818f60a6ca38" name="aee54635650e4518e9304818f60a6ca38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee54635650e4518e9304818f60a6ca38">&#9670;&#160;</a></span>configureCloudUserBackend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">configureCloudUserBackend </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>$erase</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hijack the user-sql backend by flushing pre-computed values into its config-space. </p>
+<p>This variant uses the routes of the user_sql app. Hence it will only work if the logged-in user is allowed to write to the user-sql config space.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">bool</td><td class="paramname">$erase</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00553">553</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00601">clearUserBackendCache()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service_aee54635650e4518e9304818f60a6ca38_cgraph.svg" width="412" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -358,11 +440,11 @@ Here is the caller graph for this function:</div>
 <div class="line">]</div>
 </div><!-- fragment --> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00677">677</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00666">666</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00265">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00255">personalizedViewName()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00266">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00256">personalizedViewName()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l01104">removeMusicianPersonalizedViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l01055">updateMusicianPersonalizedViews()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l01093">removeMusicianPersonalizedViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l01044">updateMusicianPersonalizedViews()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -420,11 +502,11 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00436">436</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00437">437</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00239">viewName()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00240">viewName()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00528">writeUserSqlConfig()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00529">writeUserSqlConfig()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -470,7 +552,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00333">333</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00334">334</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_organizational_roles_service_8php_source.html#l00533">OrganizationalRolesService\isClubMember()</a>.</p>
 <div class="dynheader">
@@ -497,7 +579,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>bool Check for cached cloud user-backend config </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00655">655</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00644">644</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
 </div>
 </div>
@@ -536,11 +618,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00255">255</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00256">256</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00239">viewName()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00240">viewName()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00677">generateMusicianPersonalizedViewsStatements()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00666">generateMusicianPersonalizedViewsStatements()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -585,9 +667,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <p>\DatabaseCloudConnectorViewException </p>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l01104">1104</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l01093">1093</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00265">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00677">generateMusicianPersonalizedViewsStatements()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00266">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00666">generateMusicianPersonalizedViewsStatements()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -620,9 +702,9 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00403">403</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00404">404</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00239">viewName()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00240">viewName()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -649,7 +731,14 @@ Here is the call graph for this function:</div>
 <p>In particular flush potential data-caches after changing data of the orchestra app. </p>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00623">623</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00612">612</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00601">clearUserBackendCache()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service_aace684f0b8c77b94c50d856b0e172007_cgraph.svg" width="351" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -684,9 +773,9 @@ Here is the call graph for this function:</div>
 </dl>
 <p>\DatabaseCloudConnectorViewException </p>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l01055">1055</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l01044">1044</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00265">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00677">generateMusicianPersonalizedViewsStatements()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00266">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00666">generateMusicianPersonalizedViewsStatements()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -726,9 +815,9 @@ Here is the call graph for this function:</div>
 </dl>
 <p>\DatabaseCloudConnectorViewException </p>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00351">351</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00352">352</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00265">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00239">viewName()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00266">checkAndGetCloudDbUser()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00240">viewName()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -778,9 +867,9 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00239">239</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00240">240</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00436">generateUserSqlConfig()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l00255">personalizedViewName()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l00403">removeUserSqlViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00351">updateUserSqlViews()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_cloud_user_connector_service_8php_source.html#l00437">generateUserSqlConfig()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l00256">personalizedViewName()</a>, <a class="el" href="_cloud_user_connector_service_8php_source.html#l00404">removeUserSqlViews()</a>, and <a class="el" href="_cloud_user_connector_service_8php_source.html#l00352">updateUserSqlViews()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -819,9 +908,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00528">528</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_cloud_user_connector_service_8php_source.html#l00529">529</a> of file <a class="el" href="_cloud_user_connector_service_8php_source.html">CloudUserConnectorService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00436">generateUserSqlConfig()</a>.</p>
+<p class="reference">References <a class="el" href="_cloud_user_connector_service_8php_source.html#l00437">generateUserSqlConfig()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

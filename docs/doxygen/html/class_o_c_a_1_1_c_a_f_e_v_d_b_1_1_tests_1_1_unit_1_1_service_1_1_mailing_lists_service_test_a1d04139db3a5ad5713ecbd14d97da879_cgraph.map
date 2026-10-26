@@ -1,0 +1,11 @@
+<map id="setup" name="setup">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,59,59,85"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#a2b6965621104dc31c8305188aac22be4" title=" " alt="" coords="107,51,311,93"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,69,93,70,89,74,60,75"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="175,49,173,41,179,32,191,26,209,24,228,26,241,35,236,35,226,32,209,29,192,31,182,36,179,42,180,51"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="382,5,575,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="311,52,370,45,365,46,312,57"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#ad713ed0bc28eb03362769ab5cd8b17eb" title=" " alt="" coords="359,96,598,139"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="312,87,346,95,341,95,311,92"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="428,94,426,86,434,77,452,71,479,69,508,72,527,81,522,81,507,77,479,75,453,77,437,81,431,87,433,97"/>
+</map>

@@ -279,7 +279,7 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramtype">array&#160;|&#160;string</td><td class="paramname">$data</td><td>File upload data if this is a file-upload.</td></tr>
     <tr><td class="paramtype">null&#160;|&#160;string</td><td class="paramname">$cloudFile</td><td>If given just the full path to a file in the cloud. request['files'] is ignored in this.case.</td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$uploadMode</td><td>Upload mode for $cloudFile, link, copy, move.</td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$conflict</td><td>fail, replace, rename on conflict.</td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;EnumAddDocumentConflictAction</td><td class="paramname">$conflict</td><td>fail, replace, rename on conflict.</td></tr>
   </table>
   </dd>
 </dl>

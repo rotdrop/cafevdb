@@ -1,5 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test =
 [
+    [ "setup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html#a1d04139db3a5ad5713ecbd14d97da879", null ],
     [ "testConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html#a2fa911896ef15761c0f88db106eb91fb", null ],
     [ "testGenerateProjectPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html#add80317c2b52238d72e010cfcbc908a6", null ]
 ];

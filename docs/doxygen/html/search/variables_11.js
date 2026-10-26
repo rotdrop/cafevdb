@@ -10,5 +10,7 @@ var searchData=
   ['setupeventsservicetrait_7',['SetupEventsServiceTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#aed59a495ee027441e742465319340468',1,'OCA::CAFEVDB::Tests::Unit::Service']]],
   ['setupmigrationtrait_8',['SetupMigrationTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_maintenance_1_1_migrations.html#a6ff84385d208f267f54bb77b768775e5',1,'OCA::CAFEVDB::Tests::Unit::Maintenance::Migrations']]],
   ['softdeleteableentity_9',['SoftDeleteableEntity',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a99f887bc6e9b36cbdc27b3cceb1668db',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Traits']]],
-  ['substitutesqlfragmenttrait_10',['SubstituteSQLFragmentTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a511da148930c95fdf0e1de23b1072b65',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]]
+  ['startup_5ftimeout_10',['STARTUP_TIMEOUT',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html#af3a83376377d15db114748b7f1030cd5',1,'OCA::CAFEVDB::Service::WordSplitterService']]],
+  ['substitutesqlfragmenttrait_11',['SubstituteSQLFragmentTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a511da148930c95fdf0e1de23b1072b65',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['system_5fsocket_12',['SYSTEM_SOCKET',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html#a8617d5e99b13ee9b1bc903555316f14d',1,'OCA::CAFEVDB::Service::WordSplitterService']]]
 ];

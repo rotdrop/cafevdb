@@ -1,5 +1,13 @@
 var NAVTREEINDEX4 =
 {
+"_version060000_date20201022230000_8php_source.html":[10,0,0,17,3],
+"_version070000_date20211120104235_8php_source.html":[10,0,0,17,4],
+"_version100000_date20260211224447_8php_source.html":[10,0,0,17,5],
+"_version19700101000001_8php_source.html":[10,0,0,15,0,0],
+"_version19700101000002_8php_source.html":[10,0,0,15,0,1],
+"_version19700101000003_8php_source.html":[10,0,0,15,0,2],
+"_version20260108084800_8php_source.html":[10,0,0,15,0,3],
+"_version20260108115432_8php_source.html":[10,0,0,15,0,4],
 "_version20260130130553_8php_source.html":[10,0,0,15,0,5],
 "_version20260131090857_8php_source.html":[10,0,0,15,0,6],
 "_version20260131090857_test_8php_source.html":[10,0,3,0,1,8,0,1],
@@ -18,6 +26,9 @@ var NAVTREEINDEX4 =
 "_web_browser_history_entry_8php_source.html":[10,0,0,8,1,2,0,66],
 "_web_browser_history_state_8php_source.html":[10,0,0,8,1,2,0,67],
 "_wiki_overview_8php_source.html":[10,0,0,4,16],
+"_word_splitter_service_8php_source.html":[10,0,0,20,45],
+"_word_splitter_service_test_8php_source.html":[10,0,3,0,1,10,22],
+"_word_splitter_service_trait_8php_source.html":[10,0,3,0,1,10,23],
 "annotated.html":[9,0],
 "avatar_8js_source.html":[10,0,2,0,0,0,0],
 "bootstrap_8php_source.html":[10,0,3,0,2],
@@ -238,16 +249,5 @@ var NAVTREEINDEX4 =
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_participant_folders.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[9,0,0,0,4,6,1],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html":[8,0,0,0,4,7],
 "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html":[9,0,0,0,4,7],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[8,0,0,0,4,7,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[9,0,0,0,4,7,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html":[8,0,0,0,4,8],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html":[9,0,0,0,4,8],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[8,0,0,0,4,8,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[9,0,0,0,4,8,1],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html#af5394e286988509344b77ee93ad44048":[8,0,0,0,4,8,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html#af5394e286988509344b77ee93ad44048":[9,0,0,0,4,8,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html":[8,0,0,0,4,9],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html":[9,0,0,0,4,9],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html#a3050ae8d967178fd7426f59f73294fd9":[8,0,0,0,4,9,0],
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html#a3050ae8d967178fd7426f59f73294fd9":[9,0,0,0,4,9,0]
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html#a9be5e0bdb5720efed6ddb6426c5c16ee":[8,0,0,0,4,7,0]
 };

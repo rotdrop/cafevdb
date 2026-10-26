@@ -1,5 +1,20 @@
 <map id="setReceivable" name="setReceivable">
-<area shape="rect" id="Node000001" title="Set receivable." alt="" coords="5,27,111,53"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#ac685963a742728143bc6a9f9da1ec7b2" title="Get supportingDocument." alt="" coords="159,5,355,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,37,145,37,145,43,111,43"/>
+<area shape="rect" id="Node000001" title="Set receivable." alt="" coords="5,177,110,204"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aba8c128ee2d0a2c38c42721e06774428" title="Add a project payment and make sure the owning side is also updated." alt="" coords="158,5,353,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,175,112,140,156,102,185,86,181,90,159,106,115,144,80,178"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a891ded7e702c079399e0aa83243f4795" title="Get dataOption." alt="" coords="158,104,353,179"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="109,175,144,168,140,171,112,180"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a222dfbdf28e944d58d77dcba96c67a0c" title="Get projectParticipant." alt="" coords="158,203,353,277"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="109,201,145,211,140,213,111,206"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="184,301,326,328"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="69,202,107,245,131,268,159,287,172,295,167,296,156,292,128,272,103,248,68,207"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a54a861ce6e1e1a04d4342fe65958ab6b" title="Set receivableOption." alt="" coords="184,352,326,379"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="65,202,99,268,125,306,159,338,172,348,167,347,156,342,121,309,94,271,63,207"/>
+<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="156,83,112,124,76,166,71,163,108,120,159,78"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a9816f1677e0a00492792cdab5b523555" title="Get receivable." alt="" coords="401,29,505,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,40,388,42,383,44,354,45"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#abe7189da7e60469034725fe8a41b48bb" title="Set musician." alt="" coords="408,276,499,303"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="327,303,395,297,389,298,328,308"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a832ef68f68a949a5cebdbded384a4486" title="Set project." alt="" coords="413,327,493,353"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="327,321,400,333,395,333,327,326"/>
 </map>

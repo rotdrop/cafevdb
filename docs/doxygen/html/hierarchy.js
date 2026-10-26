@@ -170,6 +170,7 @@ var hierarchy =
     [ "ByPassToSService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_by_pass_to_s_service.html", null ],
     [ "CalDavService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html", null ],
     [ "CalendarObjects", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_calendar_objects.html", null ],
+    [ "CamelCaseString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string.html", null ],
     [ "CardDavService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html", null ],
     [ "ChangeLog", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_change_log.html", null ],
     [ "ClassMetadataDecorator", null, [
@@ -941,6 +942,7 @@ var hierarchy =
     ] ],
     [ "SepaBulkTransactionEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html", null ],
     [ "SepaBulkTransactionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html", null ],
+    [ "SepaTransliterator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_transliterator.html", null ],
     [ "ServerPlugin", null, [
       [ "ImageExportPlugin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_image_export_plugin.html", null ]
     ] ],
@@ -982,6 +984,7 @@ var hierarchy =
     [ "TestCase", null, [
       [ "ArtifactsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_artifacts_test.html", null ],
       [ "AbstractUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_abstract_undoable_test.html", null ],
+      [ "CamelCaseStringTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_camel_case_string_test.html", null ],
       [ "ConsoleLoggerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test.html", null ],
       [ "FunctionsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test.html", null ],
       [ "GenericUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test.html", null ],
@@ -1117,13 +1120,17 @@ var hierarchy =
       [ "GnuCashConnectorServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_gnu_cash_connector_service_test.html", null ],
       [ "EventDataDTOTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transacti3005891a2a5438e9904ea5e5a51f67ea.html", null ],
       [ "SepaBulkTransactionServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html", null ],
+      [ "SepaTransliteratorTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_transliterator_test.html", null ],
       [ "HistoryServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_history_service_test.html", null ],
       [ "InstrumentationServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_instrumentation_service_test.html", null ],
       [ "BiDirectionalL10NTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_l10_n_1_1_bi_directional_l10_n_test.html", null ],
+      [ "MailingListsServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_mailing_lists_service_test.html", null ],
       [ "ProgressStatusServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_progress_status_service_test.html", null ],
       [ "ProjectParticipantFieldsServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_participant_fields_service_test.html", null ],
       [ "ProjectServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_service_test.html", null ],
+      [ "WordSplitterServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_word_splitter_service_test.html", null ],
       [ "AdminInitialStateTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test.html", null ],
+      [ "UserStorageTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test.html", null ],
       [ "DecimalRationalMonetaryTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_monetary_test.html", null ],
       [ "DecimalRationalP2S2Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p2_s2_test.html", null ],
       [ "DecimalRationalP4S4Test", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common_1_1_decimal_rational_p4_s4_test.html", null ],
@@ -1202,5 +1209,6 @@ var hierarchy =
       [ "UuidType", "class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html", null ]
     ] ],
     [ "VarDumper", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_var_dumper.html", null ],
-    [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", null ]
+    [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", null ],
+    [ "WordSplitterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html", null ]
 ];

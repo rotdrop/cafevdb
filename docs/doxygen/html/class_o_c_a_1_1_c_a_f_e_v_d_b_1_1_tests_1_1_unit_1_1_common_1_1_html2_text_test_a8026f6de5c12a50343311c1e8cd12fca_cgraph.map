@@ -1,0 +1,7 @@
+<map id="testSingleConverter" name="testSingleConverter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,142,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#a7a90b68144cdf152f987f3bedf2ea6f0" title="Skip the test if the converter is not installed, otherwise hide all other converters." alt="" coords="190,5,289,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,16,177,18,172,19,142,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#aa6d73a9ef47d5e5cf0e6e2cbacc6661e" title=" " alt="" coords="337,5,419,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="289,16,324,19,319,19,289,21"/>
+</map>

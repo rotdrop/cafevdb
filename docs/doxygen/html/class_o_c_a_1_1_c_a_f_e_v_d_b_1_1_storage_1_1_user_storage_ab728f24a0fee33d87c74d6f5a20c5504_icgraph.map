@@ -1,0 +1,9 @@
+<map id="normalizePath" name="normalizePath">
+<area shape="rect" id="Node000001" title="Normalize the path in order to have suitable cache&#45;keys and no special cases in comparisons." alt="" coords="145,56,249,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#a276b6e02e924a328452c80479a389da9" title=" " alt="" coords="31,5,71,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,52,71,28,71,23,144,49"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#a8a4d4f43f0909ea3cacd907ba6d4d2bd" title=" " alt="" coords="17,56,85,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,71,85,72,85,67,131,68"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#a2320d119e0996ffb2563c00deb1d1c4d" title="Strip the given number of directories from $path." alt="" coords="5,107,97,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,88,93,109,91,104,139,89"/>
+</map>

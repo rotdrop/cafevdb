@@ -438,15 +438,12 @@ trait EntityGeneratorTrait
     $option = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
       ->setKey(self::getUuid())
-      ->setLabel('ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß');
+      ->setLabel('Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß');
     $field->addDataOption($option);
     $datum = new Entities\ProjectParticipantFieldDatum()
       ->setDataOption($option)
       ->setProjectParticipant($this->participant)
       ->setOptionValue(RationalNumber::fromDecimal('12.23'));
-    $option->getFieldData()->set($this->musician->getId(), $datum);
-    $field->getFieldData()->add($datum);
-    $this->participant->addParticipantFieldDatum($datum);
 
     $this->entities[Entities\ProjectParticipantFieldDatum::class] = $datum;
 
@@ -492,8 +489,7 @@ trait EntityGeneratorTrait
       ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ->setReceivable($datum)
-      ->setReceivableOption($datum->getDataOption())
-      ->setAmount($datum->getOptionValue());
+      ->setAmount($datum->amountPayable());
 
     /** @var Entities\CompositePayment $compositePayment */
     $compositePayment = new Entities\CompositePayment()
@@ -504,9 +500,8 @@ trait EntityGeneratorTrait
     $this->participant->addPayment($compositePayment);
     $projectPayment->setCompositePayment($compositePayment);
 
-    $compositePayment->getProjectPayments()->add($projectPayment);
     $compositePayment->setAmount($compositePayment->sumPaymentsAmount());
-    $compositePayment->updateSubject($transliterate);
+    $compositePayment->updateSubject(transliterate: $transliterate);
 
     if ($persist) {
       $this->entityManager->beginTransaction();
@@ -572,6 +567,373 @@ trait EntityGeneratorTrait
     $this->entities[Entities\SepaBankTransfer::class] = $entity;
 
     return $entity;
+  }
+
+  /**
+   * Generate a CompositePayment with many items s.t. automatic subject
+   * generation with length restrictions becomes a challenge.
+   *
+   * @return Entities\SepaBankTransfer
+   */
+  public function generateMultiItemPayment(): Entities\CompositePayment
+  {
+    // $this->expectNotToPerformAssertions(); assertions already in setup
+
+    $fieldData = [
+      [
+        'id' => 481,
+        'project_id' => 156,
+        'display_order' => 90,
+        'name' => 'Unkostenerstattungen',
+        'tooltip' => null,
+        'tab' => null,
+        'encrypted' => null,
+        'default_value' => null,
+        'multiplicity' => 'recurring',
+        'data_type' => 'liabilities',
+        'due_date' => '2026-09-13 00:00:00.000000',
+        'deposit_due_date' => null,
+        'deleted' => null,
+        'participant_access' => 'none',
+        'participation_context' => 'unrestricted',
+        'balancing_account' => null,
+      ],
+      [
+        'id' => '540',
+        'project_id' => '156',
+        'display_order' => '100',
+        'name' => 'Unkostenbeiträge',
+        'tooltip' => null,
+        'tab' => null,
+        'encrypted' => null,
+        'default_value' => null,
+        'multiplicity' => 'multiple',
+        'data_type' => 'receivables',
+        'due_date' => '2026-06-30 00:00:00.000000',
+        'deposit_due_date' => null,
+        'deleted' => null,
+        'participant_access' => 'none',
+        'participation_context' => 'unrestricted',
+        'balancing_account' => 'Erträge:Zweckbetrieb:Unkostenbeiträge:Agatharied2026',
+      ],
+    ];
+    $fields = [];
+    foreach ($fieldData as $row) {
+      /** @var Entities\ProjectParticipantField $field */
+      $field = new Entities\ProjectParticipantField()
+        ->setProject($this->project);
+      unset($row['project_id']);
+      foreach ($row as $column => $value) {
+        $field[$column] = $value;
+      }
+      $fields[$field->getId()] = $field;
+    }
+
+    $fieldOptionsData = [
+      [
+        'label' => 'Einkäufe REWE 08.09. 14:00',
+        'field_id' => 481,
+        'key' => '353c24e6-6d55-11f1-b797-1d5ae83cae79',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-06-21 09:40:15.798507',
+        'updated' => '2026-10-21 00:07:17.820847',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Einkäufe Getränke Fristo 08.09. 14:45',
+        'field_id' => 481,
+        'key' => '1b62be48-ac4a-11f1-8f7a-09053123d944',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-09 12:29:31.221563',
+        'updated' => '2026-10-21 00:07:17.806675',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Einkäufe Edeka 08.09. 18:20',
+        'field_id' => 481,
+        'key' => '6a45a9da-ac4a-11f1-8bd4-f575da26e540',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-09 12:31:43.571022',
+        'updated' => '2026-10-21 00:07:17.794457',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Veselin Peykov e.K. 09.09. 17:49',
+        'field_id' => 481,
+        'key' => '9259fa58-ad16-11f1-ae14-cf8df5192a51',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-10 12:53:08.145734',
+        'updated' => '2026-10-21 00:07:17.921441',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Edeka 09.09. 18:10',
+        'field_id' => 481,
+        'key' => 'b8875ba8-ad16-11f1-a1de-a53514e7b0bc',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-10 12:54:12.196515',
+        'updated' => '2026-10-20 23:04:03.323706',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Edeka 11.09. 12:57 Leergut vs. Milch',
+        'field_id' => 481,
+        'key' => 'c5fea978-add2-11f1-98b6-3d2c5188727d',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-11 11:20:20.174178',
+        'updated' => '2026-10-20 23:15:34.348463',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Fristo 11.09. 13:07 Leergut',
+        'field_id' => 481,
+        'key' => 'ef0cbdf0-add2-11f1-8625-bdb55e20bfd1',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-11 11:21:29.052899',
+        'updated' => '2026-10-21 00:07:17.848173',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'label' => 'Edeka 12.09. 10:00',
+        'field_id' => 481,
+        'key' => '21c890a0-aec0-11f1-ab76-4908b1c1d503',
+        'data' => null,
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-09-12 15:39:24.894941',
+        'updated' => '2026-10-21 00:07:17.777836',
+        'balancing_account' => 'Aufwendungen:Zweckbetrieb:KostLogis:Verpflegung:Agatharied2026',
+      ],
+      [
+        'field_id' => '540',
+        'key' => '2ceaac80-014a-11f1-af7b-09acd852a84d',
+        'label' => 'Regulär',
+        'data' => '460.00',
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-02-03 21:51:34.924558',
+        'updated' => '2026-02-10 00:31:58.979845',
+        'balancing_account' => null,
+      ],
+      [
+        'field_id' => '540',
+        'key' => '779a7698-014a-11f1-846d-eb3a9c0a9215',
+        'label' => 'Ermäßigt',
+        'data' => '340.00',
+        'deposit' => null,
+        'limit' => null,
+        'tooltip' => null,
+        'deleted' => null,
+        'created' => '2026-02-03 21:51:34.931473',
+        'updated' => '2026-02-05 09:31:42.777411',
+        'balancing_account' => null,
+      ],
+    ];
+    $fieldOptions = [];
+    foreach ($fieldOptionsData as $row) {
+      $fieldOption = new Entities\ProjectParticipantFieldDataOption()
+        ->setField($fields[$row['field_id']]);
+      unset($row['field_id']);
+      foreach ($row as $column => $value) {
+        $fieldOption[$column] = $value;
+      }
+      $fieldOptions[(string)$fieldOption->getKey()] = $fieldOption;
+    }
+
+    $fieldDataData = [
+      [
+        'field_id' => 481,
+        'option_key' => '1b62be48-ac4a-11f1-8f7a-09053123d944',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017235,
+        'option_value' => '150.45',
+        'deposit' => null,
+        'created' => '2026-09-09 12:29:31.331857',
+        'updated' => '2026-09-10 12:46:21.632520',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => '21c890a0-aec0-11f1-ab76-4908b1c1d503',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017303,
+        'option_value' => '-21.71',
+        'deposit' => null,
+        'created' => '2026-09-12 15:39:25.010550',
+        'updated' => '2026-09-12 15:41:52.106889',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => '353c24e6-6d55-11f1-b797-1d5ae83cae79',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017236,
+        'option_value' => '161.73',
+        'deposit' => null,
+        'created' => '2026-09-09 12:28:15.422842',
+        'updated' => '2026-09-10 12:52:19.971078',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => '6a45a9da-ac4a-11f1-8bd4-f575da26e540',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017234,
+        'option_value' => '29.80',
+        'deposit' => null,
+        'created' => '2026-09-09 12:31:43.681170',
+        'updated' => '2026-09-10 12:45:48.315941',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => '9259fa58-ad16-11f1-ae14-cf8df5192a51',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017269,
+        'option_value' => '26.20',
+        'deposit' => null,
+        'created' => '2026-09-10 12:53:08.253851',
+        'updated' => '2026-09-11 10:15:02.476433',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => 'b8875ba8-ad16-11f1-a1de-a53514e7b0bc',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017268,
+        'option_value' => '131.65',
+        'deposit' => null,
+        'created' => '2026-09-10 12:54:12.281799',
+        'updated' => '2026-09-11 10:14:00.079206',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => 'c5fea978-add2-11f1-98b6-3d2c5188727d',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017285,
+        'option_value' => '1.27',
+        'deposit' => null,
+        'created' => '2026-09-11 11:20:20.276506',
+        'updated' => '2026-09-11 11:26:33.959816',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => 481,
+        'option_key' => 'ef0cbdf0-add2-11f1-8625-bdb55e20bfd1',
+        'project_id' => 156,
+        'musician_id' => 1215,
+        'supporting_document_id' => 72017286,
+        'option_value' => '-6.12',
+        'deposit' => null,
+        'created' => '2026-09-11 11:21:29.140878',
+        'updated' => '2026-09-11 11:27:46.240619',
+        'deleted' => null,
+      ],
+      [
+        'field_id' => '540',
+        'option_key' => '2ceaac80-014a-11f1-af7b-09acd852a84d',
+        'project_id' => '156',
+        'musician_id' => '1215',
+        'supporting_document_id' => null,
+        'option_value' => null,
+        'deposit' => null,
+        'created' => '2026-08-26 12:23:53.933467',
+        'updated' => '2026-08-26 12:23:53.933292',
+        'deleted' => null,
+      ],
+    ];
+
+    $documents = [];
+    foreach ($fieldDataData as $row) {
+      $fieldOption = $fieldOptions[$row['option_key']];
+      $document = $documents[$row['supporting_document_id'] ?? ''] ?? null;
+      if (!$document && $row['supporting_document_id']) {
+        $document = new Entities\DatabaseStorageFile()
+          ->setId($row['supporting_document_id'])
+          ->setFile(new Entities\EncryptedFile("filename-{$fieldOption->getLabel()}", 'data', 'text/plain'));
+        $document->getFile()->setId($document->getId());
+        $documents[$row['supporting_document_id']] = $document;
+      }
+      $datum = new Entities\ProjectParticipantFieldDatum()
+        ->setField($fields[$row['field_id']])
+        ->setDataOption($fieldOption)
+        ->setProjectParticipant($this->participant)
+        ->setSupportingDocument($document)
+        ;
+      unset($row['field_id']);
+      unset($row['project_id']);
+      unset($row['musician_id']);
+      unset($row['option_key']);
+      unset($row['supporting_document_id']);
+      foreach ($row as $column => $value) {
+        $datum[$column] = $value;
+      }
+    }
+
+    $compositePayment = new Entities\CompositePayment()
+      ->setProjectParticipant($this->participant);
+    $balanceDocumentsFolder = new Entities\DatabaseStorageFolder()
+      ->setName($this->project->getName() . '-019');
+    $compositePayment->setBalanceDocumentsFolder($balanceDocumentsFolder);
+    foreach ($fields as $field) {
+      /** @var ProjectPayment $receivable */
+      foreach ($field->getFieldData() as $receivable) {
+        $projectPayment = new Entities\ProjectPayment()
+          ->setReceivable($receivable)
+          ->setAmount($receivable->amountPayable());
+        $compositePayment->addProjectPayment($projectPayment);
+      }
+    }
+    $compositePayment->setAmount($compositePayment->sumPaymentsAmount());
+
+    return $compositePayment;
+    // $sepaBankTransfer = new Entities\SepaBankTransfer()
+    //   ->addPayment($compositePayment)
+    //   ->setDueDate('2026-09-12');
+
+    // // echo $sepaBankTransfer->getPayments()->first()->generateSubject() . PHP_EOL;
+
+    // return $sepaBankTransfer;
   }
 
   // /**

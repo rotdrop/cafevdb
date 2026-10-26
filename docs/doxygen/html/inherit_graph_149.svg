@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_mime_type_service.html" target="_top" xlink:title="Tweak the Nextcloud server to support all MIME&#45;types needed by this app.">
+<g id="a_Node000000"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html" target="_top" xlink:title="Tweak the Nextcloud server to support all MIME&#45;types needed by this app.">
 <polygon fill="white" stroke="#666666" points="94,-20 0,-20 0,0 94,0 94,-20"/>
 <text xml:space="preserve" text-anchor="middle" x="47" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">MimeTypeService</text>
 </a>

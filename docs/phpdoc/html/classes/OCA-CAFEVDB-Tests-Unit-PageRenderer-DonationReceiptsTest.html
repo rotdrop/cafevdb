@@ -124,7 +124,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-GetFormValuesTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\PageRenderer\GetFormValuesTrait">GetFormValuesTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait">EnableDeprecationsTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait">EntityGeneratorTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait">SetupMigrationTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait">SetupCalendarBackendTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait">MockUserStorageTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-GetFormValuesTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\PageRenderer\GetFormValuesTrait">GetFormValuesTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait">EnableDeprecationsTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait">EntityGeneratorTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait">SetupMigrationTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait">SetupCalendarBackendTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html"><abbr title="\OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait">RootFolderStubTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -230,6 +230,14 @@
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Common\AbstractUndoable::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\CamelCaseString::class
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -941,6 +949,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Storage\UserStorage::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class
     </dd>
     </dl>
@@ -1141,6 +1157,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesTrait">UsesTrait</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Traits\AppConfigTrait::class
     </dd>
     </dl>
@@ -1328,9 +1352,9 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries">$databaseDirEntries</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_databaseDirEntries">$databaseDirEntries</a>
     <span>
-                        &nbsp;: array&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>&gt;            </span>
+                        &nbsp;: array            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -1358,7 +1382,7 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes">$fileSystemNodes</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_fileSystemNodes">$fileSystemNodes</a>
     <span>
                         &nbsp;: array            </span>
 </dt>
@@ -1382,7 +1406,7 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a>
     <span>
                         &nbsp;: <abbr title="\OCP\Files\IMimeTypeDetector">IMimeTypeDetector</abbr>            </span>
 </dt>
@@ -1400,13 +1424,13 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodeId">$nodeId</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions">$nodePermissions</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodePermissions">$nodePermissions</a>
     <span>
                         &nbsp;: array            </span>
 </dt>
@@ -1454,13 +1478,25 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_urlGenerator">$urlGenerator</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storage">$storage</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Files\Storage\IStorage">IStorage</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storages">$storages</a>
+    <span>
+                        &nbsp;: array            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_urlGenerator">$urlGenerator</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage">$userStorage</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_userStorage">$userStorage</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a>            </span>
 </dt>
@@ -1515,6 +1551,14 @@ VCalendarService and CalDavService.</dd>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment">generateMultiItemPayment()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a>    </span>
+</dt>
+<dd>Generate a CompositePayment with many items s.t. automatic subject
+generation with length restrictions becomes a challenge.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant">generateProjectParticipant()</a>
@@ -1619,17 +1663,40 @@ data set.</dd>
 <dd>Enable throwing Doctrine deprecations.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFileStub">generateFileStub()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\File">File</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFolderStub">generateFolderStub()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-GetFormValuesTrait.html#method_getFormValues">getFormValues()</a>
     <span>
                                 &nbsp;: array    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub">getUserStorageStub()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getRootFolderStub">getRootFolderStub()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: <abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>    </span>
 </dt>
-<dd>Generate a stub or mock for the UserStorage class.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getStorage">getStorage()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Storage\IStorage">IStorage</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getUserStorage">getUserStorage()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a>    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_getUuid">getUuid()</a>
@@ -1638,7 +1705,19 @@ data set.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions">setNodePermissions()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_pathCat">pathCat()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setDatabaseDirEntry">setDatabaseDirEntry()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Node">Node</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setNodePermissions">setNodePermissions()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -1759,9 +1838,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">597</span>
+    <span class="phpdocumentor-element-found-in__line">959</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.959" class="phpdocumentor-element-found-in__source" data-line="959" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -2497,24 +2576,24 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_databaseDirEntries">
         $databaseDirEntries
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_databaseDirEntries" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">array&lt;string, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>&gt;</span>
+            <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">$databaseDirEntries</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
 
@@ -2687,17 +2766,17 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_fileSystemNodes">
         $fileSystemNodes
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_fileSystemNodes" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -2771,9 +2850,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">193</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -2839,17 +2918,17 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_mimeTypeDetector">
         $mimeTypeDetector
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_mimeTypeDetector" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -2923,9 +3002,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -2953,17 +3032,17 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_nodeId">
         $nodeId
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodeId" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">66</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -2991,17 +3070,17 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_nodePermissions">
         $nodePermissions
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -3037,9 +3116,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">192</span>
+    <span class="phpdocumentor-element-found-in__line">195</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3075,9 +3154,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3113,9 +3192,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">191</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.191" class="phpdocumentor-element-found-in__source" data-line="191" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3151,9 +3230,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">194</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3189,9 +3268,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">182</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3227,9 +3306,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">186</span>
+    <span class="phpdocumentor-element-found-in__line">189</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3293,19 +3372,95 @@ of the way of real entities generated in the test database.</p>
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_urlGenerator">
-        $urlGenerator
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_urlGenerator" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_storage">
+        $storage
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storage" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\Storage\IStorage">IStorage</abbr></span>
+    <span class="phpdocumentor-signature__name">$storage</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_storages">
+        $storages
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storages" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array</span>
+    <span class="phpdocumentor-signature__name">$storages</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_urlGenerator">
+        $urlGenerator
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_urlGenerator" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">67</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -3333,17 +3488,17 @@ of the way of real entities generated in the test database.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_userStorage">
         $userStorage
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_userStorage" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
@@ -3460,9 +3615,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">910</span>
+    <span class="phpdocumentor-element-found-in__line">1272</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.910" class="phpdocumentor-element-found-in__source" data-line="910" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.1272" class="phpdocumentor-element-found-in__source" data-line="1272" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Augment the given project by a couple of project events. The data is
@@ -3665,6 +3820,47 @@ VCalendarService and CalDavService.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_generateMultiItemPayment">
+        generateMultiItemPayment()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">578</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.578" class="phpdocumentor-element-found-in__source" data-line="578" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate a CompositePayment with many items s.t. automatic subject
+generation with length restrictions becomes a challenge.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">generateMultiItemPayment</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_generateProjectParticipant">
         generateProjectParticipant()
         <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3771,9 +3967,9 @@ VCalendarService and CalDavService.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">199</span>
+    <span class="phpdocumentor-element-found-in__line">202</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3807,9 +4003,9 @@ VCalendarService and CalDavService.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">251</span>
+    <span class="phpdocumentor-element-found-in__line">254</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.251" class="phpdocumentor-element-found-in__source" data-line="251" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
     
@@ -3842,9 +4038,9 @@ VCalendarService and CalDavService.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">265</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">This is quas a setupBeforeClass() but we need some mocked / stubbed
@@ -3879,9 +4075,9 @@ classes for the entity-manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">269</span>
+    <span class="phpdocumentor-element-found-in__line">272</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.269" class="phpdocumentor-element-found-in__source" data-line="269" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.272" class="phpdocumentor-element-found-in__source" data-line="272" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3929,9 +4125,9 @@ classes for the entity-manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php"><a href="files/tests-phpunit-unit-pagerenderer-donationreceiptstest.html"><abbr title="tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php">DonationReceiptsTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">294</span>
+    <span class="phpdocumentor-element-found-in__line">297</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.297" class="phpdocumentor-element-found-in__source" data-line="297" data-modal="source-view" data-src="files/tests/phpunit/Unit/PageRenderer/DonationReceiptsTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">This is quas a tearDownAfterClass() but we need some mocked / stubbed
@@ -4034,9 +4230,9 @@ classes for the entity-manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">480</span>
+    <span class="phpdocumentor-element-found-in__line">477</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.477" class="phpdocumentor-element-found-in__source" data-line="477" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -4228,9 +4424,9 @@ ManuallyGeneratedReceivablesGenerator::class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">534</span>
+    <span class="phpdocumentor-element-found-in__line">529</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.534" class="phpdocumentor-element-found-in__source" data-line="534" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -4267,9 +4463,9 @@ ManuallyGeneratedReceivablesGenerator::class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">557</span>
+    <span class="phpdocumentor-element-found-in__line">552</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.557" class="phpdocumentor-element-found-in__source" data-line="557" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.552" class="phpdocumentor-element-found-in__source" data-line="552" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -4396,6 +4592,118 @@ data set.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_generateFileStub">
+        generateFileStub()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFileStub" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">196</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">generateFileStub</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Files\Folder">Folder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$childPath</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$content</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\File">File</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$parent</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$childPath</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$content</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\File">File</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_generateFolderStub">
+        generateFolderStub()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFolderStub" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">121</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">generateFolderStub</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$path</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getFormValues">
         getFormValues()
         <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-GetFormValuesTrait.html#method_getFormValues" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4452,47 +4760,116 @@ data set.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getUserStorageStub">
-        getUserStorageStub()
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getRootFolderStub">
+        getRootFolderStub()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getRootFolderStub" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Generate a stub or mock for the UserStorage class.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">getUserStorageStub</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mock</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getRootFolderStub</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$mock</span>
-                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>If \true generate a mock, else a stub</p>
-</section>
-
-            </dd>
-            </dl>
-
+    
     
 
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getStorage">
+        getStorage()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getStorage" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">96</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
     
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">getStorage</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Storage\IStorage">IStorage</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Storage\IStorage">IStorage</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserStorage">
+        getUserStorage()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getUserStorage" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">261</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">getUserStorage</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"><abbr title="\OCA\CAFEVDB\Storage\UserStorage">UserStorage</abbr></a></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -4539,23 +4916,23 @@ data set.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_setNodePermissions">
-        setNodePermissions()
-        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_pathCat">
+        pathCat()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_pathCat" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php"><a href="files/tests-phpunit-unit-storage-mockuserstoragetrait.html"><abbr title="tests/phpunit/Unit/Storage/MockUserStorageTrait.php">MockUserStorageTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/MockUserStorageTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">setNodePermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$path</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">pathCat</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$child</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4564,8 +4941,120 @@ data set.</p>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$path</span>
+                <span class="phpdocumentor-argument-list__argument__name">$parent</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$child</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setDatabaseDirEntry">
+        setDatabaseDirEntry()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setDatabaseDirEntry" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">283</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">setDatabaseDirEntry</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dirEntry</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mountPointPath</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Node">Node</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dirEntry</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$mountPointPath</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Node">Node</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setNodePermissions">
+        setNodePermissions()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setNodePermissions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php"><a href="files/tests-phpunit-unit-storage-rootfolderstubtrait.html"><abbr title="tests/phpunit/Unit/Storage/RootFolderStubTrait.php">RootFolderStubTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">86</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/tests/phpunit/Unit/Storage/RootFolderStubTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">setNodePermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Files\Node">Node</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$node</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$node</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Files\Node">Node</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -4730,20 +5219,20 @@ data set.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_calendarObjectId">$calendarObjectId</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_calendarObjects">$calendarObjects</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_configService">$configService</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_databaseDirEntries">$databaseDirEntries</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_databaseDirEntries">$databaseDirEntries</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#property_databaseProvider">$databaseProvider</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_defaultCalendars">$defaultCalendars</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_entities">$entities</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_entityManager">$entityManager</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_fileSystemNodes">$fileSystemNodes</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_fileSystemNodes">$fileSystemNodes</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_instrumentationService">$instrumentationService</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_migrationsApplied">$migrationsApplied</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#property_migrationsService">$migrationsService</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_mimeTypeDetector">$mimeTypeDetector</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_mockProvider">$mockProvider</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_musicianId">$musicianId</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodeId">$nodeId</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_nodePermissions">$nodePermissions</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodeId">$nodeId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_nodePermissions">$nodePermissions</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_now">$now</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_phpMyEdit">$phpMyEdit</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_postData">$postData</a></li>
@@ -4751,8 +5240,10 @@ data set.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_renderer">$renderer</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#property_request">$request</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_sharedCalendarRows">$sharedCalendarRows</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_urlGenerator">$urlGenerator</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#property_userStorage">$userStorage</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storage">$storage</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_storages">$storages</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_urlGenerator">$urlGenerator</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#property_userStorage">$userStorage</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#property_uuidIndex">$uuidIndex</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#property_vCalendarService">$vCalendarService</a></li>
                                             </ul>
@@ -4765,6 +5256,7 @@ data set.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#method_applyMigrations">applyMigrations()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Service-SetupCalendarBackendTrait.html#method_generateCalendarBackend">generateCalendarBackend()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateEncryptedFile">generateEncryptedFile()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment">generateMultiItemPayment()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant">generateProjectParticipant()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Maintenance-Migrations-SetupMigrationTrait.html#method_getEntityManager">getEntityManager()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-DonationReceiptsTest.html#method_setup">setup()</a></li>
@@ -4780,10 +5272,16 @@ data set.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateSepaBankTransfer">generateSepaBankTransfer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateYesNoField">generateYesNoField()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-EnableDeprecationsTrait.html#method_enableDeprecations">enableDeprecations()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFileStub">generateFileStub()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_generateFolderStub">generateFolderStub()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-PageRenderer-GetFormValuesTrait.html#method_getFormValues">getFormValues()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_getUserStorageStub">getUserStorageStub()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getRootFolderStub">getRootFolderStub()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getStorage">getStorage()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_getUserStorage">getUserStorage()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_getUuid">getUuid()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-MockUserStorageTrait.html#method_setNodePermissions">setNodePermissions()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_pathCat">pathCat()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setDatabaseDirEntry">setDatabaseDirEntry()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Storage-RootFolderStubTrait.html#method_setNodePermissions">setNodePermissions()</a></li>
                                     </ul>
             </li>
                     </ul>

@@ -1,0 +1,8 @@
+<map id="getCompositePayment" name="getCompositePayment">
+<area shape="rect" id="Node000001" title="Get compositePayment." alt="" coords="514,21,668,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a7bbb04d993160b8b39ff259d9a00b420" title=" " alt="" coords="208,5,466,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="496,35,466,37,466,32,501,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#ab3e37f847769704baa78ecb0578be043" title="Set compositePayment." alt="" coords="5,21,160,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="189,44,160,46,160,40,194,43"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="175,23,210,25,204,26,176,29"/>
+</map>

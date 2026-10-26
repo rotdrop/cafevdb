@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /** Test the Entities\SepaBankTransaction entity. */
 #[Attributes\CoversClass(Entities\SepaBulkTransaction::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]

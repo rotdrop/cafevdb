@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_constants.html" target="_top" xlink:title="A couple of constants in order to avoid string literals.">
+<g id="a_Node000000"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_constants.html" target="_top" xlink:title="Helper class for tests, defining some constants.">
 <polygon fill="white" stroke="#666666" points="61,-20 0,-20 0,0 61,0 61,-20"/>
 <text xml:space="preserve" text-anchor="middle" x="30.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">Constants</text>
 </a>

@@ -55,6 +55,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
@@ -268,6 +269,7 @@ class InsuranceRatesTest extends TestCase
   #[Attributes\Depends('testApplyMigrations')]
   public function testRenderList(): void
   {
+
     $this->postData[PersistentCGIKeys::TEMPLATE] = PageRenderer\SepaBulkTransactions::TEMPLATE;
     ob_start();
     try {

@@ -431,6 +431,23 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * @param ProjectParticipantField $field
+   *
+   * @return self
+   */
+  public function addParticipantField(ProjectParticipantField $field): self
+  {
+    if (!$this->participantFields->contains($field)) {
+      $this->participantFields->add($field);
+    }
+    if ($field->getProject() !== $this) {
+      $field->setProject($this);
+    }
+
+    return $this;
+  }
+
+  /**
    * Get participantFields.
    *
    * @param string|Types\EnumParticipationContext $participationContext
@@ -488,6 +505,23 @@ class Project implements \ArrayAccess
   public function setParticipants(Collection $participants): Project
   {
     $this->participants = $participants;
+
+    return $this;
+  }
+
+  /**
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addParticipantFieldsDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    if (!$this->participantFieldsData->contains($datum)) {
+      $this->participantFieldsData->add($datum);
+    }
+    if (!$datum->getField() === $this) {
+      $datum->setField($this);
+    }
 
     return $this;
   }

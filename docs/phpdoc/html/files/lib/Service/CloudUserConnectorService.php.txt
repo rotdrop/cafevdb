@@ -210,13 +210,14 @@ WHERE m.email IS NOT NULL AND m.email <> ""
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    private EncryptionService $encryptionService,
+    private IAppManager $appManager,
+    private IConfig $cloudConfig,
+    private IL10N $l,
+    private RequestService $requestService,
     private string $appName,
     protected ContainerInterface $appContainer,
     protected ILogger $logger,
-    private IL10N $l,
-    private IConfig $cloudConfig,
-    private EncryptionService $encryptionService,
-    private IAppManager $appManager,
   ) {
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
@@ -551,9 +552,6 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    */
   public function configureCloudUserBackend(bool $erase = false):array
   {
-    /** @var RequestService $requestService */
-    $requestService = $this->appContainer->get(RequestService::class);
-
     $configKeys = $this->cloudConfig->getAppKeys($this->appName);
     $prefix = self::CLOUD_USER_BACKEND . ':';
     $prefixLen = strlen($prefix);
@@ -581,15 +579,12 @@ WHERE m.email IS NOT NULL AND m.email <> ""
 
     $messages = [];
 
-    /** @var RequestService $requestService */
-    $requestService = $this->appContainer->get(RequestService::class);
-
     $route = implode('.', [
       self::CLOUD_USER_BACKEND,
-      'settings',
+      'Settings',
       'saveProperties',
     ]);
-    $result = $requestService->postToRoute($route, requestData: $cloudUserBackendParams, postType: RequestService::URL_ENCODED);
+    $result = $this->requestService->postToRoute($route, requestData: $cloudUserBackendParams, postType: RequestService::URL_ENCODED);
     $messages[] = $result['message'] ?? $this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
 
     // try also to clear the cache after and before changing the configuration
@@ -601,17 +596,11 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   /**
    * Clear the backend cache, for use in controllers, back-reportings messages.
    *
-   * @param null|RequestService $requestService
-   *
-   * @param null|array $messages
-   *
    * @return void
    */
-  private function clearUserBackendCache():void
+  private function clearUserBackendCache(): void
   {
-    /** @var \OCA\UserSQL\Cache $userBackendCache */
-    $userBackendCache = $this->appContainer->get(\OCA\UserSQL\Cache::class);
-    $userBackendCache->clear();
+    $this->requestService->postToRoute(implode('.', [self::CLOUD_USER_BACKEND, 'Settings', 'clearCache']));
   }
 
   /**

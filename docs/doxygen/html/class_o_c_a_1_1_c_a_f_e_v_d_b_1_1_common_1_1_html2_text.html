@@ -126,19 +126,28 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('class_o_c_a_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac1743bd351c832b6cd7731ac36ceb691" id="r_ac1743bd351c832b6cd7731ac36ceb691"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#ac1743bd351c832b6cd7731ac36ceb691">setExecutableFinder</a> (?ExecutableFinder $executableFinder)</td></tr>
+<tr class="memdesc:ac1743bd351c832b6cd7731ac36ceb691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inject an executable finder, mainly for testing.  <br /></td></tr>
 <tr class="memitem:a8c2cb1b2ebba9f4deaf5f6b2dadfd205" id="r_a8c2cb1b2ebba9f4deaf5f6b2dadfd205"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a8c2cb1b2ebba9f4deaf5f6b2dadfd205">convert</a> (string $html)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-static-methods" class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a8cce3bddd623b2fa4760c181a1eb77e9" id="r_a8cce3bddd623b2fa4760c181a1eb77e9"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a8cce3bddd623b2fa4760c181a1eb77e9">normalizeSpaces</a> (string $text)</td></tr>
 <tr class="memdesc:a8cce3bddd623b2fa4760c181a1eb77e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim the string and remove spaces followed by a newline character.  <br /></td></tr>
+<tr class="memitem:a62abf9a36e78cdb15f1f5ad384a6c04f" id="r_a62abf9a36e78cdb15f1f5ad384a6c04f"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a62abf9a36e78cdb15f1f5ad384a6c04f">renderTable</a> (DOMElement $table)</td></tr>
+<tr class="memitem:a17cb79482e08bb0c20d4a49c3e01d0df" id="r_a17cb79482e08bb0c20d4a49c3e01d0df"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a17cb79482e08bb0c20d4a49c3e01d0df">cellText</a> (DOMNode $cell)</td></tr>
+<tr class="memitem:a819565111aa83890dfffdd5b2409069c" id="r_a819565111aa83890dfffdd5b2409069c"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a819565111aa83890dfffdd5b2409069c">cellAlignment</a> (DOMElement $cell)</td></tr>
 <tr class="memitem:ab90bcfd5ae9b8d7c6a687386f44bc216" id="r_ab90bcfd5ae9b8d7c6a687386f44bc216"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#ab90bcfd5ae9b8d7c6a687386f44bc216">callConverter</a> (string $converter, array $arguments, string $html)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-static-attribs" class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:adbee0b52f4f6dcc5c1c1285851072163" id="r_adbee0b52f4f6dcc5c1c1285851072163"><td class="memItemLeft">static ExecutableFinder&#160;</td><td class="memItemRight"><a class="el" href="#adbee0b52f4f6dcc5c1c1285851072163">$executableFinder</a> = null</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Html to text converter. </p>
-<p>Try to use "lynx" as that seems to be the only html-to-text tool which has sort-of support for HTML tables. </p>
+<p>Use the external "w3m" program if available as that has the best support for HTML tables. Otherwise fall back to a pure PHP implementation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00035">35</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00046">46</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="ab90bcfd5ae9b8d7c6a687386f44bc216" name="ab90bcfd5ae9b8d7c6a687386f44bc216"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab90bcfd5ae9b8d7c6a687386f44bc216">&#9670;&#160;</a></span>callConverter()</h2>
@@ -181,14 +190,82 @@ Static Private Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00118">118</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00254">254</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_html2_text_8php_source.html#l00095">convert()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_html2_text_8php_source.html#l00106">convert()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text_ab90bcfd5ae9b8d7c6a687386f44bc216_icgraph.svg" width="100%" height="415"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
+
+</div>
+</div>
+<a id="a819565111aa83890dfffdd5b2409069c" name="a819565111aa83890dfffdd5b2409069c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a819565111aa83890dfffdd5b2409069c">&#9670;&#160;</a></span>cellAlignment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cellAlignment </td>
+          <td>(</td>
+          <td class="paramtype">DOMElement</td>          <td class="paramname"><span class="paramname"><em>$cell</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">DOMElement</td><td class="paramname">$cell</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string One of 'left', 'center' or 'right'. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00235">235</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+
+</div>
+</div>
+<a id="a17cb79482e08bb0c20d4a49c3e01d0df" name="a17cb79482e08bb0c20d4a49c3e01d0df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17cb79482e08bb0c20d4a49c3e01d0df">&#9670;&#160;</a></span>cellText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cellText </td>
+          <td>(</td>
+          <td class="paramtype">DOMNode</td>          <td class="paramname"><span class="paramname"><em>$cell</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">DOMNode</td><td class="paramname">$cell</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00218">218</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 
 </div>
 </div>
@@ -222,9 +299,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00095">95</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00106">106</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_html2_text_8php_source.html#l00118">callConverter()</a>, and <a class="el" href="_html2_text_8php_source.html#l00080">normalizeSpaces()</a>.</p>
+<p class="reference">References <a class="el" href="_html2_text_8php_source.html#l00254">callConverter()</a>, and <a class="el" href="_html2_text_8php_source.html#l00091">normalizeSpaces()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_open_document_filler_8php_source.html#l00169">OpenDocumentFiller\fillInternal()</a>, and <a class="el" href="_p_h_p_mailer_8php_source.html#l00147">PHPMailer\html2text()</a>.</p>
 <div class="dynheader">
@@ -272,14 +349,110 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00080">80</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00091">91</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_html2_text_8php_source.html#l00095">convert()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_html2_text_8php_source.html#l00106">convert()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text_a8cce3bddd623b2fa4760c181a1eb77e9_icgraph.svg" width="100%" height="415"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
+
+</div>
+</div>
+<a id="a62abf9a36e78cdb15f1f5ad384a6c04f" name="a62abf9a36e78cdb15f1f5ad384a6c04f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62abf9a36e78cdb15f1f5ad384a6c04f">&#9670;&#160;</a></span>renderTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">renderTable </td>
+          <td>(</td>
+          <td class="paramtype">DOMElement</td>          <td class="paramname"><span class="paramname"><em>$table</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">DOMElement</td><td class="paramname">$table</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00173">173</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+
+</div>
+</div>
+<a id="ac1743bd351c832b6cd7731ac36ceb691" name="ac1743bd351c832b6cd7731ac36ceb691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1743bd351c832b6cd7731ac36ceb691">&#9670;&#160;</a></span>setExecutableFinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">setExecutableFinder </td>
+          <td>(</td>
+          <td class="paramtype">?ExecutableFinder</td>          <td class="paramname"><span class="paramname"><em>$executableFinder</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inject an executable finder, mainly for testing. </p>
+<p>Pass null to reset.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">null&#160;|&#160;ExecutableFinder</td><td class="paramname">$executableFinder</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00079">79</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Field Documentation</h2>
+<a id="adbee0b52f4f6dcc5c1c1285851072163" name="adbee0b52f4f6dcc5c1c1285851072163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbee0b52f4f6dcc5c1c1285851072163">&#9670;&#160;</a></span>$executableFinder</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ExecutableFinder $executableFinder = null</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_html2_text_8php_source.html#l00070">70</a> of file <a class="el" href="_html2_text_8php_source.html">Html2Text.php</a>.</p>
 
 </div>
 </div>

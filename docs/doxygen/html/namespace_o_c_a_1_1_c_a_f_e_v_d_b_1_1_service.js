@@ -43,5 +43,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service =
     [ "ToolTipsDataService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service" ],
     [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service" ],
     [ "UserEncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_user_encryption_service.html", null ],
-    [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ]
+    [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ],
+    [ "WordSplitterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service" ]
 ];

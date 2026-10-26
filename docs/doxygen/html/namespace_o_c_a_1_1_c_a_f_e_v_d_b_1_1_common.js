@@ -9,6 +9,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common =
     [ "AbstractFileSystemUndoable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable" ],
     [ "AbstractProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status" ],
     [ "AbstractUndoable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable" ],
+    [ "CamelCaseString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string" ],
     [ "ConsoleLogger", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_console_logger.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_console_logger" ],
     [ "DatabaseProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status" ],
     [ "DoNothingProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status" ],

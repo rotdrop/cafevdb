@@ -29,8 +29,9 @@ var searchData=
   ['userrecryptionresponse_26',['UserRecryptionResponse',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_user_recryption_response.html',1,'OCA::CAFEVDB::Controller::DTO']]],
   ['userscopeservice_27',['UserScopeService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html',1,'UserScopeService'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_user_scope_service.html',1,'UserScopeService']]],
   ['userstorage_28',['UserStorage',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html',1,'OCA::CAFEVDB::Storage']]],
-  ['util_29',['Util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
-  ['utiltest_30',['UtilTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test.html',1,'OCA::CAFEVDB::Tests::Unit::Common']]],
-  ['uuid_31',['Uuid',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html',1,'OCA::CAFEVDB::Common']]],
-  ['uuidtype_32',['UuidType',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'UuidType'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'UuidType']]]
+  ['userstoragetest_29',['UserStorageTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test.html',1,'OCA::CAFEVDB::Tests::Unit::Storage']]],
+  ['util_30',['Util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
+  ['utiltest_31',['UtilTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_util_test.html',1,'OCA::CAFEVDB::Tests::Unit::Common']]],
+  ['uuid_32',['Uuid',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html',1,'OCA::CAFEVDB::Common']]],
+  ['uuidtype_33',['UuidType',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'UuidType'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'UuidType']]]
 ];

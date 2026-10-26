@@ -127,13 +127,14 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
     </aside>
 
-            <p class="phpdocumentor-summary">Html to text converter. Try to use &quot;lynx&quot; as that seems to be the only
-html-to-text tool which has sort-of support for HTML tables.</p>
+            <p class="phpdocumentor-summary">Html to text converter. Use the external &quot;w3m&quot; program if available as that
+has the best support for HTML tables. Otherwise fall back to a pure PHP
+implementation.</p>
 
 
 
@@ -162,12 +163,25 @@ html-to-text tool which has sort-of support for HTML tables.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#constant_HTML_CONVERTERS">HTML_CONVERTERS</a>
     <span>
-        &nbsp;: array&nbsp;= [ &#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-...                            </span>
+        &nbsp;: array&nbsp;= [&#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-8...                            </span>
 </dt>
 
     </dl>
 
 
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#property_executableFinder">$executableFinder</a>
+    <span>
+                        &nbsp;: null|<abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr>            </span>
+</dt>
+
+    </dl>
 
 <h4 id="toc-methods">
     Methods
@@ -181,10 +195,29 @@ html-to-text tool which has sort-of support for HTML tables.</p>
                                 &nbsp;: string    </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_setExecutableFinder">setExecutableFinder()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Inject an executable finder, mainly for testing. Pass null to reset.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_callConverter">callConverter()</a>
     <span>
                                 &nbsp;: null|string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellAlignment">cellAlignment()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellText">cellText()</a>
+    <span>
+                                &nbsp;: string    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
@@ -193,6 +226,21 @@ html-to-text tool which has sort-of support for HTML tables.</p>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Trim the string and remove spaces followed by a newline character.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTable">renderTable()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTables">renderTables()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Replace all HTML tables by preformatted blocks containing a plain-text
+rendering of the table. Nested tables are rendered inside-out. Row spans
+are not supported, column spans are.</dd>
 
     </dl>
 
@@ -215,9 +263,9 @@ html-to-text tool which has sort-of support for HTML tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
     </aside>
 
     
@@ -226,20 +274,16 @@ html-to-text tool which has sort-of support for HTML tables.</p>
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">array</span>
     <span class="phpdocumentor-signature__name">HTML_CONVERTERS</span>
-    = <span class="phpdocumentor-signature__default-value">[
-    &#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-8&#039;, &#039;-T&#039;, &#039;text/html&#039;],
-    &#039;lynx&#039; =&gt; [&#039;-force_html&#039;, &#039;-noreferer&#039;, &#039;-nomargins&#039;, &#039;-dont_wrap_pre&#039;, &#039;-nolist&#039;, &#039;-display_charset=utf-8&#039;, &#039;-width=80&#039;, &#039;-dump&#039;, &#039;-stdin&#039;],
-    // elinks is really SSSSLLLLOOOOWWWW
-    &#039;elinks&#039; =&gt; [&#039;-dump&#039;, &#039;-force-html&#039;],
-]</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;w3m&#039; =&gt; [&#039;-dump&#039;, &#039;-I&#039;, &#039;utf-8&#039;, &#039;-O&#039;, &#039;utf-8&#039;, &#039;-T&#039;, &#039;text/html&#039;]]</span>
 </code>
 
 
     
-        <section class="phpdocumentor-description"><p>List of possible html to text programs. The programs listed below have at
-least rudimentary support for HTML tables, in contrast to the various PHP
-implementations of html2text which all are loosing when it comes to
-tables.</p>
+        <section class="phpdocumentor-description"><p>List of possible html to text programs. Only w3m is supported as its
+output has proven to be the best for tables, block quotes and
+preformatted text, in contrast to the various PHP implementations of
+html2text which all are loosing when it comes to tables. lynx and elinks
+have been dropped as their output differs substantially from w3m.</p>
 <p>None of the external programs seems to have support for CSS ... Oops.</p>
 </section>
 
@@ -250,6 +294,51 @@ tables.</p>
             </section>
 
         
+    <section class="phpdocumentor-properties">
+        <h3 class="phpdocumentor-elements__header" id="properties">
+            Properties
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+            -static                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_executableFinder">
+        $executableFinder
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#property_executableFinder" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">null|<abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr></span>
+    <span class="phpdocumentor-signature__name">$executableFinder</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+            </section>
 
             <section class="phpdocumentor-methods">
         <h3 class="phpdocumentor-elements__header" id="methods">
@@ -271,9 +360,9 @@ tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
     </aside>
 
     
@@ -309,6 +398,52 @@ tables.</p>
                     <article
         class="phpdocumentor-element
             -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setExecutableFinder">
+        setExecutableFinder()
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_setExecutableFinder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">79</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Inject an executable finder, mainly for testing. Pass null to reset.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">setExecutableFinder</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$executableFinder</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$executableFinder</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -private
                                     -static                    "
 >
@@ -320,9 +455,9 @@ tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">254</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
     </aside>
 
     
@@ -375,6 +510,108 @@ tables.</p>
             -private
                                     -static                    "
 >
+    <h4 class="phpdocumentor-element__name" id="method_cellAlignment">
+        cellAlignment()
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellAlignment" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">235</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.235" class="phpdocumentor-element-found-in__source" data-line="235" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">cellAlignment</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DOMElement">DOMElement</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cell</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$cell</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DOMElement">DOMElement</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>One of 'left', 'center' or 'right'.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_cellText">
+        cellText()
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellText" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">218</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">cellText</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DOMNode">DOMNode</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cell</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$cell</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DOMNode">DOMNode</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
     <h4 class="phpdocumentor-element__name" id="method_normalizeSpaces">
         normalizeSpaces()
         <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_normalizeSpaces" class="headerlink"><i class="fas fa-link"></i></a>
@@ -383,9 +620,9 @@ tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Trim the string and remove spaces followed by a newline character.</p>
@@ -402,6 +639,107 @@ tables.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$text</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_renderTable">
+        renderTable()
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTable" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">173</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">renderTable</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DOMElement">DOMElement</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$table</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$table</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DOMElement">DOMElement</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_renderTables">
+        renderTables()
+        <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTables" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Html2Text.php"><a href="files/lib-common-html2text.html"><abbr title="lib/Common/Html2Text.php">Html2Text.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">129</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Html2Text.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/lib/Common/Html2Text.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Replace all HTML tables by preformatted blocks containing a plain-text
+rendering of the table. Nested tables are rendered inside-out. Row spans
+are not supported, column spans are.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">renderTables</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$html</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$html</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
@@ -527,7 +865,8 @@ tables.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                         <li><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#toc-constants">Constants</a></li>
-                                                                                <li><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#toc-methods">Methods</a></li>
+                                                            <li><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
@@ -537,13 +876,24 @@ tables.</p>
                                             </ul>
                 </li>
             
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#property_executableFinder">$executableFinder</a></li>
+                                            </ul>
+                </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_convert">convert()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_setExecutableFinder">setExecutableFinder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_callConverter">callConverter()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellAlignment">cellAlignment()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_cellText">cellText()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_normalizeSpaces">normalizeSpaces()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTable">renderTable()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Html2Text.html#method_renderTables">renderTables()</a></li>
                                     </ul>
             </li>
                     </ul>

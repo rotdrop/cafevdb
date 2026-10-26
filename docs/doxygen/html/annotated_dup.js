@@ -55,6 +55,7 @@ var annotated_dup =
           [ "AbstractFileSystemUndoable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable" ],
           [ "AbstractProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status" ],
           [ "AbstractUndoable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable" ],
+          [ "CamelCaseString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string" ],
           [ "ConsoleLogger", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_console_logger.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_console_logger" ],
           [ "DatabaseProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status" ],
           [ "DoNothingProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status" ],
@@ -667,7 +668,8 @@ var annotated_dup =
             [ "ManuallyGeneratedReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator" ],
             [ "PeriodicReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_periodic_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_periodic_receivables_generator" ],
             [ "ReceivablesGeneratorFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_receivables_generator_factory.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_receivables_generator_factory" ],
-            [ "SepaBulkTransactionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service" ]
+            [ "SepaBulkTransactionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service" ],
+            [ "SepaTransliterator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_transliterator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_transliterator" ]
           ] ],
           [ "IMAP", null, [
             [ "Address", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address" ],
@@ -720,7 +722,8 @@ var annotated_dup =
           [ "ToolTipsDataService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service" ],
           [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service" ],
           [ "UserEncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_user_encryption_service.html", null ],
-          [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ]
+          [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ],
+          [ "WordSplitterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service" ]
         ] ],
         [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings.html", [
           [ "Admin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin" ],
@@ -760,6 +763,7 @@ var annotated_dup =
           [ "Unit", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit.html", [
             [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common.html", [
               [ "AbstractUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_abstract_undoable_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_abstract_undoable_test" ],
+              [ "CamelCaseStringTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_camel_case_string_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_camel_case_string_test" ],
               [ "ConsoleLoggerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_console_logger_test" ],
               [ "FunctionsTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_functions_test" ],
               [ "GenericUndoableTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_generic_undoable_test" ],
@@ -829,7 +833,7 @@ var annotated_dup =
               [ "MailingListsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_mailing_lists_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_mailing_lists_controller_test" ],
               [ "MusiciansControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musicians_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musicians_controller_test" ],
               [ "MusicianValidationControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musician_validation_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_musician_validation_controller_test" ],
-              [ "PersonalSettingsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_personal_settings_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_personal_settings_controller_test" ],
+              [ "PersonalSettingsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_personal_settings_controller_test.html", null ],
               [ "ProblemReportControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_problem_report_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_problem_report_controller_test" ],
               [ "ProgressStatusControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_progress_status_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_progress_status_controller_test" ],
               [ "ProjectEventsControllerTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_project_events_controller_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_controller_1_1_project_events_controller_test" ],
@@ -924,7 +928,8 @@ var annotated_dup =
                 [ "AqBankingBulkTransactionExporterTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter_test" ],
                 [ "FinanceServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_finance_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_finance_service_test" ],
                 [ "GnuCashConnectorServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_gnu_cash_connector_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_gnu_cash_connector_service_test" ],
-                [ "SepaBulkTransactionServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test" ]
+                [ "SepaBulkTransactionServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service_test" ],
+                [ "SepaTransliteratorTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_transliterator_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_finance_1_1_sepa_transliterator_test" ]
               ] ],
               [ "L10N", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_l10_n.html", [
                 [ "BiDirectionalL10NTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_l10_n_1_1_bi_directional_l10_n_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_l10_n_1_1_bi_directional_l10_n_test" ]
@@ -940,12 +945,17 @@ var annotated_dup =
               [ "EventsServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_events_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_events_service_test" ],
               [ "HistoryServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_history_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_history_service_test" ],
               [ "InstrumentationServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_instrumentation_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_instrumentation_service_test" ],
+              [ "MailingListsServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_mailing_lists_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_mailing_lists_service_test" ],
               [ "ProgressStatusServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_progress_status_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_progress_status_service_test" ],
               [ "ProjectParticipantFieldsServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_participant_fields_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_participant_fields_service_test" ],
-              [ "ProjectServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_service_test" ]
+              [ "ProjectServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_project_service_test" ],
+              [ "WordSplitterServiceTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_word_splitter_service_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_word_splitter_service_test" ]
             ] ],
             [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings.html", [
               [ "AdminInitialStateTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_settings_1_1_admin_initial_state_test" ]
+            ] ],
+            [ "Storage", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage.html", [
+              [ "UserStorageTest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test" ]
             ] ],
             [ "Toolkit", null, [
               [ "Common", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_toolkit_1_1_common.html", [

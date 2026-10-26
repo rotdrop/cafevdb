@@ -131,9 +131,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">40</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Post to local routes on the same server.</p>
@@ -171,13 +171,19 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_DELETE">DELETE</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;delete&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;DELETE&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_GET">GET</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;get&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;GET&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_HEAD">HEAD</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;HEAD&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -187,15 +193,27 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_OPTIONS">OPTIONS</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;OPTIONS&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_PATCH">PATCH</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;PATCH&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_POST">POST</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;post&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;POST&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_PUT">PUT</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;put&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;PUT&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -217,6 +235,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Container\ContainerInterface">ContainerInterface</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_client">$client</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Http\Client\IClient">IClient</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -270,13 +294,6 @@
                                 &nbsp;: array    </span>
 </dt>
 <dd>GET from a Cloud route.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_getFromURL">getFromURL()</a>
-    <span>
-                                &nbsp;: array    </span>
-</dt>
-<dd>GET from an URL.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
@@ -340,13 +357,6 @@
 </dt>
 <dd>Post to to a Cloud route.</dd>
 
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_postToURL">postToURL()</a>
-    <span>
-                                &nbsp;: array    </span>
-</dt>
-<dd>POST to an URL.</dd>
-
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
@@ -383,9 +393,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -414,9 +424,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -425,7 +435,7 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">DELETE</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;delete&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;DELETE&#039;</span>
 </code>
 
 
@@ -445,9 +455,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -456,7 +466,38 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">GET</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;get&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;GET&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_HEAD">
+        HEAD
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_HEAD" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">48</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">HEAD</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;HEAD&#039;</span>
 </code>
 
 
@@ -476,9 +517,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -498,6 +539,68 @@ understands those.</dd>
         
     </article>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_OPTIONS">
+        OPTIONS
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_OPTIONS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">OPTIONS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;OPTIONS&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PATCH">
+        PATCH
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_PATCH" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">50</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PATCH</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;PATCH&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_POST">
         POST
         <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_POST" class="headerlink"><i class="fas fa-link"></i></a>
@@ -507,9 +610,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -518,7 +621,7 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">POST</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;post&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;POST&#039;</span>
 </code>
 
 
@@ -538,9 +641,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -549,7 +652,7 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">PUT</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;put&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;PUT&#039;</span>
 </code>
 
 
@@ -569,9 +672,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -644,6 +747,44 @@ understands those.</dd>
             -protected
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_client">
+        $client
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_client" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">44</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Http\Client\IClient">IClient</abbr></span>
+    <span class="phpdocumentor-signature__name">$client</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_l">
         $l
         <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
@@ -654,9 +795,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -692,9 +833,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -730,9 +871,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -768,9 +909,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
@@ -811,15 +952,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$urlGenerator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$urlGenerator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Http\Client\IClientService">IClientService</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$clientService</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -855,6 +996,13 @@ understands those.</dd>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$clientService</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Http\Client\IClientService">IClientService</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
             </dl>
 
     
@@ -877,9 +1025,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Send to to a Cloud route.</p>
@@ -899,10 +1047,7 @@ understands those.</dd>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Route name or URL. If $route starts with a literal
-'http' then it will be used as is. The $routeParams are ignored in this
-case and the $requestParams are appended to the URL for GET and posted to
-the URL for POST requests.</p>
+                    <section class="phpdocumentor-description"><p>Route name.</p>
 </section>
 
             </dd>
@@ -968,9 +1113,9 @@ the fact that we use POST).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">GET from a Cloud route.</p>
@@ -1010,68 +1155,6 @@ the fact that we use POST).</p>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Stuff passed by the POST method.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getFromURL">
-        getFromURL()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_getFromURL" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">113</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">GET from an URL.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getFromURL</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$url</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requestData</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$url</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The URL. Will be made absolute if not starting with a
-literal 'http'.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$requestData</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Stuff passed by the GET method.</p>
 </section>
 
             </dd>
@@ -1700,9 +1783,9 @@ literal 'http'.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Post to to a Cloud route.</p>
@@ -1752,68 +1835,6 @@ the fact that we use POST).</p>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>How $requestData is encoded. Can be 'json' or
 'urlencoded'. Default is 'json'.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_postToURL">
-        postToURL()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_postToURL" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/RequestService.php"><a href="files/lib-toolkit-service-requestservice.html"><abbr title="lib/Toolkit/Service/RequestService.php">RequestService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">133</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/lib/Toolkit/Service/RequestService.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">POST to an URL.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">postToURL</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$url</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requestData</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$url</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The URL. Will be made absolute if not starting with a
-literal 'http'.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$requestData</span>
-                : <span class="phpdocumentor-argument-list__argument__type">array</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Stuff passed by the POST method.</p>
 </section>
 
             </dd>
@@ -2034,7 +2055,10 @@ understands those.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_DATA">DATA</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_DELETE">DELETE</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_GET">GET</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_HEAD">HEAD</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_JSON">JSON</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_OPTIONS">OPTIONS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_PATCH">PATCH</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_POST">POST</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_PUT">PUT</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#constant_URL_ENCODED">URL_ENCODED</a></li>
@@ -2045,6 +2069,7 @@ understands those.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_client">$client</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_l">$l</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_logger">$logger</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#property_request">$request</a></li>
@@ -2058,7 +2083,6 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_callInternalRoute">callInternalRoute()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_getFromRoute">getFromRoute()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_getFromURL">getFromURL()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a></li>
@@ -2068,7 +2092,6 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_postToRoute">postToRoute()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html#method_postToURL">postToURL()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
                                     </ul>

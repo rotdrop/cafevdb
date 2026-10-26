@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"_instrument_instrument_family_test_8php_source.html":[10,0,3,0,1,4,0,1,0,5],
+"_instrument_insurance_8php_source.html":[10,0,0,8,1,2,0,30],
 "_instrument_insurance_controller_8php_source.html":[10,0,0,6,54],
 "_instrument_insurance_controller_test_8php_source.html":[10,0,3,0,1,2,15],
 "_instrument_insurance_receivables_generator_8php_source.html":[10,0,0,20,2,9],
@@ -57,6 +59,8 @@ var NAVTREEINDEX2 =
 "_mailing_lists_email_changed_listener_8php_source.html":[10,0,0,14,20],
 "_mailing_lists_registration_confirmation_listener_8php_source.html":[10,0,0,14,21],
 "_mailing_lists_service_8php_source.html":[10,0,0,20,30],
+"_mailing_lists_service_test_8php_source.html":[10,0,3,0,1,10,14],
+"_mailing_lists_service_trait_8php_source.html":[10,0,3,0,1,10,15],
 "_mailing_lists_trait_8php_source.html":[10,0,0,19,2,5],
 "_manually_generated_receivables_generator_8php_source.html":[10,0,0,20,2,12],
 "_mapper_8php_source.html":[10,0,0,8,0,1,1],
@@ -74,7 +78,6 @@ var NAVTREEINDEX2 =
 "_mock_musicians_repository_trait_8php_source.html":[10,0,3,0,1,4,0,1,0,8],
 "_mock_projects_repository_trait_8php_source.html":[10,0,3,0,1,4,0,1,0,9],
 "_mock_provider_8php_source.html":[10,0,3,0,3],
-"_mock_user_storage_trait_8php_source.html":[10,0,3,0,1,12,2],
 "_mount_provider_8php_source.html":[10,0,0,22,0,8],
 "_musician_8php_source.html":[10,0,0,8,1,2,0,38],
 "_musician_avatar_trait_8php_source.html":[10,0,0,19,2,6],
@@ -110,8 +113,8 @@ var NAVTREEINDEX2 =
 "_no_group_member_required_8php_source.html":[10,0,0,2,3],
 "_not_authorized_exception_8php_source.html":[10,0,0,12,31],
 "_notifier_8php_source.html":[10,0,0,18,0],
-"_number_formatter_8php_source.html":[10,0,0,5,11],
-"_number_formatter_test_8php_source.html":[10,0,3,0,1,1,5],
+"_number_formatter_8php_source.html":[10,0,0,5,12],
+"_number_formatter_test_8php_source.html":[10,0,3,0,1,1,6],
 "_o_c___calendar___object_8php_source.html":[10,0,0,13,0,0],
 "_old_settings_keys_8php_source.html":[10,0,0,21,4],
 "_open_document_filler_8php_source.html":[10,0,0,9,0],
@@ -121,7 +124,7 @@ var NAVTREEINDEX2 =
 "_orchestra_locale_response_8php_source.html":[10,0,0,6,0,45],
 "_organizational_roles_service_8php_source.html":[10,0,0,20,33],
 "_p_d_f_form_filler_8php_source.html":[10,0,0,9,1],
-"_p_h_p_mailer_8php_source.html":[10,0,0,5,12],
+"_p_h_p_mailer_8php_source.html":[10,0,0,5,13],
 "_p_m_e_8lang_8_c_a-_l_a_t_i_n1_8inc_source.html":[10,0,0,13,1,0,0],
 "_p_m_e_8lang_8_c_a-_u_t_f8_8inc_source.html":[10,0,0,13,1,0,1],
 "_p_m_e_8lang_8_c_a_8inc_source.html":[10,0,0,13,1,0,2],
@@ -229,7 +232,7 @@ var NAVTREEINDEX2 =
 "_phone_number_validation_response_d_t_o_test_8php_source.html":[10,0,3,0,1,2,0,29],
 "_php_my_edit_timer_8php_source.html":[10,0,0,13,1,2],
 "_php_spreadsheet_value_binder_8php_source.html":[10,0,0,19,1,3],
-"_plain_file_progress_status_8php_source.html":[10,0,0,5,13],
+"_plain_file_progress_status_8php_source.html":[10,0,0,5,14],
 "_pme_table_controller_8php_source.html":[10,0,0,6,62],
 "_post_change_composite_payment_notification_message_id_8php_source.html":[10,0,0,11,8],
 "_post_change_musician_email_8php_source.html":[10,0,0,11,9],
@@ -246,8 +249,5 @@ var NAVTREEINDEX2 =
 "_problem_report_controller_8php_source.html":[10,0,0,6,63],
 "_problem_report_controller_test_8php_source.html":[10,0,3,0,1,2,20],
 "_problem_report_service_8php_source.html":[10,0,0,20,35],
-"_progress_response_8php_source.html":[10,0,0,6,0,55],
-"_progress_status_8php_source.html":[10,0,0,8,0,0,1],
-"_progress_status_controller_8php_source.html":[10,0,0,6,64],
-"_progress_status_controller_test_8php_source.html":[10,0,3,0,1,2,21]
+"_progress_response_8php_source.html":[10,0,0,6,0,55]
 };

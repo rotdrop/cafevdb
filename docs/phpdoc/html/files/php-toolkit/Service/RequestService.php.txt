@@ -3,7 +3,7 @@
  * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,12 @@ namespace OCA\RotDrop\Toolkit\Service;
 use InvalidArgumentException;
 use RuntimeException;
 
+use GuzzleHttp\Cookie\CookieJar;
+
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\Http\Client\IClient;
+use OCP\Http\Client\IClientService;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
@@ -37,10 +41,15 @@ class RequestService
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
-  const POST = 'post';
-  const GET = 'get';
-  const DELETE = 'delete';
-  const PUT = 'put';
+  protected IClient $client;
+
+  const DELETE = 'DELETE';
+  const GET = 'GET';
+  const HEAD = 'HEAD';
+  const OPTIONS = 'OPTIONS';
+  const PATCH = 'PATCH';
+  const POST = 'POST';
+  const PUT = 'PUT';
 
   const JSON = 'json';
   const URL_ENCODED = 'urlencoded';
@@ -52,7 +61,9 @@ class RequestService
     protected IURLGenerator $urlGenerator,
     protected LoggerInterface $logger,
     protected IL10N $l,
+    IClientService $clientService,
   ) {
+    $this->client = $clientService->newClient();
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 
@@ -101,52 +112,9 @@ class RequestService
   }
 
   /**
-   * GET from an URL.
-   *
-   * @param string $url The URL. Will be made absolute if not starting with a
-   * literal 'http'.
-   *
-   * @param array $requestData Stuff passed by the GET method.
-   *
-   * @return array
-   */
-  public function getFromURL(
-    string $url,
-    array $requestData = [],
-  ):array {
-    if (!str_starts_with($url, 'http')) {
-      $url = $this->urlGenerator->getAbsoluteURL($url);
-    }
-    return $this->callInternalRoute($url, self::GET, [], $requestData);
-  }
-
-  /**
-   * POST to an URL.
-   *
-   * @param string $url The URL. Will be made absolute if not starting with a
-   * literal 'http'.
-   *
-   * @param array $requestData Stuff passed by the POST method.
-   *
-   * @return array
-   */
-  public function postToURL(
-    string $url,
-    array $requestData = [],
-  ):array {
-    if (!str_starts_with($url, 'http')) {
-      $url = $this->urlGenerator->getAbsoluteURL($url);
-    }
-    return $this->callInternalRoute($url, self::POST, [], $requestData);
-  }
-
-  /**
    * Send to to a Cloud route.
    *
-   * @param string $route Route name or URL. If $route starts with a literal
-   * 'http' then it will be used as is. The $routeParams are ignored in this
-   * case and the $requestParams are appended to the URL for GET and posted to
-   * the URL for POST requests.
+   * @param string $route Route name.
    *
    * @param string $method
    *
@@ -166,118 +134,93 @@ class RequestService
     array $routeParams = [],
     array $requestData = [],
     string $postType = self::JSON,
-  ):array {
-    // $this->logInfo('CALL ROUTE ' . $route . ' ' . print_r($routeParams, true) . ' ' . print_r($requestData, true));
+  ): array {
 
-    $headers = [];
+    $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);
 
-    $requestToken = \OCP\Util::callRegister();
-    $requestData['requesttoken'] = $requestToken;
     $urlParameters = [
-      'requesttoken' => $requestToken,
-      'format' => 'json',
+      'format' => self::JSON,
     ];
+
+    // catch excess url parameters
+    $query = parse_url($url, PHP_URL_QUERY);
+    if (!empty($query)) {
+      $url = substr($url, 0, strrpos($url, '?'));
+      $query = parse_str($query, $query);
+      $urlParameters = array_merge($urlParameters, $query);
+    }
 
     if ($method == self::GET) {
       $urlParameters = array_merge($urlParameters, $requestData);
       $requestData = null;
     }
+
+    $requestOptions = [];
+
     if (!empty($requestData)) {
       switch ($postType) {
         case self::JSON:
-          if (is_array($requestData)) {
-            $requestData = \OC_JSON::encode($requestData);
-            $headers[] = 'Content-Type: application/json';
-          }
+          $requestOptions['json'] = $requestData;
           break;
         case self::URL_ENCODED:
-          if (is_array($requestData)) {
-            $requestData = http_build_query($requestData, '', '&');
-          }
+          $requestOptions['form_params'] = $requestData;
           break;
         default:
           throw new InvalidArgumentException(
             $this->l->t('Supported data formats are "%1$s" and "%2$s", specified was "%3$s".', [
               self::JSON, self::URL_ENCODED, $postType
             ]));
-          break;
       }
     }
 
-    if (str_starts_with($route, 'http')) {
-      unset($urlParameters['format']);
-      $appendSep = strrchr($url, '?') === false ? '?' : '&';
-      $url = $route . $appendSep . http_build_query($urlParameters, '', '&');
-    } else {
-      $url = $this->urlGenerator->linkToRouteAbsolute($route, array_merge($routeParams, $urlParameters));
+    $requestOptions['headers'] = [
+      'requesttoken' =>  \OCP\Util::callRegister(),
+      'Accept' => 'application/json',
+      'OCS-APIRequest' => 'true',
+    ];
+    $serverHost = $this->request->getServerHost();
+    if (!empty($this->request->cookies)) {
+      $requestOptions['cookies'] = CookieJar::fromArray(
+        $this->request->cookies,
+        $serverHost,
+      );
+    }
+    if ($serverHost === 'localhost' && str_starts_with($url, 'https:')) {
+      $requestOptions['verify'] = false;
     }
 
-    $cookies = array();
-    foreach ($this->request->cookies as $name => $value) {
-      $cookies[] = "$name=" . urlencode($value);
-    }
+    $this->logInfo('CALL OUT ' . $url . ' ' . print_r($requestOptions, true));
 
-    $headers[] = 'OCS-APIRequest: true';
-    $headers[] = 'Accept: application/json';
-    $headers[] = 'requesttoken: ' . $requestToken;
+    /** @var IResponse $response */
+    $response = $this->client->request($method, $url, $requestOptions);
 
-    $c = curl_init($url);
-    curl_setopt($c, CURLOPT_VERBOSE, 0);
-    curl_setopt($c, CURLOPT_HEADER, 0);
-    curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
-    switch ($method) {
-      case self::GET:
-        curl_setopt($c, CURLOPT_HTTPGET, 1);
-        curl_setopt($c, CURLOPT_POST, 0);
-        break;
-      case self::POST:
-        curl_setopt($c, CURLOPT_POST, 1);
-        break;
-      case self::PUT:
-        curl_setopt($c, CURLOPT_POST, 0);
-        curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'PUT');
-        break;
-      case self::DELETE:
-        curl_setopt($c, CURLOPT_POST, 0);
-        curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        break;
-    }
-    if (!empty($requestData)) {
-      curl_setopt($c, CURLOPT_POSTFIELDS, $requestData);
-      $this->logDebug('CURL REQUEST DATA ' . $requestData);
-    }
-    if (count($cookies) > 0) {
-      curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
-    }
-    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-    // this is internal, so there is no point in verifying certs:
-    curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
-
-    $result = curl_exec($c);
-    curl_close($c);
-
-    $responseData = json_decode($result, true);
+    $body = $response->getBody();
+    $responseData = json_decode($body, true);
     if (!is_array($responseData)) {
       throw new RuntimeException(
-        $this->l->t('Invalid response from API call: "%s"', print_r($result, true)));
+        $this->l->t('Invalid response from API call: "%s"', print_r([
+          'body' => $body,
+          'statusCode' => $response->getStatusCode(),
+          'headers' => $response->getHeaders(),
+        ], true)),
+      );
     }
 
     $this->logDebug('RESPONSE DATA ' . print_r($responseData, true));
 
     // Some apps still return HTTP_STATUS_OK and code errors and success in
     // the old way instead of using HTTP-error-codes.
-    if (($responseData['status']??null) != 'success' && isset($responseData['data'])) {
+    if (($responseData['status'] ?? null) != 'success' && isset($responseData['data'])) {
       throw new RuntimeException(
         $this->l->t('Error response from call to internal route "%1$s": %2$s', [
-          $route, $responseData['data']['message']??print_r($responseData, true)
+          $route, $responseData['data']['message'] ?? print_r($responseData, true)
         ]));
     }
 
     // parse OCS responses if format matches
     if (isset($responseData['ocs'])) {
-      $meta = $responseData['ocs']['meta']??null;
-      $data = $responseData['ocs']['data']??null;
+      $meta = $responseData['ocs']['meta'] ?? null;
+      $data = $responseData['ocs']['data'] ?? null;
       if ($meta === null || $data === null) {
         throw new RuntimeException(
           $this->l->t('Invalid OCS response from call to internal route "%1$s": %2$s', [
@@ -287,7 +230,7 @@ class RequestService
       if ($meta['statuscode'] !== 100) {
         throw new RuntimeException(
           $this->l->t('Error response from call to internal route "%1$s": %2$s --  %3$s', [
-            $route, $meta['status']??'unknwown status', $meta['message']??print_r($meta, true)
+            $route, $meta['status'] ?? 'unknwown status', $meta['message'] ?? print_r($meta, true)
           ]));
       }
       return $data;

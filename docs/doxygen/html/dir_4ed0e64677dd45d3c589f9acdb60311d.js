@@ -44,5 +44,6 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
     [ "ToolTipsDataService.php", "_tool_tips_data_service_8php_source.html", null ],
     [ "ToolTipsService.php", "_tool_tips_service_8php_source.html", null ],
     [ "UserEncryptionService.php", "_user_encryption_service_8php_source.html", null ],
-    [ "VCalendarService.php", "_v_calendar_service_8php_source.html", null ]
+    [ "VCalendarService.php", "_v_calendar_service_8php_source.html", null ],
+    [ "WordSplitterService.php", "_word_splitter_service_8php_source.html", null ]
 ];

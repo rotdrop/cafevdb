@@ -28,8 +28,6 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 
-use Behat\Transliterator\Transliterator;
-
 use Psr\Container\ContainerInterface;
 use OCP\App\IAppManager;
 use OCP\Config\IUserConfig;
@@ -45,6 +43,7 @@ use OCP\IUserManager;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -586,14 +585,19 @@ trait ConfigTrait
    *
    * @return string The default user-id slug.
    */
-  public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName):string
+  public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName): string
   {
     if (empty($firstName) && empty($nickName)) {
       return '';
     }
-    return Transliterator::transliterate($this->transliterate($nickName?:$firstName), '-')
-      .'.'
-      . Transliterator::transliterate($this->transliterate($surName), '-');
+
+    /** @var Transliterator $transliterator */
+    $transliterator = $this->appContainer()->get(Transliterator::class);
+    $slug = $transliterator->generateUserIdSlug(
+      compact('surName', 'firstName', 'nickName'),
+      $this->appLocale(),
+    );
+    return $slug;
   }
 
   /** @return int */

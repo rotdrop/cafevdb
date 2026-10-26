@@ -1,7 +1,7 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service =
 [
     [ "EnumExportFormat", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a4c20ec2ebfcccc67987a3de90600de75", null ],
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a46b1d4261db960727b59305e22961a1e", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#aafa9fa2a56ffb301c0e661bd1e8273ac", null ],
     [ "calculateDebitNoteDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a08d0e1c1471abe69f0bcb8fdbfbea375", null ],
     [ "calculateDebitNotePreNotificationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a96f670ef02f4a46af4158489bc6ff1e4", null ],
     [ "getBalancingItemsExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a9a2861d37e7eb4e36f3e0abb60a4937f", null ],

@@ -176,6 +176,14 @@
         #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
+        \OCA\CAFEVDB\Common\CamelCaseString::class
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\PHPUnit\Framework\Attributes\UsesClass">UsesClass</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
         \OCA\CAFEVDB\Common\PHPMailer::class
     </dd>
     </dl>
@@ -862,6 +870,12 @@ of the way of real entities generated in the test database.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_JSON_OPTIONS">JSON_OPTIONS</a>
+    <span>
+        &nbsp;: mixed&nbsp;= JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR | JSON_...                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_NON_NULL_PROPERTIES">NON_NULL_PROPERTIES</a>
     <span>
         &nbsp;: mixed&nbsp;= [&#039;registration&#039; =&gt; true, &#039;participationStatus&#039;...                            </span>
@@ -975,6 +989,14 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</dd>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment">generateMultiItemPayment()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a>    </span>
+</dt>
+<dd>Generate a CompositePayment with many items s.t. automatic subject
+generation with length restrictions becomes a challenge.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant">generateProjectParticipant()</a>
@@ -1125,9 +1147,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">597</span>
+    <span class="phpdocumentor-element-found-in__line">959</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.959" class="phpdocumentor-element-found-in__source" data-line="959" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -1395,6 +1417,37 @@ of the way of real entities generated in the test database.</p>
         
     </article>
                     <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_JSON_OPTIONS">
+        JSON_OPTIONS
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_JSON_OPTIONS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1728</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.1728" class="phpdocumentor-element-found-in__source" data-line="1728" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">JSON_OPTIONS</span>
+    = <span class="phpdocumentor-signature__default-value">JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_NON_NULL_PROPERTIES">
         NON_NULL_PROPERTIES
         <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_NON_NULL_PROPERTIES" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1404,9 +1457,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">218</span>
+    <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -1466,9 +1519,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -1484,15 +1537,15 @@ of the way of real entities generated in the test database.</p>
     &quot;deleted&quot;: null,
     &quot;invoices&quot;: [],
     &quot;musician&quot;: {
-        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-        &quot;entityClassName&quot;: &quot;Musician&quot;
+        &quot;entityClassName&quot;: &quot;Musician&quot;,
+        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
     },
     &quot;participantFieldsData&quot;: {
         &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
         &quot;entities&quot;: {
             &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                &quot;entityClassName&quot;: null
+                &quot;entityClassName&quot;: null,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
             }
         }
     },
@@ -1501,14 +1554,14 @@ of the way of real entities generated in the test database.</p>
         &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
         &quot;entities&quot;: [
             {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: null
+                &quot;entityClassName&quot;: null,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             }
         ]
     },
     &quot;project&quot;: {
-        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-        &quot;entityClassName&quot;: &quot;Project&quot;
+        &quot;entityClassName&quot;: &quot;Project&quot;,
+        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
     },
     &quot;projectInstruments&quot;: [],
     &quot;registration&quot;: false,
@@ -1537,8 +1590,8 @@ of the way of real entities generated in the test database.</p>
             &quot;entityClassName&quot;: &quot;MusicianEmailAddress&quot;,
             &quot;entities&quot;: {
                 &quot;john.doe@nowhere.tld&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             }
         },
@@ -1566,8 +1619,8 @@ of the way of real entities generated in the test database.</p>
             &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
             &quot;entities&quot;: [
                 {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             ]
         },
@@ -1581,8 +1634,8 @@ of the way of real entities generated in the test database.</p>
             &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
             &quot;entities&quot;: {
                 &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                 }
             }
         },
@@ -1590,8 +1643,8 @@ of the way of real entities generated in the test database.</p>
             &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
             &quot;entities&quot;: {
                 &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             }
         },
@@ -1602,12 +1655,12 @@ of the way of real entities generated in the test database.</p>
             &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
             &quot;entities&quot;: [
                 {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;
                 },
                 {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
                 }
             ]
         },
@@ -1626,30 +1679,38 @@ of the way of real entities generated in the test database.</p>
             &quot;__DEPTH__&quot;: 0,
             &quot;created&quot;: null,
             &quot;dataOption&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;
+                &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
             },
             &quot;deleted&quot;: null,
             &quot;deposit&quot;: null,
             &quot;field&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;
+                &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;invoiceItems&quot;: [],
             &quot;musician&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;Musician&quot;
+                &quot;entityClassName&quot;: &quot;Musician&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;optionKey&quot;: &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
             &quot;optionValue&quot;: &quot;12.23&quot;,
-            &quot;payments&quot;: [],
+            &quot;payments&quot;: {
+                &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
+                &quot;entities&quot;: [
+                    {
+                        &quot;entityClassName&quot;: null,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                    }
+                ]
+            },
             &quot;project&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;Project&quot;
+                &quot;entityClassName&quot;: &quot;Project&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;projectParticipant&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;
+                &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;supportingDocument&quot;: null,
             &quot;updated&quot;: null
@@ -1659,45 +1720,45 @@ of the way of real entities generated in the test database.</p>
     &quot;payments&quot;: [
         {
             &quot;__DEPTH__&quot;: 0,
-            &quot;amount&quot;: &quot;12.23&quot;,
+            &quot;amount&quot;: &quot;-12.23&quot;,
             &quot;balanceDocumentsFolder&quot;: null,
             &quot;created&quot;: null,
             &quot;dateOfReceipt&quot;: null,
             &quot;donationReceipt&quot;: null,
             &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
             &quot;musician&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;Musician&quot;
+                &quot;entityClassName&quot;: &quot;Musician&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;notificationMessageId&quot;: null,
             &quot;preNotificationEmail&quot;: null,
             &quot;project&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;Project&quot;
+                &quot;entityClassName&quot;: &quot;Project&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;projectParticipant&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;
+                &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
             &quot;projectPayments&quot;: {
                 &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
                 &quot;entities&quot;: [
                     {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                        &quot;entityClassName&quot;: null
+                        &quot;entityClassName&quot;: null,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                     }
                 ]
             },
             &quot;sepaBankAccount&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;,
-                &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;
+                &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
             },
             &quot;sepaDebitMandate&quot;: null,
             &quot;sepaTransaction&quot;: {
-                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                &quot;entityClassName&quot;: &quot;SepaBankTransfer&quot;
+                &quot;entityClassName&quot;: &quot;SepaBankTransfer&quot;,
+                &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
             },
-            &quot;subject&quot;: &quot;TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+            &quot;subject&quot;: &quot;TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß&quot;,
             &quot;supportingDocument&quot;: null,
             &quot;updated&quot;: null
         }
@@ -1711,7 +1772,7 @@ of the way of real entities generated in the test database.</p>
             &quot;entities&quot;: [
                 {
                     &quot;entityClassName&quot;: null,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             ]
         },
@@ -1723,15 +1784,31 @@ of the way of real entities generated in the test database.</p>
         &quot;invoices&quot;: [],
         &quot;mailingListId&quot;: null,
         &quot;name&quot;: &quot;TestProject2099&quot;,
-        &quot;participantFields&quot;: [],
-        &quot;participantFieldsData&quot;: [],
+        &quot;participantFields&quot;: {
+            &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+            &quot;entities&quot;: [
+                {
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                }
+            ]
+        },
+        &quot;participantFieldsData&quot;: {
+            &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+            &quot;entities&quot;: [
+                {
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                }
+            ]
+        },
         &quot;participantInstruments&quot;: [],
         &quot;participants&quot;: {
             &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
             &quot;entities&quot;: {
                 &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: null
+                    &quot;entityClassName&quot;: null,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             }
         },
@@ -1740,7 +1817,7 @@ of the way of real entities generated in the test database.</p>
             &quot;entities&quot;: [
                 {
                     &quot;entityClassName&quot;: null,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 }
             ]
         },
@@ -1783,8 +1860,8 @@ of the way of real entities generated in the test database.</p>
                 &quot;address&quot;: &quot;john.doe@nowhere.tld&quot;,
                 &quot;created&quot;: &quot;2024-01-01T00:00:00.000000Z&quot;,
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;updated&quot;: &quot;2024-01-01T00:00:00.000000Z&quot;
             }
@@ -1812,45 +1889,45 @@ of the way of real entities generated in the test database.</p>
         &quot;payments&quot;: [
             {
                 &quot;__DEPTH__&quot;: 0,
-                &quot;amount&quot;: &quot;12.23&quot;,
+                &quot;amount&quot;: &quot;-12.23&quot;,
                 &quot;balanceDocumentsFolder&quot;: null,
                 &quot;created&quot;: null,
                 &quot;dateOfReceipt&quot;: null,
                 &quot;donationReceipt&quot;: null,
                 &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;notificationMessageId&quot;: null,
                 &quot;preNotificationEmail&quot;: null,
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectParticipant&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectPayments&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;sepaBankAccount&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;,
-                    &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;
+                    &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
                 },
                 &quot;sepaDebitMandate&quot;: null,
                 &quot;sepaTransaction&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;SepaBankTransfer&quot;
+                    &quot;entityClassName&quot;: &quot;SepaBankTransfer&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
-                &quot;subject&quot;: &quot;TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+                &quot;subject&quot;: &quot;TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß&quot;,
                 &quot;supportingDocument&quot;: null,
                 &quot;updated&quot;: null
             }
@@ -1866,30 +1943,38 @@ of the way of real entities generated in the test database.</p>
                 &quot;__DEPTH__&quot;: 0,
                 &quot;created&quot;: null,
                 &quot;dataOption&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                 },
                 &quot;deleted&quot;: null,
                 &quot;deposit&quot;: null,
                 &quot;field&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;invoiceItems&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;optionKey&quot;: &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
                 &quot;optionValue&quot;: &quot;12.23&quot;,
-                &quot;payments&quot;: [],
+                &quot;payments&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectParticipant&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;supportingDocument&quot;: null,
                 &quot;updated&quot;: null
@@ -1903,15 +1988,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;deleted&quot;: null,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;participantFieldsData&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -1920,14 +2005,14 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectInstruments&quot;: [],
                 &quot;registration&quot;: false,
@@ -1948,8 +2033,8 @@ of the way of real entities generated in the test database.</p>
                 &quot;iban&quot;: &quot;DE02700100800030876808&quot;,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;payments&quot;: [],
                 &quot;sepaDebitMandates&quot;: [],
@@ -1966,15 +2051,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;iban&quot;: &quot;DE02120300000000202051&quot;,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;payments&quot;: {
-                   &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
+                    &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
                             &quot;entityClassName&quot;: null,
-                            &quot;flatIdentifier&quot;: &quot;9999&quot;
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2005,21 +2090,21 @@ of the way of real entities generated in the test database.</p>
                 &quot;deleted&quot;: null,
                 &quot;deposit&quot;: null,
                 &quot;field&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;fieldData&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
                 &quot;invoiceItems&quot;: [],
                 &quot;key&quot;: &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                &quot;label&quot;: &quot;ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+                &quot;label&quot;: &quot;Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß&quot;,
                 &quot;limit&quot;: null,
                 &quot;payments&quot;: [],
                 &quot;tooltip&quot;: null,
@@ -2034,23 +2119,23 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
                     &quot;entities&quot;: {
                         &quot;00000000-0000-0000-0000-000000000000&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:00000000-0000-0000-0000-000000000000&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:00000000-0000-0000-0000-000000000000&quot;
                         },
                         &quot;027db41d-4f5b-45be-a956-c70095dab48d&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;
                         },
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
                 &quot;dataType&quot;: &quot;liabilities&quot;,
                 &quot;defaultValue&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;,
-                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;
                 },
                 &quot;deleted&quot;: null,
                 &quot;depositDueDate&quot;: null,
@@ -2061,8 +2146,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     ]
                 },
@@ -2072,8 +2157,8 @@ of the way of real entities generated in the test database.</p>
                 &quot;participantAccess&quot;: &quot;none&quot;,
                 &quot;participationContext&quot;: &quot;unrestricted&quot;,
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectEvent&quot;: null,
                 &quot;tab&quot;: null,
@@ -2098,8 +2183,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;MusicianEmailAddress&quot;,
                     &quot;entities&quot;: {
                         &quot;john.doe@nowhere.tld&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
@@ -2127,8 +2212,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2142,8 +2227,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -2151,8 +2236,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
@@ -2163,12 +2248,12 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;
                         },
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
                         }
                     ]
                 },
@@ -2184,7 +2269,42 @@ of the way of real entities generated in the test database.</p>
             },
             &quot;optionKey&quot;: &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
             &quot;optionValue&quot;: &quot;12.23&quot;,
-            &quot;payments&quot;: [],
+            &quot;payments&quot;: [
+                {
+                    &quot;__DEPTH__&quot;: 0,
+                    &quot;amount&quot;: &quot;-12.23&quot;,
+                    &quot;balanceDocumentsFolder&quot;: null,
+                    &quot;compositePayment&quot;: {
+                        &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                    },
+                    &quot;created&quot;: null,
+                    &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
+                    &quot;isDonation&quot;: false,
+                    &quot;musician&quot;: {
+                        &quot;entityClassName&quot;: &quot;Musician&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                    },
+                    &quot;project&quot;: {
+                        &quot;entityClassName&quot;: &quot;Project&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                    },
+                    &quot;projectParticipant&quot;: {
+                        &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                    },
+                    &quot;receivable&quot;: {
+                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                    },
+                    &quot;receivableOption&quot;: {
+                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                    },
+                    &quot;subject&quot;: &quot;Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß&quot;,
+                    &quot;updated&quot;: null
+                }
+            ],
             &quot;project&quot;: {
                 &quot;__DEPTH__&quot;: 0,
                 &quot;applications&quot;: [],
@@ -2194,7 +2314,7 @@ of the way of real entities generated in the test database.</p>
                     &quot;entities&quot;: [
                         {
                             &quot;entityClassName&quot;: null,
-                            &quot;flatIdentifier&quot;: &quot;9999&quot;
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2206,27 +2326,43 @@ of the way of real entities generated in the test database.</p>
                 &quot;invoices&quot;: [],
                 &quot;mailingListId&quot;: null,
                 &quot;name&quot;: &quot;TestProject2099&quot;,
-                &quot;participantFields&quot;: [],
-                &quot;participantFieldsData&quot;: [],
+                &quot;participantFields&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
+                &quot;participantFieldsData&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                        }
+                    ]
+                },
                 &quot;participantInstruments&quot;: [],
                 &quot;participants&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
                 &quot;payments&quot;: {
-            &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
-            &quot;entities&quot;: [
-                {
-                    &quot;entityClassName&quot;: null,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
-                }
-            ]
-        },
+                    &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
                 &quot;registrationCalendarEvent&quot;: null,
                 &quot;registrationDeadline&quot;: null,
                 &quot;registrationStartDate&quot;: null,
@@ -2244,15 +2380,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;deleted&quot;: null,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;participantFieldsData&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -2261,14 +2397,14 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectInstruments&quot;: [],
                 &quot;registration&quot;: false,
@@ -2282,7 +2418,7 @@ of the way of real entities generated in the test database.</p>
     &quot;payments&quot;: [
         {
             &quot;__DEPTH__&quot;: 1,
-            &quot;amount&quot;: &quot;12.23&quot;,
+            &quot;amount&quot;: &quot;-12.23&quot;,
             &quot;balanceDocumentsFolder&quot;: null,
             &quot;created&quot;: null,
             &quot;dateOfReceipt&quot;: null,
@@ -2306,8 +2442,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;MusicianEmailAddress&quot;,
                     &quot;entities&quot;: {
                         &quot;john.doe@nowhere.tld&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;john.doe@nowhere.tld:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
@@ -2335,8 +2471,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2350,8 +2486,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -2359,8 +2495,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
@@ -2371,12 +2507,12 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:1&quot;
                         },
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
                         }
                     ]
                 },
@@ -2401,7 +2537,7 @@ of the way of real entities generated in the test database.</p>
                     &quot;entities&quot;: [
                         {
                             &quot;entityClassName&quot;: null,
-                            &quot;flatIdentifier&quot;: &quot;9999&quot;
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2413,27 +2549,43 @@ of the way of real entities generated in the test database.</p>
                 &quot;invoices&quot;: [],
                 &quot;mailingListId&quot;: null,
                 &quot;name&quot;: &quot;TestProject2099&quot;,
-                &quot;participantFields&quot;: [],
-                &quot;participantFieldsData&quot;: [],
+                &quot;participantFields&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
+                &quot;participantFieldsData&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                        }
+                    ]
+                },
                 &quot;participantInstruments&quot;: [],
                 &quot;participants&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
                 &quot;payments&quot;: {
-            &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
-            &quot;entities&quot;: [
-                {
-                    &quot;entityClassName&quot;: null,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
-                }
-            ]
-        },
+                    &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
                 &quot;registrationCalendarEvent&quot;: null,
                 &quot;registrationDeadline&quot;: null,
                 &quot;registrationStartDate&quot;: null,
@@ -2451,15 +2603,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;deleted&quot;: null,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;participantFieldsData&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -2468,14 +2620,14 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectInstruments&quot;: [],
                 &quot;registration&quot;: false,
@@ -2484,36 +2636,36 @@ of the way of real entities generated in the test database.</p>
             &quot;projectPayments&quot;: [
                 {
                     &quot;__DEPTH__&quot;: 0,
-                    &quot;amount&quot;: &quot;12.23&quot;,
+                    &quot;amount&quot;: &quot;-12.23&quot;,
                     &quot;balanceDocumentsFolder&quot;: null,
                     &quot;compositePayment&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                        &quot;entityClassName&quot;: &quot;CompositePayment&quot;
+                        &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                     },
                     &quot;created&quot;: null,
                     &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
                     &quot;isDonation&quot;: false,
                     &quot;musician&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                        &quot;entityClassName&quot;: &quot;Musician&quot;
+                        &quot;entityClassName&quot;: &quot;Musician&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                     },
                     &quot;project&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                        &quot;entityClassName&quot;: &quot;Project&quot;
+                        &quot;entityClassName&quot;: &quot;Project&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                     },
                     &quot;projectParticipant&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                        &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;
+                        &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                     },
                     &quot;receivable&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;
+                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                     },
                     &quot;receivableOption&quot;: {
-                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;
+                        &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                        &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                     },
-                    &quot;subject&quot;: &quot;Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+                    &quot;subject&quot;: &quot;Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß&quot;,
                     &quot;updated&quot;: null
                 }
             ],
@@ -2527,15 +2679,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;iban&quot;: &quot;DE02120300000000202051&quot;,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;payments&quot;: {
-                   &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
+                    &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
                             &quot;entityClassName&quot;: null,
-                            &quot;flatIdentifier&quot;: &quot;9999&quot;
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
@@ -2557,8 +2709,8 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: {
                         &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     }
                 },
@@ -2572,7 +2724,7 @@ of the way of real entities generated in the test database.</p>
                 &quot;submitDate&quot;: null,
                 &quot;updated&quot;: null
             },
-            &quot;subject&quot;: &quot;TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+            &quot;subject&quot;: &quot;TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß&quot;,
             &quot;supportingDocument&quot;: null,
             &quot;updated&quot;: null
         }
@@ -2584,45 +2736,45 @@ of the way of real entities generated in the test database.</p>
         &quot;compositePayments&quot;: [
             {
                 &quot;__DEPTH__&quot;: 0,
-                &quot;amount&quot;: &quot;12.23&quot;,
+                &quot;amount&quot;: &quot;-12.23&quot;,
                 &quot;balanceDocumentsFolder&quot;: null,
                 &quot;created&quot;: null,
                 &quot;dateOfReceipt&quot;: null,
                 &quot;donationReceipt&quot;: null,
-                &quot;id&quot;: 9999,
+                &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
                 &quot;musician&quot;: {
                     &quot;entityClassName&quot;: &quot;Musician&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;notificationMessageId&quot;: null,
                 &quot;preNotificationEmail&quot;: null,
                 &quot;project&quot;: {
                     &quot;entityClassName&quot;: &quot;Project&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectParticipant&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999:9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectPayments&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
                     &quot;entities&quot;: [
                         {
                             &quot;entityClassName&quot;: null,
-                            &quot;flatIdentifier&quot;: &quot;9999&quot;
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;sepaBankAccount&quot;: {
                     &quot;entityClassName&quot;: &quot;SepaBankAccount&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999:2&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:2&quot;
                 },
                 &quot;sepaDebitMandate&quot;: null,
                 &quot;sepaTransaction&quot;: {
                     &quot;entityClassName&quot;: &quot;SepaBankTransfer&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
-                &quot;subject&quot;: &quot;TestProject \/ Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+                &quot;subject&quot;: &quot;TestProject / Forderungen: RechnungsNummer RE25/01354 AktenZeichen 25-01258 ümläüteßWeitereÜmläüteß&quot;,
                 &quot;supportingDocument&quot;: null,
                 &quot;updated&quot;: null
             }
@@ -2635,8 +2787,102 @@ of the way of real entities generated in the test database.</p>
         &quot;invoices&quot;: [],
         &quot;mailingListId&quot;: null,
         &quot;name&quot;: &quot;TestProject2099&quot;,
-        &quot;participantFields&quot;: [],
-        &quot;participantFieldsData&quot;: [],
+        &quot;participantFields&quot;: [
+            {
+                &quot;__DEPTH__&quot;: 0,
+                &quot;balancingAccount&quot;: null,
+                &quot;dataOptions&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                    &quot;entities&quot;: {
+                        &quot;00000000-0000-0000-0000-000000000000&quot;: {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:00000000-0000-0000-0000-000000000000&quot;
+                        },
+                        &quot;027db41d-4f5b-45be-a956-c70095dab48d&quot;: {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;
+                        },
+                        &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                        }
+                    }
+                },
+                &quot;dataType&quot;: &quot;liabilities&quot;,
+                &quot;defaultValue&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:027db41d-4f5b-45be-a956-c70095dab48d&quot;
+                },
+                &quot;deleted&quot;: null,
+                &quot;depositDueDate&quot;: null,
+                &quot;displayOrder&quot;: null,
+                &quot;dueDate&quot;: &quot;2099-01-01T00:00:00.000000Z&quot;,
+                &quot;encrypted&quot;: false,
+                &quot;fieldData&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                        }
+                    ]
+                },
+                &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
+                &quot;multiplicity&quot;: &quot;recurring&quot;,
+                &quot;name&quot;: &quot;Forderungen&quot;,
+                &quot;participantAccess&quot;: &quot;none&quot;,
+                &quot;participationContext&quot;: &quot;unrestricted&quot;,
+                &quot;project&quot;: {
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                },
+                &quot;projectEvent&quot;: null,
+                &quot;tab&quot;: null,
+                &quot;tooltip&quot;: null
+            }
+        ],
+        &quot;participantFieldsData&quot;: [
+            {
+                &quot;__DEPTH__&quot;: 0,
+                &quot;created&quot;: null,
+                &quot;dataOption&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                },
+                &quot;deleted&quot;: null,
+                &quot;deposit&quot;: null,
+                &quot;field&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipantField&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                },
+                &quot;invoiceItems&quot;: [],
+                &quot;musician&quot;: {
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                },
+                &quot;optionKey&quot;: &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
+                &quot;optionValue&quot;: &quot;12.23&quot;,
+                &quot;payments&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectPayment&quot;,
+                    &quot;entities&quot;: [
+                        {
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                        }
+                    ]
+                },
+                &quot;project&quot;: {
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                },
+                &quot;projectParticipant&quot;: {
+                    &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
+                },
+                &quot;supportingDocument&quot;: null,
+                &quot;updated&quot;: null
+            }
+        ],
         &quot;participantInstruments&quot;: [],
         &quot;participants&quot;: {
             &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;: {
@@ -2646,15 +2892,15 @@ of the way of real entities generated in the test database.</p>
                 &quot;deleted&quot;: null,
                 &quot;invoices&quot;: [],
                 &quot;musician&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Musician&quot;
+                    &quot;entityClassName&quot;: &quot;Musician&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;participantFieldsData&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
                     &quot;entities&quot;: {
                         &quot;0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;: {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                         }
                     }
                 },
@@ -2663,14 +2909,14 @@ of the way of real entities generated in the test database.</p>
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
                     &quot;entities&quot;: [
                         {
-                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                            &quot;entityClassName&quot;: null
+                            &quot;entityClassName&quot;: null,
+                            &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                         }
                     ]
                 },
                 &quot;project&quot;: {
-                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;,
-                    &quot;entityClassName&quot;: &quot;Project&quot;
+                    &quot;entityClassName&quot;: &quot;Project&quot;,
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectInstruments&quot;: [],
                 &quot;registration&quot;: false,
@@ -2680,36 +2926,36 @@ of the way of real entities generated in the test database.</p>
         &quot;payments&quot;: [
             {
                 &quot;__DEPTH__&quot;: 0,
-                &quot;amount&quot;: &quot;12.23&quot;,
+                &quot;amount&quot;: &quot;-12.23&quot;,
                 &quot;balanceDocumentsFolder&quot;: null,
                 &quot;compositePayment&quot;: {
                     &quot;entityClassName&quot;: &quot;CompositePayment&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;created&quot;: null,
-                &quot;id&quot;: 9999,
+                &quot;id&quot;: &#039; . self::FAKED_ENTITY_ID . &#039;,
                 &quot;isDonation&quot;: false,
                 &quot;musician&quot;: {
                     &quot;entityClassName&quot;: &quot;Musician&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;project&quot;: {
                     &quot;entityClassName&quot;: &quot;Project&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;projectParticipant&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipant&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999:9999&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;&quot;
                 },
                 &quot;receivable&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDatum&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999:9999:9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                 },
                 &quot;receivableOption&quot;: {
                     &quot;entityClassName&quot;: &quot;ProjectParticipantFieldDataOption&quot;,
-                    &quot;flatIdentifier&quot;: &quot;9999:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
+                    &quot;flatIdentifier&quot;: &quot;&#039; . self::FAKED_ENTITY_ID . &#039;:0c1eca68-bc3b-4d65-b80e-588ffbe0ca86&quot;
                 },
-                &quot;subject&quot;: &quot;Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df&quot;,
+                &quot;subject&quot;: &quot;Forderungen: Rechnungs-Nummer RE25/01354 Akten-Zeichen 25-01258 ümläüteß-weitere-Ümläüteß&quot;,
                 &quot;updated&quot;: null
             }
         ],
@@ -2952,9 +3198,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3028,9 +3274,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">132</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3185,9 +3431,9 @@ of the way of real entities generated in the test database.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">910</span>
+    <span class="phpdocumentor-element-found-in__line">1272</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.910" class="phpdocumentor-element-found-in__source" data-line="910" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.1272" class="phpdocumentor-element-found-in__source" data-line="1272" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Augment the given project by a couple of project events. The data is
@@ -3305,6 +3551,47 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_generateMultiItemPayment">
+        generateMultiItemPayment()
+        <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">578</span>
+
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.578" class="phpdocumentor-element-found-in__source" data-line="578" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate a CompositePayment with many items s.t. automatic subject
+generation with length restrictions becomes a challenge.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">generateMultiItemPayment</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankTransfer.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankTransfer">SepaBankTransfer</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_generateProjectParticipant">
         generateProjectParticipant()
         <a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3372,9 +3659,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3408,9 +3695,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">174</span>
+    <span class="phpdocumentor-element-found-in__line">175</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3443,9 +3730,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3478,9 +3765,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3513,9 +3800,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">234</span>
+    <span class="phpdocumentor-element-found-in__line">235</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.235" class="phpdocumentor-element-found-in__source" data-line="235" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3548,9 +3835,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">252</span>
+    <span class="phpdocumentor-element-found-in__line">253</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.253" class="phpdocumentor-element-found-in__source" data-line="253" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3583,9 +3870,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php"><a href="files/tests-phpunit-unit-toolkit-doctrine-orm-entityserializer-entityarrayadaptertest.html"><abbr title="tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php">EntityArrayAdapterTest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1535</span>
+    <span class="phpdocumentor-element-found-in__line">1731</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.1535" class="phpdocumentor-element-found-in__source" data-line="1535" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.1731" class="phpdocumentor-element-found-in__source" data-line="1731" data-modal="source-view" data-src="files/tests/phpunit/Unit/Toolkit/Doctrine/ORM/EntitySerializer/EntityArrayAdapterTest.php.txt"></a>
     </aside>
 
     
@@ -3618,9 +3905,9 @@ compatible with OCA\CAFEVDB\Tests\Unit\Service\CalendarObjects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">480</span>
+    <span class="phpdocumentor-element-found-in__line">477</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.477" class="phpdocumentor-element-found-in__source" data-line="477" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -3812,9 +4099,9 @@ ManuallyGeneratedReceivablesGenerator::class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">534</span>
+    <span class="phpdocumentor-element-found-in__line">529</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.534" class="phpdocumentor-element-found-in__source" data-line="534" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -3851,9 +4138,9 @@ ManuallyGeneratedReceivablesGenerator::class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php"><a href="files/tests-phpunit-unit-database-doctrine-orm-entities-entitygeneratortrait.html"><abbr title="tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php">EntityGeneratorTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">557</span>
+    <span class="phpdocumentor-element-found-in__line">552</span>
 
-            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.557" class="phpdocumentor-element-found-in__source" data-line="557" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#source-view.552" class="phpdocumentor-element-found-in__source" data-line="552" data-modal="source-view" data-src="files/tests/phpunit/Unit/Database/Doctrine/ORM/Entities/EntityGeneratorTrait.php.txt"></a>
     </aside>
 
     
@@ -4092,6 +4379,7 @@ data set.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#constant_MUSICIAN_BIC">MUSICIAN_BIC</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#constant_MUSICIAN_BLZ">MUSICIAN_BLZ</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#constant_MUSICIAN_IBAN">MUSICIAN_IBAN</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_JSON_OPTIONS">JSON_OPTIONS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_NON_NULL_PROPERTIES">NON_NULL_PROPERTIES</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#constant_PARTICIPANT_FIELD_OPION_KEYS">PARTICIPANT_FIELD_OPION_KEYS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#constant_SERIALIZED_ENTITY">SERIALIZED_ENTITY</a></li>
@@ -4120,6 +4408,7 @@ data set.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_addProjectEvents">addProjectEvents()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateEncryptedFile">generateEncryptedFile()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateMultiItemPayment">generateMultiItemPayment()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Database-Doctrine-ORM-Entities-EntityGeneratorTrait.html#method_generateProjectParticipant">generateProjectParticipant()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#method_setup">setup()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Tests-Unit-Toolkit-Doctrine-ORM-EntitySerializer-EntityArrayAdapterTest.html#method_tearDown">tearDown()</a></li>

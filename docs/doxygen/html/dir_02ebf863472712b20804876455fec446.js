@@ -1,6 +1,7 @@
 var dir_02ebf863472712b20804876455fec446 =
 [
     [ "AbstractUndoableTest.php", "_abstract_undoable_test_8php_source.html", null ],
+    [ "CamelCaseStringTest.php", "_camel_case_string_test_8php_source.html", null ],
     [ "ConsoleLoggerTest.php", "_console_logger_test_8php_source.html", null ],
     [ "FunctionsTest.php", "_functions_test_8php_source.html", null ],
     [ "GenericUndoableTest.php", "_generic_undoable_test_8php_source.html", null ],

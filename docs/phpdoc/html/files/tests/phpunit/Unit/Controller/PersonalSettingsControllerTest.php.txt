@@ -56,6 +56,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 class PersonalSettingsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 
   private const CONTROLLER_CLASS = Controller\PersonalSettingsController::class;
   private const EXPECTED_ROUTES = [
@@ -75,7 +76,7 @@ class PersonalSettingsControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    self::enableDeprecations();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
@@ -107,11 +108,5 @@ class PersonalSettingsControllerTest extends TestCase
       webPagesRPC: $this->createStub(WebPagesRPC::class),
       wikiRPC: $this->createStub(WikiRPC::class),
     );
-  }
-
-  /** @return void */
-  public function tearDown(): void
-  {
-    restore_error_handler();
   }
 }

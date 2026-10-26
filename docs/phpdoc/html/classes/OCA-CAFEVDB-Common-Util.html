@@ -168,6 +168,24 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_ESCAPE">EXPLODE_DEFAULT_ESCAPE</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;\\&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_FLAGS">EXPLODE_DEFAULT_FLAGS</a>
+    <span>
+        &nbsp;: mixed&nbsp;= self::OMIT_EMPTY_FIELDS | self::ESCAPED                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_LIMIT">EXPLODE_DEFAULT_LIMIT</a>
+    <span>
+        &nbsp;: mixed&nbsp;= -1                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#constant_FILE_EXTENSIONS_BY_MIME_TYPE">FILE_EXTENSIONS_BY_MIME_TYPE</a>
     <span>
         &nbsp;: mixed&nbsp;= [&#039;image/png&#039; =&gt; &#039;png&#039;, &#039;image/jpeg&#039; =&gt; &#039;jpg&#039;, &#039;...                            </span>
@@ -250,7 +268,7 @@ entries which are arrays will be recursed into by this function.</dd>
     <span>
                                 &nbsp;: array    </span>
 </dt>
-<dd>A preg_explode() wrapper with some extra features.</dd>
+<dd>A preg_split() wrapper with some extra features.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_explodeIndexed">explodeIndexed()</a>
@@ -367,14 +385,6 @@ options, UTF-8 for stone-age PHP versions.</dd>
                                 &nbsp;: null|string    </span>
 </dt>
 <dd>Remove all whitespace</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_shortenCamelCaseString">shortenCamelCaseString()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-<dd>Shorten the given string by iteratively reducing the size of its
-camel-case components until it fits into the given length.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_strftime">strftime()</a>
@@ -510,6 +520,99 @@ timeozone.</dd>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">ESCAPED</span>
     = <span class="phpdocumentor-signature__default-value">4</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPLODE_DEFAULT_ESCAPE">
+        EXPLODE_DEFAULT_ESCAPE
+        <a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_ESCAPE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">254</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EXPLODE_DEFAULT_ESCAPE</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;\\&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPLODE_DEFAULT_FLAGS">
+        EXPLODE_DEFAULT_FLAGS
+        <a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_FLAGS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">253</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.253" class="phpdocumentor-element-found-in__source" data-line="253" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EXPLODE_DEFAULT_FLAGS</span>
+    = <span class="phpdocumentor-signature__default-value">self::OMIT_EMPTY_FIELDS | self::ESCAPED</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPLODE_DEFAULT_LIMIT">
+        EXPLODE_DEFAULT_LIMIT
+        <a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_LIMIT" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">255</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EXPLODE_DEFAULT_LIMIT</span>
+    = <span class="phpdocumentor-signature__default-value">-1</span>
 </code>
 
 
@@ -846,9 +949,9 @@ just appended.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">669</span>
+    <span class="phpdocumentor-element-found-in__line">645</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.669" class="phpdocumentor-element-found-in__source" data-line="669" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.645" class="phpdocumentor-element-found-in__source" data-line="645" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Semi deep clone of an array: entries which are objects will be cloned,
@@ -903,9 +1006,9 @@ entries which are arrays will be recursed into by this function.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">329</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Escape delimiters in the given value.</p>
@@ -967,16 +1070,16 @@ entries which are arrays will be recursed into by this function.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">276</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.276" class="phpdocumentor-element-found-in__source" data-line="276" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">A preg_explode() wrapper with some extra features.</p>
+        <p class="phpdocumentor-summary">A preg_split() wrapper with some extra features.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">explode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$delim</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flags</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\self::OMIT_EMPTY_FIELDS">self::OMIT_EMPTY_FIELDS</abbr> | <abbr title="\self::ESCAPED">self::ESCAPED</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$escape</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'\\'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">explode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$delim</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flags</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_FLAGS">self::EXPLODE_DEFAULT_FLAGS</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$escape</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_ESCAPE">self::EXPLODE_DEFAULT_ESCAPE</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_LIMIT">self::EXPLODE_DEFAULT_LIMIT</abbr></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1005,7 +1108,7 @@ entries which are arrays will be recursed into by this function.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$flags</span>
                 : <span class="phpdocumentor-argument-list__argument__type">int</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\self::OMIT_EMPTY_FIELDS">self::OMIT_EMPTY_FIELDS</abbr> | <abbr title="\self::ESCAPED">self::ESCAPED</abbr></span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_FLAGS">self::EXPLODE_DEFAULT_FLAGS</abbr></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED</p>
 <ul>
@@ -1020,9 +1123,18 @@ in the output array.. See paramterer $escape.</li>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$escape</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">'\\'</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_ESCAPE">self::EXPLODE_DEFAULT_ESCAPE</abbr></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The escape character when self::ESCAPED is set.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$limit</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\self::EXPLODE_DEFAULT_LIMIT">self::EXPLODE_DEFAULT_LIMIT</abbr></span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p><abbr title="\OCA\CAFEVDB\Common\preg_split">preg_split</abbr>.</p>
 </section>
 
             </dd>
@@ -1052,9 +1164,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">397</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explode a string of the form
@@ -1145,9 +1257,9 @@ that it is not necessary to escape the key-delimiter.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">428</span>
+    <span class="phpdocumentor-element-found-in__line">439</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.439" class="phpdocumentor-element-found-in__source" data-line="439" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explode a string of the form
@@ -1277,9 +1389,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">727</span>
+    <span class="phpdocumentor-element-found-in__line">703</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.727" class="phpdocumentor-element-found-in__source" data-line="727" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.703" class="phpdocumentor-element-found-in__source" data-line="703" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Decode an file-upload error into some &quot;readable&quot; error string.</p>
@@ -1334,9 +1446,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">604</span>
+    <span class="phpdocumentor-element-found-in__line">580</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.604" class="phpdocumentor-element-found-in__source" data-line="604" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.580" class="phpdocumentor-element-found-in__source" data-line="580" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dumps a string into a traditional hex dump for programmers,
@@ -1517,9 +1629,9 @@ options, UTF-8 for stone-age PHP versions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">502</span>
+    <span class="phpdocumentor-element-found-in__line">513</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.502" class="phpdocumentor-element-found-in__source" data-line="502" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Locale-aware &quot;human readable&quot; file-size.</p>
@@ -1594,9 +1706,9 @@ options, UTF-8 for stone-age PHP versions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">310</span>
+    <span class="phpdocumentor-element-found-in__line">321</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.321" class="phpdocumentor-element-found-in__source" data-line="321" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counter-part to self::explode().</p>
@@ -1677,9 +1789,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">452</span>
+    <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Undo self::explodeIndexedMulti().</p>
@@ -1741,9 +1853,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">475</span>
+    <span class="phpdocumentor-element-found-in__line">486</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.475" class="phpdocumentor-element-found-in__source" data-line="475" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.486" class="phpdocumentor-element-found-in__source" data-line="486" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the maximum upload file size.</p>
@@ -1902,78 +2014,6 @@ space in the cloud FS for the current user into account.</p>
             -public
                                     -static                    "
 >
-    <h4 class="phpdocumentor-element__name" id="method_shortenCamelCaseString">
-        shortenCamelCaseString()
-        <a href="classes/OCA-CAFEVDB-Common-Util.html#method_shortenCamelCaseString" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">565</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.565" class="phpdocumentor-element-found-in__source" data-line="565" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Shorten the given string by iteratively reducing the size of its
-camel-case components until it fits into the given length.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">shortenCamelCaseString</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$minLen</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">2</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$string</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The string to shorten.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$limit</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The target length.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$minLen</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">2</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Defaults to 2. Components smaller than this will not
-be shortened. This also means that the target-length may not be reached.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
     <h4 class="phpdocumentor-element__name" id="method_strftime">
         strftime()
         <a href="classes/OCA-CAFEVDB-Common-Util.html#method_strftime" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1982,9 +2022,9 @@ be shortened. This also means that the target-length may not be reached.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">536</span>
+    <span class="phpdocumentor-element-found-in__line">547</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.547" class="phpdocumentor-element-found-in__source" data-line="547" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the right way (tm).</p>
@@ -2053,9 +2093,9 @@ be shortened. This also means that the target-length may not be reached.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">704</span>
+    <span class="phpdocumentor-element-found-in__line">680</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.704" class="phpdocumentor-element-found-in__source" data-line="704" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.680" class="phpdocumentor-element-found-in__source" data-line="680" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Turn a php $_FILES array of the form
@@ -2118,9 +2158,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">348</span>
+    <span class="phpdocumentor-element-found-in__line">359</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.348" class="phpdocumentor-element-found-in__source" data-line="348" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.359" class="phpdocumentor-element-found-in__source" data-line="359" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Un-escape delimiters in the given value.</p>
@@ -2182,9 +2222,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="lib/Common/Util.php"><a href="files/lib-common-util.html"><abbr title="lib/Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">651</span>
+    <span class="phpdocumentor-element-found-in__line">627</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.651" class="phpdocumentor-element-found-in__source" data-line="651" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.627" class="phpdocumentor-element-found-in__source" data-line="627" data-modal="source-view" data-src="files/lib/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unset all array elements with value $value.</p>
@@ -2771,6 +2811,9 @@ timeozone.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_ESCAPED">ESCAPED</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_ESCAPE">EXPLODE_DEFAULT_ESCAPE</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_FLAGS">EXPLODE_DEFAULT_FLAGS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_EXPLODE_DEFAULT_LIMIT">EXPLODE_DEFAULT_LIMIT</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_FILE_EXTENSIONS_BY_MIME_TYPE">FILE_EXTENSIONS_BY_MIME_TYPE</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_OMIT_EMPTY_FIELDS">OMIT_EMPTY_FIELDS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#constant_TRIM">TRIM</a></li>
@@ -2806,7 +2849,6 @@ timeozone.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_maxUploadSize">maxUploadSize()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_normalizeSpaces">normalizeSpaces()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_removeSpaces">removeSpaces()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_shortenCamelCaseString">shortenCamelCaseString()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_strftime">strftime()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_transposeArray">transposeArray()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_unescapeDelimiter">unescapeDelimiter()</a></li>

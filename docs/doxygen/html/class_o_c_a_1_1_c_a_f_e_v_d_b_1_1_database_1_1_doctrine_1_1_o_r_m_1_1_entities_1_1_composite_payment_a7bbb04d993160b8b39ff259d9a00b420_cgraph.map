@@ -1,0 +1,12 @@
+<map id="addProjectPayment" name="addProjectPayment">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,141,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#accd73e0fd06bff955fcd752259f49201" title="Get compositePayment." alt="" coords="189,5,444,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,101,188,73,210,68,206,71,190,79,113,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#ab3e37f847769704baa78ecb0578be043" title="Set compositePayment." alt="" coords="189,88,444,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,123,176,125,170,127,141,128"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="186,109,156,111,155,106,191,108"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a9c0d8ff97922cc054ac3aa2394beaf1f" title="Get balanceDocumentsFolder." alt="" coords="524,67,714,93"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="444,99,512,93,507,94,445,104"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#ad53712c439abc0fffefe24d47b6b319b" title="Set balanceDocumentsFolder." alt="" coords="492,117,746,192"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="445,130,479,137,474,137,444,136"/>
+</map>

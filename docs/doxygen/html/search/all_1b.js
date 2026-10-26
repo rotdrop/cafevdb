@@ -18,6 +18,9 @@ var searchData=
   ['withbody_15',['withBody',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_imap_message_fetcher.html#a92edf26a46a381a1a072f8bc7c12b2b6',1,'OCA::CAFEVDB::Service::IMAP::ImapMessageFetcher']]],
   ['withtimezone_16',['withTimeZone',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_time_factory.html#ada6cb37ad2cfddb4405f4b1d5d21eeb2',1,'OCA::CAFEVDB::Common::TimeFactory']]],
   ['wkhtmltopdfconvert_17',['wkhtmltopdfConvert',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#a52cf2faa2f4a73b0ece5a4a55545e35c',1,'OCA\\CAFEVDB\\Toolkit\\Service\\AnyToPdf\\wkhtmltopdfConvert()'],['../class_o_c_a_1_1_rot_drop_1_1_toolkit_1_1_service_1_1_any_to_pdf.html#a52cf2faa2f4a73b0ece5a4a55545e35c',1,'OCA\\RotDrop\\Toolkit\\Service\\AnyToPdf\\wkhtmltopdfConvert()']]],
-  ['writeusersqlconfig_18',['writeUserSqlConfig',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a738d301bd56cac033014f9e648939e42',1,'OCA::CAFEVDB::Service::CloudUserConnectorService']]],
-  ['written_19',['Test which must be written',['../md__2var_2www_2dev6_2htdocs_2nextcloud-git-35_2apps_2cafevdb_2tests_2phpunit_2_t_o_d_o.html',1,'']]]
+  ['wordsplitterservice_18',['WordSplitterService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html',1,'OCA::CAFEVDB::Service']]],
+  ['wordsplitterservicetest_19',['WordSplitterServiceTest',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service_1_1_word_splitter_service_test.html',1,'OCA::CAFEVDB::Tests::Unit::Service']]],
+  ['wordsplitterservicetrait_20',['WordSplitterServiceTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#abe9a54cfb6c435f0e8643f7a71df6d8a',1,'OCA::CAFEVDB::Tests::Unit::Service']]],
+  ['writeusersqlconfig_21',['writeUserSqlConfig',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a738d301bd56cac033014f9e648939e42',1,'OCA::CAFEVDB::Service::CloudUserConnectorService']]],
+  ['written_22',['Test which must be written',['../md__2var_2www_2dev6_2htdocs_2nextcloud-git-35_2apps_2cafevdb_2tests_2phpunit_2_t_o_d_o.html',1,'']]]
 ];

@@ -1,0 +1,11 @@
+<map id="stubFinder" name="stubFinder">
+<area shape="rect" id="Node000001" title=" " alt="" coords="383,56,465,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#a7a90b68144cdf152f987f3bedf2ea6f0" title="Skip the test if the converter is not installed, otherwise hide all other converters." alt="" coords="236,56,335,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="365,70,336,72,335,67,370,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#a0c06eca3cd043d4aed010701c06313f0" title=" " alt="" coords="42,5,151,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,53,149,35,149,30,223,51"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#a4d0e8d35d0c3927dac45232aaaaf4bb2" title="Column spans, line breaks in cells, nested tables and escaping of console formatting characters in th..." alt="" coords="5,56,188,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="217,70,189,72,188,67,223,69"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_common_1_1_html2_text_test.html#a8026f6de5c12a50343311c1e8cd12fca" title=" " alt="" coords="28,107,165,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="224,86,150,109,148,103,218,87"/>
+</map>

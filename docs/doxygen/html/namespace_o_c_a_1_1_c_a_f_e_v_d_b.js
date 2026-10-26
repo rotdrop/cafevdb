@@ -56,7 +56,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b =
       [ "databaseConfigured", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9d1b3dddcf394f67302abcad8d5cc6dc", null ],
       [ "dateTimeFormatter", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af3b3d2dae405ec96b29b4072ef4824a2", null ],
       [ "decrypt", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9681c0e87cd47308aa7b3b970ad0928f", null ],
-      [ "defaultUserIdSlug", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1b4e14b3eb59bdcd06596c6386a0405c", null ],
       [ "deleteAppValue", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a40b0e6098c85e4fe46be90feb5346f23", null ],
       [ "deleteConfigValue", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4a5f07c964bfd3ef94b8dc177ef2538a", null ],
       [ "deleteUserValue", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a774b3f8a0990f7e2d637b02712c7f5d5", null ],

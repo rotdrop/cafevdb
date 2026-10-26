@@ -48,6 +48,7 @@ use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
 
 use OCA\CAFEVDB\Common\TimeFactory;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller;
@@ -111,7 +112,6 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
@@ -141,9 +141,11 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\HttpStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -159,19 +161,20 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class EmailFormControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockEmailTemplatesRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockInstrumentsRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
   private const EXPECTED_ROUTES = [
     'webform',
@@ -273,7 +276,7 @@ class EmailFormControllerTest extends TestCase
     $this->configService->setConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER, 'downloads');
     $this->configService->setConfigValue(ConfigConstants::BALANCES_FOLDER, 'balances');
 
-    $this->userStorage = $this->getUserStorageStub();
+    $this->userStorage = $this->getUserStorage();
     $mockProvider->registerClassInstance(Storage\UserStorage::class, $this->userStorage, global: true);
 
     $this->urlGenerator = $this->appContainer->get(IURLGenerator::class);
@@ -330,10 +333,11 @@ class EmailFormControllerTest extends TestCase
       function(int $projectId) {
         $project = $this->entityManager->getRepository(Entities\Project::class)->find(['id' => $projectId]);
         if (!$project) {
+          echo 'NO PROJECT ' . PHP_EOL;
           return null;
         }
         $path = '/orchestra-members/projects/' . $project->getYear() . '/' . $project->getName();
-        $node = $this->userStorage->get($path);
+        $node = $this->userStorage->ensureFolder($path);
         $result = $this->simpleSharingService->linkShare($node, password: $project->getName());
         $result['mount_point'] = $path;
         return $result;
@@ -344,10 +348,11 @@ class EmailFormControllerTest extends TestCase
     $this->projectService = new Service\ProjectService(
       configService: $this->configService,
       entityManager: $this->entityManager,
-      userStorage: $this->userStorage,
-      participantFieldsService: $projectParticipantFieldsService,
-      musicianService: $musiciansService,
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      musicianService: $musiciansService,
+      participantFieldsService: $projectParticipantFieldsService,
+      transliterator: $this->appContainer->get(Transliterator::class),
+      userStorage: $this->userStorage,
     );
     $mockProvider->registerClassInstance(Service\ProjectService::class, $this->projectService);
 
@@ -736,7 +741,7 @@ class EmailFormControllerTest extends TestCase
   private function composerPreviewSetup(bool $fillDownloads = true): void
   {
     $this->mockHttpClient();
-    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
+    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: false);
     if ($fillDownloads) {
       $this->userStorage->putContent($publicDownloads . '/entry.md', '# Hello World!');
     }
@@ -834,7 +839,7 @@ class EmailFormControllerTest extends TestCase
   public function testComposerPreviewCatchIllegalDownloadShares(): void
   {
     $this->composerPreviewSetup();
-    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
+    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: false);
     [ 'mount_point' => $postProjectMedia ] = $this->projectGroupService->getProjectFolderLinkShare($this->project->getId());
     $subFolderTests = [
       'PROJECT_MUSIC_SHEETS_SHARE' => $publicDownloads,
@@ -843,7 +848,8 @@ class EmailFormControllerTest extends TestCase
     $expectations = [];
     $messageText = '';
     foreach ($subFolderTests as $replacementKey => $path) {
-      $subFolder = $this->userStorage->get($path . '/subFolder');
+      // should fail
+      $subFolder = $this->userStorage->ensureFolder($path . '/subFolder');
       [ 'files_sharing' => $subFolderUri ] = $this->simpleSharingService->linkShare($subFolder);
       $this->assertStringStartsWith(
         $this->request->getServerProtocol() . '://' . $this->request->getServerHost(),
@@ -854,21 +860,25 @@ class EmailFormControllerTest extends TestCase
 ';
       $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . '}?dir=/subFolder'] = $subFolderUri;
 
-      $file = $this->userStorage->putContent($subFolder->getPath() . '/Anleitung.md', '# Hello World!');
+      // should fail
+      $file = $this->userStorage->putContent($this->userStorage->getUserPath($subFolder) . '/Anleitung.md', '# Hello World!');
       [ 'files_sharing' => $fileUri ] = $this->simpleSharingService->linkShare($file);
       $fileText = 'links to ' . $fileUri;
       $messageText .= '<a href="' . $fileUri . '">' . $fileText . '</a>
 ';
       $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . ':/subFolder/Anleitung.md}'] = $fileUri;
 
-      $oldUri = $this->linkSharesByPath[$path] ?? null;
-      unset($this->linkSharesByPath[$path]);
-      $folder = $this->userStorage->get($path);
+      // should fail
+      $folder = $this->userStorage->ensureFolder($path);
+      $fullPath = $folder->getPath();
+      $oldUri = $this->linkSharesByPath[$fullPath] ?? null;
+      unset($this->linkSharesByPath[$fullPath]);
       [ 'files_sharing' => $folderUri ] = $this->simpleSharingService->linkShare($folder);
       $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . '}'] = $folderUri;
-      unset($this->linkSharesByPath[$path]);
+      unset($this->linkSharesByPath[$fullPath]);
+      unset($this->linkSharesByPath[$fullPath]);
       if ($oldUri) {
-        $this->linkSharesByPath[$path] = $oldUri;
+        $this->linkSharesByPath[$fullPath] = $oldUri;
       }
       $folderText = 'links to ' . $folderUri;
       $messageText .= '<a href="' . $folderUri . '">' . $folderText . '</a>
@@ -903,7 +913,6 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(true, $domDoc->loadHTML($messageText, LIBXML_PEDANTIC));
     $diagnostics = $requestData->diagnostics;
     $validationData = $diagnostics['ExternalLinkValidation'] ?? null;
-    // print_r($validationData);
     $this->assertNotEmpty($validationData);
     $this->assertTrue($validationData['status']);
     $this->assertEquals(6, count($validationData['good']));

@@ -130,7 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a60c98c66d906272b04db8256d97c794f"><td class="mdescLeft">&#160;</td><td class="mdescRight">{}  <br /></td></tr>
 <tr class="memitem:a7b6e5c12813dec3c45ec9531820c539a" id="r_a7b6e5c12813dec3c45ec9531820c539a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7b6e5c12813dec3c45ec9531820c539a">setUser</a> (?IUser $<a class="el" href="#ae8a275690ff1b618e1947378b0ed73ae">user</a>)</td></tr>
 <tr class="memitem:ae8a275690ff1b618e1947378b0ed73ae" id="r_ae8a275690ff1b618e1947378b0ed73ae"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae8a275690ff1b618e1947378b0ed73ae">user</a> ()</td></tr>
+<tr class="memitem:ae81b7186fb97a7c6457edcc68c9aa2ef" id="r_ae81b7186fb97a7c6457edcc68c9aa2ef"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae81b7186fb97a7c6457edcc68c9aa2ef">getUser</a> ()</td></tr>
 <tr class="memitem:ab3611160d9a34bb9dadc778f2885eeb1" id="r_ab3611160d9a34bb9dadc778f2885eeb1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab3611160d9a34bb9dadc778f2885eeb1">userId</a> ()</td></tr>
+<tr class="memitem:a05f6aa1ffae6295260d9f1cca016bf33" id="r_a05f6aa1ffae6295260d9f1cca016bf33"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a05f6aa1ffae6295260d9f1cca016bf33">getUserId</a> ()</td></tr>
 <tr class="memitem:af51ff79273a9130754c89a499fe1af5c" id="r_af51ff79273a9130754c89a499fe1af5c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#af51ff79273a9130754c89a499fe1af5c">getUserPath</a> (Node $node)</td></tr>
 <tr class="memdesc:af51ff79273a9130754c89a499fe1af5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the path relative to user-folder.  <br /></td></tr>
 <tr class="memitem:a276b6e02e924a328452c80479a389da9" id="r_a276b6e02e924a328452c80479a389da9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a276b6e02e924a328452c80479a389da9">get</a> (?string $path, ?string $type=null, bool $useCache=false, bool $throw=false)</td></tr>
@@ -147,26 +149,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8ba8871bf0ed2a7aba8fa3407248a356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make sure the given directory exists.  <br /></td></tr>
 <tr class="memitem:ae00d3fd376a5852334619ba68bf4cbb2" id="r_ae00d3fd376a5852334619ba68bf4cbb2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae00d3fd376a5852334619ba68bf4cbb2">ensureFolderChain</a> (array $chain)</td></tr>
 <tr class="memdesc:ae00d3fd376a5852334619ba68bf4cbb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make sure that all components of the given array exists where each following component is chained to the previous one.  <br /></td></tr>
-<tr class="memitem:ada1aeefc7aee3dd0391dd02e26bd5af1" id="r_ada1aeefc7aee3dd0391dd02e26bd5af1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ada1aeefc7aee3dd0391dd02e26bd5af1">getCacheFolder</a> (string $subDirectory)</td></tr>
 <tr class="memitem:aa5f378c63a7d9fa6f2dd69b5a852c7e0" id="r_aa5f378c63a7d9fa6f2dd69b5a852c7e0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa5f378c63a7d9fa6f2dd69b5a852c7e0">putContent</a> (string $path, string $content)</td></tr>
 <tr class="memdesc:aa5f378c63a7d9fa6f2dd69b5a852c7e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put file content by path.  <br /></td></tr>
 <tr class="memitem:a7c74ad795b0991dfe92d16611b20be9d" id="r_a7c74ad795b0991dfe92d16611b20be9d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7c74ad795b0991dfe92d16611b20be9d">getContent</a> (string $path)</td></tr>
 <tr class="memdesc:a7c74ad795b0991dfe92d16611b20be9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get file content by path.  <br /></td></tr>
-<tr class="memitem:af58846e7dd1ab51361459c33ac592cd7" id="r_af58846e7dd1ab51361459c33ac592cd7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#af58846e7dd1ab51361459c33ac592cd7">getDownloadLink</a> ($pathOrNode)</td></tr>
-<tr class="memdesc:af58846e7dd1ab51361459c33ac592cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a DAV download-link for the given node or path-name.  <br /></td></tr>
-<tr class="memitem:a76c6d5e47da5f2741084435d06fe2584" id="r_a76c6d5e47da5f2741084435d06fe2584"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a76c6d5e47da5f2741084435d06fe2584">getFilesAppLink</a> ($pathOrNode, bool $subDir=false)</td></tr>
-<tr class="memdesc:a76c6d5e47da5f2741084435d06fe2584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a link to the files-app pointing to the parent folder if $pathOrNode is a file, or the node itself if it is a folder.  <br /></td></tr>
+<tr class="memitem:aab547f28350e1481e7587aa3d67470b6" id="r_aab547f28350e1481e7587aa3d67470b6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aab547f28350e1481e7587aa3d67470b6">getDownloadLink</a> (string|Node $pathOrNode)</td></tr>
+<tr class="memdesc:aab547f28350e1481e7587aa3d67470b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a DAV download-link for the given node or path-name.  <br /></td></tr>
+<tr class="memitem:aed7fb8bbc4f4bb8cbd478c043674d5ff" id="r_aed7fb8bbc4f4bb8cbd478c043674d5ff"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aed7fb8bbc4f4bb8cbd478c043674d5ff">getFilesAppLink</a> (string|Node $pathOrNode, bool $subDir=false)</td></tr>
+<tr class="memdesc:aed7fb8bbc4f4bb8cbd478c043674d5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a link to the files-app pointing to the parent folder if $pathOrNode is a file, or the node itself if it is a folder.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a60fea4594ea8cb53ed5d3c49d7c268f6" id="r_a60fea4594ea8cb53ed5d3c49d7c268f6"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a60fea4594ea8cb53ed5d3c49d7c268f6">pathCat</a> ($first, ?string $second=null)</td></tr>
+<tr class="memitem:ab728f24a0fee33d87c74d6f5a20c5504" id="r_ab728f24a0fee33d87c74d6f5a20c5504"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#ab728f24a0fee33d87c74d6f5a20c5504">normalizePath</a> (?string $path)</td></tr>
+<tr class="memdesc:ab728f24a0fee33d87c74d6f5a20c5504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalize the path in order to have suitable cache-keys and no special cases in comparisons.  <br /></td></tr>
+<tr class="memitem:a8a4d4f43f0909ea3cacd907ba6d4d2bd" id="r_a8a4d4f43f0909ea3cacd907ba6d4d2bd"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a8a4d4f43f0909ea3cacd907ba6d4d2bd">pathCat</a> (null|string|array $first, ?string $second=null)</td></tr>
 <tr class="memitem:a2320d119e0996ffb2563c00deb1d1c4d" id="r_a2320d119e0996ffb2563c00deb1d1c4d"><td class="memItemLeft">static&#160;</td><td class="memItemRight"><a class="el" href="#a2320d119e0996ffb2563c00deb1d1c4d">stripParents</a> (string $path, int $depth)</td></tr>
 <tr class="memdesc:a2320d119e0996ffb2563c00deb1d1c4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strip the given number of directories from $path.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a3799d36bab7799bf2ff64997a4616bcf" id="r_a3799d36bab7799bf2ff64997a4616bcf"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a3799d36bab7799bf2ff64997a4616bcf">PATH_SEP</a> = Constants::PATH_SEP</td></tr>
-<tr class="memitem:a43e84be6597c73c02e67db0dc944cd1a" id="r_a43e84be6597c73c02e67db0dc944cd1a"><td class="memItemLeft">const&#160;</td><td class="memItemRight"><a class="el" href="#a43e84be6597c73c02e67db0dc944cd1a">CACHE_DIRECTORY</a> = self::PATH_SEP.'cache'</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -180,7 +182,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Some tweaks to for the user-folder stuff. </p>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00058">58</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00059">59</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a60c98c66d906272b04db8256d97c794f" name="a60c98c66d906272b04db8256d97c794f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a60c98c66d906272b04db8256d97c794f">&#9670;&#160;</a></span>__construct()</h2>
@@ -224,7 +226,7 @@ Private Attributes</h2></td></tr>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a60c98c66d906272b04db8256d97c794f_cgraph.svg" width="310" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a60c98c66d906272b04db8256d97c794f_cgraph.svg" width="426" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -265,7 +267,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00577">577</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00613">613</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -294,7 +296,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00469">469</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00505">505</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -329,13 +331,13 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00602">602</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00638">638</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00633">ensureFolderChain()</a>, <a class="el" href="_user_storage_8php_source.html#l00649">getCacheFolder()</a>, and <a class="el" href="_user_storage_8php_source.html#l00664">putContent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00669">ensureFolderChain()</a>, and <a class="el" href="_user_storage_8php_source.html#l00689">putContent()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a8ba8871bf0ed2a7aba8fa3407248a356_icgraph.svg" width="286" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a8ba8871bf0ed2a7aba8fa3407248a356_icgraph.svg" width="286" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -371,9 +373,9 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00633">633</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00669">669</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00602">ensureFolder()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00638">ensureFolder()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -421,39 +423,13 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|Node The user-folder or the given sub-folder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00148">148</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00183">183</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-</div>
-</div>
-<a id="ada1aeefc7aee3dd0391dd02e26bd5af1" name="ada1aeefc7aee3dd0391dd02e26bd5af1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada1aeefc7aee3dd0391dd02e26bd5af1">&#9670;&#160;</a></span>getCacheFolder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">getCacheFolder </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$subDirectory</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$subDirectory</td><td>Folder name inside cache subdirectory.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>\OCP\Files\Folder The requested cache folder </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00649">649</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
-
-<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00602">ensureFolder()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00165">normalizePath()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ada1aeefc7aee3dd0391dd02e26bd5af1_cgraph.svg" width="268" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a276b6e02e924a328452c80479a389da9_cgraph.svg" width="203" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -480,14 +456,22 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The file content. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The file content.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">InvalidArgumentException</td><td>If $path refers to a folder.</td></tr>
+    <tr><td class="paramname">FileNotFoundException</td><td>If $path does not refer to an existing node.</td></tr>
+    <tr><td class="paramname">RuntimeException</td><td>If some other error occurs. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00688">688</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00719">719</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
-<a id="af58846e7dd1ab51361459c33ac592cd7" name="af58846e7dd1ab51361459c33ac592cd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af58846e7dd1ab51361459c33ac592cd7">&#9670;&#160;</a></span>getDownloadLink()</h2>
+<a id="aab547f28350e1481e7587aa3d67470b6" name="aab547f28350e1481e7587aa3d67470b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab547f28350e1481e7587aa3d67470b6">&#9670;&#160;</a></span>getDownloadLink()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -495,7 +479,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">getDownloadLink </td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$pathOrNode</em></span></td><td>)</td>
+          <td class="paramtype">string|Node</td>          <td class="paramname"><span class="paramname"><em>$pathOrNode</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -508,7 +492,7 @@ Here is the call graph for this function:</div>
 <p><a href="https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/index.php/apps/files/ajax/download.php?dir=%2Fcamerata%2Fprojects%2F1997%2FVereinsmitglieder%2Fparticipants%2Fclaus.heine%2FVersicherungsunterlagen&amp;files=Blah&amp;downloadStartSecret=yur5m66p6lm">https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/index.php/apps/files/ajax/download.php?dir=%2Fcamerata%2Fprojects%2F1997%2FVereinsmitglieder%2Fparticipants%2Fclaus.heine%2FVersicherungsunterlagen&amp;files=Blah&amp;downloadStartSecret=yur5m66p6lm</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string&#160;|&#160;\\OCP\\Files\\Node</td><td class="paramname">$pathOrNode</td><td>The file-system path or node.</td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;Node</td><td class="paramname">$pathOrNode</td><td>The file-system path or node.</td></tr>
   </table>
   </dd>
 </dl>
@@ -520,7 +504,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00756">756</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00790">790</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -551,12 +535,12 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|File The user-folder or the given sub-folder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00184">184</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00220">220</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
-<a id="a76c6d5e47da5f2741084435d06fe2584" name="a76c6d5e47da5f2741084435d06fe2584"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76c6d5e47da5f2741084435d06fe2584">&#9670;&#160;</a></span>getFilesAppLink()</h2>
+<a id="aed7fb8bbc4f4bb8cbd478c043674d5ff" name="aed7fb8bbc4f4bb8cbd478c043674d5ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed7fb8bbc4f4bb8cbd478c043674d5ff">&#9670;&#160;</a></span>getFilesAppLink()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -564,7 +548,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">getFilesAppLink </td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$pathOrNode</em></span>, </td>
+          <td class="paramtype">string|Node</td>          <td class="paramname"><span class="paramname"><em>$pathOrNode</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -586,7 +570,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string|null URL to the files app. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00803">803</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00835">835</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -617,7 +601,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|Folder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00196">196</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00232">232</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -635,9 +619,77 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>\OCP\Files\Folder The root-folder </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>?Folder The root-folder or null if no user has been installed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00456">456</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00492">492</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00108">user()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_aad5f81bb01a9f12cfb3fc38ca462a90d_cgraph.svg" width="288" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ae81b7186fb97a7c6457edcc68c9aa2ef" name="ae81b7186fb97a7c6457edcc68c9aa2ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae81b7186fb97a7c6457edcc68c9aa2ef">&#9670;&#160;</a></span>getUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getUser </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>null|IUser The current user </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00116">116</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00108">user()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ae81b7186fb97a7c6457edcc68c9aa2ef_icgraph.svg" width="436" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a05f6aa1ffae6295260d9f1cca016bf33" name="a05f6aa1ffae6295260d9f1cca016bf33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05f6aa1ffae6295260d9f1cca016bf33">&#9670;&#160;</a></span>getUserId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getUserId </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>?string The current user-id </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00135">135</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00108">user()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00127">userId()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a05f6aa1ffae6295260d9f1cca016bf33_cgraph.svg" width="299" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a05f6aa1ffae6295260d9f1cca016bf33_icgraph.svg" width="195" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -665,12 +717,55 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00125">125</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00147">147</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
-<a id="a60fea4594ea8cb53ed5d3c49d7c268f6" name="a60fea4594ea8cb53ed5d3c49d7c268f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60fea4594ea8cb53ed5d3c49d7c268f6">&#9670;&#160;</a></span>pathCat()</h2>
+<a id="ab728f24a0fee33d87c74d6f5a20c5504" name="ab728f24a0fee33d87c74d6f5a20c5504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab728f24a0fee33d87c74d6f5a20c5504">&#9670;&#160;</a></span>normalizePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">normalizePath </td>
+          <td>(</td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Normalize the path in order to have suitable cache-keys and no special cases in comparisons. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">?string</td><td class="paramname">$path</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00165">165</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00183">get()</a>, <a class="el" href="_user_storage_8php_source.html#l00456">pathCat()</a>, and <a class="el" href="_user_storage_8php_source.html#l00483">stripParents()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ab728f24a0fee33d87c74d6f5a20c5504_icgraph.svg" width="255" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a8a4d4f43f0909ea3cacd907ba6d4d2bd" name="a8a4d4f43f0909ea3cacd907ba6d4d2bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a4d4f43f0909ea3cacd907ba6d4d2bd">&#9670;&#160;</a></span>pathCat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -681,7 +776,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">pathCat </td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$first</em></span>, </td>
+          <td class="paramtype">null|string|array</td>          <td class="paramname"><span class="paramname"><em>$first</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -697,14 +792,21 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string&#160;|&#160;array</td><td class="paramname">$first</td><td>Paths to cat. May be an array.</td></tr>
-    <tr><td class="paramtype">null&#160;|&#160;string</td><td class="paramname">$second</td><td>Optional second component.</td></tr>
+    <tr><td class="paramtype">null&#160;|&#160;string&#160;|&#160;array</td><td class="paramname">$first</td><td>Paths to cat. May be an array.</td></tr>
+    <tr><td class="paramtype">?string</td><td class="paramname">$second</td><td>Optional second component.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string The concatenated paths. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00420">420</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00456">456</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00165">normalizePath()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a8a4d4f43f0909ea3cacd907ba6d4d2bd_cgraph.svg" width="231" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -738,9 +840,9 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>File </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00664">664</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00689">689</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00602">ensureFolder()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00638">ensureFolder()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -784,7 +886,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00553">553</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00589">589</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>
@@ -812,13 +914,13 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00091">91</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00105">user()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00108">user()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00076">__construct()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a7b6e5c12813dec3c45ec9531820c539a_cgraph.svg" width="172" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a7b6e5c12813dec3c45ec9531820c539a_cgraph.svg" width="288" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -866,7 +968,14 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00448">448</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00483">483</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00165">normalizePath()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_a2320d119e0996ffb2563c00deb1d1c4d_cgraph.svg" width="255" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -884,15 +993,23 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>null|IUser The current user </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>null|IUser The current user</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000003">Deprecated</a></b></dt><dd>Use UserStorage::getUser() instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00105">105</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00108">108</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00091">setUser()</a>, and <a class="el" href="_user_storage_8php_source.html#l00113">userId()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00116">getUser()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_user_storage_8php_source.html#l00492">getRoot()</a>, <a class="el" href="_user_storage_8php_source.html#l00135">getUserId()</a>, and <a class="el" href="_user_storage_8php_source.html#l00091">setUser()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ae8a275690ff1b618e1947378b0ed73ae_cgraph.svg" width="172" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ae8a275690ff1b618e1947378b0ed73ae_icgraph.svg" width="310" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ae8a275690ff1b618e1947378b0ed73ae_icgraph.svg" width="322" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -911,15 +1028,16 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>string The current user-id </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>?string The current user-id</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000004">Deprecated</a></b></dt><dd>Use UserStorage::getUserId() instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00113">113</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00127">127</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00105">user()</a>.</p>
+<p class="reference">References <a class="el" href="_user_storage_8php_source.html#l00135">getUserId()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ab3611160d9a34bb9dadc778f2885eeb1_cgraph.svg" width="163" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_ab3611160d9a34bb9dadc778f2885eeb1_cgraph.svg" width="404" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -997,22 +1115,6 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a43e84be6597c73c02e67db0dc944cd1a" name="a43e84be6597c73c02e67db0dc944cd1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43e84be6597c73c02e67db0dc944cd1a">&#9670;&#160;</a></span>CACHE_DIRECTORY</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const CACHE_DIRECTORY = self::PATH_SEP.'cache'</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00064">64</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
-
-</div>
-</div>
 <a id="a3799d36bab7799bf2ff64997a4616bcf" name="a3799d36bab7799bf2ff64997a4616bcf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3799d36bab7799bf2ff64997a4616bcf">&#9670;&#160;</a></span>PATH_SEP</h2>
 
@@ -1025,7 +1127,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00063">63</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_user_storage_8php_source.html#l00064">64</a> of file <a class="el" href="_user_storage_8php_source.html">UserStorage.php</a>.</p>
 
 </div>
 </div>

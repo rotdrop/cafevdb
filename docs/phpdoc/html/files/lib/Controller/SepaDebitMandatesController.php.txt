@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaTransliterator;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -122,6 +123,7 @@ class SepaDebitMandatesController extends Controller
     private FinanceService $financeService,
     private FuzzyInputService $fuzzyInputService,
     private ProjectService $projectService,
+    private SepaTransliterator $sepaTransliterator,
     private StorageFactory $storageFactory,
     private TimeFactory $timeFactory,
     protected ConfigService $configService,
@@ -340,8 +342,8 @@ class SepaDebitMandatesController extends Controller
           }
           break;
         case ConfigConstants::BANK_ACCOUNT_OWNER:
-          $this->logInfo('OWNER ' . $value . ' ' . $this->financeService->sepaTranslit($value));
-          $value = $this->financeService->sepaTranslit($value);
+          $this->logInfo('OWNER ' . $value . ' ' . $this->sepaTransliterator->translit($value));
+          $value = $this->sepaTransliterator->translit($value);
           if (!$this->financeService->validateSepaString($value)) {
             throw new Exceptions\EnduserNotificationException(
               $this->l->t('Account owner contains invalid characters: "%s"', $value),

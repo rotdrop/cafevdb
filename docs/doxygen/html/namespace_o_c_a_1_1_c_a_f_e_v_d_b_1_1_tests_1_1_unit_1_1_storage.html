@@ -124,13 +124,22 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('namespace_o_c_
 <p>Orchestra member, musician and project management application.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:UserStorageTest" id="r_UserStorageTest"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test.html">UserStorageTest</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test aspects of the UserStorage class.  <a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_1_1_user_storage_test.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab198ac6d35f74f98e531f49b00c8bed6" id="r_ab198ac6d35f74f98e531f49b00c8bed6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab198ac6d35f74f98e531f49b00c8bed6">getAppDataStub</a> (bool $mock=false)</td></tr>
 <tr class="memitem:a2bb49eb86872b64c2cd5851a970240f6" id="r_a2bb49eb86872b64c2cd5851a970240f6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2bb49eb86872b64c2cd5851a970240f6">getAppStorage</a> (bool $appDataMock=false)</td></tr>
-<tr class="memitem:afd7831104ee74a484d5ca9ddb8fd355d" id="r_afd7831104ee74a484d5ca9ddb8fd355d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afd7831104ee74a484d5ca9ddb8fd355d">setNodePermissions</a> (string $path, int $permissions)</td></tr>
-<tr class="memitem:a845e525c5514bd8afd0ed507e2cad62c" id="r_a845e525c5514bd8afd0ed507e2cad62c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a845e525c5514bd8afd0ed507e2cad62c">getUserStorageStub</a> (bool $mock=false)</td></tr>
-<tr class="memdesc:a845e525c5514bd8afd0ed507e2cad62c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a stub or mock for the UserStorage class.  <br /></td></tr>
+<tr class="memitem:a16089dd28b2d8bb6be65a6d503c4495a" id="r_a16089dd28b2d8bb6be65a6d503c4495a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a16089dd28b2d8bb6be65a6d503c4495a">setNodePermissions</a> (Node $node, int $permissions)</td></tr>
+<tr class="memitem:a2ee306b3cf5ab89be63cfdef2db1000d" id="r_a2ee306b3cf5ab89be63cfdef2db1000d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2ee306b3cf5ab89be63cfdef2db1000d">getStorage</a> ()</td></tr>
+<tr class="memitem:a3c4b0ec59bea4b7a712c204b3882139b" id="r_a3c4b0ec59bea4b7a712c204b3882139b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3c4b0ec59bea4b7a712c204b3882139b">pathCat</a> (string $parent, string $child)</td></tr>
+<tr class="memitem:a0010fb4907763ccdf504a2635b9b3997" id="r_a0010fb4907763ccdf504a2635b9b3997"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a0010fb4907763ccdf504a2635b9b3997">generateFolderStub</a> (string $path)</td></tr>
+<tr class="memitem:a24908e5f1a0a298be8f2227806e9b8b9" id="r_a24908e5f1a0a298be8f2227806e9b8b9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a24908e5f1a0a298be8f2227806e9b8b9">generateFileStub</a> (Folder $parent, string $childPath, ?string $content)</td></tr>
+<tr class="memitem:aab440e4e850ad6d4f44c6ed4b106d702" id="r_aab440e4e850ad6d4f44c6ed4b106d702"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aab440e4e850ad6d4f44c6ed4b106d702">getRootFolderStub</a> ()</td></tr>
+<tr class="memitem:a12af233b429764d5fa9971864bc357e3" id="r_a12af233b429764d5fa9971864bc357e3"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a12af233b429764d5fa9971864bc357e3">getUserStorage</a> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -143,14 +152,17 @@ Variables</h2></td></tr>
 <tr class="memitem:a75f135da6d6ebfdf1c623881af2d31b7" id="r_a75f135da6d6ebfdf1c623881af2d31b7"><td class="memItemLeft">array&#160;</td><td class="memItemRight"><a class="el" href="#a75f135da6d6ebfdf1c623881af2d31b7">$topLevelFolders</a> = []</td></tr>
 <tr class="memitem:a6fcbe5c2a31a583256de7c7739e5886f" id="r_a6fcbe5c2a31a583256de7c7739e5886f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6fcbe5c2a31a583256de7c7739e5886f">$folderFactory</a></td></tr>
 <tr class="memitem:abe8a176e9dab6e7958c650ad72b950a5" id="r_abe8a176e9dab6e7958c650ad72b950a5"><td class="memItemLeft"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_time_factory.html">TimeFactory</a>&#160;</td><td class="memItemRight"><a class="el" href="#abe8a176e9dab6e7958c650ad72b950a5">$timeFactory</a></td></tr>
-<tr class="memitem:a062e800b77258f42e262ee5d270312cc" id="r_a062e800b77258f42e262ee5d270312cc"><td class="memItemLeft">trait&#160;</td><td class="memItemRight"><a class="el" href="#a062e800b77258f42e262ee5d270312cc">MockUserStorageTrait</a></td></tr>
-<tr class="memdesc:a062e800b77258f42e262ee5d270312cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fabricate a stub or mock intercepting file system access.  <br /></td></tr>
+<tr class="memitem:a87d8a2d4830fe0773c9c842e2811da81" id="r_a87d8a2d4830fe0773c9c842e2811da81"><td class="memItemLeft">trait&#160;</td><td class="memItemRight"><a class="el" href="#a87d8a2d4830fe0773c9c842e2811da81">RootFolderStubTrait</a></td></tr>
+<tr class="memdesc:a87d8a2d4830fe0773c9c842e2811da81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fabricate a stub or mock intercepting file system access.  <br /></td></tr>
+<tr class="memitem:a6d669bfc8a8c176e99dbf8bbab5666fb" id="r_a6d669bfc8a8c176e99dbf8bbab5666fb"><td class="memItemLeft">IStorage&#160;</td><td class="memItemRight"><a class="el" href="#a6d669bfc8a8c176e99dbf8bbab5666fb">$storage</a></td></tr>
+<tr class="memitem:a873d7d70389e07ec5229c3054f31cc33" id="r_a873d7d70389e07ec5229c3054f31cc33"><td class="memItemLeft"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a>&#160;</td><td class="memItemRight"><a class="el" href="#a873d7d70389e07ec5229c3054f31cc33">$userStorage</a></td></tr>
+<tr class="memitem:a939c771b2f06c935155ef1e5f83d0b59" id="r_a939c771b2f06c935155ef1e5f83d0b59"><td class="memItemLeft">array&#160;</td><td class="memItemRight"><a class="el" href="#a939c771b2f06c935155ef1e5f83d0b59">$storages</a> = []</td></tr>
 <tr class="memitem:a2f2f0262af4ee23188102ada1b79c759" id="r_a2f2f0262af4ee23188102ada1b79c759"><td class="memItemLeft">ContainerInterface&#160;</td><td class="memItemRight"><a class="el" href="#a2f2f0262af4ee23188102ada1b79c759">$appContainer</a></td></tr>
 <tr class="memitem:ae46105450303adc84beab619a8c45b21" id="r_ae46105450303adc84beab619a8c45b21"><td class="memItemLeft">IURLGenerator&#160;</td><td class="memItemRight"><a class="el" href="#ae46105450303adc84beab619a8c45b21">$urlGenerator</a></td></tr>
 <tr class="memitem:aa13b326792b3b2502a74cdd5924fec7c" id="r_aa13b326792b3b2502a74cdd5924fec7c"><td class="memItemLeft">array&#160;</td><td class="memItemRight"><a class="el" href="#aa13b326792b3b2502a74cdd5924fec7c">$fileSystemNodes</a> = []</td></tr>
 <tr class="memitem:ac8703b71b9332079b7e575b6e993105e" id="r_ac8703b71b9332079b7e575b6e993105e"><td class="memItemLeft">array&#160;</td><td class="memItemRight"><a class="el" href="#ac8703b71b9332079b7e575b6e993105e">$nodePermissions</a> = []</td></tr>
-<tr class="memitem:aea1668056a5523dc4b1a743606b728d7" id="r_aea1668056a5523dc4b1a743606b728d7"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#aea1668056a5523dc4b1a743606b728d7">$nodeId</a> = 1</td></tr>
 <tr class="memitem:a85eec08e890e60af6111c022e51e949a" id="r_a85eec08e890e60af6111c022e51e949a"><td class="memItemLeft">array&#160;</td><td class="memItemRight"><a class="el" href="#a85eec08e890e60af6111c022e51e949a">$databaseDirEntries</a> = []</td></tr>
+<tr class="memitem:aea1668056a5523dc4b1a743606b728d7" id="r_aea1668056a5523dc4b1a743606b728d7"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#aea1668056a5523dc4b1a743606b728d7">$nodeId</a> = 1</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Orchestra member, musician and project management application. </p>
@@ -161,6 +173,113 @@ Variables</h2></td></tr>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>
 <p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a24908e5f1a0a298be8f2227806e9b8b9" name="a24908e5f1a0a298be8f2227806e9b8b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24908e5f1a0a298be8f2227806e9b8b9">&#9670;&#160;</a></span>generateFileStub()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generateFileStub </td>
+          <td>(</td>
+          <td class="paramtype">Folder</td>          <td class="paramname"><span class="paramname"><em>$parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$childPath</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$content</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">Folder</td><td class="paramname">$parent</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$childPath</td><td></td></tr>
+    <tr><td class="paramtype">?string</td><td class="paramname">$content</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>File </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">196</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">generateFileStub()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00096">getStorage()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">generateFileStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a24908e5f1a0a298be8f2227806e9b8b9_cgraph.svg" width="446" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a24908e5f1a0a298be8f2227806e9b8b9_icgraph.svg" width="491" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a0010fb4907763ccdf504a2635b9b3997" name="a0010fb4907763ccdf504a2635b9b3997"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0010fb4907763ccdf504a2635b9b3997">&#9670;&#160;</a></span>generateFolderStub()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generateFolderStub </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$path</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Folder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">121</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">generateFileStub()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00096">getStorage()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00108">pathCat()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">generateFileStub()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00237">getRootFolderStub()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a0010fb4907763ccdf504a2635b9b3997_cgraph.svg" width="446" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a0010fb4907763ccdf504a2635b9b3997_icgraph.svg" width="324" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="ab198ac6d35f74f98e531f49b00c8bed6" name="ab198ac6d35f74f98e531f49b00c8bed6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab198ac6d35f74f98e531f49b00c8bed6">&#9670;&#160;</a></span>getAppDataStub()</h2>
 
@@ -193,7 +312,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">62</a> of file <a class="el" href="_get_app_storage_trait_8php_source.html">GetAppStorageTrait.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00116">AbstractMockProvider\create()</a>, and <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">getAppDataStub()</a>.</p>
+<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00117">AbstractMockProvider\create()</a>, and <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">getAppDataStub()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">getAppDataStub()</a>, and <a class="el" href="_get_app_storage_trait_8php_source.html#l00192">getAppStorage()</a>.</p>
 <div class="dynheader">
@@ -241,7 +360,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="_get_app_storage_trait_8php_source.html#l00192">192</a> of file <a class="el" href="_get_app_storage_trait_8php_source.html">GetAppStorageTrait.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00116">AbstractMockProvider\create()</a>, <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">getAppDataStub()</a>, and <a class="el" href="_get_app_storage_trait_8php_source.html#l00192">getAppStorage()</a>.</p>
+<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00117">AbstractMockProvider\create()</a>, <a class="el" href="_get_app_storage_trait_8php_source.html#l00062">getAppDataStub()</a>, and <a class="el" href="_get_app_storage_trait_8php_source.html#l00192">getAppStorage()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="_get_app_storage_trait_8php_source.html#l00192">getAppStorage()</a>.</p>
 <div class="dynheader">
@@ -257,8 +376,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a845e525c5514bd8afd0ed507e2cad62c" name="a845e525c5514bd8afd0ed507e2cad62c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a845e525c5514bd8afd0ed507e2cad62c">&#9670;&#160;</a></span>getUserStorageStub()</h2>
+<a id="aab440e4e850ad6d4f44c6ed4b106d702" name="aab440e4e850ad6d4f44c6ed4b106d702"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab440e4e850ad6d4f44c6ed4b106d702">&#9670;&#160;</a></span>getRootFolderStub()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,9 +386,9 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">getUserStorageStub </td>
+          <td class="memname">getRootFolderStub </td>
           <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>$mock</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -279,36 +398,165 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>IRootFolder </dd></dl>
 
-<p>Generate a stub or mock for the UserStorage class. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">bool</td><td class="paramname">$mock</td><td>If \true generate a mock, else a stub</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>mixed </dd></dl>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00237">237</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00093">93</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00117">AbstractMockProvider\create()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00237">getRootFolderStub()</a>.</p>
 
-<p class="reference">References <a class="el" href="_abstract_mock_provider_8php_source.html#l00116">AbstractMockProvider\create()</a>, and <a class="el" href="_mock_user_storage_trait_8php_source.html#l00093">getUserStorageStub()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_mock_user_storage_trait_8php_source.html#l00093">getUserStorageStub()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00237">getRootFolderStub()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a845e525c5514bd8afd0ed507e2cad62c_cgraph.svg" width="391" height="70"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_aab440e4e850ad6d4f44c6ed4b106d702_cgraph.svg" width="100%" height="471"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a845e525c5514bd8afd0ed507e2cad62c_icgraph.svg" width="151" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_aab440e4e850ad6d4f44c6ed4b106d702_icgraph.svg" width="142" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
-<a id="afd7831104ee74a484d5ca9ddb8fd355d" name="afd7831104ee74a484d5ca9ddb8fd355d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd7831104ee74a484d5ca9ddb8fd355d">&#9670;&#160;</a></span>setNodePermissions()</h2>
+<a id="a2ee306b3cf5ab89be63cfdef2db1000d" name="a2ee306b3cf5ab89be63cfdef2db1000d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ee306b3cf5ab89be63cfdef2db1000d">&#9670;&#160;</a></span>getStorage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">getStorage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>IStorage </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00096">96</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00096">getStorage()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00196">generateFileStub()</a>, <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00096">getStorage()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a2ee306b3cf5ab89be63cfdef2db1000d_cgraph.svg" width="95" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a2ee306b3cf5ab89be63cfdef2db1000d_icgraph.svg" width="623" height="87"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a12af233b429764d5fa9971864bc357e3" name="a12af233b429764d5fa9971864bc357e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12af233b429764d5fa9971864bc357e3">&#9670;&#160;</a></span>getUserStorage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">getUserStorage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>UserStorage </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00261">261</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00261">getUserStorage()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00261">getUserStorage()</a>, and <a class="el" href="_user_storage_test_8php_source.html#l00061">UserStorageTest\setup()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a12af233b429764d5fa9971864bc357e3_cgraph.svg" width="123" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a12af233b429764d5fa9971864bc357e3_icgraph.svg" width="380" height="70"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a3c4b0ec59bea4b7a712c204b3882139b" name="a3c4b0ec59bea4b7a712c204b3882139b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c4b0ec59bea4b7a712c204b3882139b">&#9670;&#160;</a></span>pathCat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">pathCat </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$child</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$parent</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$child</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00108">108</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00108">pathCat()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00121">generateFolderStub()</a>, and <a class="el" href="_root_folder_stub_trait_8php_source.html#l00108">pathCat()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a3c4b0ec59bea4b7a712c204b3882139b_cgraph.svg" width="79" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a3c4b0ec59bea4b7a712c204b3882139b_icgraph.svg" width="439" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a16089dd28b2d8bb6be65a6d503c4495a" name="a16089dd28b2d8bb6be65a6d503c4495a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16089dd28b2d8bb6be65a6d503c4495a">&#9670;&#160;</a></span>setNodePermissions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,7 +567,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">setNodePermissions </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$path</em></span>, </td>
+          <td class="paramtype">Node</td>          <td class="paramname"><span class="paramname"><em>$node</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -335,27 +583,27 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$path</td><td></td></tr>
+    <tr><td class="paramtype">Node</td><td class="paramname">$path</td><td></td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$permissions</td><td></td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00078">78</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00086">86</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_mock_user_storage_trait_8php_source.html#l00078">setNodePermissions()</a>.</p>
+<p class="reference">References <a class="el" href="_root_folder_stub_trait_8php_source.html#l00086">setNodePermissions()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_mock_user_storage_trait_8php_source.html#l00078">setNodePermissions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_root_folder_stub_trait_8php_source.html#l00086">setNodePermissions()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_afd7831104ee74a484d5ca9ddb8fd355d_cgraph.svg" width="154" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a16089dd28b2d8bb6be65a6d503c4495a_cgraph.svg" width="154" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_afd7831104ee74a484d5ca9ddb8fd355d_icgraph.svg" width="154" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_storage_a16089dd28b2d8bb6be65a6d503c4495a_icgraph.svg" width="154" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -381,7 +629,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00056">56</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00065">65</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -429,7 +677,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00069">69</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00075">75</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -453,7 +701,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00062">62</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00071">71</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -549,7 +797,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00066">66</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00077">77</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -573,7 +821,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00064">64</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00073">73</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -598,6 +846,54 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_get_app_storage_trait_8php_source.html#l00049">49</a> of file <a class="el" href="_get_app_storage_trait_8php_source.html">GetAppStorageTrait.php</a>.</p>
+
+</div>
+</div>
+<a id="a6d669bfc8a8c176e99dbf8bbab5666fb" name="a6d669bfc8a8c176e99dbf8bbab5666fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d669bfc8a8c176e99dbf8bbab5666fb">&#9670;&#160;</a></span>$storage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IStorage $storage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00057">57</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+</div>
+</div>
+<a id="a939c771b2f06c935155ef1e5f83d0b59" name="a939c771b2f06c935155ef1e5f83d0b59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a939c771b2f06c935155ef1e5f83d0b59">&#9670;&#160;</a></span>$storages</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">array $storages = []</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00061">61</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -669,7 +965,31 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00058">58</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00067">67</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
+
+</div>
+</div>
+<a id="a873d7d70389e07ec5229c3054f31cc33" name="a873d7d70389e07ec5229c3054f31cc33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a873d7d70389e07ec5229c3054f31cc33">&#9670;&#160;</a></span>$userStorage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a> $userStorage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00059">59</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>
@@ -694,25 +1014,24 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a062e800b77258f42e262ee5d270312cc" name="a062e800b77258f42e262ee5d270312cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a062e800b77258f42e262ee5d270312cc">&#9670;&#160;</a></span>MockUserStorageTrait</h2>
+<a id="a87d8a2d4830fe0773c9c842e2811da81" name="a87d8a2d4830fe0773c9c842e2811da81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87d8a2d4830fe0773c9c842e2811da81">&#9670;&#160;</a></span>RootFolderStubTrait</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">trait MockUserStorageTrait</td>
+          <td class="memname">trait RootFolderStubTrait</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">  <span class="keyword">private</span> <a class="code hl_class" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">UserStorage</a> $userStorage</div>
-<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html">OCA\CAFEVDB\Storage\UserStorage</a></div><div class="ttdoc">Some tweaks to for the user-folder stuff.</div><div class="ttdef"><b>Definition</b> <a href="_user_storage_8php_source.html#l00058">UserStorage.php:59</a></div></div>
+<div class="line">  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait</div>
 </div><!-- fragment -->
 <p>Fabricate a stub or mock intercepting file system access. </p>
 <p>@method mixed createStub(string $class) </p>
 
-<p class="definition">Definition at line <a class="el" href="_mock_user_storage_trait_8php_source.html#l00050">50</a> of file <a class="el" href="_mock_user_storage_trait_8php_source.html">MockUserStorageTrait.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_root_folder_stub_trait_8php_source.html#l00053">53</a> of file <a class="el" href="_root_folder_stub_trait_8php_source.html">RootFolderStubTrait.php</a>.</p>
 
 </div>
 </div>

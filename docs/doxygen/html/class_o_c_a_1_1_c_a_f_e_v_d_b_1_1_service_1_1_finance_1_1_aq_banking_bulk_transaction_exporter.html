@@ -136,7 +136,7 @@ Collaboration diagram for AqBankingBulkTransactionExporter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a45c1f4d8e8c55add03b938bd3be46209" id="r_a45c1f4d8e8c55add03b938bd3be46209"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a45c1f4d8e8c55add03b938bd3be46209">__construct</a> (protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a> $configService,)</td></tr>
+<tr class="memitem:a81756248751aa2e9c1385df2733b4db4" id="r_a81756248751aa2e9c1385df2733b4db4"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a81756248751aa2e9c1385df2733b4db4">__construct</a> (protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a> $configService, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string.html">CamelCaseString</a> $camelCaseString, private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_transliterator.html">SepaTransliterator</a> $sepaTransliterator,)</td></tr>
 <tr class="memitem:a3b0d685951a1867425e204cde5f68de2" id="r_a3b0d685951a1867425e204cde5f68de2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3b0d685951a1867425e204cde5f68de2">mimeType</a> (Entities\SepaBulkTransaction $transaction)</td></tr>
 <tr class="memdesc:a3b0d685951a1867425e204cde5f68de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">{Generate the mime-type for the given bulk-transaction.<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -184,7 +184,7 @@ Data Fields</h2></td></tr>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ab4d72818cbdd2907d0ac44e249231bdb" id="r_ab4d72818cbdd2907d0ac44e249231bdb"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab4d72818cbdd2907d0ac44e249231bdb">bankTransferColumnHeadings</a> ()</td></tr>
 <tr class="memitem:a882861f1d554623d7ac355d5be4c680a" id="r_a882861f1d554623d7ac355d5be4c680a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a882861f1d554623d7ac355d5be4c680a">debitNoteColumnHeadings</a> ()</td></tr>
-<tr class="memitem:af7cc58e6980288d64ddcdd0912d0156f" id="r_af7cc58e6980288d64ddcdd0912d0156f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#af7cc58e6980288d64ddcdd0912d0156f">generatePurpose</a> (string $subject)</td></tr>
+<tr class="memitem:a2a76535a52d8c078930ddb9d4cc6342f" id="r_a2a76535a52d8c078930ddb9d4cc6342f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2a76535a52d8c078930ddb9d4cc6342f">generatePurpose</a> (<a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html">Entities\CompositePayment</a> $payment)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -196,10 +196,10 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Generate AqBanking data-sets for submission to the bank. </p>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00037">37</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00038">38</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a45c1f4d8e8c55add03b938bd3be46209" name="a45c1f4d8e8c55add03b938bd3be46209"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45c1f4d8e8c55add03b938bd3be46209">&#9670;&#160;</a></span>__construct()</h2>
+<a id="a81756248751aa2e9c1385df2733b4db4" name="a81756248751aa2e9c1385df2733b4db4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81756248751aa2e9c1385df2733b4db4">&#9670;&#160;</a></span>__construct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,13 +207,22 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">__construct </td>
           <td>(</td>
-          <td class="paramtype">protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a></td>          <td class="paramname"><span class="paramname"><em>$configService</em></span></td><td>)</td>
+          <td class="paramtype">protected <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html">ConfigService</a></td>          <td class="paramname"><span class="paramname"><em>$configService</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_camel_case_string.html">CamelCaseString</a></td>          <td class="paramname"><span class="paramname"><em>$camelCaseString</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">private <a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_transliterator.html">SepaTransliterator</a></td>          <td class="paramname"><span class="paramname"><em>$sepaTransliterator</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00061">61</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00062">62</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -242,7 +251,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00152">152</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00155">155</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -270,7 +279,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00223">223</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00226">226</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -300,7 +309,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html#ae34fa2e3e55dea9554018c20085764f1">IBulkTransactionExporter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00093">93</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00096">96</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -330,12 +339,12 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html#a2d1a68be77555b9e1be49efd57a7e29b">IBulkTransactionExporter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00087">87</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00090">90</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
-<a id="af7cc58e6980288d64ddcdd0912d0156f" name="af7cc58e6980288d64ddcdd0912d0156f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7cc58e6980288d64ddcdd0912d0156f">&#9670;&#160;</a></span>generatePurpose()</h2>
+<a id="a2a76535a52d8c078930ddb9d4cc6342f" name="a2a76535a52d8c078930ddb9d4cc6342f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a76535a52d8c078930ddb9d4cc6342f">&#9670;&#160;</a></span>generatePurpose()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +355,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">generatePurpose </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$subject</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html">Entities\CompositePayment</a></td>          <td class="paramname"><span class="paramname"><em>$payment</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -358,13 +367,13 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$subject</td><td></td></tr>
+    <tr><td class="paramtype">Entities\\CompositePayment</td><td class="paramname">$payment</td><td></td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00252">252</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00255">255</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -396,7 +405,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html#a9dce7cfafc75f9adeb3ee31bcb5bb21f">IBulkTransactionExporter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00075">75</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00078">78</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -426,7 +435,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html#a3b0d685951a1867425e204cde5f68de2">IBulkTransactionExporter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00081">81</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00084">84</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -451,7 +460,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00054">54</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00055">55</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -475,7 +484,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00058">58</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00059">59</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -499,7 +508,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00052">52</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00053">53</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -523,7 +532,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00056">56</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00057">57</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -539,7 +548,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00043">43</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00044">44</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -555,7 +564,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00044">44</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00045">45</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -571,7 +580,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00046">46</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00047">47</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -587,7 +596,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00041">41</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00042">42</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -603,7 +612,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00045">45</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00046">46</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>
@@ -623,7 +632,7 @@ Private Attributes</h2></td></tr>
 <div class="line">  <span class="keyword">false</span> =&gt; <span class="stringliteral">&#39;following&#39;</span>,</div>
 <div class="line">]</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00047">47</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html#l00048">48</a> of file <a class="el" href="_aq_banking_bulk_transaction_exporter_8php_source.html">AqBankingBulkTransactionExporter.php</a>.</p>
 
 </div>
 </div>

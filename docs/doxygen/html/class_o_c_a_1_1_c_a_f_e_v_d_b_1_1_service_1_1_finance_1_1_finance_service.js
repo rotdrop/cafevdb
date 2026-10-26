@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a96e33b3952979445583f5267e0f8e462", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a20ec00b5f62054d1dd3bf1ed2f9e978a", null ],
     [ "deactivateSepaMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ab82ba710392198499ab3234ea9a80d28", null ],
     [ "deleteFinanceCalendarEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a349e7ea640af42bf861193ce01f56b47", null ],
     [ "deleteSepaMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a8e777ef16b9110cba2381b683cdef099", null ],
@@ -16,12 +16,10 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service =
     [ "mandateReferenceUsage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a8197b25128b1d0236931c797d4a70a80", null ],
     [ "patchFinanceCalendarEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ac0ac4c491a8825f68fa8fdc158779fe7", null ],
     [ "sepaMandateSequenceType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ac1db31f23077c04fb529fa71f5c675e7", null ],
-    [ "sepaTranslit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a898fc6e65d6339c655d54ce2221316b5", null ],
     [ "storeSepaMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ae880ef74ba5660c8aaf4078e5c18301c", null ],
     [ "testCI", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ac6316b3a72155d428d81eca4ebc7ec8a", null ],
     [ "updateFinanceCalendarEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a39aa2ca2aea38394e0a6e6d3709b21e7", null ],
     [ "validateSepaAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a85dfff658810a9ea38d8348f1d59e1e8", null ],
-    [ "validateSepaString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a71a07a45f535949b89d3ba7569f13b0c", null ],
     [ "validateSWIFT", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a6f81c0a0aa459a24c563c1217a933db0", null ],
     [ "SEPA_MANDATE_EXPIRE_MONTHS", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a1491748d05471bbf893bb0c9356c19c3", null ],
     [ "SEPA_MANDATE_LENGTH", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#abfcdebfecab009257946f7efb16d48d5", null ]

@@ -1,0 +1,9 @@
+<map id="getMailingListsService" name="getMailingListsService">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,158,81"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="44,55,38,46,42,36,57,30,82,28,108,31,123,39,118,40,106,36,81,33,58,35,46,40,43,45,49,54"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_rot_drop_1_1_tests_1_1_abstract_mock_provider.html#a4585e6334c6ad2ac07f3c62b02fec7a6" title="Create a new instance." alt="" coords="206,5,398,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,51,193,47,188,48,157,57"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_service.html#ad713ed0bc28eb03362769ab5cd8b17eb" title=" " alt="" coords="208,96,396,123"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="157,79,215,92,210,93,156,85"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="264,95,258,87,263,77,277,71,302,69,328,72,343,81,338,80,327,77,302,75,279,77,266,81,263,87,269,97"/>
+</map>

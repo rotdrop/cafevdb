@@ -125,7 +125,7 @@ class DocumentStorageUploadController extends Controller
    *
    * @param string $uploadMode Upload mode for $cloudFile, link, copy, move.
    *
-   * @param string $conflict fail, replace, rename on conflict.
+   * @param string|EnumAddDocumentConflictAction $conflict fail, replace, rename on conflict.
    *
    * @return Response
    */
@@ -144,7 +144,7 @@ class DocumentStorageUploadController extends Controller
     array|string $data = '{}',
     ?string $cloudFile = null,
     string $uploadMode = EnumFileUploadMode::COPY->value,
-    string $conflict = EnumAddDocumentConflictAction::REPLACE->value,
+    string|EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::REPLACE,
   ):Response {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
@@ -410,7 +410,7 @@ class DocumentStorageUploadController extends Controller
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $actualConflict,
-          'messages' => [$message],
+          'messages' => array_filter([$message]),
         ]);
 
         return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
@@ -585,7 +585,7 @@ class DocumentStorageUploadController extends Controller
    *
    * @param DatabaseStorage $storage
    *
-   * @param string $conflict
+   * @param EnumAddDocumentConflictAction $conflict
    *
    * @return Entities\DatabaseStorageFile
    *
@@ -596,7 +596,7 @@ class DocumentStorageUploadController extends Controller
     Entities\EncryptedFile $fileEntity,
     mixed $entity,
     DatabaseStorage $storage,
-    string $conflict,
+    EnumAddDocumentConflictAction $conflict,
   ):Entities\DatabaseStorageFile {
     switch (true) {
       case ($entity instanceof Entities\CompositePayment):
@@ -604,7 +604,7 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
@@ -613,13 +613,13 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
       case ($entity instanceof Entities\Invoice):
         /** @var Entities\Invoice $entity */
-        $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+        $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
         $entity->setWrittenInvoice($fileNodeEntity);
         return $fileNodeEntity;
       case ($entity instanceof Entities\TaxExemptionNotice):
@@ -627,7 +627,7 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflictAction: $conflict);
           $entity->setWrittenNotice($fileNodeEntity);
         }
         return $fileNodeEntity;

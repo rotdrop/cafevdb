@@ -34,15 +34,16 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\VueAppController;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\RootFolderStubTrait;
 
 #[Attributes\CoversClass(VueAppController::class)]
 /**
@@ -87,6 +88,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectEntityTrait::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\CamelCaseString::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -117,6 +119,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaTransliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\FuzzyInputService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ImagesService::class)]
@@ -132,6 +135,7 @@ use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\DatabaseStorageUtil::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AnyToPdf::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
@@ -147,12 +151,14 @@ use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class VueAppControllerTest extends TestCase
 {
+  use EnableDeprecationsTrait;
   use EntityGeneratorTrait;
-  use MockUserStorageTrait;
+  use RootFolderStubTrait;
   use TestRoutesAreDefinedTrait;
 
   private const CONTROLLER_CLASS = VueAppController::class;
@@ -171,12 +177,14 @@ class VueAppControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    self::enableDeprecations();
+
     $this->generateProjectParticipant(persist: false);
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $this->userStorage = $this->getUserStorageStub();
+    $this->userStorage = $this->getUserStorage();
     $mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $this->entityManager->method('getRepository')->willReturnCallback(

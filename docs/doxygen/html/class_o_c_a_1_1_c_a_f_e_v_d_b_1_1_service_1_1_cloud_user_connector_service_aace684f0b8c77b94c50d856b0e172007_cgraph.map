@@ -1,0 +1,5 @@
+<map id="synchronizeCloud" name="synchronizeCloud">
+<area shape="rect" id="Node000001" title="In particular flush potential data&#45;caches after changing data of the orchestra app." alt="" coords="5,5,131,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a452c1bc56f4ae1f83153341f0e9948c6" title="Clear the backend cache, for use in controllers, back&#45;reportings messages." alt="" coords="179,5,345,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,16,165,18,160,19,131,21"/>
+</map>

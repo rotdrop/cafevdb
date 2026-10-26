@@ -2,6 +2,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service =
 [
     [ "checkAndGetCloudDbUser", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a671fba0b17a311cf25f00baf8fa06912", null ],
     [ "checkRequirements", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ab9908b4a2aaa00954cc55cac5d5ad1b2", null ],
+    [ "clearUserBackendCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a452c1bc56f4ae1f83153341f0e9948c6", null ],
+    [ "configureCloudUserBackend", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#aee54635650e4518e9304818f60a6ca38", null ],
     [ "generateMusicianPersonalizedViewsStatements", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#afd669fc5c9519ec4df86f83338241f86", null ],
     [ "generateUserSqlConfig", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a1a19b48267e2ba917d0226da1acdcb25", null ],
     [ "getProjectGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a0d00b746fa1f2ecf4394e2ba4bf0bb55", null ],

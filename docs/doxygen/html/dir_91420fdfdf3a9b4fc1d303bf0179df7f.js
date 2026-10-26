@@ -14,9 +14,14 @@ var dir_91420fdfdf3a9b4fc1d303bf0179df7f =
     [ "EventsServiceTest.php", "_events_service_test_8php_source.html", null ],
     [ "HistoryServiceTest.php", "_history_service_test_8php_source.html", null ],
     [ "InstrumentationServiceTest.php", "_instrumentation_service_test_8php_source.html", null ],
+    [ "MailingListsServiceTest.php", "_mailing_lists_service_test_8php_source.html", null ],
+    [ "MailingListsServiceTrait.php", "_mailing_lists_service_trait_8php_source.html", null ],
     [ "ProgressStatusServiceTest.php", "_progress_status_service_test_8php_source.html", null ],
     [ "ProjectParticipantFieldsServiceTest.php", "_project_participant_fields_service_test_8php_source.html", null ],
     [ "ProjectServiceTest.php", "_project_service_test_8php_source.html", null ],
     [ "SetupCalendarBackendTrait.php", "_setup_calendar_backend_trait_8php_source.html", null ],
-    [ "SetupEventsServiceTrait.php", "_setup_events_service_trait_8php_source.html", null ]
+    [ "SetupEventsServiceTrait.php", "_setup_events_service_trait_8php_source.html", null ],
+    [ "UserSqlRequestsTrait.php", "_user_sql_requests_trait_8php_source.html", null ],
+    [ "WordSplitterServiceTest.php", "_word_splitter_service_test_8php_source.html", null ],
+    [ "WordSplitterServiceTrait.php", "_word_splitter_service_trait_8php_source.html", null ]
 ];

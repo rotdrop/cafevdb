@@ -1,5 +1,7 @@
 <map id="setField" name="setField">
-<area shape="rect" id="Node000001" title="Set field." alt="" coords="386,29,453,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entitiedcb14ed77267e2e196739be35c28a3b1.html#a9e28985ed9c16b1c110872794f31d288" title=" " alt="" coords="5,5,338,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="368,43,338,45,338,40,373,43"/>
+<area shape="rect" id="Node000001" title="Set field." alt="" coords="386,79,453,105"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a65f442ad3bedb1b6c04aa3720aa76fa5" title="Add a new option." alt="" coords="82,5,261,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="368,83,261,63,261,58,373,82"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_tests_1_1_unit_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entitiedcb14ed77267e2e196739be35c28a3b1.html#a9e28985ed9c16b1c110872794f31d288" title=" " alt="" coords="5,104,338,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="368,102,338,111,337,105,373,101"/>
 </map>

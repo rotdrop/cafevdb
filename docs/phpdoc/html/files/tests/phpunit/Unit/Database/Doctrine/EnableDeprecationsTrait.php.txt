@@ -50,4 +50,10 @@ trait EnableDeprecationsTrait
     }
     DeprecationException::throwOnDeprecations(exclude: '/' . $exclude . '/');
   }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
+  }
 }

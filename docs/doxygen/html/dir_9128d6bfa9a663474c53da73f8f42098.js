@@ -3,6 +3,7 @@ var dir_9128d6bfa9a663474c53da73f8f42098 =
     [ "AbstractFileSystemUndoable.php", "_abstract_file_system_undoable_8php_source.html", null ],
     [ "AbstractProgressStatus.php", "_abstract_progress_status_8php_source.html", null ],
     [ "AbstractUndoable.php", "_abstract_undoable_8php_source.html", null ],
+    [ "CamelCaseString.php", "_camel_case_string_8php_source.html", null ],
     [ "ConsoleLogger.php", "_console_logger_8php_source.html", null ],
     [ "DatabaseProgressStatus.php", "_database_progress_status_8php_source.html", null ],
     [ "DoNothingProgressStatus.php", "_do_nothing_progress_status_8php_source.html", null ],

@@ -1,0 +1,5 @@
+<map id="ensureStarted" name="ensureStarted">
+<area shape="rect" id="Node000001" title="Make sure the service is running, launching it in the background if necessary and waiting until it ac..." alt="" coords="5,5,108,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_word_splitter_service.html#a6a7d2f9bbded75508e6be2f95d2622d3" title="Check whether the service accepts connections on its socket." alt="" coords="156,5,204,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,16,143,18,137,19,108,21"/>
+</map>
