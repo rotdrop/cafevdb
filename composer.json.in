@@ -82,7 +82,12 @@
   "repositories": [
     {
       "type": "path",
-      "url": "3rdparty/opentbs"
+      "url": "3rdparty/opentbs",
+      "options": {
+        "versions": {
+          "tinybutstrong/opentbs": "dev-production/cafevdb"
+        }
+      }
     }
   ],
   "minimum-stability": "dev",
