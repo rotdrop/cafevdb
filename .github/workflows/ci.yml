@@ -21,21 +21,6 @@ env:
   BAV_APP_BRANCH: master
 
 jobs:
-  vitest:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use https for submodules
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm test
-
   phpunit:
     runs-on: ubuntu-latest
     env:
@@ -149,3 +134,17 @@ jobs:
       - name: Enable app
         working-directory: server
         run: php occ app:enable ${{ env.APP_NAME }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/apps/${{ env.APP_NAME }}/package-lock.json
+
+      - name: Install app JavaScript dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: npm ci
+
+      - name: Run Vitest suite
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: make selectize jstest
