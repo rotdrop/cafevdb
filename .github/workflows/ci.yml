@@ -16,9 +16,6 @@ env:
   MEMBERS_APP_NAME: cafevdbmembers
   MEMBERS_APP_REPO: rotdrop/cafevdb-members
   MEMBERS_APP_BRANCH: stable35
-  BAV_APP_NAME: bav
-  BAV_APP_REPO: rotdrop/nextcloud-app-bav
-  BAV_APP_BRANCH: master
   DOKUWIKI_APP_NAME: dokuwiki
   DOKUWIKI_APP_REPO: rotdrop/nextcloud-app-dokuwiki
   DOKUWIKI_APP_BRANCH: master
@@ -57,14 +54,6 @@ jobs:
           ref: ${{ env.MEMBERS_APP_BRANCH }}
           token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
           path: server/apps/${{ env.MEMBERS_APP_NAME }}
-          submodules: recursive
-
-      - name: Checkout BAV app
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.BAV_APP_REPO }}
-          ref: ${{ env.BAV_APP_BRANCH }}
-          path: server/apps/${{ env.BAV_APP_NAME }}
           submodules: recursive
 
       - name: Checkout DokuWiki app
@@ -140,19 +129,11 @@ jobs:
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make dev-setup-php
 
-      - name: Install BAV app PHP dependencies
-        working-directory: server/apps/${{ env.BAV_APP_NAME }}
-        run: make dev-setup
-
       - name: Install DokuWiki and Redaxo PHP dependencies
         run: |
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make -C server/apps/${{ env.DOKUWIKI_APP_NAME }} dev-setup
           make -C server/apps/${{ env.REDAXO_APP_NAME }} dev-setup
-
-      - name: Enable BAV app
-        working-directory: server
-        run: php occ app:enable ${{ env.BAV_APP_NAME }}
 
       - name: Enable members app
         working-directory: server
