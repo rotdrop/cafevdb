@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Common;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\ExecutableFinder;
 use PHPUnit\Framework\Attributes;
 
 use OCA\CAFEVDB\Common\Html2Text;
@@ -80,12 +81,74 @@ und rechts ausgerichteten Text.',
   ];
 
   /** @return void */
+  protected function tearDown(): void
+  {
+    Html2Text::setExecutableFinder(null);
+  }
+
+  /**
+   * @param string $only
+   *
+   * @return ExecutableFinder
+   */
+  private function stubFinder(string $only): ExecutableFinder
+  {
+    $real = new ExecutableFinder;
+    $finder = $this->createStub(ExecutableFinder::class);
+    $finder->method('find')->willReturnCallback(
+      fn(string $name) => $name === $only ? $real->find($name) : null
+    );
+    return $finder;
+  }
+
+  /** @return void */
   public function testConversion(): void
   {
     foreach (self::HTML_TEXTS as $htmlText => $plainText) {
       $text = Html2Text::convert($htmlText);
-      // echo 'A' . $text . 'B' . PHP_EOL;
       $this->assertEquals($plainText, $text);
     }
+  }
+
+  /**
+   * @param string $converter
+   *
+   * @return void
+   */
+  #[Attributes\DataProvider('converterProvider')]
+  public function testSingleConverter(string $converter): void
+  {
+    if ($converter !== 'php' && (new ExecutableFinder)->find($converter) === null) {
+      $this->markTestSkipped($converter . ' is not installed.');
+    }
+    // 'php' hides all external converters, so the composer class is used.
+    Html2Text::setExecutableFinder($this->stubFinder($converter));
+    $text = Html2Text::convert('<p>Hello&nbsp;<strong>W&ouml;rld</strong></p><p>Second</p>');
+    $this->assertStringContainsString('Hello W' . "\u{f6}" . 'rld', $text);
+    $this->assertStringContainsString('Second', $text);
+    $this->assertSame($text, trim($text));
+  }
+
+  /** @return array */
+  public static function converterProvider(): array
+  {
+    return [
+      'w3m' => ['w3m'],
+      'lynx' => ['lynx'],
+      'elinks' => ['elinks'],
+      'php' => ['php'],
+    ];
+  }
+
+  /** @return void */
+  public function testFallbackWithoutExternalConverters(): void
+  {
+    $finder = $this->createStub(ExecutableFinder::class);
+    $finder->method('find')->willReturn(null);
+    Html2Text::setExecutableFinder($finder);
+    $text = Html2Text::convert('<p>a <b>b</b></p>');
+    $this->assertStringContainsString('a', $text);
+    $this->assertStringContainsString('b', $text);
+    $this->assertStringNotContainsString('<', $text);
   }
 }

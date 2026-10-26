@@ -70,6 +70,21 @@ class Html2Text
     ],
   ];
 
+  /** @var null|ExecutableFinder */
+  private static ?ExecutableFinder $executableFinder = null;
+
+  /**
+   * Inject an executable finder, mainly for testing. Pass null to reset.
+   *
+   * @param null|ExecutableFinder $executableFinder
+   *
+   * @return void
+   */
+  public static function setExecutableFinder(?ExecutableFinder $executableFinder): void
+  {
+    self::$executableFinder = $executableFinder;
+  }
+
   /**
    * Trim the string and remove spaces followed by a newline character.
    *
@@ -101,9 +116,8 @@ class Html2Text
       }
     }
     // Fallback. No support for tables.
-    $html2Text = new PhpHtml2Text;
-    $html2Text->setHtml($html);
-    return self::normalizeSpaces($html2Text->convert(), stripLinebreaks: false);
+    $html2Text = new PhpHtml2Text($html);
+    return self::normalizeSpaces($html2Text->getText());
   }
 
   /**
@@ -117,7 +131,7 @@ class Html2Text
    */
   private static function callConverter(string $converter, array $arguments, string $html):?string
   {
-    $converter = (new ExecutableFinder)->find($converter);
+    $converter = (self::$executableFinder ?? new ExecutableFinder)->find($converter);
     if (empty($converter)) {
       return null;
     }
