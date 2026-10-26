@@ -13,6 +13,9 @@ env:
   NC_REPO: rotdrop/nextcloud-server
   NC_BRANCH: cjh-stable35
   APP_NAME: cafevdb
+  MEMBERS_APP_NAME: cafevdbmembers
+  MEMBERS_APP_REPO: rotdrop/cafevdbmembers
+  MEMBERS_APP_BRANCH: stable35
 
 jobs:
   vitest:
@@ -52,6 +55,14 @@ jobs:
         with:
           path: server/apps/${{ env.APP_NAME }}
           submodules: recursive
+
+      - name: Checkout members app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MEMBERS_APP_REPO }}
+          ref: ${{ env.MEMBERS_APP_BRANCH }}
+          token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
+          path: server/apps/${{ env.MEMBERS_APP_NAME }}
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
         run: |
