@@ -40,6 +40,24 @@ import AdminSettings from '~/src/components/AdminSettings.vue';
 import { AUTHORIZATION_GROUP_SUFFIXES, INITIAL_STATE_SECTION } from '~/build/ts-types/php-modules/Settings/Admin.ts';
 import { appName } from '~/src/config.ts';
 
+// No server is available: fail requests without network access and do not
+// try to render toasts, which jsdom cannot do reliably.
+vi.mock(import('@nextcloud/axios'), () => {
+  const reject = vi.fn(() => Promise.reject(new Error('no server in unit tests')));
+  return { default: { get: reject, post: reject, put: reject, delete: reject, patch: reject } } as never;
+});
+
+vi.mock(import('@nextcloud/dialogs'), async (originalImport) => {
+  const originalModule = await originalImport();
+  return {
+    ...originalModule,
+    showError: vi.fn(),
+    showSuccess: vi.fn(),
+    showInfo: vi.fn(),
+    showWarning: vi.fn(),
+  };
+});
+
 vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
   const originalModule = await originalImport();
 
