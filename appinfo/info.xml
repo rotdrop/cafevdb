@@ -24,7 +24,7 @@
     </plugins>
   </sabre>
   <dependencies>
-    <php min-version="8.4" max-version="8.5" />
+    <php min-version="8.5" max-version="8.5" />
     <nextcloud min-version="35" max-version="35" />
   </dependencies>
   <repair-steps>
@@ -51,6 +51,7 @@
     <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section> -->
   </settings>
   <commands>
+    <command>OCA\CAFEVDB\Command\DatabaseMigrate</command>
     <command>OCA\CAFEVDB\Command\DatabaseSanitizers</command>
     <command>OCA\CAFEVDB\Command\DatabaseStorage</command>
     <command>OCA\CAFEVDB\Command\ExecutiveBoard</command>

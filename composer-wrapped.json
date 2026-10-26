@@ -44,6 +44,9 @@
       "type": "path",
       "url": "3rdparty/doctrine-orm",
       "options": {
+        "versions": {
+          "doctrine/orm": "dev-production/3.7.x/cafevdb"
+        },
         "symlink": false
       }
     },
@@ -51,6 +54,9 @@
       "type": "path",
       "url": "3rdparty/mediamonks-doctrine-extensions",
       "options": {
+        "versions": {
+          "mediamonks/doctrine-extensions": "0.1.x-dev"
+        },
         "symlink": false
       }
     },
@@ -65,6 +71,9 @@
       "type": "path",
       "url": "3rdparty/gedmo-doctrine-extensions",
       "options": {
+        "versions": {
+          "gedmo/doctrine-extensions": "3.7.x-dev"
+        },
         "symlink": false
       }
     }

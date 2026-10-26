@@ -62,3 +62,35 @@ const ResizeObserverMock = class {
 
 // Stub the global ResizeObserver API
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
+
+// jsdom does not implement the SVG animated length/rect interfaces which are
+// used by DynamicSvgIcon.vue, provide minimal stand-ins.
+if (!('SVGLength' in globalThis)) {
+  vi.stubGlobal('SVGLength', { SVG_LENGTHTYPE_NUMBER: 1 });
+}
+if (typeof SVGSVGElement !== 'undefined' && !('width' in SVGSVGElement.prototype)) {
+  const animatedLength = () => ({
+    baseVal: {
+      value: 0,
+      newValueSpecifiedUnits(_unitType: number, value: number) {
+        this.value = value;
+      },
+    },
+  });
+  for (const property of ['width', 'height']) {
+    const key = Symbol(property);
+    Object.defineProperty(SVGSVGElement.prototype, property, {
+      configurable: true,
+      get() {
+        return this[key] ?? (this[key] = animatedLength());
+      },
+    });
+  }
+  const viewBoxKey = Symbol('viewBox');
+  Object.defineProperty(SVGSVGElement.prototype, 'viewBox', {
+    configurable: true,
+    get() {
+      return this[viewBoxKey] ?? (this[viewBoxKey] = { baseVal: { x: 0, y: 0, width: 0, height: 0 } });
+    },
+  });
+}

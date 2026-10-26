@@ -28,6 +28,9 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\Authentication\Exceptions\CredentialsUnavailableException;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Events;
@@ -131,5 +134,35 @@ class AsymmetricKeyServiceTest extends TestCase
 
     $result = $this->service->getSharedPrivateData(ownerId: $ownerId);
     $this->assertEmpty($result);
+  }
+
+  /** @return void */
+  public function testGenerateKeyPairWithoutStoredLoginCredentials(): void
+  {
+    $appContainer = $this->mockProvider->getAppContainer();
+    $credentialsStore = $this->createStub(ICredentialsStore::class);
+    $credentialsStore->method('getLoginCredentials')->willThrowException(new CredentialsUnavailableException());
+
+    $service = new AsymmetricKeyService(
+      appName: $this->mockProvider->appName,
+      appContainer: $appContainer,
+      userSession: $this->mockProvider->getUserSession(),
+      credentialsStore: $credentialsStore,
+      cloudUserConfig: $this->mockProvider->getCloudUserConfig(),
+      eventDispatcher: $this->mockProvider->getEventDispatcher(),
+      l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
+      keyStorage: $appContainer->get(Crypto\AsymmetricKeyStorageInterface::class),
+      cryptorPrototype: $appContainer->get(Crypto\AsymmetricCryptorInterface::class),
+    );
+
+    $keyPair = $service->initEncryptionKeyPair(
+      ownerId: MockProvider::CLOUD_USER_UID,
+      keyPassphrase: 'ci-user-password',
+      forceNewKeyPair: true,
+    );
+
+    $this->assertArrayHasKey(Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG, $keyPair);
+    $this->assertArrayHasKey(Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG, $keyPair);
   }
 }

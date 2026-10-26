@@ -1,0 +1,253 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main, nextcloud35, 'cjh-*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NC_REPO: rotdrop/nextcloud-server
+  NC_BRANCH: cjh-stable35
+  APP_NAME: cafevdb
+  MEMBERS_APP_NAME: cafevdbmembers
+  MEMBERS_APP_REPO: rotdrop/cafevdb-members
+  MEMBERS_APP_BRANCH: stable35
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    env:
+      PHP_VERSION: '8.5'
+      MARIADB_MAJOR: '12'
+    steps:
+      - name: Use https for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Checkout modified Nextcloud server
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NC_REPO }}
+          ref: ${{ env.NC_BRANCH }}
+          submodules: recursive
+          path: server
+
+      - name: Checkout app
+        uses: actions/checkout@v4
+        with:
+          path: server/apps/${{ env.APP_NAME }}
+          submodules: recursive
+
+      - name: Checkout members app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MEMBERS_APP_REPO }}
+          ref: ${{ env.MEMBERS_APP_BRANCH }}
+          token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
+          path: server/apps/${{ env.MEMBERS_APP_NAME }}
+          submodules: recursive
+
+      - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl ca-certificates apt-transport-https
+          sudo install -d /etc/apt/keyrings
+          sudo curl -fsSL -o /etc/apt/keyrings/mariadb-keyring.pgp \
+            https://mariadb.org/mariadb_release_signing_key.pgp
+          # newest series (e.g. 12.2) of the pinned major version, stable or RC
+          MARIADB_VERSION="$(curl -fsSL https://downloads.mariadb.org/rest-api/mariadb/ \
+            | jq -r --arg m "${MARIADB_MAJOR}." \
+              '[.major_releases[] | select(.release_id | startswith($m)) | select(.release_status | IN("Stable","RC"))][0].release_id')"
+          [ -n "$MARIADB_VERSION" ] && [ "$MARIADB_VERSION" != null ] || { echo "no MariaDB ${MARIADB_MAJOR}.x series found"; exit 1; }
+          echo "Using MariaDB series ${MARIADB_VERSION}"
+          codename="$(lsb_release -cs)"
+          echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://archive.mariadb.org/mariadb-${MARIADB_VERSION}/repo/ubuntu ${codename} main" \
+            | sudo tee /etc/apt/sources.list.d/mariadb.list
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mariadb-server mariadb-client
+          # PHPUnit uses a private server; keep the system server for app type generation.
+          sudo systemctl enable --now mariadb
+          for b in mariadb-install-db mariadbd-safe mariadb mariadb-dump; do
+            command -v "$b" || { echo "missing $b"; exit 1; }
+          done
+          mariadb --version
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ctype, curl, dom, gd, iconv, intl, json, mbstring, openssl, pdo_sqlite, posix, sqlite3, xml, zip, apcu, bcmath, gmp, imagick, fileinfo
+          coverage: xdebug
+          tools: composer:v2
+          ini-values: apc.enable_cli=1, memory_limit=1G
+
+      - name: Install w3m for Html2Text tests
+        run: sudo apt-get install -y --no-install-recommends w3m
+
+      - name: Install Nextcloud (sqlite)
+        working-directory: server
+        run: |
+          composer install --no-interaction --no-progress
+          php occ maintenance:install --database=sqlite \
+            --admin-user=admin --admin-pass=admin --no-interaction
+          php occ config:system:set debug --value=true --type=boolean
+
+      - name: Install app PHP dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
+          make dev-setup-php
+
+      - name: Install members app PHP dependencies
+        working-directory: server/apps/${{ env.MEMBERS_APP_NAME }}
+        run: |
+          # the Makefile needs xpath to read the scoped namespace from info.xml
+          sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+          make dev-setup-php
+
+      - name: Enable members app
+        working-directory: server
+        run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
+
+      - name: Enable app
+        working-directory: server
+        run: php occ app:enable ${{ env.APP_NAME }}
+
+      - name: Run PHPUnit unit suite
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: make phpunit PHPCOVERAGE='-d xdebug.mode=coverage'
+
+      - name: Configure app database and apply migrations
+        working-directory: server
+        run: |
+          db_password="$(openssl rand -hex 24)"
+          cafevdb_user="cafevdb-ci"
+          cafevdb_group="cafevdb_ci"
+          user_password="$(openssl rand -hex 24)"
+          sudo mariadb <<SQL
+          CREATE DATABASE cafevdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER 'cafevdb'@'%' IDENTIFIED BY '${db_password}';
+          GRANT ALL PRIVILEGES ON cafevdb.* TO 'cafevdb'@'%';
+          SQL
+          php occ group:add "${cafevdb_group}"
+          OC_PASS="${user_password}" php occ user:add --password-from-env "${cafevdb_user}"
+          php occ group:adduser "${cafevdb_group}" "${cafevdb_user}"
+          php occ config:app:set "${APP_NAME}" dbname --value=cafevdb
+          php occ config:app:set "${APP_NAME}" dbuser --value=cafevdb
+          php occ config:app:set "${APP_NAME}" dbpassword --value="${db_password}"
+          php occ config:app:set "${APP_NAME}" dbserver --value=127.0.0.1
+          php occ config:app:set "${APP_NAME}" userGroup --value="${cafevdb_group}"
+          password_file="apps/${APP_NAME}/.clipassword"
+          printf %s "${user_password}" > "$password_file"
+          chmod 600 "$password_file"
+          php occ "${APP_NAME}:database:migrate" -v \
+            --user="${cafevdb_user}" --password-file="${password_file}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/apps/${{ env.APP_NAME }}/package-lock.json
+
+      - name: Install app JavaScript dependencies
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          npm ci
+          # Keep the locked versions: make would otherwise run "npm update"
+          # because package.json is newer than package-lock.json after checkout.
+          touch package-lock.json
+
+      - name: Run Vitest suite
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          trap 'rm -f .clipassword' EXIT
+          CAFEVDB_USER=cafevdb-ci make selectize jstest
+
+      - name: Upload PHPUnit coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/phpunit/code-coverage/
+          if-no-files-found: error
+
+      - name: Upload Vitest coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-coverage
+          path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/vitest/coverage/
+          if-no-files-found: error
+
+  publish-coverage:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
+    needs: phpunit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download PHPUnit coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: coverage-report
+
+      - name: Download Vitest coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: vitest-coverage
+          path: vitest-coverage-report
+
+      - name: Publish coverage report and update Pages index
+        run: |
+          mkdir -p gh-pages/docs/coverage
+          rsync -a --delete coverage-report/ gh-pages/docs/coverage/
+          mkdir -p gh-pages/docs/coverage-js
+          rsync -a --delete vitest-coverage-report/ gh-pages/docs/coverage-js/
+          python3 - <<'PY'
+          from pathlib import Path
+
+          readme = Path("gh-pages/docs/README.md")
+          contents = readme.read_text()
+          section = """<!-- coverage-report-start -->
+          ## Code coverage
+
+          - [PHPUnit coverage report](coverage/index.html)
+          - [Vitest coverage report](coverage-js/index.html)
+          <!-- coverage-report-end -->"""
+          start = "<!-- coverage-report-start -->"
+          end = "<!-- coverage-report-end -->"
+          if start in contents and end in contents:
+              before, remainder = contents.split(start, 1)
+              _, after = remainder.split(end, 1)
+              contents = before.rstrip() + "\n\n" + section + after
+          else:
+              contents = contents.rstrip() + "\n\n" + section + "\n"
+          readme.write_text(contents)
+          PY
+          git -C gh-pages config user.name "github-actions[bot]"
+          git -C gh-pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Jekyll skips underscore-prefixed dirs (_css, _js, _icons, _classes, ...)
+          # of the coverage reports unless explicitly included.
+          config=gh-pages/docs/_config.yml
+          touch "$config"
+          for dir in $(cd gh-pages/docs && find coverage coverage-js -type d -name '_*' | sort -u); do
+            if ! grep -qxF "  - $dir" "$config"; then
+              if grep -q '^include:' "$config"; then
+                sed -i "/^include:/a\\  - $dir" "$config"
+              else
+                printf 'include:\n  - %s\n' "$dir" >> "$config"
+              fi
+            fi
+          done
+          git -C gh-pages add docs/README.md docs/coverage docs/coverage-js docs/_config.yml
+          if ! git -C gh-pages diff --cached --quiet; then
+            git -C gh-pages commit -m "Publish PHPUnit coverage report"
+            git -C gh-pages push origin HEAD:gh-pages
+          fi
