@@ -16,12 +16,6 @@ env:
   MEMBERS_APP_NAME: cafevdbmembers
   MEMBERS_APP_REPO: rotdrop/cafevdb-members
   MEMBERS_APP_BRANCH: stable35
-  DOKUWIKI_APP_NAME: dokuwiki
-  DOKUWIKI_APP_REPO: rotdrop/nextcloud-app-dokuwiki
-  DOKUWIKI_APP_BRANCH: master
-  REDAXO_APP_NAME: redaxo
-  REDAXO_APP_REPO: rotdrop/nextcloud-app-redaxo
-  REDAXO_APP_BRANCH: main
 
 jobs:
   phpunit:
@@ -54,22 +48,6 @@ jobs:
           ref: ${{ env.MEMBERS_APP_BRANCH }}
           token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
           path: server/apps/${{ env.MEMBERS_APP_NAME }}
-          submodules: recursive
-
-      - name: Checkout DokuWiki app
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.DOKUWIKI_APP_REPO }}
-          ref: ${{ env.DOKUWIKI_APP_BRANCH }}
-          path: server/apps/${{ env.DOKUWIKI_APP_NAME }}
-          submodules: recursive
-
-      - name: Checkout Redaxo app
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.REDAXO_APP_REPO }}
-          ref: ${{ env.REDAXO_APP_BRANCH }}
-          path: server/apps/${{ env.REDAXO_APP_NAME }}
           submodules: recursive
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
@@ -129,23 +107,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make dev-setup-php
 
-      - name: Install DokuWiki and Redaxo PHP dependencies
-        run: |
-          sudo apt-get install -y --no-install-recommends libxml-xpath-perl
-          make -C server/apps/${{ env.DOKUWIKI_APP_NAME }} dev-setup
-          make -C server/apps/${{ env.REDAXO_APP_NAME }} dev-setup
-
       - name: Enable members app
         working-directory: server
         run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
-
-      - name: Enable DokuWiki app
-        working-directory: server
-        run: php occ app:enable ${{ env.DOKUWIKI_APP_NAME }}
-
-      - name: Enable Redaxo app
-        working-directory: server
-        run: php occ app:enable ${{ env.REDAXO_APP_NAME }}
 
       - name: Enable app
         working-directory: server
