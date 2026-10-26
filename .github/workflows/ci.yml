@@ -19,6 +19,12 @@ env:
   BAV_APP_NAME: bav
   BAV_APP_REPO: rotdrop/nextcloud-app-bav
   BAV_APP_BRANCH: master
+  DOKUWIKI_APP_NAME: dokuwiki
+  DOKUWIKI_APP_REPO: rotdrop/nextcloud-app-dokuwiki
+  DOKUWIKI_APP_BRANCH: master
+  REDAXO_APP_NAME: redaxo
+  REDAXO_APP_REPO: rotdrop/nextcloud-app-redaxo
+  REDAXO_APP_BRANCH: main
 
 jobs:
   phpunit:
@@ -59,6 +65,22 @@ jobs:
           repository: ${{ env.BAV_APP_REPO }}
           ref: ${{ env.BAV_APP_BRANCH }}
           path: server/apps/${{ env.BAV_APP_NAME }}
+          submodules: recursive
+
+      - name: Checkout DokuWiki app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.DOKUWIKI_APP_REPO }}
+          ref: ${{ env.DOKUWIKI_APP_BRANCH }}
+          path: server/apps/${{ env.DOKUWIKI_APP_NAME }}
+          submodules: recursive
+
+      - name: Checkout Redaxo app
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REDAXO_APP_REPO }}
+          ref: ${{ env.REDAXO_APP_BRANCH }}
+          path: server/apps/${{ env.REDAXO_APP_NAME }}
           submodules: recursive
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
@@ -119,6 +141,12 @@ jobs:
         working-directory: server/apps/${{ env.BAV_APP_NAME }}
         run: make dev-setup
 
+      - name: Install DokuWiki and Redaxo PHP dependencies
+        run: |
+          sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+          make -C server/apps/${{ env.DOKUWIKI_APP_NAME }} dev-setup
+          make -C server/apps/${{ env.REDAXO_APP_NAME }} dev-setup
+
       - name: Enable BAV app
         working-directory: server
         run: php occ app:enable ${{ env.BAV_APP_NAME }}
@@ -126,6 +154,14 @@ jobs:
       - name: Enable members app
         working-directory: server
         run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
+
+      - name: Enable DokuWiki app
+        working-directory: server
+        run: php occ app:enable ${{ env.DOKUWIKI_APP_NAME }}
+
+      - name: Enable Redaxo app
+        working-directory: server
+        run: php occ app:enable ${{ env.REDAXO_APP_NAME }}
 
       - name: Enable app
         working-directory: server
