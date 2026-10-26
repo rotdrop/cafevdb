@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard for OCA\CAFEVDB\Service\IMAP</title>
+  <link rel="stylesheet" href="../../../_css/style.css?v=14.4.1">
+  <link rel="stylesheet" href="../../../_css/custom.css">
+ </head>
+ <body>
+  <header class="masthead">
+   <nav aria-label="Breadcrumb">
+    <ol class="breadcrumbs">
+     <li><a href="../../index.html">CAFEVDB</a></li>
+     <li><a href="../index.html">Service</a></li>
+     <li><a href="index.html">IMAP</a></li>
+     <li class="current">Dashboard</li>
+    </ol>
+   </nav>
+   <ul class="tabs">
+    <li><a href="../../../dashboard.html">Files</a></li>
+    <li><a href="../../../_classes/index.html" aria-current="page">Classes</a></li>
+   </ul>
+  </header>
+  <main class="dashboard">
+   <section>
+    <h2>Classes</h2>
+    <div class="panel">
+     <div class="chart">
+      <p class="hint">Line coverage against cyclomatic complexity. Bubble size is the number of executable lines; hover for details, click to navigate.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--coverage-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--coverage-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--coverage-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--text); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--border); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--border); stroke-width: 1; }
+  .chart-label { fill: var(--text); font-size: 11px; font-family: var(--font-sans); }
+  .chart-title { fill: var(--text); font-size: 12px; font-family: var(--font-sans); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">60</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">80</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#47"><circle cx="60.0" cy="106.6" r="20.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher — Coverage: 0.0% | Lines: 216 | Complexity: 59</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#46"><circle cx="60.0" cy="189.1" r="13.7" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage — Coverage: 0.0% | Lines: 102 | Complexity: 39</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#20"><circle cx="60.0" cy="279.9" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address — Coverage: 0.0% | Lines: 36 | Complexity: 17</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#23"><circle cx="60.0" cy="288.1" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList — Coverage: 0.0% | Lines: 36 | Complexity: 15</title></circle></a>
+</svg>
+     </div>
+     <div>
+      <p class="hint">Sorted by descending <abbr title="Change Risk Anti-Patterns">CRAP</abbr> index.</p>
+      <div class="scrollbox">
+     <table class="crap">
+      <thead>
+       <tr>
+        <th scope="col">Class</th>
+        <th scope="col" class="number"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        <th scope="col" class="number">Coverage</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#47">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher</a></td><td class="number">3540</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#46">OCA\CAFEVDB\Service\IMAP\IMAPMessage</a></td><td class="number">1560</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#20">OCA\CAFEVDB\Service\IMAP\Address</a></td><td class="number">306</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#23">OCA\CAFEVDB\Service\IMAP\AddressList</a></td><td class="number">240</td><td class="number">0.0%</td></tr>
+      </tbody>
+     </table>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section>
+    <h2>Methods</h2>
+    <div class="panel">
+     <div class="chart">
+      <p class="hint">Line coverage against cyclomatic complexity. Bubble size is the number of executable lines; hover for details, click to navigate.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--coverage-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--coverage-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--coverage-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--text); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--border); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--border); stroke-width: 1; }
+  .chart-label { fill: var(--text); font-size: 11px; font-family: var(--font-sans); }
+  .chart-title { fill: var(--text); font-size: 12px; font-family: var(--font-sans); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">5</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">15</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#108"><circle cx="60.0" cy="168.5" r="20.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::fetchMessage — Coverage: 0.0% | Lines: 70 | Complexity: 11</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#215"><circle cx="60.0" cy="119.0" r="18.2" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::getPart — Coverage: 0.0% | Lines: 58 | Complexity: 14</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#441"><circle cx="60.0" cy="201.5" r="12.9" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::parseHeaders — Coverage: 0.0% | Lines: 29 | Complexity: 9</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#373"><circle cx="60.0" cy="234.5" r="12.2" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::loadBodyData — Coverage: 0.0% | Lines: 26 | Complexity: 7</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#81"><circle cx="60.0" cy="333.5" r="12.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::__construct — Coverage: 0.0% | Lines: 25 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#300"><circle cx="60.0" cy="333.5" r="10.7" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::jsonSerialize — Coverage: 0.0% | Lines: 20 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#281"><circle cx="60.0" cy="317.0" r="8.3" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFullMessage — Coverage: 0.0% | Lines: 12 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#150"><circle cx="60.0" cy="333.5" r="7.9" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFlags — Coverage: 0.0% | Lines: 11 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#79"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::getEmail — Coverage: 0.0% | Lines: 10 | Complexity: 4</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#51"><circle cx="60.0" cy="317.0" r="7.2" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::fromHorde — Coverage: 0.0% | Lines: 9 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#62"><circle cx="60.0" cy="300.5" r="6.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::getCustomEmail — Coverage: 0.0% | Lines: 8 | Complexity: 3</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#121"><circle cx="60.0" cy="300.5" r="6.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::merge — Coverage: 0.0% | Lines: 8 | Complexity: 3</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#488"><circle cx="60.0" cy="267.5" r="6.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::isEncrypted — Coverage: 0.0% | Lines: 8 | Complexity: 5</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#417"><circle cx="60.0" cy="267.5" r="5.9" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::hasAttachments — Coverage: 0.0% | Lines: 6 | Complexity: 5</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#49"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::getLabel — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#430"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::decodeSubject — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#37"><circle cx="60.0" cy="317.0" r="4.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::fromRaw — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#107"><circle cx="60.0" cy="333.5" r="4.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::jsonSerialize — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#142"><circle cx="60.0" cy="333.5" r="4.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::toHorde — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#324"><circle cx="60.0" cy="317.0" r="4.8" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleMultiPartMessage — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#66"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::fromRow — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#79"><circle cx="60.0" cy="317.0" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::first — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#89"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::jsonSerialize — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#73"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::__construct — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#357"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleHtmlMessage — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#118"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::equals — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#40"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::parse — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#111"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::iterate — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#90"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::withBody — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/ImapMessageFetcher.php.html#342"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleTextMessage — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#29"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#33"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::fromHorde — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/Address.php.html#101"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\Address::toHorde — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#30"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/AddressList.php.html#100"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\AddressList::count — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#135"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::generateMessageId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#142"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getUid — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#172"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setFlags — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#177"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawReferences — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#181"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawInReplyTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#185"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawHeaders — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#189"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getDispositionNotificationTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#193"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFrom — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#204"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setFrom — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#208"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#219"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#223"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getCC — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#234"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setCC — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#238"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getBCC — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#249"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setBcc — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#253"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getMessageId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#257"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getSubject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#268"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setSubject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#272"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getSentDate — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#328"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getHtmlBody — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#335"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getPlainBody — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#339"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getContent — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#346"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setContent — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#353"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getAttachments — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#363"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::addRawAttachment — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#373"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::addEmbeddedMessageAttachment — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#382"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::addAttachmentFromFiles — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#392"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::addLocalAttachment — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#399"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getInReplyTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#408"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setInReplyTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#412"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getReplyTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#421"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::setReplyTo — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#425"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::getUnsubscribeUrl — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../../Service/IMAP/IMAPMessage.php.html#429"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\IMAP\IMAPMessage::isOneClickUnsubscribe — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+     <div>
+      <p class="hint">Sorted by descending <abbr title="Change Risk Anti-Patterns">CRAP</abbr> index.</p>
+      <div class="scrollbox">
+     <table class="crap">
+      <thead>
+       <tr>
+        <th scope="col">Method</th>
+        <th scope="col" class="number"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        <th scope="col" class="number">Coverage</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#215">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::getPart</a></td><td class="number">210</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#108">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::fetchMessage</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#441">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::parseHeaders</a></td><td class="number">90</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#373">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::loadBodyData</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#417">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::hasAttachments</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#488">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::isEncrypted</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#79">OCA\CAFEVDB\Service\IMAP\Address::getEmail</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#62">OCA\CAFEVDB\Service\IMAP\Address::getCustomEmail</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#121">OCA\CAFEVDB\Service\IMAP\AddressList::merge</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#37">OCA\CAFEVDB\Service\IMAP\Address::fromRaw</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#49">OCA\CAFEVDB\Service\IMAP\Address::getLabel</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#118">OCA\CAFEVDB\Service\IMAP\Address::equals</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#51">OCA\CAFEVDB\Service\IMAP\AddressList::fromHorde</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#79">OCA\CAFEVDB\Service\IMAP\AddressList::first</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#111">OCA\CAFEVDB\Service\IMAP\AddressList::iterate</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#281">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFullMessage</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#324">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleMultiPartMessage</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#430">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::decodeSubject</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#29">OCA\CAFEVDB\Service\IMAP\Address::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#33">OCA\CAFEVDB\Service\IMAP\Address::fromHorde</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#101">OCA\CAFEVDB\Service\IMAP\Address::toHorde</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/Address.php.html#107">OCA\CAFEVDB\Service\IMAP\Address::jsonSerialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#30">OCA\CAFEVDB\Service\IMAP\AddressList::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#40">OCA\CAFEVDB\Service\IMAP\AddressList::parse</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#66">OCA\CAFEVDB\Service\IMAP\AddressList::fromRow</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#89">OCA\CAFEVDB\Service\IMAP\AddressList::jsonSerialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#100">OCA\CAFEVDB\Service\IMAP\AddressList::count</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/AddressList.php.html#142">OCA\CAFEVDB\Service\IMAP\AddressList::toHorde</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#81">OCA\CAFEVDB\Service\IMAP\IMAPMessage::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#135">OCA\CAFEVDB\Service\IMAP\IMAPMessage::generateMessageId</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#142">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getUid</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#150">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFlags</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#172">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setFlags</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#177">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawReferences</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#181">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawInReplyTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#185">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getRawHeaders</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#189">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getDispositionNotificationTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#193">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getFrom</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#204">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setFrom</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#208">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#219">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#223">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getCC</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#234">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setCC</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#238">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getBCC</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#249">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setBcc</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#253">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getMessageId</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#257">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getSubject</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#268">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setSubject</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#272">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getSentDate</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#300">OCA\CAFEVDB\Service\IMAP\IMAPMessage::jsonSerialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#328">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getHtmlBody</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#335">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getPlainBody</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#339">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getContent</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#346">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setContent</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#353">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getAttachments</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#363">OCA\CAFEVDB\Service\IMAP\IMAPMessage::addRawAttachment</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#373">OCA\CAFEVDB\Service\IMAP\IMAPMessage::addEmbeddedMessageAttachment</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#382">OCA\CAFEVDB\Service\IMAP\IMAPMessage::addAttachmentFromFiles</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#392">OCA\CAFEVDB\Service\IMAP\IMAPMessage::addLocalAttachment</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#399">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getInReplyTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#408">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setInReplyTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#412">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getReplyTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#421">OCA\CAFEVDB\Service\IMAP\IMAPMessage::setReplyTo</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#425">OCA\CAFEVDB\Service\IMAP\IMAPMessage::getUnsubscribeUrl</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/IMAPMessage.php.html#429">OCA\CAFEVDB\Service\IMAP\IMAPMessage::isOneClickUnsubscribe</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#73">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#90">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::withBody</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#342">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleTextMessage</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../../Service/IMAP/ImapMessageFetcher.php.html#357">OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher::handleHtmlMessage</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+      </tbody>
+     </table>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer>
+   <p class="credits">Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.4.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.12</a> and <a href="https://phpunit.de/">PHPUnit 13.4.3</a> at Mon Oct 26 15:18:36 UTC 2026.</p>
+  </footer>
+ </body>
+</html>

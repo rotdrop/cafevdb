@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard for OCA\CAFEVDB\Common</title>
+  <link rel="stylesheet" href="../../_css/style.css?v=14.4.1">
+  <link rel="stylesheet" href="../../_css/custom.css">
+ </head>
+ <body>
+  <header class="masthead">
+   <nav aria-label="Breadcrumb">
+    <ol class="breadcrumbs">
+     <li><a href="../index.html">CAFEVDB</a></li>
+     <li><a href="index.html">Common</a></li>
+     <li class="current">Dashboard</li>
+    </ol>
+   </nav>
+   <ul class="tabs">
+    <li><a href="../../dashboard.html">Files</a></li>
+    <li><a href="../../_classes/index.html" aria-current="page">Classes</a></li>
+   </ul>
+  </header>
+  <main class="dashboard">
+   <section>
+    <h2>Classes</h2>
+    <div class="panel">
+     <div class="chart">
+      <p class="hint">Line coverage against cyclomatic complexity. Bubble size is the number of executable lines; hover for details, click to navigate.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--coverage-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--coverage-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--coverage-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--text); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--border); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--border); stroke-width: 1; }
+  .chart-label { fill: var(--text); font-size: 11px; font-family: var(--font-sans); }
+  .chart-title { fill: var(--text); font-size: 12px; font-family: var(--font-sans); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="240.0" x2="780" y2="240.0" class="chart-grid"/>
+ <text x="52" y="240.0" text-anchor="end" dominant-baseline="middle" class="chart-label">50</text>
+ <line x1="60" y1="130.0" x2="780" y2="130.0" class="chart-grid"/>
+ <text x="52" y="130.0" text-anchor="end" dominant-baseline="middle" class="chart-label">100</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">150</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="../../Common/Util.php.html#37"><circle cx="205.4" cy="145.4" r="20.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util — Coverage: 20.2% | Lines: 203 | Complexity: 93</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#38"><circle cx="213.5" cy="257.6" r="16.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter — Coverage: 21.3% | Lines: 136 | Complexity: 42</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#46"><circle cx="763.1" cy="292.8" r="12.9" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text — Coverage: 97.6% | Lines: 85 | Complexity: 26</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#41"><circle cx="780.0" cy="290.6" r="11.4" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue — Coverage: 100.0% | Lines: 66 | Complexity: 27</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#36"><circle cx="60.0" cy="286.2" r="11.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer — Coverage: 0.0% | Lines: 62 | Complexity: 29</title></circle></a>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#45"><circle cx="60.0" cy="297.2" r="11.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate — Coverage: 0.0% | Lines: 62 | Complexity: 24</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#39"><circle cx="666.3" cy="299.4" r="10.6" class="bubble-warning"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus — Coverage: 84.2% | Lines: 57 | Complexity: 23</title></circle></a>
+ <a href="../../Common/UndoableFolderRename.php.html#45"><circle cx="60.0" cy="303.8" r="9.9" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRename — Coverage: 0.0% | Lines: 50 | Complexity: 21</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#40"><circle cx="60.0" cy="308.2" r="9.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove — Coverage: 0.0% | Lines: 45 | Complexity: 19</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#36"><circle cx="60.0" cy="306.0" r="8.9" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus — Coverage: 0.0% | Lines: 40 | Complexity: 20</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#44"><circle cx="60.0" cy="310.4" r="8.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename — Coverage: 0.0% | Lines: 39 | Complexity: 18</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#43"><circle cx="60.0" cy="314.8" r="8.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate — Coverage: 0.0% | Lines: 39 | Complexity: 16</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#39"><circle cx="60.0" cy="314.8" r="8.3" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace — Coverage: 0.0% | Lines: 35 | Complexity: 16</title></circle></a>
+ <a href="../../Common/CamelCaseString.php.html#31"><circle cx="780.0" cy="334.6" r="6.6" class="bubble-success"><title>OCA\CAFEVDB\Common\CamelCaseString — Coverage: 100.0% | Lines: 22 | Complexity: 7</title></circle></a>
+ <a href="../../Common/Uuid.php.html#36"><circle cx="60.0" cy="321.4" r="6.3" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid — Coverage: 0.0% | Lines: 20 | Complexity: 13</title></circle></a>
+ <a href="../../Common/AbstractFileSystemUndoable.php.html#34"><circle cx="60.0" cy="343.4" r="5.3" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractFileSystemUndoable — Coverage: 0.0% | Lines: 14 | Complexity: 3</title></circle></a>
+ <a href="../../Common/ConsoleLogger.php.html#37"><circle cx="780.0" cy="330.2" r="5.3" class="bubble-success"><title>OCA\CAFEVDB\Common\ConsoleLogger — Coverage: 100.0% | Lines: 14 | Complexity: 9</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#30"><circle cx="60.0" cy="328.0" r="5.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus — Coverage: 0.0% | Lines: 13 | Complexity: 10</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#35"><circle cx="780.0" cy="336.8" r="5.1" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator — Coverage: 100.0% | Lines: 13 | Complexity: 6</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#54"><circle cx="60.0" cy="332.4" r="4.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory — Coverage: 0.0% | Lines: 10 | Complexity: 8</title></circle></a>
+ <a href="../../Common/AbstractProgressStatus.php.html#30"><circle cx="471.4" cy="339.0" r="4.0" class="bubble-warning"><title>OCA\CAFEVDB\Common\AbstractProgressStatus — Coverage: 57.1% | Lines: 7 | Complexity: 5</title></circle></a>
+ <a href="../../Common/GenericUndoable.php.html#35"><circle cx="780.0" cy="339.0" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\GenericUndoable — Coverage: 100.0% | Lines: 6 | Complexity: 5</title></circle></a>
+ <a href="../../Common/VarDumper.php.html#31"><circle cx="780.0" cy="345.6" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\VarDumper — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/AbstractUndoable.php.html#30"><circle cx="780.0" cy="345.6" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\AbstractUndoable — Coverage: 100.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFileRemove.php.html#35"><circle cx="60.0" cy="347.8" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRemove — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderRemove.php.html#36"><circle cx="60.0" cy="347.8" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRemove — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+     <div>
+      <p class="hint">Sorted by descending <abbr title="Change Risk Anti-Patterns">CRAP</abbr> index.</p>
+      <div class="scrollbox">
+     <table class="crap">
+      <thead>
+       <tr>
+        <th scope="col">Class</th>
+        <th scope="col" class="number"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        <th scope="col" class="number">Coverage</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr><td><a href="../../Common/Util.php.html#37">OCA\CAFEVDB\Common\Util</a></td><td class="number">4488.65</td><td class="number">20.2%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#38">OCA\CAFEVDB\Common\NumberFormatter</a></td><td class="number">901.08</td><td class="number">21.3%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#36">OCA\CAFEVDB\Common\PHPMailer</a></td><td class="number">870</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#45">OCA\CAFEVDB\Common\UndoableTextFileUpdate</a></td><td class="number">600</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRename.php.html#45">OCA\CAFEVDB\Common\UndoableFolderRename</a></td><td class="number">462</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#36">OCA\CAFEVDB\Common\DatabaseProgressStatus</a></td><td class="number">420</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#40">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove</a></td><td class="number">380</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#44">OCA\CAFEVDB\Common\UndoableFileRename</a></td><td class="number">342</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#39">OCA\CAFEVDB\Common\UndoableFileReplace</a></td><td class="number">272</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#43">OCA\CAFEVDB\Common\UndoableFolderCreate</a></td><td class="number">272</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#36">OCA\CAFEVDB\Common\Uuid</a></td><td class="number">182</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#30">OCA\CAFEVDB\Common\DoNothingProgressStatus</a></td><td class="number">110</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#54">OCA\CAFEVDB\Common\TimeFactory</a></td><td class="number">72</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#41">OCA\CAFEVDB\Common\UndoableRunQueue</a></td><td class="number">27</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#46">OCA\CAFEVDB\Common\Html2Text</a></td><td class="number">26</td><td class="number">97.6%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#39">OCA\CAFEVDB\Common\PlainFileProgressStatus</a></td><td class="number">25.08</td><td class="number">84.2%</td></tr>
+       <tr><td><a href="../../Common/AbstractFileSystemUndoable.php.html#34">OCA\CAFEVDB\Common\AbstractFileSystemUndoable</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/ConsoleLogger.php.html#37">OCA\CAFEVDB\Common\ConsoleLogger</a></td><td class="number">9</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/CamelCaseString.php.html#31">OCA\CAFEVDB\Common\CamelCaseString</a></td><td class="number">7</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractProgressStatus.php.html#30">OCA\CAFEVDB\Common\AbstractProgressStatus</a></td><td class="number">6.97</td><td class="number">57.1%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#35">OCA\CAFEVDB\Common\Transliterator</a></td><td class="number">6</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/GenericUndoable.php.html#35">OCA\CAFEVDB\Common\GenericUndoable</a></td><td class="number">5</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractUndoable.php.html#30">OCA\CAFEVDB\Common\AbstractUndoable</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRemove.php.html#35">OCA\CAFEVDB\Common\UndoableFileRemove</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRemove.php.html#36">OCA\CAFEVDB\Common\UndoableFolderRemove</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/VarDumper.php.html#31">OCA\CAFEVDB\Common\VarDumper</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+      </tbody>
+     </table>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section>
+    <h2>Methods</h2>
+    <div class="panel">
+     <div class="chart">
+      <p class="hint">Line coverage against cyclomatic complexity. Bubble size is the number of executable lines; hover for details, click to navigate.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--coverage-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--coverage-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--coverage-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--text); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--border); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--border); stroke-width: 1; }
+  .chart-label { fill: var(--text); font-size: 11px; font-family: var(--font-sans); }
+  .chart-title { fill: var(--text); font-size: 12px; font-family: var(--font-sans); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">5</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">15</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#100"><circle cx="60.0" cy="69.5" r="20.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate::do — Coverage: 0.0% | Lines: 48 | Complexity: 17</title></circle></a>
+ <a href="../../Common/UndoableFolderRename.php.html#87"><circle cx="60.0" cy="102.5" r="18.3" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRename::do — Coverage: 0.0% | Lines: 40 | Complexity: 15</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#82"><circle cx="60.0" cy="119.0" r="17.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::do — Coverage: 0.0% | Lines: 38 | Complexity: 14</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#328"><circle cx="60.0" cy="234.5" r="16.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::numberToWordsPhp — Coverage: 0.0% | Lines: 31 | Complexity: 7</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#225"><circle cx="60.0" cy="201.5" r="15.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::numberToWordsKWN — Coverage: 0.0% | Lines: 30 | Complexity: 9</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#81"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate::do — Coverage: 0.0% | Lines: 29 | Complexity: 10</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#112"><circle cx="625.7" cy="201.5" r="15.3" class="bubble-warning"><title>OCA\CAFEVDB\Common\NumberFormatter::provideLanguage — Coverage: 78.6% | Lines: 28 | Complexity: 9</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#173"><circle cx="753.3" cy="234.5" r="15.0" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::renderTable — Coverage: 96.3% | Lines: 27 | Complexity: 7</title></circle></a>
+ <a href="../../Common/Util.php.html#580"><circle cx="60.0" cy="201.5" r="15.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::hexDump — Coverage: 0.0% | Lines: 27 | Complexity: 9</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#75"><circle cx="60.0" cy="185.0" r="14.7" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace::do — Coverage: 0.0% | Lines: 26 | Complexity: 10</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#129"><circle cx="751.2" cy="234.5" r="14.4" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::renderTables — Coverage: 96.0% | Lines: 25 | Complexity: 7</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#280"><circle cx="60.0" cy="234.5" r="14.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::kwnSanitizer — Coverage: 0.0% | Lines: 25 | Complexity: 7</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#120"><circle cx="780.0" cy="251.0" r="14.4" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::executeActions — Coverage: 100.0% | Lines: 25 | Complexity: 6</title></circle></a>
+ <a href="../../Common/CamelCaseString.php.html#58"><circle cx="780.0" cy="251.0" r="13.2" class="bubble-success"><title>OCA\CAFEVDB\Common\CamelCaseString::shorten — Coverage: 100.0% | Lines: 21 | Complexity: 6</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#69"><circle cx="60.0" cy="234.5" r="12.9" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::bind — Coverage: 0.0% | Lines: 20 | Complexity: 7</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#110"><circle cx="672.0" cy="234.5" r="12.9" class="bubble-warning"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::bind — Coverage: 85.0% | Lines: 20 | Complexity: 7</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#97"><circle cx="60.0" cy="251.0" r="12.9" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename::rename — Coverage: 0.0% | Lines: 20 | Complexity: 6</title></circle></a>
+ <a href="../../Common/Util.php.html#703"><circle cx="60.0" cy="185.0" r="12.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::fileUploadError — Coverage: 0.0% | Lines: 19 | Complexity: 10</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#284"><circle cx="60.0" cy="267.5" r="11.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::failedRecipients — Coverage: 0.0% | Lines: 16 | Complexity: 5</title></circle></a>
+ <a href="../../Common/Util.php.html#276"><circle cx="780.0" cy="251.0" r="11.5" class="bubble-success"><title>OCA\CAFEVDB\Common\Util::explode — Coverage: 100.0% | Lines: 16 | Complexity: 6</title></circle></a>
+ <a href="../../Common/Util.php.html#513"><circle cx="60.0" cy="251.0" r="11.2" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::humanFileSize — Coverage: 0.0% | Lines: 15 | Complexity: 6</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#97"><circle cx="60.0" cy="267.5" r="10.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::__construct — Coverage: 0.0% | Lines: 13 | Complexity: 5</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#173"><circle cx="60.0" cy="284.0" r="10.4" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::send — Coverage: 0.0% | Lines: 13 | Complexity: 4</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#162"><circle cx="780.0" cy="251.0" r="10.4" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::executeUndo — Coverage: 100.0% | Lines: 13 | Complexity: 6</title></circle></a>
+ <a href="../../Common/ConsoleLogger.php.html#51"><circle cx="780.0" cy="234.5" r="10.0" class="bubble-success"><title>OCA\CAFEVDB\Common\ConsoleLogger::log — Coverage: 100.0% | Lines: 12 | Complexity: 7</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#165"><circle cx="452.7" cy="300.5" r="9.6" class="bubble-warning"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::sync — Coverage: 54.5% | Lines: 11 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#153"><circle cx="60.0" cy="300.5" r="9.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::normalizeSpaces — Coverage: 0.0% | Lines: 11 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#397"><circle cx="60.0" cy="284.0" r="9.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::explodeIndexed — Coverage: 0.0% | Lines: 11 | Complexity: 4</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#111"><circle cx="60.0" cy="284.0" r="9.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::update — Coverage: 0.0% | Lines: 10 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#254"><circle cx="780.0" cy="317.0" r="8.7" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::callConverter — Coverage: 100.0% | Lines: 9 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#250"><circle cx="780.0" cy="300.5" r="8.7" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::reset — Coverage: 100.0% | Lines: 9 | Complexity: 3</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#134"><circle cx="60.0" cy="300.5" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename::do — Coverage: 0.0% | Lines: 8 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#113"><circle cx="780.0" cy="234.5" r="8.2" class="bubble-success"><title>OCA\CAFEVDB\Common\Util::arrayMergeTwoRecursive — Coverage: 100.0% | Lines: 8 | Complexity: 7</title></circle></a>
+ <a href="../../Common/Util.php.html#463"><circle cx="60.0" cy="284.0" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::implodeIndexedMulti — Coverage: 0.0% | Lines: 8 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Util.php.html#486"><circle cx="60.0" cy="317.0" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::maxUploadSize — Coverage: 0.0% | Lines: 8 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Uuid.php.html#70"><circle cx="60.0" cy="267.5" r="8.2" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::asUuid — Coverage: 0.0% | Lines: 8 | Complexity: 5</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#218"><circle cx="780.0" cy="317.0" r="7.6" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::cellText — Coverage: 100.0% | Lines: 7 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#109"><circle cx="780.0" cy="317.0" r="7.6" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator::generateUserIdSlug — Coverage: 100.0% | Lines: 7 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFolderRename.php.html#152"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRename::undo — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#188"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate::undo — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Util.php.html#91"><circle cx="677.1" cy="300.5" r="7.6" class="bubble-warning"><title>OCA\CAFEVDB\Common\Util::arrayMergeRecursive — Coverage: 85.7% | Lines: 7 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#198"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::htmlEscape — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Util.php.html#238"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::arraySliceKeys — Coverage: 0.0% | Lines: 7 | Complexity: 5</title></circle></a>
+ <a href="../../Common/Util.php.html#439"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::explodeIndexedMulti — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Util.php.html#547"><circle cx="780.0" cy="300.5" r="7.6" class="bubble-success"><title>OCA\CAFEVDB\Common\Util::strftime — Coverage: 100.0% | Lines: 7 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#645"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::cloneArray — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/Util.php.html#680"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::transposeArray — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="../../Common/AbstractFileSystemUndoable.php.html#78"><circle cx="60.0" cy="333.5" r="7.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractFileSystemUndoable::renamedName — Coverage: 0.0% | Lines: 6 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#58"><circle cx="60.0" cy="300.5" r="7.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::update — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#106"><circle cx="780.0" cy="300.5" r="7.1" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::convert — Coverage: 100.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#166"><circle cx="60.0" cy="317.0" r="7.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::currencyToWords — Coverage: 0.0% | Lines: 6 | Complexity: 2</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#73"><circle cx="780.0" cy="333.5" r="7.1" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::reset — Coverage: 100.0% | Lines: 6 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#152"><circle cx="780.0" cy="300.5" r="7.1" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::update — Coverage: 100.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#71"><circle cx="60.0" cy="267.5" r="7.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename::__construct — Coverage: 0.0% | Lines: 6 | Complexity: 5</title></circle></a>
+ <a href="../../Common/Util.php.html#68"><circle cx="60.0" cy="300.5" r="7.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::fileExtensionFromMimeType — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="../../Common/AbstractFileSystemUndoable.php.html#48"><circle cx="60.0" cy="333.5" r="6.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractFileSystemUndoable::initialize — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#91"><circle cx="780.0" cy="333.5" r="6.5" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::normalizeSpaces — Coverage: 100.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#235"><circle cx="780.0" cy="300.5" r="6.5" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::cellAlignment — Coverage: 100.0% | Lines: 5 | Complexity: 3</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#387"><circle cx="60.0" cy="333.5" r="6.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::formatNumber — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#401"><circle cx="780.0" cy="300.5" r="6.5" class="bubble-success"><title>OCA\CAFEVDB\Common\NumberFormatter::ensureFloat — Coverage: 100.0% | Lines: 5 | Complexity: 3</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#89"><circle cx="636.0" cy="317.0" r="6.5" class="bubble-warning"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::flush — Coverage: 80.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#138"><circle cx="60.0" cy="300.5" r="6.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate::undo — Coverage: 0.0% | Lines: 5 | Complexity: 3</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#83"><circle cx="780.0" cy="317.0" r="6.5" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::register — Coverage: 100.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#99"><circle cx="780.0" cy="333.5" r="6.5" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::clearActionQueue — Coverage: 100.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Util.php.html#219"><circle cx="60.0" cy="300.5" r="6.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::htmlToMarkDown — Coverage: 0.0% | Lines: 5 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#627"><circle cx="60.0" cy="317.0" r="6.5" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::unsetValue — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="../../Common/AbstractProgressStatus.php.html#33"><circle cx="780.0" cy="317.0" r="5.8" class="bubble-success"><title>OCA\CAFEVDB\Common\AbstractProgressStatus::increment — Coverage: 100.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#83"><circle cx="60.0" cy="317.0" r="5.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::getMailHeaders — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#256"><circle cx="60.0" cy="317.0" r="5.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::createHeader — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#116"><circle cx="60.0" cy="300.5" r="5.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace::undo — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="../../Common/Util.php.html#340"><circle cx="60.0" cy="333.5" r="5.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::escapeDelimiter — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Util.php.html#359"><circle cx="780.0" cy="333.5" r="5.8" class="bubble-success"><title>OCA\CAFEVDB\Common\Util::unescapeDelimiter — Coverage: 100.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Uuid.php.html#99"><circle cx="60.0" cy="317.0" r="5.8" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::uuidBytes — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="../../Common/AbstractFileSystemUndoable.php.html#64"><circle cx="60.0" cy="333.5" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractFileSystemUndoable::normalizePath — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#60"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::delete — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/GenericUndoable.php.html#64"><circle cx="780.0" cy="317.0" r="5.0" class="bubble-success"><title>OCA\CAFEVDB\Common\GenericUndoable::undo — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#95"><circle cx="60.0" cy="333.5" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::setLocale — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#147"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::html2text — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#101"><circle cx="780.0" cy="317.0" r="5.0" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::delete — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#85"><circle cx="60.0" cy="333.5" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::withTimeZone — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#162"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename::reset — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#127"><circle cx="60.0" cy="333.5" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace::reset — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#141"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::undo — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#206"><circle cx="780.0" cy="317.0" r="5.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::getRunQueueException — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#204"><circle cx="60.0" cy="333.5" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate::reset — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Util.php.html#178"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::removeSpaces — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Util.php.html#321"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::implode — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Uuid.php.html#55"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::uuid1 — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Uuid.php.html#113"><circle cx="60.0" cy="317.0" r="5.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::createNode — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="../../Common/ConsoleLogger.php.html#40"><circle cx="780.0" cy="317.0" r="4.1" class="bubble-success"><title>OCA\CAFEVDB\Common\ConsoleLogger::__construct — Coverage: 100.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#148"><circle cx="60.0" cy="317.0" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::getData — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#57"><circle cx="780.0" cy="333.5" r="4.1" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::__construct — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#42"><circle cx="780.0" cy="333.5" r="4.1" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator::__construct — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#60"><circle cx="780.0" cy="333.5" r="4.1" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator::setLocale — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileRename.php.html#153"><circle cx="60.0" cy="317.0" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRename::undo — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#150"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::reset — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#74"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate::initialize — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#150"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate::reset — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderRename.php.html#168"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRename::reset — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#81"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate::__construct — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableTextFileUpdate.php.html#93"><circle cx="60.0" cy="333.5" r="4.1" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableTextFileUpdate::initialize — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/VarDumper.php.html#40"><circle cx="780.0" cy="333.5" r="4.1" class="bubble-success"><title>OCA\CAFEVDB\Common\VarDumper::__construct — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="../../Common/AbstractProgressStatus.php.html#42"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractProgressStatus::setCurrent — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/AbstractProgressStatus.php.html#48"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractProgressStatus::setTarget — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/AbstractProgressStatus.php.html#54"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\AbstractProgressStatus::setData — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/AbstractUndoable.php.html#39"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\AbstractUndoable::initialize — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/AbstractUndoable.php.html#45"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\AbstractUndoable::getSortOrder — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/CamelCaseString.php.html#41"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\CamelCaseString::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#49"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#105"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#130"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::sync — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#136"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::getCurrent — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DatabaseProgressStatus.php.html#142"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DatabaseProgressStatus::getTarget — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#42"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::delete — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#47"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::bind — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#52"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#71"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::sync — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#76"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::getCurrent — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#82"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::getTarget — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/DoNothingProgressStatus.php.html#88"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\DoNothingProgressStatus::getData — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/GenericUndoable.php.html#50"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\GenericUndoable::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/GenericUndoable.php.html#58"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\GenericUndoable::do — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/GenericUndoable.php.html#73"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\GenericUndoable::reset — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Html2Text.php.html#79"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text::setExecutableFinder — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#85"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\NumberFormatter::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#189"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\NumberFormatter::formatCurrency — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/NumberFormatter.php.html#207"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\NumberFormatter::numberToWords — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#126"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::enableExceptions — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#136"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::disableExceptions — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#160"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::setProgressCallback — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#201"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::generateMessageId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#213"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::addReference — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#225"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::setReferences — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#235"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::clearReferences — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#245"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::getReferences — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PHPMailer.php.html#271"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\PHPMailer::getSentMIMEMessage — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#146"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#183"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::getCurrent — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#189"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::getTarget — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/PlainFileProgressStatus.php.html#195"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\PlainFileProgressStatus::getData — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#61"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#67"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::now — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#73"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::getTime — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#79"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::getDateTime — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#93"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::getTimeZone — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#109"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::getDateTimeImmutable — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/TimeFactory.php.html#121"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\TimeFactory::sleepUntil — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#50"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator::getLocale — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Transliterator.php.html#74"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\Transliterator::transliterate — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileRemove.php.html#44"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileRemove::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#59"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileReplace.php.html#69"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileReplace::initialize — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#65"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFileSystemNodeRemove.php.html#76"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::initialize — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderCreate.php.html#65"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderCreate::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderRemove.php.html#52"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRemove::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableFolderRename.php.html#70"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\UndoableFolderRename::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#64"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#193"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::getRunQueueExceptions — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#219"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::getUndoExceptions — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#225"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::size — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#231"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::active — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/UndoableRunQueue.php.html#240"><circle cx="780.0" cy="317.0" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\UndoableRunQueue::executionCount — Coverage: 100.0% | Lines: 1 | Complexity: 2</title></circle></a>
+ <a href="../../Common/Util.php.html#137"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Util::arrayMapAssoc — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Uuid.php.html#47"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::create — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/Uuid.php.html#87"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Common\Uuid::nil — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="../../Common/VarDumper.php.html#56"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\VarDumper::dump — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+     <div>
+      <p class="hint">Sorted by descending <abbr title="Change Risk Anti-Patterns">CRAP</abbr> index.</p>
+      <div class="scrollbox">
+     <table class="crap">
+      <thead>
+       <tr>
+        <th scope="col">Method</th>
+        <th scope="col" class="number"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        <th scope="col" class="number">Coverage</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#100">OCA\CAFEVDB\Common\UndoableTextFileUpdate::do</a></td><td class="number">306</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRename.php.html#87">OCA\CAFEVDB\Common\UndoableFolderRename::do</a></td><td class="number">240</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#82">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::do</a></td><td class="number">210</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#75">OCA\CAFEVDB\Common\UndoableFileReplace::do</a></td><td class="number">110</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#81">OCA\CAFEVDB\Common\UndoableFolderCreate::do</a></td><td class="number">110</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#703">OCA\CAFEVDB\Common\Util::fileUploadError</a></td><td class="number">110</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#225">OCA\CAFEVDB\Common\NumberFormatter::numberToWordsKWN</a></td><td class="number">90</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#580">OCA\CAFEVDB\Common\Util::hexDump</a></td><td class="number">90</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#69">OCA\CAFEVDB\Common\DatabaseProgressStatus::bind</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#280">OCA\CAFEVDB\Common\NumberFormatter::kwnSanitizer</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#328">OCA\CAFEVDB\Common\NumberFormatter::numberToWordsPhp</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#97">OCA\CAFEVDB\Common\UndoableFileRename::rename</a></td><td class="number">42</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#513">OCA\CAFEVDB\Common\Util::humanFileSize</a></td><td class="number">42</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#97">OCA\CAFEVDB\Common\PHPMailer::__construct</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#284">OCA\CAFEVDB\Common\PHPMailer::failedRecipients</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#71">OCA\CAFEVDB\Common\UndoableFileRename::__construct</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#238">OCA\CAFEVDB\Common\Util::arraySliceKeys</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#70">OCA\CAFEVDB\Common\Uuid::asUuid</a></td><td class="number">30</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#111">OCA\CAFEVDB\Common\DatabaseProgressStatus::update</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#173">OCA\CAFEVDB\Common\PHPMailer::send</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRename.php.html#152">OCA\CAFEVDB\Common\UndoableFolderRename::undo</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#188">OCA\CAFEVDB\Common\UndoableTextFileUpdate::undo</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#198">OCA\CAFEVDB\Common\Util::htmlEscape</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#397">OCA\CAFEVDB\Common\Util::explodeIndexed</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#439">OCA\CAFEVDB\Common\Util::explodeIndexedMulti</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#463">OCA\CAFEVDB\Common\Util::implodeIndexedMulti</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#645">OCA\CAFEVDB\Common\Util::cloneArray</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#680">OCA\CAFEVDB\Common\Util::transposeArray</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#58">OCA\CAFEVDB\Common\DoNothingProgressStatus::update</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#134">OCA\CAFEVDB\Common\UndoableFileRename::do</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#116">OCA\CAFEVDB\Common\UndoableFileReplace::undo</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#138">OCA\CAFEVDB\Common\UndoableFolderCreate::undo</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#68">OCA\CAFEVDB\Common\Util::fileExtensionFromMimeType</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#153">OCA\CAFEVDB\Common\Util::normalizeSpaces</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#219">OCA\CAFEVDB\Common\Util::htmlToMarkDown</a></td><td class="number">12</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#112">OCA\CAFEVDB\Common\NumberFormatter::provideLanguage</a></td><td class="number">9.80</td><td class="number">78.6%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#110">OCA\CAFEVDB\Common\PlainFileProgressStatus::bind</a></td><td class="number">7.17</td><td class="number">85.0%</td></tr>
+       <tr><td><a href="../../Common/ConsoleLogger.php.html#51">OCA\CAFEVDB\Common\ConsoleLogger::log</a></td><td class="number">7</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#129">OCA\CAFEVDB\Common\Html2Text::renderTables</a></td><td class="number">7</td><td class="number">96.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#173">OCA\CAFEVDB\Common\Html2Text::renderTable</a></td><td class="number">7</td><td class="number">96.3%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#113">OCA\CAFEVDB\Common\Util::arrayMergeTwoRecursive</a></td><td class="number">7</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/CamelCaseString.php.html#58">OCA\CAFEVDB\Common\CamelCaseString::shorten</a></td><td class="number">6</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#60">OCA\CAFEVDB\Common\DatabaseProgressStatus::delete</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#148">OCA\CAFEVDB\Common\DatabaseProgressStatus::getData</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#166">OCA\CAFEVDB\Common\NumberFormatter::currencyToWords</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#83">OCA\CAFEVDB\Common\PHPMailer::getMailHeaders</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#147">OCA\CAFEVDB\Common\PHPMailer::html2text</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#256">OCA\CAFEVDB\Common\PHPMailer::createHeader</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#153">OCA\CAFEVDB\Common\UndoableFileRename::undo</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRename.php.html#162">OCA\CAFEVDB\Common\UndoableFileRename::reset</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#141">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::undo</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#120">OCA\CAFEVDB\Common\UndoableRunQueue::executeActions</a></td><td class="number">6</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#162">OCA\CAFEVDB\Common\UndoableRunQueue::executeUndo</a></td><td class="number">6</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#178">OCA\CAFEVDB\Common\Util::removeSpaces</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#276">OCA\CAFEVDB\Common\Util::explode</a></td><td class="number">6</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#321">OCA\CAFEVDB\Common\Util::implode</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#486">OCA\CAFEVDB\Common\Util::maxUploadSize</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#627">OCA\CAFEVDB\Common\Util::unsetValue</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#55">OCA\CAFEVDB\Common\Uuid::uuid1</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#99">OCA\CAFEVDB\Common\Uuid::uuidBytes</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#113">OCA\CAFEVDB\Common\Uuid::createNode</a></td><td class="number">6</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#165">OCA\CAFEVDB\Common\PlainFileProgressStatus::sync</a></td><td class="number">3.85</td><td class="number">54.5%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#91">OCA\CAFEVDB\Common\Util::arrayMergeRecursive</a></td><td class="number">3.03</td><td class="number">85.7%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#106">OCA\CAFEVDB\Common\Html2Text::convert</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#235">OCA\CAFEVDB\Common\Html2Text::cellAlignment</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#401">OCA\CAFEVDB\Common\NumberFormatter::ensureFloat</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#152">OCA\CAFEVDB\Common\PlainFileProgressStatus::update</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#250">OCA\CAFEVDB\Common\UndoableRunQueue::reset</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#547">OCA\CAFEVDB\Common\Util::strftime</a></td><td class="number">3</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#89">OCA\CAFEVDB\Common\PlainFileProgressStatus::flush</a></td><td class="number">2.03</td><td class="number">80.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractFileSystemUndoable.php.html#48">OCA\CAFEVDB\Common\AbstractFileSystemUndoable::initialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractFileSystemUndoable.php.html#64">OCA\CAFEVDB\Common\AbstractFileSystemUndoable::normalizePath</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractFileSystemUndoable.php.html#78">OCA\CAFEVDB\Common\AbstractFileSystemUndoable::renamedName</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractProgressStatus.php.html#33">OCA\CAFEVDB\Common\AbstractProgressStatus::increment</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractProgressStatus.php.html#42">OCA\CAFEVDB\Common\AbstractProgressStatus::setCurrent</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractProgressStatus.php.html#48">OCA\CAFEVDB\Common\AbstractProgressStatus::setTarget</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractProgressStatus.php.html#54">OCA\CAFEVDB\Common\AbstractProgressStatus::setData</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/ConsoleLogger.php.html#40">OCA\CAFEVDB\Common\ConsoleLogger::__construct</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#49">OCA\CAFEVDB\Common\DatabaseProgressStatus::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#105">OCA\CAFEVDB\Common\DatabaseProgressStatus::getId</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#130">OCA\CAFEVDB\Common\DatabaseProgressStatus::sync</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#136">OCA\CAFEVDB\Common\DatabaseProgressStatus::getCurrent</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DatabaseProgressStatus.php.html#142">OCA\CAFEVDB\Common\DatabaseProgressStatus::getTarget</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#42">OCA\CAFEVDB\Common\DoNothingProgressStatus::delete</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#47">OCA\CAFEVDB\Common\DoNothingProgressStatus::bind</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#52">OCA\CAFEVDB\Common\DoNothingProgressStatus::getId</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#71">OCA\CAFEVDB\Common\DoNothingProgressStatus::sync</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#76">OCA\CAFEVDB\Common\DoNothingProgressStatus::getCurrent</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#82">OCA\CAFEVDB\Common\DoNothingProgressStatus::getTarget</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/DoNothingProgressStatus.php.html#88">OCA\CAFEVDB\Common\DoNothingProgressStatus::getData</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/GenericUndoable.php.html#64">OCA\CAFEVDB\Common\GenericUndoable::undo</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#218">OCA\CAFEVDB\Common\Html2Text::cellText</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#254">OCA\CAFEVDB\Common\Html2Text::callConverter</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#95">OCA\CAFEVDB\Common\NumberFormatter::setLocale</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#207">OCA\CAFEVDB\Common\NumberFormatter::numberToWords</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#387">OCA\CAFEVDB\Common\NumberFormatter::formatNumber</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#126">OCA\CAFEVDB\Common\PHPMailer::enableExceptions</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#136">OCA\CAFEVDB\Common\PHPMailer::disableExceptions</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#160">OCA\CAFEVDB\Common\PHPMailer::setProgressCallback</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#201">OCA\CAFEVDB\Common\PHPMailer::generateMessageId</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#213">OCA\CAFEVDB\Common\PHPMailer::addReference</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#225">OCA\CAFEVDB\Common\PHPMailer::setReferences</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#235">OCA\CAFEVDB\Common\PHPMailer::clearReferences</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#245">OCA\CAFEVDB\Common\PHPMailer::getReferences</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PHPMailer.php.html#271">OCA\CAFEVDB\Common\PHPMailer::getSentMIMEMessage</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#101">OCA\CAFEVDB\Common\PlainFileProgressStatus::delete</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#61">OCA\CAFEVDB\Common\TimeFactory::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#67">OCA\CAFEVDB\Common\TimeFactory::now</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#73">OCA\CAFEVDB\Common\TimeFactory::getTime</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#79">OCA\CAFEVDB\Common\TimeFactory::getDateTime</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#85">OCA\CAFEVDB\Common\TimeFactory::withTimeZone</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#93">OCA\CAFEVDB\Common\TimeFactory::getTimeZone</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#109">OCA\CAFEVDB\Common\TimeFactory::getDateTimeImmutable</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/TimeFactory.php.html#121">OCA\CAFEVDB\Common\TimeFactory::sleepUntil</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#109">OCA\CAFEVDB\Common\Transliterator::generateUserIdSlug</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileRemove.php.html#44">OCA\CAFEVDB\Common\UndoableFileRemove::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#59">OCA\CAFEVDB\Common\UndoableFileReplace::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#69">OCA\CAFEVDB\Common\UndoableFileReplace::initialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileReplace.php.html#127">OCA\CAFEVDB\Common\UndoableFileReplace::reset</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#65">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#76">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::initialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFileSystemNodeRemove.php.html#150">OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::reset</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#65">OCA\CAFEVDB\Common\UndoableFolderCreate::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#74">OCA\CAFEVDB\Common\UndoableFolderCreate::initialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderCreate.php.html#150">OCA\CAFEVDB\Common\UndoableFolderCreate::reset</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRemove.php.html#52">OCA\CAFEVDB\Common\UndoableFolderRemove::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRename.php.html#70">OCA\CAFEVDB\Common\UndoableFolderRename::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableFolderRename.php.html#168">OCA\CAFEVDB\Common\UndoableFolderRename::reset</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#83">OCA\CAFEVDB\Common\UndoableRunQueue::register</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#206">OCA\CAFEVDB\Common\UndoableRunQueue::getRunQueueException</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#240">OCA\CAFEVDB\Common\UndoableRunQueue::executionCount</a></td><td class="number">2</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#81">OCA\CAFEVDB\Common\UndoableTextFileUpdate::__construct</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#93">OCA\CAFEVDB\Common\UndoableTextFileUpdate::initialize</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableTextFileUpdate.php.html#204">OCA\CAFEVDB\Common\UndoableTextFileUpdate::reset</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#137">OCA\CAFEVDB\Common\Util::arrayMapAssoc</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#340">OCA\CAFEVDB\Common\Util::escapeDelimiter</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#47">OCA\CAFEVDB\Common\Uuid::create</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/Uuid.php.html#87">OCA\CAFEVDB\Common\Uuid::nil</a></td><td class="number">2</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractUndoable.php.html#39">OCA\CAFEVDB\Common\AbstractUndoable::initialize</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/AbstractUndoable.php.html#45">OCA\CAFEVDB\Common\AbstractUndoable::getSortOrder</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/CamelCaseString.php.html#41">OCA\CAFEVDB\Common\CamelCaseString::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/GenericUndoable.php.html#50">OCA\CAFEVDB\Common\GenericUndoable::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/GenericUndoable.php.html#58">OCA\CAFEVDB\Common\GenericUndoable::do</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/GenericUndoable.php.html#73">OCA\CAFEVDB\Common\GenericUndoable::reset</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#79">OCA\CAFEVDB\Common\Html2Text::setExecutableFinder</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Html2Text.php.html#91">OCA\CAFEVDB\Common\Html2Text::normalizeSpaces</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#85">OCA\CAFEVDB\Common\NumberFormatter::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/NumberFormatter.php.html#189">OCA\CAFEVDB\Common\NumberFormatter::formatCurrency</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#57">OCA\CAFEVDB\Common\PlainFileProgressStatus::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#73">OCA\CAFEVDB\Common\PlainFileProgressStatus::reset</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#146">OCA\CAFEVDB\Common\PlainFileProgressStatus::getId</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#183">OCA\CAFEVDB\Common\PlainFileProgressStatus::getCurrent</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#189">OCA\CAFEVDB\Common\PlainFileProgressStatus::getTarget</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/PlainFileProgressStatus.php.html#195">OCA\CAFEVDB\Common\PlainFileProgressStatus::getData</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#42">OCA\CAFEVDB\Common\Transliterator::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#50">OCA\CAFEVDB\Common\Transliterator::getLocale</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#60">OCA\CAFEVDB\Common\Transliterator::setLocale</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Transliterator.php.html#74">OCA\CAFEVDB\Common\Transliterator::transliterate</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#64">OCA\CAFEVDB\Common\UndoableRunQueue::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#99">OCA\CAFEVDB\Common\UndoableRunQueue::clearActionQueue</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#193">OCA\CAFEVDB\Common\UndoableRunQueue::getRunQueueExceptions</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#219">OCA\CAFEVDB\Common\UndoableRunQueue::getUndoExceptions</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#225">OCA\CAFEVDB\Common\UndoableRunQueue::size</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/UndoableRunQueue.php.html#231">OCA\CAFEVDB\Common\UndoableRunQueue::active</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/Util.php.html#359">OCA\CAFEVDB\Common\Util::unescapeDelimiter</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/VarDumper.php.html#40">OCA\CAFEVDB\Common\VarDumper::__construct</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+       <tr><td><a href="../../Common/VarDumper.php.html#56">OCA\CAFEVDB\Common\VarDumper::dump</a></td><td class="number">1</td><td class="number">100.0%</td></tr>
+      </tbody>
+     </table>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer>
+   <p class="credits">Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.4.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.12</a> and <a href="https://phpunit.de/">PHPUnit 13.4.3</a> at Mon Oct 26 15:18:36 UTC 2026.</p>
+  </footer>
+ </body>
+</html>

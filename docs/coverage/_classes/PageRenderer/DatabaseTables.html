@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code Coverage for OCA\CAFEVDB\PageRenderer\DatabaseTables</title>
+  <link rel="stylesheet" href="../../_css/style.css?v=14.4.1">
+  <link rel="stylesheet" href="../../_css/custom.css">
+ </head>
+ <body>
+  <header class="masthead">
+   <nav aria-label="Breadcrumb">
+    <ol class="breadcrumbs">
+     <li><a href="../index.html">CAFEVDB</a></li>
+     <li><a href="index.html">PageRenderer</a></li>
+     <li class="current">DatabaseTables</li>
+    </ol>
+   </nav>
+   <ul class="tabs">
+    <li><a href="../../PageRenderer/DatabaseTables.php.html">Files</a></li>
+    <li><a href="../../_classes/index.html" aria-current="page">Classes</a></li>
+   </ul>
+  </header>
+  <main>
+   <div class="summary" data-coverage="{&quot;linesTotal&quot;:0,&quot;linesAll&quot;:0,&quot;methodsTotal&quot;:0,&quot;methodsAll&quot;:0,&quot;classesTotal&quot;:0,&quot;classesAll&quot;:0,&quot;linesSmall&quot;:0,&quot;methodsSmall&quot;:0,&quot;classesSmall&quot;:0,&quot;linesMedium&quot;:0,&quot;methodsMedium&quot;:0,&quot;classesMedium&quot;:0,&quot;linesLarge&quot;:0,&quot;methodsLarge&quot;:0,&quot;classesLarge&quot;:0,&quot;linesSM&quot;:0,&quot;methodsSM&quot;:0,&quot;classesSM&quot;:0,&quot;linesSL&quot;:0,&quot;methodsSL&quot;:0,&quot;classesSL&quot;:0,&quot;linesML&quot;:0,&quot;methodsML&quot;:0,&quot;classesML&quot;:0,&quot;linesSML&quot;:0,&quot;methodsSML&quot;:0,&quot;classesSML&quot;:0}">
+    <div class="metric" data-metric="lines-card" data-level="">
+     <span class="metric-name">Lines</span>
+     <span class="metric-percentage" data-metric="lines-percent" data-level="">n/a</span>
+     <span class="metric-bar" data-metric="lines-bar" data-level=""></span>
+     <span class="metric-count" data-metric="lines-number" data-level="">0 / 0</span>
+    </div>
+    <div class="metric" data-metric="methods-card" data-level="">
+     <span class="metric-name">Methods</span>
+     <span class="metric-percentage" data-metric="methods-percent" data-level="">n/a</span>
+     <span class="metric-bar" data-metric="methods-bar" data-level=""></span>
+     <span class="metric-count" data-metric="methods-number" data-level="">0 / 0</span>
+    </div>
+    <div class="metric" data-metric="classes-card" data-level="">
+     <span class="metric-name">Classes</span>
+     <span class="metric-percentage" data-metric="classes-percent" data-level="">n/a</span>
+     <span class="metric-bar" data-metric="classes-bar" data-level=""></span>
+     <span class="metric-count" data-metric="classes-number" data-level="">0 / 0</span>
+    </div>
+   </div>
+   <div class="table-scroll">
+    <table class="coverage">
+     <thead>
+      <tr>
+       <th scope="col" class="name">Name</th>
+       <th scope="colgroup" colspan="3">Lines</th>
+       <th scope="colgroup" colspan="3">Methods</th>
+       <th scope="col" class="crap"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+      </tr>
+     </thead>
+     <tbody>
+     </tbody>
+    </table>
+   </div>
+   <table class="source">
+    <tbody>
+     <tr><td class="line-number"><a id="28" href="#28">28</a></td><td class="hit-count"></td><td class="code"><span class="keyword">class</span><span class="default">&nbsp;</span><span class="default">DatabaseTables</span></td></tr>
+     <tr><td class="line-number"><a id="29" href="#29">29</a></td><td class="hit-count"></td><td class="code"><span class="keyword">{</span></td></tr>
+     <tr><td class="line-number"><a id="30" href="#30">30</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="comment">/**</span></td></tr>
+     <tr><td class="line-number"><a id="31" href="#31">31</a></td><td class="hit-count"></td><td class="code"><span class="comment">&nbsp;&nbsp;&nbsp;*&nbsp;Hard-coded&nbsp;sequence&nbsp;table&nbsp;name.&nbsp;This&nbsp;relies&nbsp;on</span></td></tr>
+     <tr><td class="line-number"><a id="32" href="#32">32</a></td><td class="hit-count"></td><td class="code"><span class="comment">&nbsp;&nbsp;&nbsp;*</span></td></tr>
+     <tr><td class="line-number"><a id="33" href="#33">33</a></td><td class="hit-count"></td><td class="code"><span class="comment">&nbsp;&nbsp;&nbsp;*&nbsp;@link&nbsp;https://mariadb.com/kb/en/sequence-storage-engine/</span></td></tr>
+     <tr><td class="line-number"><a id="34" href="#34">34</a></td><td class="hit-count"></td><td class="code"><span class="comment">&nbsp;&nbsp;&nbsp;*/</span></td></tr>
+     <tr><td class="line-number"><a id="35" href="#35">35</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SEQUENCE_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'seq_0_to_100000_step_1'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="36" href="#36">36</a></td><td class="hit-count"></td><td class="code"></td></tr>
+     <tr><td class="line-number"><a id="37" href="#37">37</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">COMPOSITE_PAYMENTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'CompositePayments'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="38" href="#38">38</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">DATABASE_STORAGES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'DatabaseStorages'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="39" href="#39">39</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">DATABASE_STORAGE_DIR_ENTRIES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'DatabaseStorageDirEntries'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="40" href="#40">40</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">DONATION_RECEIPTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'DonationReceipts'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="41" href="#41">41</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">FIELD_TRANSLATIONS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'TableFieldTranslations'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="42" href="#42">42</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">FILES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'Files'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="43" href="#43">43</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSTRUMENTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'Instruments'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="44" href="#44">44</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'instrument_instrument_family'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="45" href="#45">45</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSTRUMENT_FAMILIES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'InstrumentFamilies'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="46" href="#46">46</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSTRUMENT_INSURANCES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'InstrumentInsurances'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="47" href="#47">47</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSURANCE_BROKERS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'InsuranceBrokers'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="48" href="#48">48</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INSURANCE_RATES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'InsuranceRates'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="49" href="#49">49</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INVOICES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'Invoices'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="50" href="#50">50</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">INVOICE_ITEMS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'InvoiceItems'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="51" href="#51">51</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">MUSICIANS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'Musicians'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="52" href="#52">52</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">MUSICIAN_EMAILS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'MusicianEmailAddresses'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="53" href="#53">53</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">MUSICIAN_INSTRUMENTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'MusicianInstruments'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="54" href="#54">54</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">MUSICIAN_PHOTO_JOIN_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'MusicianPhoto'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="55" href="#55">55</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'Projects'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="56" href="#56">56</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_INSTRUMENTATION_NUMBERS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectInstrumentationNumbers'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="57" href="#57">57</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_INSTRUMENTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectInstruments'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="58" href="#58">58</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_PARTICIPANTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectParticipants'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="59" href="#59">59</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_PARTICIPANT_FIELDS_DATA_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectParticipantFieldsData'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="60" href="#60">60</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectParticipantFieldsDataOptions'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="61" href="#61">61</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_PARTICIPANT_FIELDS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectParticipantFields'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="62" href="#62">62</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">PROJECT_PAYMENTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'ProjectPayments'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="63" href="#63">63</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SENT_EMAILS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'SentEmails'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="64" href="#64">64</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SEPA_BANK_ACCOUNTS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'SepaBankAccounts'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="65" href="#65">65</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SEPA_BULK_TRANSACTIONS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'SepaBulkTransactions'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="66" href="#66">66</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SEPA_BULK_TRANSACTION_DATA_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'SepaBulkTransactionData'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="67" href="#67">67</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">SEPA_DEBIT_MANDATES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'SepaDebitMandates'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="68" href="#68">68</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">TAXATION_STATUTORY_SOURCES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'TaxationStatutorySources'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="69" href="#69">69</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">TAX_EXEMPTION_ITEMS_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'TaxExemptionItems'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="70" href="#70">70</a></td><td class="hit-count"></td><td class="code"><span class="default">&nbsp;&nbsp;</span><span class="keyword">const</span><span class="default">&nbsp;</span><span class="default">TAX_EXEMPTION_NOTICES_TABLE</span><span class="default">&nbsp;</span><span class="keyword">=</span><span class="default">&nbsp;</span><span class="default">'TaxExemptionNotices'</span><span class="keyword">;</span></td></tr>
+     <tr><td class="line-number"><a id="71" href="#71">71</a></td><td class="hit-count"></td><td class="code"><span class="keyword">}</span></td></tr>
+    </tbody>
+   </table>
+  </main>
+  <a class="to-top" href="#" title="Back to the top" hidden>
+   <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3.5 14 11H2z"/></svg>
+   <span class="visually-hidden">Back to the top</span>
+  </a>
+  <footer>
+   <ul class="legend">
+    <li class="covered-by-small-tests">Covered by small (and larger) tests</li>
+    <li class="covered-by-medium-tests">Covered by medium (and large) tests</li>
+    <li class="covered-by-large-tests">Covered by large tests (and tests of unknown size)</li>
+    <li class="not-covered">Not covered</li>
+    <li class="not-coverable">Not coverable</li>
+   </ul>
+   <p class="credits">Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.4.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.12</a> and <a href="https://phpunit.de/">PHPUnit 13.4.3</a> at Mon Oct 26 15:18:36 UTC 2026.</p>
+  </footer>
+  <script src="../../_js/coverage-table.js?v=14.4.1" defer></script>
+  <script src="../../_js/source-view.js?v=14.4.1" defer></script>
+ </body>
+</html>
