@@ -51,6 +51,7 @@
     <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section> -->
   </settings>
   <commands>
+    <command>OCA\CAFEVDB\Command\DatabaseMigrate</command>
     <command>OCA\CAFEVDB\Command\DatabaseSanitizers</command>
     <command>OCA\CAFEVDB\Command\DatabaseStorage</command>
     <command>OCA\CAFEVDB\Command\ExecutiveBoard</command>
