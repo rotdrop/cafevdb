@@ -29,9 +29,6 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Exception as ProcessExceptions;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 use OCA\RotDrop\Toolkit\Constants;
 
@@ -288,7 +285,7 @@ export {
   }
 
   /**
-   * Run the ORM cli commands and form an array of meta-data information.
+   * Query the ORM metadata factory in-process and form an array of meta-data information.
    *
    * @return array
    */
@@ -305,64 +302,30 @@ export {
     $progressBar = new ProgressBar($progressSection);
     $warningsSection = $this->output->section();
 
-    $ormCliCmd = $this->devScriptsFolder . Constants::PATH_SEP . 'orm-cmd.php';
-
     $headerSection->writeln('<info>' . 'Fetching list of entities ...' . '</>');
 
-    // --format=json not understood here.
-    $ormCliProcess = new Process([
-      $ormCliCmd,
-      'orm:info',
-    ]);
+    $entityManager = $this->getEntityManager();
 
-    $ormCliProcess->run();
-    if (!$ormCliProcess->isSuccessful()) {
-      throw new ProcessFailedException($ormCliProcess);
+    // The metadata factory uses the metadata cache of the ORM
+    // configuration, so all metadata is loaded (and cached) in one go.
+    $allMetadata = [];
+    foreach ($entityManager->getMetadataFactory()->getAllMetadata() as $classMetadata) {
+      $allMetadata[$classMetadata->getName()] = $classMetadata;
     }
-    $rawEntities = $ormCliProcess->getOutput();
-    $numberOfLines = substr_count($rawEntities, "\n");
-    $progressBar->start($numberOfLines);
-    $ormFile = fopen('php://temp', 'r+');
-    fputs($ormFile, $rawEntities);
-    rewind($ormFile);
-    /* discard */ fgets($ormFile, 4096);
-    $line = fgets($ormFile, 4096);
-    while ($line !== false) {
-      $line = trim($line);
-      if (str_starts_with($line, '[OK]')) {
-        $entity = trim(substr($line, strlen('[OK]')));
-        $textSection->writeln($entity);
-        $entityNames[] = $entity;
-      }
-      $progressBar->advance();
-      $line = fgets($ormFile, 4096);
-    }
-    sort($entityNames);
+    ksort($allMetadata);
 
-    $textSection->clear();
     $headerSection->writeln('<info>' . 'Obtaining metadata information ...' . '</>');
-    $progressBar->start(count($entityNames));
+    $progressBar->start(count($allMetadata));
 
-    // Ok, now fetch the meta data. For implementing kind-of entity-repositories
-    // (read-only) in the frontend we just need the information if a field is an
-    // association, and if this is the case, whether it is to-one -- this yields a
-    // simple getter -- or if it is to-may -- this yields an iterator.
-    foreach ($entityNames as $entityName) {
-      // $textSection->writeln('ENTITY ' . $entityName);
-      $ormCliProcess = new Process([
-        $ormCliCmd,
-        '--format=json',
-        'orm:mapping:describe',
-        $entityName,
-      ]);
-      $ormCliProcess->run();
-      if (!$ormCliProcess->isSuccessful()) {
-        throw new UnexpectedValueException('ORM CLI process failed: ' . $ormCliProcess->getErrorOutput());
-      }
-
-      $metadataJson = $ormCliProcess->getOutput();
-
-      $metadata = json_decode($metadataJson, true);
+    // For implementing kind-of entity-repositories (read-only) in the
+    // frontend we just need the information if a field is an association,
+    // and if this is the case, whether it is to-one -- this yields a simple
+    // getter -- or if it is to-may -- this yields an iterator.
+    foreach ($allMetadata as $entityName => $classMetadata) {
+      $metadata = [
+        'fieldMappings' => $classMetadata->fieldMappings,
+        'associationMappings' => $classMetadata->associationMappings,
+      ];
 
       if (!str_starts_with($entityName, $this->phpNamespacePrefix)
           || str_contains($entityName, 'Wrapped')) {
@@ -383,38 +346,42 @@ export {
       foreach ($metadata['fieldMappings'] as $fieldName => $ownField) {
         $metaInfo[$fieldName] = [
           'fieldName' => $fieldName,
-          'type' => $ownField['type'],
-          'id' => !!$ownField['id'],
-          'nullable' => !!$ownField['nullable'],
+          'type' => self::mappingValue($ownField, 'type'),
+          'id' => !!self::mappingValue($ownField, 'id'),
+          'nullable' => !!self::mappingValue($ownField, 'nullable'),
           'mapping' => self::FIELD_TYPE_OWNED,
         ];
       }
       foreach ($metadata['associationMappings'] as $fieldName => $associationField) {
         $nullable = false;
-        if (str_contains($associationField['class'], 'ToOne')) {
+        $mappingClass = is_object($associationField) ? get_class($associationField) : (string)($associationField['class'] ?? '');
+        $targetEntityClass = self::mappingValue($associationField, 'targetEntity');
+        $inversedBy = self::mappingValue($associationField, 'inversedBy');
+        $mappedBy = self::mappingValue($associationField, 'mappedBy');
+        if (str_contains($mappingClass, 'ToOne')) {
           $multiplicity = self::FIELD_TYPE_TO_ONE;
-          if (str_contains($associationField['class'], 'OwningSide')  || str_contains($associationField['class'], 'ManyToOne')) {
-            foreach ($associationField['joinColumns'] as $joinColumn) {
-              $nullable = !isset($joinColumn['nullable']) || $joinColumn['nullable'];
+          if (str_contains($mappingClass, 'OwningSide')  || str_contains($mappingClass, 'ManyToOne')) {
+            foreach (self::mappingValue($associationField, 'joinColumns') ?? [] as $joinColumn) {
+              $nullable = (bool)(self::mappingValue($joinColumn, 'nullable') ?? true);
               break;
             }
-            if (!empty($associationField['inversedBy']) && isset($this->entityMetaInfo[$associationField['targetEntity']])) {
-              $this->entityMetaInfo[$associationField['targetEntity']][$associationField['inversedBy']]['nullable'] = $nullable;
+            if (!empty($inversedBy) && isset($this->entityMetaInfo[$targetEntityClass])) {
+              $this->entityMetaInfo[$targetEntityClass][$inversedBy]['nullable'] = $nullable;
             }
           } else {
             // we need to inspect the owning side
-            if (!empty($associationField['mappedBy']) && isset($this->entityMetaInfo[$associationField['targetEntity']])) {
-              $nullable = $this->entityMetaInfo[$associationField['targetEntity']][$associationField['mappedBy']]['nullable'];
+            if (!empty($mappedBy) && isset($this->entityMetaInfo[$targetEntityClass])) {
+              $nullable = $this->entityMetaInfo[$targetEntityClass][$mappedBy]['nullable'];
             }
           }
         } else {
           $multiplicity = self::FIELD_TYPE_TO_MANY;
           $nullable = false; // this is always a collection
         }
-        $targetEntity = new ReflectionClass($associationField['targetEntity'])->getShortName();
+        $targetEntity = new ReflectionClass($targetEntityClass)->getShortName();
         $metaInfo[$fieldName] = [
           'fieldName' => $fieldName,
-          'id' => !!$associationField['id'],
+          'id' => !!self::mappingValue($associationField, 'id'),
           'mapping' => $multiplicity,
           'type' => $targetEntity,
           'nullable' => $nullable,
@@ -433,5 +400,48 @@ export {
     }
 
     return $this->entityMetaInfo;
+  }
+
+  /**
+   * ORM 3 uses objects for mappings, older versions arrays.
+   *
+   * @param array|object $mapping
+   *
+   * @param string $key
+   *
+   * @return mixed
+   */
+  private static function mappingValue(array|object $mapping, string $key):mixed
+  {
+    return is_array($mapping) ? ($mapping[$key] ?? null) : ($mapping->$key ?? null);
+  }
+
+  /**
+   * Bootstrap the entity manager in the current process, mimicking what
+   * orm-cmd.php does.
+   *
+   * @return object
+   */
+  private function getEntityManager():object
+  {
+    $appDir = $this->devScriptsFolder . Constants::PATH_SEP . '..';
+
+    $cafevDbUser = getenv('CAFEVDB_USER');
+    if ($cafevDbUser === false) {
+      $cafevDbUser = posix_getpwuid(posix_getuid())['name'];
+    }
+    $cafevDbPassword = @file_get_contents($appDir . '/.clipassword');
+    if (empty($cafevDbPassword)) {
+      throw new UnexpectedValueException('Unable to obtain database credentials from ' . $appDir . '/.clipassword');
+    }
+
+    $user = \OC::$server->get(\OCP\IUserManager::class)->get($cafevDbUser);
+    \OC::$server->get(\OCP\IUserSession::class)->setUser($user);
+    \OC::$server->get(\OCA\CAFEVDB\Service\EncryptionService::class)->bind($cafevDbUser, $cafevDbPassword);
+
+    $entityManager = \OCP\Server::get(\OCA\CAFEVDB\Database\EntityManager::class);
+    $entityManager->decorateClassMetadata(false);
+
+    return $entityManager;
   }
 }
