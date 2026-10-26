@@ -487,10 +487,11 @@ else\
 fi
 
 .PHONY: gh-pages
-gh-pages: $(GH_PAGES_PHPDOC_HTML)/index.html $(GH_PAGES_DOXYGEN_HTML)/index.html $(GH_PAGES_JSDOC_HTML)/index.html
+gh-pages: $(GH_PAGES_PHPDOC_HTML)/index.html $(GH_PAGES_DOXYGEN_HTML)/index.html $(GH_PAGES_JSDOC_HTML)/index.html $(GH_PAGES_TSDOC_HTML)/index.html
 	cd $(GH_PAGES_BUILD_DIR); \
  git add .; \
- git commit -a -m "Update API docs"; \
+ if git diff --cached --quiet; then echo "API docs are up to date."; exit 0; fi; \
+ git commit -m "Update API docs"; \
  git push
 
 PHPDOC_HTML = $(DOC_BUILD_DIR)/phpdoc/
@@ -562,10 +563,10 @@ $(GH_PAGES_TSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(TSDOC_HTML)/index.htm
 	mkdir -p $(GH_PAGES_TSDOC_HTML)
 	cp -a $(TSDOC_HTML)/. $(GH_PAGES_TSDOC_HTML)/.
 
-$(TSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) $(MAKEFILE_DEP)
+$(TSDOC_HTML)/index.html: doc/typedoc/typedoc.mjs $(APP_BUILD_HASH) $(WEBPACK_DEPS) $(MAKEFILE_DEP)
 	rm -rf $(TSDOC_HTML)
 	mkdir -p $(TSDOC_HTML)
-	$(NPM) run generate-docs
+	$(NPM) run generate-typedoc
 
 # END DOCS
 #
