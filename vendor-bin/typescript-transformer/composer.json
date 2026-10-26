@@ -8,6 +8,9 @@
       "type": "path",
       "url": "../../3rdparty/typescript-transformer",
       "options": {
+        "versions": {
+          "spatie/typescript-transformer": "dev-production/cafevdb"
+        },
         "symlink": true
       }
     }
