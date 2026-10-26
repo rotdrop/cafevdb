@@ -29,18 +29,20 @@ use Symfony\Component\Process\ExecutableFinder;
 use Html2Text\Html2Text as PhpHtml2Text;
 
 /**
- * Html to text converter. Try to use "lynx" as that seems to be the only
- * html-to-text tool which has sort-of support for HTML tables.
+ * Html to text converter. Use the external "w3m" program if available as that
+ * has the best support for HTML tables. Otherwise fall back to a pure PHP
+ * implementation.
  */
 class Html2Text
 {
   /**
    * @var array
    *
-   * List of possible html to text programs. The programs listed below have at
-   * least rudimentary support for HTML tables, in contrast to the various PHP
-   * implementations of html2text which all are loosing when it comes to
-   * tables.
+   * List of possible html to text programs. Only w3m is supported as its
+   * output has proven to be the best for tables, block quotes and
+   * preformatted text, in contrast to the various PHP implementations of
+   * html2text which all are loosing when it comes to tables. lynx and elinks
+   * have been dropped as their output differs substantially from w3m.
    *
    * None of the external programs seems to have support for CSS ... Oops.
    */
@@ -51,22 +53,6 @@ class Html2Text
       '-O', 'utf-8',
       '-T',
       'text/html',
-    ],
-    'lynx' => [
-      '-force_html',
-      '-noreferer',
-      '-nomargins',
-      '-dont_wrap_pre',
-      '-nolist',
-      '-display_charset=utf-8',
-      '-width=80',
-      '-dump',
-      '-stdin',
-    ],
-    // elinks is really SSSSLLLLOOOOWWWW
-    'elinks' => [
-      '-dump',
-      '-force-html',
     ],
   ];
 

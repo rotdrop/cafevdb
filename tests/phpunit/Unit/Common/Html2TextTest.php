@@ -53,26 +53,6 @@ Text
     und ein Blockzitat
 
 und rechts ausgerichteten Text.',
-      'lynx' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält Fettschrift und Kursivschrift und
-
-Zeilenumbrüche und
-vorformatierten
-Text
-
-und ein Blockzitat
-
-und rechts ausgerichteten Text.',
-      'elinks' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält
-   Fettschrift und Kursivschrift und
-
-   Zeilenumbrüche und
-
- vorformatierten
- Text
-
-   > und ein Blockzitat
-
-                                              und rechts ausgerichteten Text.',
       'php' => 'Das ist ein Beispieltext, der mit TinyMCE erzeugt wurde. Er enhält
 FETTSCHRIFT und _Kursivschrift _und
 
@@ -112,16 +92,6 @@ und rechts ausgerichteten Text.',
 ├───┼───┼───┤
 │a31│a32│a33│
 └───┴───┴───┘',
-      'lynx' => 'a11 a12 a13
-a21 a22 a23
-a31 a32 a33',
-      'elinks' => '┌─────┬─────┬─────┐
-   │ a11 │ a12 │ a13 │
-   ├─────┼─────┼─────┤
-   │ a21 │ a22 │ a23 │
-   ├─────┼─────┼─────┤
-   │ a31 │ a32 │ a33 │
-   └─────┴─────┴─────┘',
       'php' => 'a11
  		a12
  		a13
@@ -207,8 +177,6 @@ a31 a32 a33',
   {
     return [
       'w3m' => ['w3m'],
-      'lynx' => ['lynx'],
-      'elinks' => ['elinks'],
       'php' => ['php'],
     ];
   }
