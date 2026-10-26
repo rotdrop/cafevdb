@@ -178,21 +178,26 @@ jobs:
         working-directory: server
         run: |
           db_password="$(openssl rand -hex 24)"
-          echo "CAFEVDB_APP_DB_PASSWORD=${db_password}" >> "$GITHUB_ENV"
+          cafevdb_user="cafevdb-ci"
+          cafevdb_group="cafevdb_ci"
+          user_password="$(openssl rand -hex 24)"
           sudo mariadb <<SQL
           CREATE DATABASE cafevdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
           CREATE USER 'cafevdb'@'%' IDENTIFIED BY '${db_password}';
           GRANT ALL PRIVILEGES ON cafevdb.* TO 'cafevdb'@'%';
           SQL
+          php occ group:add "${cafevdb_group}"
+          OC_PASS="${user_password}" php occ user:add --password-from-env "${cafevdb_user}"
+          php occ group:adduser "${cafevdb_group}" "${cafevdb_user}"
           php occ config:app:set "${APP_NAME}" dbname --value=cafevdb
           php occ config:app:set "${APP_NAME}" dbuser --value=cafevdb
           php occ config:app:set "${APP_NAME}" dbpassword --value="${db_password}"
           php occ config:app:set "${APP_NAME}" dbserver --value=127.0.0.1
+          php occ config:app:set "${APP_NAME}" userGroup --value="${cafevdb_group}"
           password_file="apps/${APP_NAME}/.clipassword"
-          trap 'rm -f "$password_file"' EXIT
-          printf %s admin > "$password_file"
+          printf %s "${user_password}" > "$password_file"
           chmod 600 "$password_file"
-          CAFEVDB_USER=admin php "apps/${APP_NAME}/dev-scripts/orm-cmd.php" migrations:migrate --no-interaction
+          CAFEVDB_USER="${cafevdb_user}" php "apps/${APP_NAME}/dev-scripts/orm-cmd.php" migrations:migrate --no-interaction
 
       - uses: actions/setup-node@v4
         with:
@@ -208,9 +213,7 @@ jobs:
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
           trap 'rm -f .clipassword' EXIT
-          printf %s admin > .clipassword
-          chmod 600 .clipassword
-          CAFEVDB_USER=admin make selectize jstest
+          CAFEVDB_USER=cafevdb-ci make selectize jstest
 
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v4
