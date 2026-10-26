@@ -140,7 +140,7 @@ class AsymmetricKeyServiceTest extends TestCase
   public function testGenerateKeyPairWithoutStoredLoginCredentials(): void
   {
     $appContainer = $this->mockProvider->getAppContainer();
-    $credentialsStore = $this->createMock(ICredentialsStore::class);
+    $credentialsStore = $this->createStub(ICredentialsStore::class);
     $credentialsStore->method('getLoginCredentials')->willThrowException(new CredentialsUnavailableException());
 
     $service = new AsymmetricKeyService(
