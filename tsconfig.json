@@ -2,7 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
     "./src/toolkit/types/custom.d.ts",
-    "./build/ts-types/**.ts",
+    "./build/ts-types/**/*.ts",
     "./node_modules/is-plain-object/**.ts",
     "./node_modules/@nextcloud/**.ts",
     "./node_modules/@rotdrop/**.ts",
@@ -26,7 +26,7 @@
     "./src/*-shim.d.ts",
     "./src/*.ts",
     "./build/ts-types/app-config.ts",
-    "./build/ts-types/php-modules/**.ts",
+    "./build/ts-types/php-modules/**/*.ts",
     "./src/*.vue"
   ],
   "exclude": [
