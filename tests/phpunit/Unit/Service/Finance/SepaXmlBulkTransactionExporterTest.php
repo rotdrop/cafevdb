@@ -273,8 +273,13 @@ class SepaXmlBulkTransactionExporterTest extends TestCase
    */
   private function assertSchemaValid(DOMDocument $dom, string $schema): void
   {
+    $schemaSource = file_get_contents(self::FIXTURE_DIR . '/' . $schema);
+    if ($schemaSource === false) {
+      self::fail(sprintf('Unable to read SEPA schema fixture "%s".', $schema));
+    }
+
     $useErrors = libxml_use_internal_errors(true);
-    $valid = $dom->schemaValidate(self::FIXTURE_DIR . '/' . $schema);
+    $valid = $dom->schemaValidateSource($schemaSource);
     $messages = array_map(fn($e) => trim($e->message), libxml_get_errors());
     libxml_clear_errors();
     libxml_use_internal_errors($useErrors);
