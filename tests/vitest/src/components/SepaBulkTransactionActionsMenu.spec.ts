@@ -59,7 +59,7 @@ vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
   };
 });
 
-describe('SettingsSelectUsers component', () => {
+describe('SepaBulkTransactionActionsMenu component', () => {
 
   const props = {
     enableOverviewItem: true,
