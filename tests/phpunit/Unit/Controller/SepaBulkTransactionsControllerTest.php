@@ -162,6 +162,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\AqBankingBulkTransactionExporter::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\SepaXmlBulkTransactionExporter::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\GnuCashBulkTransactionBalancingItemsExporter::class)]
