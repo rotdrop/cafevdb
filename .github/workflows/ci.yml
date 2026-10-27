@@ -85,6 +85,8 @@ jobs:
       - name: Install app PHP dependencies
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
+          # the Makefile needs xpath to read the scoped namespace from info.xml
+          sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
           make dev-setup-php
 
