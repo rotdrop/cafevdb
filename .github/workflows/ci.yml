@@ -13,9 +13,6 @@ env:
   NC_REPO: rotdrop/nextcloud-server
   NC_BRANCH: cjh-stable35
   APP_NAME: cafevdb
-  MEMBERS_APP_NAME: cafevdbmembers
-  MEMBERS_APP_REPO: rotdrop/cafevdb-members
-  MEMBERS_APP_BRANCH: stable35
 
 jobs:
   phpunit:
@@ -39,15 +36,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: server/apps/${{ env.APP_NAME }}
-          submodules: recursive
-
-      - name: Checkout members app
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.MEMBERS_APP_REPO }}
-          ref: ${{ env.MEMBERS_APP_BRANCH }}
-          token: ${{ secrets.MEMBERS_APP_TOKEN || github.token }}
-          path: server/apps/${{ env.MEMBERS_APP_NAME }}
           submodules: recursive
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
@@ -97,19 +85,10 @@ jobs:
       - name: Install app PHP dependencies
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
-          # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
-          make dev-setup-php
-
-      - name: Install members app PHP dependencies
-        working-directory: server/apps/${{ env.MEMBERS_APP_NAME }}
-        run: |
           # the Makefile needs xpath to read the scoped namespace from info.xml
           sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+          # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
           make dev-setup-php
-
-      - name: Enable members app
-        working-directory: server
-        run: php occ app:enable ${{ env.MEMBERS_APP_NAME }}
 
       - name: Enable app
         working-directory: server

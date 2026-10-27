@@ -68,7 +68,7 @@ use OCA\CAFEVDB\Storage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
-use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+use OCA\CAFEVDB\Service\IProjectGroupService;
 
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
@@ -200,7 +200,7 @@ class EmailFormControllerTest extends TestCase
 
   private Toolkit\Service\SimpleSharingService $simpleSharingService;
 
-  private ProjectGroupService $projectGroupService;
+  private IProjectGroupService $projectGroupService;
 
   private array $postData = [];
 
@@ -327,8 +327,8 @@ class EmailFormControllerTest extends TestCase
       return $this->linkShares[$url]['share'] ?? null;
     });
 
-    $this->projectGroupService = $this->createStub(ProjectGroupService::class);
-    $mockProvider->registerClassInstance(ProjectGroupService::class, $this->projectGroupService, global: true);
+    $this->projectGroupService = $this->createStub(IProjectGroupService::class);
+    $mockProvider->registerClassInstance(IProjectGroupService::class, $this->projectGroupService, global: true);
     $this->projectGroupService->method('getProjectFolderLinkShare')->willReturnCallback(
       function(int $projectId) {
         $project = $this->entityManager->getRepository(Entities\Project::class)->find(['id' => $projectId]);

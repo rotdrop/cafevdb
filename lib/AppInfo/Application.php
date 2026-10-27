@@ -45,6 +45,8 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Settings\IManager as ISettingsManager;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\IProjectGroupService;
+use OCA\CAFEVDB\Service\ProjectGroupServiceAdapter;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Settings\PersonalSection;
 
@@ -106,6 +108,8 @@ include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
 /** {@inheritdoc} */
 class Application extends AbstractApplication
 {
+  private const DEFAULT_MEMBERS_APP_NAME = 'cafevdbmembers';
+
   public const APP_ROOT_FOLDER = 'appRootFolder';
 
   public const MEMBERS_APP_NAME = 'membersAppName';
@@ -119,7 +123,10 @@ class Application extends AbstractApplication
    */
   public static function getMembersAppName(): string
   {
-    return self::$membersAppName ?? (self::$membersAppName = CAFeVDBMembers\AppInfo\Application::getAppName());
+    // fall back to the default name if the companion app is not installed
+    return self::$membersAppName ??= class_exists(CAFeVDBMembers\AppInfo\Application::class)
+      ? CAFeVDBMembers\AppInfo\Application::getAppName()
+      : self::DEFAULT_MEMBERS_APP_NAME;
   }
 
   /**
@@ -180,6 +187,7 @@ class Application extends AbstractApplication
     parent::register($context);
 
     $context->registerService(self::MEMBERS_APP_NAME, fn($c) => self::getMembersAppName());
+    $context->registerServiceAlias(IProjectGroupService::class, ProjectGroupServiceAdapter::class);
 
     // Register Middleware
     // $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
