@@ -84,12 +84,6 @@
     "cweagans/composer-patches": "^1.7",
     "doctrine/sql-formatter": "*"
   },
-  "autoload-dev": {
-    "psr-4": {
-      "OCA\\RotDrop\\DevScripts\\PhpToTypeScript\\": "dev-scripts/lib/scripts/php-to-typescript",
-      "Spatie\\TypeScriptTransformer\\": "vendor-bin/typescript-transformer/vendor/spatie/typescript-transformer/src/"
-    }
-  },
   "extra": {
     "patches": {
       "bytestream/horde-socket-client": {
