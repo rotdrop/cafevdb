@@ -42,6 +42,13 @@ import { END_POINT } from '../../../../build/ts-types/php-modules/Controller/Sep
 setLoggerSilent(true);
 
 const errorHandlerMock = vi.fn();
+// NcActionButton is rendered outside NcActions, which provides closeMenu
+const ignoreCloseMenuInjection = (msg: string) => {
+  if (!msg.includes('NcActions:closeMenu')) {
+    console.warn(msg);
+  }
+};
+
 const provideTooltipsMock = vi.fn();
 
 vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
@@ -140,6 +147,7 @@ describe('SepaBulkTransactionActionsMenu component', () => {
     global: {
       directives: { tooltip: Tooltip },
       stubs: { LegacyPageActionsMenu: LegacyPageActionsMenuStub },
+      config: { warnHandler: ignoreCloseMenuInjection },
     },
   });
 
@@ -213,6 +221,7 @@ describe('SepaBulkTransactionActionsMenu component', () => {
         global: {
           directives: { tooltip: Tooltip },
           stubs: { LegacyPageActionsMenu: LegacyPageActionsMenuStub },
+          config: { warnHandler: ignoreCloseMenuInjection },
         },
       });
       expect(wrapper.findComponent({ name: 'LegacyPageActionsMenu' }).props('enableOverviewItem')).toBe(false);
