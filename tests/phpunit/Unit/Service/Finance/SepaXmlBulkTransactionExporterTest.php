@@ -219,6 +219,8 @@ class SepaXmlBulkTransactionExporterTest extends TestCase
   {
     $bankAccount = $this->generateSepaBankAccount();
     $payment = (new Entities\CompositePayment())
+      ->setId(self::FAKED_ENTITY_ID)
+      ->setProjectParticipant($this->participant)
       ->setAmount('12.23')
       ->setSubject('Test debit payment')
       ->setSepaBankAccount($bankAccount);
