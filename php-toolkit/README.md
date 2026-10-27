@@ -3,11 +3,11 @@
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-    - [Description](#description)
-    - [Setup](#setup)
-        - [Direct Use as GIT Sub-Repo](#direct-use-as-git-sub-repo)
-        - [Indirect "Scoped" Use](#indirect-scoped-use)
-    - [Why](#why)
+- [Description](#description)
+- [Setup](#setup)
+  - [Direct Use as GIT Sub-Repo](#direct-use-as-git-sub-repo)
+  - [Indirect "Scoped" Use](#indirect-scoped-use)
+- [Why](#why)
 
 <!-- markdown-toc end -->
 
