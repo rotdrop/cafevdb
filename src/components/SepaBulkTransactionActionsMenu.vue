@@ -40,6 +40,16 @@
           <IconBankTransfer />
         </template>
       </NcActionButton>
+      <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:download-xml']"
+                      :class="[appName + '-sepa-bulk-transaction-actions']"
+                      :name="t(appName, 'SEPA-XML Data')"
+                      :closeAfterClick="true"
+                      @click="handleTransactionXmlDownload"
+      >
+        <template #icon>
+          <IconXml />
+        </template>
+      </NcActionButton>
       <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:announce']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'Email Pre-Notification')"
@@ -74,6 +84,7 @@ import { useTemplateRef } from 'vue'
 import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
 import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
+import IconXml from 'vue-material-design-icons/FileXmlBox.vue'
 import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
 import { EnumSepaBulkTransactionsExportPurpose, EnumSepaBulkTransactionsTopic } from '../../build/ts-types/php-modules/Controller.ts'
 import { END_POINT } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts'
@@ -108,6 +119,7 @@ const errorHandler = errorHandlerProvider.getHandler()
 
 const tooltipKeys = [
   'sepa-bulk-transaction:download',
+  'sepa-bulk-transaction:download-xml',
   'sepa-bulk-transaction:announce',
   'sepa-bulk-transaction:gnucash-balance',
 ]
@@ -138,14 +150,14 @@ defineExpose({
   closeMenu,
 })
 
-const handleTransactionDataDownload = async () => {
+const downloadTransactionData = async (format: string) => {
   asyncEmit(BusEvents.PUSH_BUSY_STATE)
   const post = {
     bulkTransactionId: props.entityId,
     projectId: props.projectId,
     projectName: props.projectName,
     purpose: EnumSepaBulkTransactionsExportPurpose.BANK_IMPORT,
-    format: 'aqbanking',
+    format,
   }
   try {
     await axiosFileDownload(`${END_POINT}/${EnumSepaBulkTransactionsTopic.EXPORT}`, post)
@@ -161,6 +173,10 @@ const handleTransactionDataDownload = async () => {
     )
   }
 }
+
+const handleTransactionDataDownload = () => downloadTransactionData('aqbanking')
+
+const handleTransactionXmlDownload = () => downloadTransactionData('sepa-xml')
 
 const handlePreNotificationEmail = async () => {
   asyncEmit(BusEvents.EMAIL_POPUP, {
