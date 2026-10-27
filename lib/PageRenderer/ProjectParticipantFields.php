@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use RuntimeException;
 
@@ -55,7 +56,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**Table generator for Instruments table. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipantFields extends PMETableViewBase
 {
   use FieldTraits\ProjectEntityTrait;

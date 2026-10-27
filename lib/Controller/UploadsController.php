@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use Throwable;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * Simple upload end-points which move uploaded file to and from a temporary
  * location in the app-storage area.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class UploadsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

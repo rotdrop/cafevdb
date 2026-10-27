@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX end-points for instrument insurances */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class InstrumentInsuranceController extends Controller
 {
   use GetPrefixParamsTrait;

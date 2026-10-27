@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IRequest;
 
@@ -51,7 +52,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * controls to generate import data for bank bulk transactions which then can
  * be submitted to the bank.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;

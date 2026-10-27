@@ -20,25 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Actions;
 
-use Attribute;
+use Spatie\TypeScriptTransformer\Actions\ResolveClassesInPhpFileAction as BaseAction;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Rename a property. Purpose is to track mutations in jsonSerialize().
+ * Ignore anonymous classes.
  */
-#[Attribute(Attribute::TARGET_PROPERTY)]
-class TypeScriptPropertyName
+class ResolveClassesInPhpFileAction extends BaseAction
 {
   /** {@inheritdoc} */
-  public function __construct(
-    private string $propertyName,
-  ) {
-  }
-
-  /** @return string */
-  public function getPropertyName(): string
+  public function execute(SplFileInfo $file): array
   {
-    return $this->propertyName;
+    // Anonymous classes have no name and are resolved to "Namespace\" by
+    // upstream, which is not a valid class name.
+    return array_values(array_filter(
+      parent::execute($file),
+      fn(string $name) => !str_ends_with($name, '\\') && $name !== '',
+    ));
   }
 }

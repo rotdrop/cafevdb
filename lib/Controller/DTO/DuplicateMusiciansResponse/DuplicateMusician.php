@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
@@ -36,7 +37,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 #[TSAttributes\InlineTypeScriptType]
 class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  #[TSAttributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
   public readonly EntityArrayAdapter $musician;
 
   /** {@inheritdoc} */

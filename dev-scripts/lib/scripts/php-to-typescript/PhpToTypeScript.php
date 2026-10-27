@@ -22,6 +22,11 @@
 
 namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\ClassConstantsTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\DtoTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\EnumTransformer;
 use DateTime;
 use DateTimeImmutable;
 
@@ -36,9 +41,6 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Transformers;
-use Spatie\TypeScriptTransformer\TypeScriptTransformer;
-use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Types\TypeScriptType;
 
 use Psr\Container\ContainerInterface;
@@ -76,9 +78,9 @@ class PhpToTypeScript extends Command
   private const TS_MODULES_DIR = self::PHP_PREFIX . 'modules';
   private const TS_TYPES_FILE = self::PHP_PREFIX . 'types' . self::OUTPUT_SUFFIX;
   private const TRANSFORMERS = [
-    Transformers\EnumTransformer::class,
+    EnumTransformer::class,
     ClassConstantsTransformer::class,
-    Transformers\DtoTransformer::class,
+    DtoTransformer::class,
   ];
 
   private const DEFAULT_COLLECTORS = [

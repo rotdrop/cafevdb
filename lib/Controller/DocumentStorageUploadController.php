@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 use UnexpectedValueException;
@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class DocumentStorageUploadController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

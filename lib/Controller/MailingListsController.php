@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
 
@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Handle subscription management callbacks */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MailingListsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 
@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MusiciansController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

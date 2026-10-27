@@ -32,7 +32,7 @@ use Exception;
 use PHP_IBAN;
 use Throwable;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -75,7 +75,7 @@ use OCA\CAFEVDB\Service\WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

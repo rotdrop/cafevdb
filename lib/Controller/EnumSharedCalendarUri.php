@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Export the calendar URIs as enum in order to have a type for a DTO.
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSharedCalendarUri: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

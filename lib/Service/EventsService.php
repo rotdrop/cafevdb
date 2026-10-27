@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -74,7 +74,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 /**
  * Events and tasks handling.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

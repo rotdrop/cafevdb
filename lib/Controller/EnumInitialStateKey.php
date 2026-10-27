@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Settings\Admin;
 
 /**
  * Define an an enum for all possible initial state definitions of this app.
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumInitialStateKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

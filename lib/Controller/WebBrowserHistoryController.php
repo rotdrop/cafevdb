@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Exceptions;
  *
  * @todo This should be handled by the general entity serializer stuff.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class WebBrowserHistoryController extends Controller
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;

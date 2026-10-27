@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Controller\EnumLegacyHistoryAction;
 
@@ -36,7 +36,7 @@ class LegacyPageLoaderResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponse
   /** {@inheritdoc} */
   public function __construct(
     public readonly string $template,
-    #[TSAttributes\LiteralTypeScriptType('Record<string, unknown>')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Record<string, unknown>')]
     public readonly array $defaultTemplateParameters,
     public readonly string $headerHtml,
     public readonly string $bodyHtml,

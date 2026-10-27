@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use chillerlan\QRCode\QRCode;
 
@@ -46,7 +47,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * to the ProjectParticipants table as well as the ProjectParticipants view
  * does, but comes with a reduced set of fields.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectAssociates extends ProjectParticipants
 {
   use FieldTraits\AllProjectsTrait;

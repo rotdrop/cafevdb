@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
@@ -55,7 +55,7 @@ class EncryptedFileData extends FileData
    * yield an ArrayBuffer, probably.
    */
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
-  #[TSAttributes\LiteralTypeScriptType('ArrayBuffer')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   /**

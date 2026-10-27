@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * DTO for the page navigation item of a template renderer, this is used to
@@ -33,7 +33,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 class NavigationItemsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** Array of navigation items of array of arrays */
-  #[TSAttributes\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]
   public readonly array $navigation;
 
   /** {@inheritdoc} */

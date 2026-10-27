@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use chillerlan\QRCode\QRCode;
 
@@ -57,7 +58,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
 /**Table generator for Instruments table. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;

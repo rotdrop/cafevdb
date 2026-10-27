@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Service\WikiRPC;
 
 /** AJAX end-points for admin setttings. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\OCSController;
 use OCP\IL10N;
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
 
 /** Export entities to the frontend. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EntityRepositoryController extends OCSController
 {
   use \OCA\CAFEVDB\Toolkit\Controller\EntityRepositoryControllerTrait;

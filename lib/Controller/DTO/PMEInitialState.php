@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
  * Intial state emitted for key PHPMyEdit. Consistency between class members

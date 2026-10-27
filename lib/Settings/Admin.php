@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\WikiRPC;
 
 /** Admin settings class. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

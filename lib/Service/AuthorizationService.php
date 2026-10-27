@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\Group\ISubAdmin as IGroupSubAdminManager;
 use OCP\IConfig;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * configured orchestra group and/or is a group admin. Also provide
  * contact informations for the group-admins.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class AuthorizationService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

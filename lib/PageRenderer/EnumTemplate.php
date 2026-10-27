@@ -24,13 +24,13 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Flat collection of existing template name , not least to have the list of
  * amissible template names available in the TypeScript code.
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumTemplate: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

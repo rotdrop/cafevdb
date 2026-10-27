@@ -30,7 +30,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Sharing;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Personal;

@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IRequest;
 
@@ -40,7 +41,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /** Table generator for Instruments table. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class TaxationStatutorySources extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

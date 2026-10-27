@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 
 /** AJAX end-point for progress status. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProgressStatusController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

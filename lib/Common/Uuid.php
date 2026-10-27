@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
 /**
  * Customize with some defaults, like a random node.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
 {
   /** @var Ramsey\Uuid\Provider\NodeProviderInterface */

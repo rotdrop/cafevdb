@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -113,7 +114,7 @@ class FileData implements \ArrayAccess
    * yield an ArrayBuffer, probably.
    */
   #[ORM\Column(type: 'blob', nullable: false)]
-  #[TSAttributes\LiteralTypeScriptType('ArrayBuffer')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

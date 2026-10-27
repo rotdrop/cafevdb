@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerElement;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation as Operation;
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes\ElementData;
 /**
  * Response DTO of the email-form controller.
  */
-#[TSAttributes\TemplateParameters([
+#[PhpToTypeScript\Attributes\TemplateParameters([
   'Operation extends ' . Operation::class . ' = ' . Operation::class,
   'Topic extends ' . Topic::class . " = " . Topic::class,
 ])]
@@ -44,15 +44,15 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
 {
   /** {@inheritdoc} */
   public function __construct(
-    #[TSAttributes\LiteralTypeScriptType('Operation')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Operation')]
     public readonly Operation $operation,
-    #[TSAttributes\LiteralTypeScriptType('Topic')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Topic')]
     public readonly ?Topic $topic = Topic::UNSPECIFIC,
     public readonly ?string $projectName = null,
     public readonly ?int $projectId = null,
     public readonly ?int $bulkTransactionId = -1,
     public readonly ?bool $errorStatus = false,
-    #[TSAttributes\LiteralTypeScriptType('Record<string, unknown>')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Record<string, unknown>')]
     public readonly ?array $diagnostics = [],
     public readonly ?string $templateEmailOptions = null,
     public readonly ?string $draftEmailOptions = null,
@@ -60,7 +60,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     public readonly ?string $previewData = null,
     /** @var ?array<EnumEmailFormComposerElement> */
     public readonly ?array $formElements = null,
-    #[TSAttributes\LiteralTypeScriptType(
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType(
       "Operation extends '" . Operation::UPDATE->value . "' ? (Topic extends '" . Topic::UNSPECIFIC->value . "' ? string : (Topic extends '" . Topic::ELEMENT->value . "' ? " . ElementData::class . " : undefined)) : undefined",
     )]
     public readonly null|string|ElementData $elementData = null,

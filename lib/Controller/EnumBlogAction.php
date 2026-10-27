@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Upload origin, arguably the origin "cloud" is not an upload origin,
  * however, the idea is to provide "upload from local machine" as well as
  * "choose from cloud".
  */
-#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumBlogAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

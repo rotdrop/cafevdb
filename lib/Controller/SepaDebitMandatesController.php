@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -60,7 +60,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoints for debit mandates */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class SepaDebitMandatesController extends Controller
 {
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;

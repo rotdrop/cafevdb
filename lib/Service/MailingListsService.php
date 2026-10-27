@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

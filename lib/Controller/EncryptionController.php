@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\UserEncryptionService;
 
 /** AJAX end-points in order to support encryption. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

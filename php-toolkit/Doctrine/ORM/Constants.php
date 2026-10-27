@@ -22,12 +22,12 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Provide some constants for options understood by the FindLikeTrait.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Constants
 {
     /**

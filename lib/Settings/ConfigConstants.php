@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /**
  * Configuration constants. Ideally all settings keys and some other stuff
  * should be collected in this class. The idea is to not have to fetch the
  * ConfigService just in order to access some constants.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ConfigConstants
 {
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;

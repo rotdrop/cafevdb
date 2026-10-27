@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Throwable;
 
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX end-points for database migrations. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MigrationsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

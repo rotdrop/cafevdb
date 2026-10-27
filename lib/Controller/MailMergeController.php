@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use InvalidArgumentException;
 use Throwable;
@@ -62,7 +62,7 @@ use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MailMergeController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -22,12 +22,12 @@
 
 namespace OCA\RotDrop\Toolkit\Service;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use DateTimeInterface;
 use Normalizer;
 use SensitiveParameter;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 use wapmorgan\UnifiedArchive\Abilities as DriverAbilities;
 use wapmorgan\UnifiedArchive\ArchiveEntry;
 use wapmorgan\UnifiedArchive\Drivers\Basic\BasicDriver;
@@ -47,7 +47,7 @@ use OCA\RotDrop\Toolkit\Service\ArchiveService\ArchiveInfo;
  * Wrapper around the actual archive backend class in order to interface with
  * the virtual storage and actual archive extraction controllers.
  */
-#[TSAttributes\Typescript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ArchiveService
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;

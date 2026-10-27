@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\RotDrop\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes\LiteralTypeScriptProperty;
 
 /**
  * Musician database entity, representing actually just any natural person,

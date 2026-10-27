@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTime;
 
@@ -43,7 +44,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator TaxExemptionNotice. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class TaxExemptionNotices extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

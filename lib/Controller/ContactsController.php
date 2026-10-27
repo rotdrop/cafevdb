@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -41,7 +41,7 @@ use OCP\IAddressBook;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ContactsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

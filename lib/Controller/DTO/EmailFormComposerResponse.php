@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation as Operation;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic as Topic;
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic as Topic;
 /**
  * Response DTO of the email-form controller.
  */
-#[TSAttributes\TemplateParameters([
+#[PhpToTypeScript\Attributes\TemplateParameters([
   'Operation extends ' . Operation::class . ' = ' . Operation::class,
   'Topic extends ' . Topic::class . ' = ' . Topic::class,
 ])]
@@ -47,7 +47,7 @@ class EmailFormComposerResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespons
     public readonly ?string $caption,
     /** @var array<string> */
     public readonly array $messages,
-    #[TSAttributes\LiteralTypeScriptType(EmailFormComposerRequestData::class . '<Operation, Topic>')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType(EmailFormComposerRequestData::class . '<Operation, Topic>')]
     public readonly EmailFormComposerRequestData $requestData,
     public readonly string $debug,
   ) {

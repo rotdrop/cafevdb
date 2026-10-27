@@ -1,18 +1,6 @@
 {
   "require-dev": {
-    "spatie/typescript-transformer": "dev-production/cafevdb",
+    "spatie/typescript-transformer": "2.5.0",
     "symfony/finder": "^7.3"
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../../3rdparty/typescript-transformer",
-      "options": {
-        "versions": {
-          "spatie/typescript-transformer": "dev-production/cafevdb"
-        },
-        "symlink": true
-      }
-    }
-  ]
+  }
 }
