@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes\ElementData;
 /**
  * Response DTO of the email-form controller.
  */
-#[PhpToTypeScript\TemplateParameters([
+#[PhpToTypeScript\Attributes\TemplateParameters([
   'Operation extends ' . Operation::class . ' = ' . Operation::class,
   'Topic extends ' . Topic::class . " = " . Topic::class,
 ])]

@@ -32,7 +32,7 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
-#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\Attributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityReferenceCollection extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */

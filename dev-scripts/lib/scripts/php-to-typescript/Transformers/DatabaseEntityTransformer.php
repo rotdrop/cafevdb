@@ -24,8 +24,8 @@ namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers;
 
 use OCA\RotDrop\DevScripts\PhpToTypeScript\Structures\TransformedTypeSet;
 use OCA\RotDrop\DevScripts\PhpToTypeScript\TransformerConfig;
-use OCA\RotDrop\DevScripts\PhpToTypeScript\TypeScriptPropertyName;
-use OCA\RotDrop\DevScripts\PhpToTypeScript\Types\LiteralTypeScriptProperty;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes\TypeScriptPropertyName;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes\LiteralTypeScriptProperty;
 use ReflectionClass;
 use ReflectionProperty;
 

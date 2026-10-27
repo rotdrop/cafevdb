@@ -32,7 +32,7 @@ use OCA\RotDrop\Toolkit\Doctrine\ORM;
 /**
  * A collection of entities without duplicates.
  */
-#[PhpToTypeScript\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
+#[PhpToTypeScript\Attributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityResponse extends \OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
