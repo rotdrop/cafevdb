@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
  *
  * @todo This should rather be specified per project.
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipationContext: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;

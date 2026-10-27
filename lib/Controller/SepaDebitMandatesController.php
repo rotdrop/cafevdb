@@ -60,7 +60,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoints for debit mandates */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class SepaDebitMandatesController extends Controller
 {
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;

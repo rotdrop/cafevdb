@@ -58,7 +58,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
 /**Table generator for Instruments table. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;

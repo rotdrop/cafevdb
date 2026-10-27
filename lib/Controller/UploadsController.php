@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * Simple upload end-points which move uploaded file to and from a temporary
  * location in the app-storage area.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class UploadsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

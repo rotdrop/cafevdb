@@ -44,7 +44,7 @@ use OCA\CAFEVDB\BackgroundJob\CleanupFilesCache;
  * Run background-jobs triggered by AJAX pings from the front-end. The idea
  * here is that these jobs are running with an authenticated user.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

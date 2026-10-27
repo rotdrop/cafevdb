@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**Table generator for Instruments table. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipantFields extends PMETableViewBase
 {
   use FieldTraits\ProjectEntityTrait;

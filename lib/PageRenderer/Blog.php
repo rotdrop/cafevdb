@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 /** Blog renderer class, rendering is done through legacy templates.*/
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Blog extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -29,7 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 /**
  * Operations understood by EmailFormControlller::composer().
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumEmailFormContactsOperation: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

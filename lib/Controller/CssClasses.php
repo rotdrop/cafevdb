@@ -30,7 +30,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
  * CSS classes shared between the legacy templates, scss and
  * typescript. Perhaps one should move this file somewhere else.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class CssClasses
 {
   public const APP_NAME_TAG_PREFIX = 'app' . self::CLASS_SEPARATOR;

@@ -20,8 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes\TypeScript;
 use ReflectionClass;
 use ReflectionEnum;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;

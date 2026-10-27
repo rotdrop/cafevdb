@@ -27,7 +27,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 /**
  * Provide some constants for options understood by the FindLikeTrait.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Constants
 {
     /**

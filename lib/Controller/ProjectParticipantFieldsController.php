@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Service\ProjectService;
  *
  * @see Entities\ProjectParticipantField
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipantFieldsController extends Controller
 {
   use GetPrefixParamsTrait;

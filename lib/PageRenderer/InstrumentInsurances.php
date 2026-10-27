@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Render the instrument insurances of the club-members. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class InstrumentInsurances extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

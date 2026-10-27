@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage the web-pages via the CMS. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectWebPagesController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

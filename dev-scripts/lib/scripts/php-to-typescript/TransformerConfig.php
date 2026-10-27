@@ -22,6 +22,8 @@
 
 namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DefaultCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Writers\TypeDefinitionWriter;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use Spatie\TypeScriptTransformer\Exceptions\InvalidDefaultTypeReplacer;

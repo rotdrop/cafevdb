@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\IProgressStatus;
  * Entities\ProjectParticipantField entity. The two prominent examples are
  * membership fees and instrument insurances.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 interface IRecurringReceivablesGenerator
 {
   /**

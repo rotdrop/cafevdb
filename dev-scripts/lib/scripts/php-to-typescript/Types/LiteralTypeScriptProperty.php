@@ -20,36 +20,49 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Types;
 
 use Attribute;
 
-use phpDocumentor\Reflection\Type;
-use Spatie\TypeScriptTransformer\Attributes\TypeScriptTransformableAttribute;
 use Spatie\TypeScriptTransformer\Types\StructType;
 use Spatie\TypeScriptTransformer\Types\TypeScriptType;
+use phpDocumentor\Reflection\Type;
 
 /**
- * Like the upstream attribute, but converts PHP namespace separators to dots.
+ * Define additional properties which should be present in the TS output.
  */
-#[Attribute]
-class LiteralTypeScriptType implements TypeScriptTransformableAttribute
+#[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS)]
+class LiteralTypeScriptProperty
 {
   /** {@inheritdoc} */
   public function __construct(
-    private string|array $typeScript,
+    private string $propertyName,
+    private null|string|array $typeScript,
+    private bool $optional = false,
   ) {
   }
 
-  /** {@inheritdoc} */
+  /** @return string */
+  public function getPropertyName(): string
+  {
+    return $this->propertyName;
+  }
+
+  /** @return bool */
+  public function getOptional(): bool
+  {
+    return $this->optional;
+  }
+
+  /** @return Type */
   public function getType(): Type
   {
     if (is_string($this->typeScript)) {
-      return new TypeScriptType(str_replace('\\', '.', $this->typeScript));
+      return new TypeScriptType($this->typeScript);
     }
 
     $types = array_map(
-      fn (string $type) => new TypeScriptType(str_replace('\\', '.', $type)),
+      fn (string $type) => new TypeScriptType($type),
       $this->typeScript
     );
 

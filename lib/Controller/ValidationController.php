@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
  * or move more validation code here. It is actually used in
  * project-participants-fields.ts.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ValidationController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

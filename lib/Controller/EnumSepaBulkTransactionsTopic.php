@@ -29,7 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 /**
  * Operation topics understood by SepaBulkTransactionsController::composer().
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSepaBulkTransactionsTopic: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

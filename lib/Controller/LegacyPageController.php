@@ -62,7 +62,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** UI entry point providing the non-Vue front pages. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class LegacyPageController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

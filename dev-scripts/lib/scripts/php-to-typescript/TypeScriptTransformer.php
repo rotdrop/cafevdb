@@ -22,6 +22,8 @@
 
 namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Actions\PersistTypesCollectionAction;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Actions\ResolveTypesCollectionAction;
 use Spatie\TypeScriptTransformer\Actions\FormatTypeScriptAction;
 use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\TypeScriptTransformer as BaseTransformer;

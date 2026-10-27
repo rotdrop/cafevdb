@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Constants;
 
 /** Office font-file locator, in particular for PhpOffice. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class FontService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

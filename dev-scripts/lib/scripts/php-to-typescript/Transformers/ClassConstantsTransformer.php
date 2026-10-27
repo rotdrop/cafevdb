@@ -20,8 +20,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Structures\TransformedTypeOrConstant;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Structures\TransformedTypeSet;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\TransformerConfig;
 use InvalidArgumentException;
 
 use ReflectionClass;

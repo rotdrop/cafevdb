@@ -31,7 +31,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
  * should be collected in this class. The idea is to not have to fetch the
  * ConfigService just in order to access some constants.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ConfigConstants
 {
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;

@@ -20,8 +20,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Actions\TranspileTypeToTypeScriptAction;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Structures\TransformedTypeOrConstant;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\TemplateParameters;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;

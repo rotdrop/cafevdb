@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Constants as AppConstants;
  * Define some database specific constants like the desired character set and
  * collation
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Constants extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\Constants
 {
   public const CHARACTER_SET = 'utf8mb4';

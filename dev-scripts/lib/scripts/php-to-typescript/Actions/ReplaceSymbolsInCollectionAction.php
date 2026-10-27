@@ -20,31 +20,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Actions;
 
-use Spatie\TypeScriptTransformer\Actions\PersistTypesCollectionAction as BaseAction;
+use Spatie\TypeScriptTransformer\Actions\ReplaceSymbolsInCollectionAction as BaseAction;
 use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 
 /**
- * Use our own ReplaceSymbolsInCollectionAction.
+ * Use our own ReplaceSymbolsInTypeAction.
  */
-class PersistTypesCollectionAction extends BaseAction
+class ReplaceSymbolsInCollectionAction extends BaseAction
 {
   /** {@inheritdoc} */
-  public function execute(TypesCollection $collection): void
+  public function execute(TypesCollection $collection, $withFullyQualifiedNames = true): TypesCollection
   {
-    $this->ensureOutputFileExists();
+    $replaceSymbolsInTypeAction = new ReplaceSymbolsInTypeAction($collection, $withFullyQualifiedNames);
 
-    $writer = $this->config->getWriter();
+    foreach ($collection as $type) {
+      $type->transformed = $replaceSymbolsInTypeAction->execute($type);
+    }
 
-    (new ReplaceSymbolsInCollectionAction())->execute(
-      $collection,
-      $writer->replacesSymbolsWithFullyQualifiedIdentifiers()
-    );
-
-    file_put_contents(
-      $this->config->getOutputFile(),
-      $writer->format($collection)
-    );
+    return $collection;
   }
 }

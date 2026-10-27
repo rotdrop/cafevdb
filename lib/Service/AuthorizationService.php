@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * configured orchestra group and/or is a group admin. Also provide
  * contact informations for the group-admins.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class AuthorizationService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

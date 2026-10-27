@@ -31,7 +31,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Constants;
 
 /** Dummy config-check renderer */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ConfigCheck extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

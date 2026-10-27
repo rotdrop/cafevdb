@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
  * Staff related to financial accounting. Just autocomplete for the GnuCash
  * accounts ATM.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class AccountingController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\ProblemReportService;
 /**
  * AJAX endpoints for reporting "frontend" errors, i.e. errors the user was confronted with.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProblemReportController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -27,7 +27,7 @@ namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 use SortDirection;
 use UnexpectedValueException;
 
-use OCA\RotDrop\DevScripts\PhpToTypeScript\TypeScript;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes\TypeScript;
 
 /**
  * Possible order-by options for findBy().

@@ -20,30 +20,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Attributes;
 
-use ReflectionClass;
-use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
-use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Structures\TypesCollection;
+use Attribute;
+
+use Spatie\TypeScriptTransformer\Attributes\TypeScript as BaseTypeScript;
 
 /**
- * Vanilla spatie/typescript-transformer v2.5 transformers and collectors can
- * only return a single TransformedType. This wrapper allows to return a whole
- * collection; it is unwrapped by ResolveTypesCollectionAction.
+ * Like the upstream attribute, but with additional options, e.g.
+ * ['nativeEnums' => true] to override the global enum setting.
  */
-class TransformedTypeSet extends TransformedType
+#[Attribute]
+class TypeScript extends BaseTypeScript
 {
-  public function __construct(
-    ReflectionClass $class,
-    public TypesCollection $types = new TypesCollection(),
-  ) {
-    parent::__construct($class, null, '', new MissingSymbolsCollection(), false);
-  }
+  public ?array $options;
 
-  /** @return TypesCollection */
-  public function getTypes(): TypesCollection
+  /** {@inheritdoc} */
+  public function __construct(?string $name = null, ?array $options = null)
   {
-    return $this->types;
+    parent::__construct($name);
+    $this->options = $options;
   }
 }

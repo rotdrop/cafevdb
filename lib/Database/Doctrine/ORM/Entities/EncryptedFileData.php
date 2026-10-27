@@ -55,7 +55,7 @@ class EncryptedFileData extends FileData
    * yield an ArrayBuffer, probably.
    */
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
-  #[PhpToTypeScript\LiteralTypeScriptType('ArrayBuffer')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   /**

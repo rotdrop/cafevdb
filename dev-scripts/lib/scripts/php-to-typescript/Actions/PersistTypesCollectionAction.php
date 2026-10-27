@@ -20,24 +20,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Actions;
 
-use Spatie\TypeScriptTransformer\Actions\ResolveClassesInPhpFileAction as BaseAction;
-use Symfony\Component\Finder\SplFileInfo;
+use Spatie\TypeScriptTransformer\Actions\PersistTypesCollectionAction as BaseAction;
+use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 
 /**
- * Ignore anonymous classes.
+ * Use our own ReplaceSymbolsInCollectionAction.
  */
-class ResolveClassesInPhpFileAction extends BaseAction
+class PersistTypesCollectionAction extends BaseAction
 {
   /** {@inheritdoc} */
-  public function execute(SplFileInfo $file): array
+  public function execute(TypesCollection $collection): void
   {
-    // Anonymous classes have no name and are resolved to "Namespace\" by
-    // upstream, which is not a valid class name.
-    return array_values(array_filter(
-      parent::execute($file),
-      fn(string $name) => !str_ends_with($name, '\\') && $name !== '',
-    ));
+    $this->ensureOutputFileExists();
+
+    $writer = $this->config->getWriter();
+
+    (new ReplaceSymbolsInCollectionAction())->execute(
+      $collection,
+      $writer->replacesSymbolsWithFullyQualifiedIdentifiers()
+    );
+
+    file_put_contents(
+      $this->config->getOutputFile(),
+      $writer->format($collection)
+    );
   }
 }

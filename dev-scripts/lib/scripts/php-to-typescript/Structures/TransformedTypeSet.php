@@ -20,25 +20,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Structures;
 
-use Spatie\TypeScriptTransformer\Actions\ReplaceSymbolsInCollectionAction as BaseAction;
+use ReflectionClass;
+use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 
 /**
- * Use our own ReplaceSymbolsInTypeAction.
+ * Vanilla spatie/typescript-transformer v2.5 transformers and collectors can
+ * only return a single TransformedType. This wrapper allows to return a whole
+ * collection; it is unwrapped by ResolveTypesCollectionAction.
  */
-class ReplaceSymbolsInCollectionAction extends BaseAction
+class TransformedTypeSet extends TransformedType
 {
-  /** {@inheritdoc} */
-  public function execute(TypesCollection $collection, $withFullyQualifiedNames = true): TypesCollection
+  public function __construct(
+    ReflectionClass $class,
+    public TypesCollection $types = new TypesCollection(),
+  ) {
+    parent::__construct($class, null, '', new MissingSymbolsCollection(), false);
+  }
+
+  /** @return TypesCollection */
+  public function getTypes(): TypesCollection
   {
-    $replaceSymbolsInTypeAction = new ReplaceSymbolsInTypeAction($collection, $withFullyQualifiedNames);
-
-    foreach ($collection as $type) {
-      $type->transformed = $replaceSymbolsInTypeAction->execute($type);
-    }
-
-    return $collection;
+    return $this->types;
   }
 }

@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Fetch one or multiple tooltip via AJAX. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ToolTipsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

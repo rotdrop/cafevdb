@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** CSS classes shared between the legacy templates, scss and typescript. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ComposerCssClasses
 {
   public const EMPTY_SELECTION = 'empty-selection';

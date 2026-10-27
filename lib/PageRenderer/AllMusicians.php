@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Musicians table. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class AllMusicians extends Musicians
 {
   public const TEMPLATE = EnumTemplate::ALL_MUSICIANS->value;

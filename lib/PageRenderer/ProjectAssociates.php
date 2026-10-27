@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * to the ProjectParticipants table as well as the ProjectParticipants view
  * does, but comes with a reduced set of fields.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectAssociates extends ProjectParticipants
 {
   use FieldTraits\AllProjectsTrait;

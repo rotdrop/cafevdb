@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** AJAX endpoint for generating the main page of the app. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;

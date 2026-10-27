@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator TaxExemptionNotice. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class TaxExemptionNotices extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

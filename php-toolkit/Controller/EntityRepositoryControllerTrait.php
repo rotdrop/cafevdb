@@ -40,7 +40,7 @@ use OCA\RotDrop\Toolkit\Exceptions;
  * Export entities to the frontend. This is a trait as it seem controllers
  * have to live in the Controller namespace.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 trait EntityRepositoryControllerTrait
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;

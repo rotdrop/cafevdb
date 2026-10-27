@@ -33,7 +33,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 class NavigationItemsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** Array of navigation items of array of arrays */
-  #[PhpToTypeScript\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]
   public readonly array $navigation;
 
   /** {@inheritdoc} */

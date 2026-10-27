@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** CSS classes shared between the legacy templates, scss and typescript. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class RecipientsFilterCssClasses
 {
   public const ANNOUNCEMENTS_MAILING_LIST = RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY;

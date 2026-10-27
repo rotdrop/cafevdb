@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MusiciansController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

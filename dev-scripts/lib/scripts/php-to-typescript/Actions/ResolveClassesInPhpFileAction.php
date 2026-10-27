@@ -20,25 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Actions;
 
-use Attribute;
-
-use Spatie\TypeScriptTransformer\Attributes\TypeScript as BaseTypeScript;
+use Spatie\TypeScriptTransformer\Actions\ResolveClassesInPhpFileAction as BaseAction;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Like the upstream attribute, but with additional options, e.g.
- * ['nativeEnums' => true] to override the global enum setting.
+ * Ignore anonymous classes.
  */
-#[Attribute]
-class TypeScript extends BaseTypeScript
+class ResolveClassesInPhpFileAction extends BaseAction
 {
-  public ?array $options;
-
   /** {@inheritdoc} */
-  public function __construct(?string $name = null, ?array $options = null)
+  public function execute(SplFileInfo $file): array
   {
-    parent::__construct($name);
-    $this->options = $options;
+    // Anonymous classes have no name and are resolved to "Namespace\" by
+    // upstream, which is not a valid class name.
+    return array_values(array_filter(
+      parent::execute($file),
+      fn(string $name) => !str_ends_with($name, '\\') && $name !== '',
+    ));
   }
 }

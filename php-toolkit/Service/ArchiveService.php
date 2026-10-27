@@ -47,7 +47,7 @@ use OCA\RotDrop\Toolkit\Service\ArchiveService\ArchiveInfo;
  * Wrapper around the actual archive backend class in order to interface with
  * the virtual storage and actual archive extraction controllers.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ArchiveService
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;

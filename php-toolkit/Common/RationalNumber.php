@@ -24,7 +24,7 @@ namespace OCA\RotDrop\Toolkit\Common;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
-use OCA\RotDrop\DevScripts\PhpToTypeScript\DtoTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\DtoTransformer;
 
 use InvalidArgumentException;
 use JsonSerializable;
@@ -37,8 +37,8 @@ use MathPHP\Number\Rational;
  * the possible denominator are well known, which often is the case in a
  * monetary context.
  */
-#[PhpToTypeScript\TypeScript]
-#[PhpToTypeScript\LiteralTypeScriptType('string')]
+#[PhpToTypeScript\Attributes\TypeScript]
+#[PhpToTypeScript\Attributes\LiteralTypeScriptType('string')]
 #[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
 class RationalNumber extends Rational implements JsonSerializable
 {

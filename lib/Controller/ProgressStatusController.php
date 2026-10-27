@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 
 /** AJAX end-point for progress status. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProgressStatusController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

@@ -114,7 +114,7 @@ class FileData implements \ArrayAccess
    * yield an ArrayBuffer, probably.
    */
   #[ORM\Column(type: 'blob', nullable: false)]
-  #[PhpToTypeScript\LiteralTypeScriptType('ArrayBuffer')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

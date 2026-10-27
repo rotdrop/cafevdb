@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  * @todo Check whether the blog is still needed at all. Perhaps replace by
  * context sensisitive one-time popup messages.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class BlogController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

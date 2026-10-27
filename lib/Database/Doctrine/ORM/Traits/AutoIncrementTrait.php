@@ -45,7 +45,7 @@ trait AutoIncrementTrait
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  #[PhpToTypeScript\LiteralTypeScriptType('number')]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType('number')]
   protected ?int $id = null;
 
   /**

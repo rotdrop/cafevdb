@@ -47,7 +47,7 @@ class EmailFormComposerResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespons
     public readonly ?string $caption,
     /** @var array<string> */
     public readonly array $messages,
-    #[PhpToTypeScript\LiteralTypeScriptType(EmailFormComposerRequestData::class . '<Operation, Topic>')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType(EmailFormComposerRequestData::class . '<Operation, Topic>')]
     public readonly EmailFormComposerRequestData $requestData,
     public readonly string $debug,
   ) {

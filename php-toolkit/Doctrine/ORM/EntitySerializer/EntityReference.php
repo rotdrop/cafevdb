@@ -40,7 +40,7 @@ class EntityReference extends EntityReferenceIdentifier
   /** {@inheritdoc} */
   public function __construct(
     string $flatIdentifier,
-    #[PhpToTypeScript\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('K')]
     public readonly string $entityClassName,
   ) {
     parent::__construct(flatIdentifier: $flatIdentifier);

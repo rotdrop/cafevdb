@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Settings\Admin;
 /**
  * Define an an enum for all possible initial state definitions of this app.
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumInitialStateKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

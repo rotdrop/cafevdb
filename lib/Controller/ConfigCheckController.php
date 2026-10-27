@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 /**
  * Endpoint for returning the config-check results.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ConfigCheckController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

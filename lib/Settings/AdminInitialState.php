@@ -33,12 +33,12 @@ use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
 class AdminInitialState extends AbstractDTO
 {
   /** @var array<string, FontFileNames> */
-  #[PhpToTypeScript\LiteralTypeScriptType("Partial<typeof Service.FontService.FONT_FILE_NAMES>")]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType("Partial<typeof Service.FontService.FONT_FILE_NAMES>")]
   public readonly array $officeFonts;
 
   /** {@inheritdoc} */
   public function __construct(
-    #[PhpToTypeScript\LiteralTypeScriptType('typeof Service.AuthorizationService.GROUP_SUFFIX_LIST')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('typeof Service.AuthorizationService.GROUP_SUFFIX_LIST')]
     public readonly array $authorizationGroupSuffixes,
     public readonly string $cloudUserBackend,
     public readonly bool $haveCloudUserBackendConfig,

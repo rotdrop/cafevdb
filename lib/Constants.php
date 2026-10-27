@@ -29,7 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 use OCA\CAFEVDB\Toolkit\Constants as ToolkitConstants;
 
 /** General constants for the app. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Constants extends ToolkitConstants
 {
   const README_NAME = 'README.md';

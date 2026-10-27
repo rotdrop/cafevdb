@@ -40,10 +40,10 @@ class ParticipantFieldGeneratorDefineResponse extends MessagesResponse
     public readonly string $value,
     public readonly string $slug,
     /** @var array<string, bool|string> */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [K in (typeof ' . IRecurringReceivablesGenerator::class . '.OPERATION_SLUGS)[number]]: boolean|string }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [K in (typeof ' . IRecurringReceivablesGenerator::class . '.OPERATION_SLUGS)[number]]: boolean|string }')]
     public readonly array $operationLabels,
     /** @var array<string> */
-    #[PhpToTypeScript\LiteralTypeScriptType('(typeof ' . IRecurringReceivablesGenerator::class . '.UPDATE_STRATEGIES)[number][]')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('(typeof ' . IRecurringReceivablesGenerator::class . '.UPDATE_STRATEGIES)[number][]')]
     public readonly array $availableUpdateStrategies,
   ) {
     parent::__construct($messages);

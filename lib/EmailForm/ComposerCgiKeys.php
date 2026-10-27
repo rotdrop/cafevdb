@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** All the names used by the legacy email composer form template. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ComposerCgiKeys
 {
   public const ADDRESS_BOOK_BCC = 'addressBookBCC';

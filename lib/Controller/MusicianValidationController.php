@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 
 /** Validation controller for some personal input fields. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MusicianValidationController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

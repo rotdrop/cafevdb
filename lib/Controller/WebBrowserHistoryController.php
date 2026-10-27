@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Exceptions;
  *
  * @todo This should be handled by the general entity serializer stuff.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class WebBrowserHistoryController extends Controller
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;

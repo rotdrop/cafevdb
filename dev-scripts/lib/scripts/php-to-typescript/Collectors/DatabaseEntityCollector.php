@@ -20,8 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\DatabaseEntityTransformer;
 use ReflectionClass;
 
 use Spatie\TypeScriptTransformer\Exceptions\InvalidTransformerGiven;

@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for Instruments table. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Invoices extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;

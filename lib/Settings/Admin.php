@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\WikiRPC;
 
 /** Admin settings class. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

@@ -37,14 +37,14 @@ class EntityReferenceCollection extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    #[PhpToTypeScript\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('K')]
     public readonly string $entityClassName,
     /**
      * @var Collection<string, EntityReference>
      *
      * The array key is whatever has been specified by "indexBy".
      */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [index: string|number]: ' . CollectionEntityReference::class . '<keyof ' . ORM::class . '.EntityMetadata.EntityMap> }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [index: string|number]: ' . CollectionEntityReference::class . '<keyof ' . ORM::class . '.EntityMetadata.EntityMap> }')]
     public readonly array $entities,
   ) {
   }

@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\UserEncryptionService;
 
 /** AJAX end-points in order to support encryption. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

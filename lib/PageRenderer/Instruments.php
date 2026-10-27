@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class Instruments extends PMETableViewBase
 {
   use FieldTraits\ProjectModeNavigationItemTrait;

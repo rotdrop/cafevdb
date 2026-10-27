@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** The two possible bindings for debit mandates. */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSepaDebitMandateBinding: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

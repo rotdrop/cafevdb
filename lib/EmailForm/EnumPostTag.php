@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Some constants also used in the frontend code. */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumPostTag: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

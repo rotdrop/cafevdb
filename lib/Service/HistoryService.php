@@ -40,7 +40,7 @@ use OCP\IRequest;
  * been persisted to the database. This already can be done explicitly, but as
  * of now not automatically.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;

@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
  * Define some constants in order to avoid typos and to enforce consistent
  * naming.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class DataConstants
 {
   public const RENDERER_PREFIX_TAG = 'template:';

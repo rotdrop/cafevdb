@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** CSS classes shared between the legacy templates, scss and typescript. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class CssClasses
 {
   public const ACCEPT_GENDER_DETECTION = 'accept-gender-detection';

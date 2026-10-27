@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX end-points for project participants */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipantsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

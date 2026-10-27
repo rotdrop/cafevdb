@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for DonationReceipt entities. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class DonationReceipts extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;

@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 /**
  * Export the calendar URIs as enum in order to have a type for a DTO.
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSharedCalendarUri: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

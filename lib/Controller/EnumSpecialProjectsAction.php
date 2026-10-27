@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Actions for the special projects (executive board and members project. */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSpecialProjectsAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

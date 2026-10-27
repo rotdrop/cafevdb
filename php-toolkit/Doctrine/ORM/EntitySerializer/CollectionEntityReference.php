@@ -38,7 +38,7 @@ class CollectionEntityReference extends EntityReferenceIdentifier
   /** {@inheritdoc} */
   public function __construct(
     string $flatIdentifier,
-    #[PhpToTypeScript\LiteralTypeScriptType('K')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('K')]
     public readonly ?string $entityClassName = null,
   ) {
     parent::__construct(flatIdentifier: $flatIdentifier);

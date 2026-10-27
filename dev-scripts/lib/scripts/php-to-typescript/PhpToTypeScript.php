@@ -22,6 +22,11 @@
 
 namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\ClassConstantsTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\DtoTransformer;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Transformers\EnumTransformer;
 use DateTime;
 use DateTimeImmutable;
 

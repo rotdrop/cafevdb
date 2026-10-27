@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /** Encryption/Decryption AJAX end-points. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class CryptoController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

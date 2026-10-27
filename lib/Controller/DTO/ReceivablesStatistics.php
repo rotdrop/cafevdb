@@ -40,7 +40,7 @@ class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
      *
      * Amounts keyed by musician ids.
      */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [musicianId: number]: number }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [musicianId: number]: number }')]
     public readonly array $amounts,
     public readonly int $added,
     public readonly int $removed,
@@ -51,7 +51,7 @@ class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
      *
      * Musician name keyed by musician id.
      */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [musicianId: number]: string }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [musicianId: number]: string }')]
     public readonly array $musicians,
     /**
      * @var array<string, string>

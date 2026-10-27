@@ -35,13 +35,13 @@ class MailingListSubscriptionsResponse extends MessagesResponse
   /** {@inheritdoc} */
   public function __construct(
     /** TODO: consider using an enum. */
-    #[PhpToTypeScript\LiteralTypeScriptType('(typeof ' . ProjectParticipantsController::class . '.LIST_SUBSCRIPTION_RESPONSE_STATUS[number])')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('(typeof ' . ProjectParticipantsController::class . '.LIST_SUBSCRIPTION_RESPONSE_STATUS[number])')]
     public readonly string $status, // should be made an enum
     array $messages = [],
     public readonly ?string $feedback = null,
     // fields from ProjectParticipantsController::mailingListDeliveryStatus()
     /** TODO: consider using an enum. */
-    #[PhpToTypeScript\LiteralTypeScriptType('typeof ' . MailingListsService::class . '.SUBSCRIPTION_STATUS[number]')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('typeof ' . MailingListsService::class . '.SUBSCRIPTION_STATUS[number]')]
     public readonly ?string $subscriptionStatus = null,
     public readonly ?string $summary = null,
     /**
@@ -49,7 +49,7 @@ class MailingListSubscriptionsResponse extends MessagesResponse
      *
      * TODO: consider using an enum.
      */
-    #[PhpToTypeScript\LiteralTypeScriptType('(typeof ' . ProjectParticipantsController::class . '.LIST_SUBSCRIPTION_FLAGS[number])[]')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('(typeof ' . ProjectParticipantsController::class . '.LIST_SUBSCRIPTION_FLAGS[number])[]')]
     public readonly ?array $statusTags = null,
   ) {
     parent::__construct(messages: $messages);

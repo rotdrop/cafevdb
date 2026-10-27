@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
 
 /** Export entities to the frontend. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EntityRepositoryController extends OCSController
 {
   use \OCA\CAFEVDB\Toolkit\Controller\EntityRepositoryControllerTrait;

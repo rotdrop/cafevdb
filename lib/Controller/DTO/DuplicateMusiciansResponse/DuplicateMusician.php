@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 #[TSAttributes\InlineTypeScriptType]
 class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  #[PhpToTypeScript\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
+  #[PhpToTypeScript\Attributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
   public readonly EntityArrayAdapter $musician;
 
   /** {@inheritdoc} */

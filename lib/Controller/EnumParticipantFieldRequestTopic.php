@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Allowed post-params for '/projects/participant-fields/property/get' */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipantFieldRequestTopic: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

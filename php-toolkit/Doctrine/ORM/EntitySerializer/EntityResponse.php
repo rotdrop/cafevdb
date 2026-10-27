@@ -45,10 +45,10 @@ class EntityResponse extends \OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
      * which fields are set, while if K only "contains" a single entity name
      * then this field must not be unset.
      */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [e in K]: K extends e ? string[] : undefined|string[] }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [e in K]: K extends e ? string[] : undefined|string[] }')]
     public readonly array $entities,
     /** @var array<string, array<string, object> > */
-    #[PhpToTypeScript\LiteralTypeScriptType('{ [e in K]: { [id: string]: ' . ORM::class . '.EntityMetadata.EntityDto<e> } }')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('{ [e in K]: { [id: string]: ' . ORM::class . '.EntityMetadata.EntityDto<e> } }')]
     public readonly array $repositories,
   ) {
   }

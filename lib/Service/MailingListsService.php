@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

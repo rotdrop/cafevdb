@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 /** Provide some constants to enforce consistency and avoid typos. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class PersistentCGIKeys
 {
   public const TABLE = 'table';

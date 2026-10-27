@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * controls to generate import data for bank bulk transactions which then can
  * be submitted to the bank.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;

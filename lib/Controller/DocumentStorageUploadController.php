@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class DocumentStorageUploadController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

@@ -20,8 +20,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript\Actions;
 
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Structures\TransformedTypeSet;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\TransformerConfig;
 use Exception;
 use Generator;
 use ReflectionClass;

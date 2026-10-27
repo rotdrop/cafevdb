@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX end-points for instrument insurances */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class InstrumentInsuranceController extends Controller
 {
   use GetPrefixParamsTrait;

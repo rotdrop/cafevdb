@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EmailFormController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;

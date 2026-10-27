@@ -66,7 +66,7 @@ use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;

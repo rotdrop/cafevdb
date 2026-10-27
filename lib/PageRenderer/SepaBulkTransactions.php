@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** TBD. */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class SepaBulkTransactions extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;

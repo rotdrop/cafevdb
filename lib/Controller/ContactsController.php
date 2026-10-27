@@ -41,7 +41,7 @@ use OCP\IAddressBook;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class ContactsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;

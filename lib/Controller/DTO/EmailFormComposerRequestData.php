@@ -44,15 +44,15 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
 {
   /** {@inheritdoc} */
   public function __construct(
-    #[PhpToTypeScript\LiteralTypeScriptType('Operation')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Operation')]
     public readonly Operation $operation,
-    #[PhpToTypeScript\LiteralTypeScriptType('Topic')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Topic')]
     public readonly ?Topic $topic = Topic::UNSPECIFIC,
     public readonly ?string $projectName = null,
     public readonly ?int $projectId = null,
     public readonly ?int $bulkTransactionId = -1,
     public readonly ?bool $errorStatus = false,
-    #[PhpToTypeScript\LiteralTypeScriptType('Record<string, unknown>')]
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Record<string, unknown>')]
     public readonly ?array $diagnostics = [],
     public readonly ?string $templateEmailOptions = null,
     public readonly ?string $draftEmailOptions = null,
@@ -60,7 +60,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     public readonly ?string $previewData = null,
     /** @var ?array<EnumEmailFormComposerElement> */
     public readonly ?array $formElements = null,
-    #[PhpToTypeScript\LiteralTypeScriptType(
+    #[PhpToTypeScript\Attributes\LiteralTypeScriptType(
       "Operation extends '" . Operation::UPDATE->value . "' ? (Topic extends '" . Topic::UNSPECIFIC->value . "' ? string : (Topic extends '" . Topic::ELEMENT->value . "' ? " . ElementData::class . " : undefined)) : undefined",
     )]
     public readonly null|string|ElementData $elementData = null,

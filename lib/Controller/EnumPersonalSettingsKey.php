@@ -29,7 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 /**
  * (Some) personal settings keys.
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumPersonalSettingsKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

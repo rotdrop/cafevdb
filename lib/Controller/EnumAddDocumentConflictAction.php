@@ -29,7 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 /**
  * Conflict resolution actions for DatabaseStorageFolder::add().
  */
-#[PhpToTypeScript\TypeScript(options: ['nativeEnums' => true])]
+#[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumAddDocumentConflictAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

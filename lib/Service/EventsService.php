@@ -74,7 +74,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 /**
  * Events and tasks handling.
  */
-#[PhpToTypeScript\TypeScript]
+#[PhpToTypeScript\Attributes\TypeScript]
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
