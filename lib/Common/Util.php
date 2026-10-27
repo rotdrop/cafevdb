@@ -264,9 +264,11 @@ class Util
    *
    * @param string $escape The escape character when self::ESCAPED is set.
    *
+   * @param int $limit Maximum number of fields, -1 for unlimited.
+   *
    * @return array
    */
-  public static function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
+  public static function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\', int $limit = -1):array
   {
     if (empty($flags)) {
       return explode($delim, $string ?? '');
@@ -279,7 +281,7 @@ class Util
           preg_split(
             '/' . $trimExpr . preg_quote($escape, '/') . '.' . '(*SKIP)(*FAIL)|' . preg_quote($delim, '/') . $trimExpr . '/s',
             $string ?? '',
-            -1,
+            $limit,
             $pregFlags,
           ),
           $delim,

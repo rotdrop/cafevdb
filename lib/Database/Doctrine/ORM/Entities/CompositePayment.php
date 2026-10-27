@@ -870,7 +870,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
           trim(self::SUBJECT_OPTION_SEPARATOR),
           $subject,
           Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED,
-          limit: 2,
+          '\\',
+          2,
         ),
       );
       // print_r($parts);
