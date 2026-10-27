@@ -83,7 +83,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Response\HttpStatus;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+use OCA\CAFEVDB\Service\IProjectGroupService;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -4034,8 +4034,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     ) {
       $shareStatus = true;
 
-      /** @var ProjectGroupService $projectGroupService */
-      $projectGroupService = $this->di(ProjectGroupService::class);
+      /** @var IProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(IProjectGroupService::class);
       ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
       $httpStatusCode = $this->getHeaders($url) ?? -1;
@@ -4495,8 +4495,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         if (empty($this->project)) {
           return $key[0];
         }
-        /** @var ProjectGroupService $projectGroupService */
-        $projectGroupService = $this->di(ProjectGroupService::class);
+        /** @var IProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(IProjectGroupService::class);
 
         ['files_sharing' => $url, 'dav' => $dav] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
@@ -4507,8 +4507,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         if (empty($this->project)) {
           return $key[0];
         }
-        /** @var ProjectGroupService $projectGroupService */
-        $projectGroupService = $this->di(ProjectGroupService::class);
+        /** @var IProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(IProjectGroupService::class);
 
         ['mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
@@ -5640,8 +5640,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           ],
         ];
       }
-      /** @var ProjectGroupService $projectGroupService */
-      $projectGroupService = $this->di(ProjectGroupService::class);
+      /** @var IProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(IProjectGroupService::class);
       [
         'share' => $postProjectMediaShare,
         'mount_point' => $postProjectMediaPath,
