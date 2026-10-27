@@ -28,6 +28,7 @@ use RuntimeException;
 
 use PHP_IBAN\IBAN as PHP_IBAN;
 
+use OCA\CAFEVDB\Common\CamelCaseString;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -60,6 +61,8 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ConfigService $configService,
+    private CamelCaseString $camelCaseString,
+    private FinanceService $financeService,
   ) {
     $this->l = $this->l10n();
 
@@ -115,7 +118,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $purpose = $this->generatePurpose($compositePayment->getSubject());
+      $purpose = $this->generatePurpose($compositePayment);
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -184,7 +187,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $purpose = $this->generatePurpose($compositePayment->getSubject());
+      $purpose = $this->generatePurpose($compositePayment);
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -245,21 +248,28 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   }
 
   /**
-   * @param string $subject
+   * @param Entities\CompositePayment $payment
    *
    * @return array
    */
-  private function generatePurpose(string $subject):array
+  private function generatePurpose(Entities\CompositePayment $payment): array
   {
+    $subject = $payment->getSubject();
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
-      $subject = Util::removeSpaces($subject);
-    }
-    if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
-      $subject = Util::shortenCamelCaseString(
-        $subject,
-        limit: FinanceService::SEPA_PURPOSE_LENGTH,
-        minLen: 4,
-      );
+      $translit = fn(string $x) => $this->financeService->sepaTranslit($x);
+      $autoSubject = $payment->generateSubject(transliterate: $translit);
+      if ($autoSubject == $translit($subject)) {
+        $subject = $payment->generateSubject(
+          maxLength: FinanceService::SEPA_PURPOSE_LENGTH,
+          transliterate: $translit,
+        );
+      } else {
+        $subject = $this->camelCaseString->shorten(
+          $subject,
+          limit: FinanceService::SEPA_PURPOSE_LENGTH,
+          minLen: 4,
+        );
+      }
     }
 
     $purpose = [$subject, '', '', ''];
