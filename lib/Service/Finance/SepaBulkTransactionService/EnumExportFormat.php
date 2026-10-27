@@ -33,5 +33,6 @@ enum EnumExportFormat: string
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
   case AQBANKING = 'aqbanking';
+  case SEPA_XML = 'sepa-xml';
   case GNU_CASH = 'gnucash';
 }
