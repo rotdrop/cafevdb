@@ -218,8 +218,10 @@ class SepaXmlBulkTransactionExporterTest extends TestCase
   private function createSepaDebitNote(bool $nonRecurring = true): Entities\SepaDebitNote
   {
     $bankAccount = $this->generateSepaBankAccount();
-    $payment = $this->generateCompositePayment();
-    $payment->setSepaBankAccount($bankAccount);
+    $payment = (new Entities\CompositePayment())
+      ->setAmount('12.23')
+      ->setSubject('Test debit payment')
+      ->setSepaBankAccount($bankAccount);
 
     $mandate = new Entities\SepaDebitMandate()
       ->setMusician($this->musician)
