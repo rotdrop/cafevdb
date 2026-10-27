@@ -119,12 +119,16 @@ class SepaBulkTransactionService
   /** @var string Export format AqBanking. */
   const EXPORT_AQBANKING = EnumExportFormat::AQBANKING->value;
 
+  /** @var string Export format SEPA-XML (pain.001 / pain.008). */
+  const EXPORT_SEPA_XML = EnumExportFormat::SEPA_XML->value;
+
   /** @var string Export format GnuCash e.g. for balancing items. */
   const EXPORT_GNU_CASH = EnumExportFormat::GNU_CASH->value;
 
   /** @var array All supported exporters. */
   public const EXPORTERS = [
     self::EXPORT_AQBANKING,
+    self::EXPORT_SEPA_XML,
   ];
 
   public const BALANCING_ITEMS_EXPORTERS = [

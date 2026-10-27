@@ -93,6 +93,10 @@ class Registration
       Finance\AqBankingBulkTransactionExporter::class);
 
     $context->registerServiceAlias(
+      Finance\SepaBulkTransactionService::EXPORT_SERVICE_ALIAS . 'sepa-xml',
+      Finance\SepaXmlBulkTransactionExporter::class);
+
+    $context->registerServiceAlias(
       Finance\SepaBulkTransactionService::EXPORT_BALANCING_ITEMS_SERVICE_ALIAS . 'gnucash',
       Finance\GnuCashBulkTransactionBalancingItemsExporter::class);
 
