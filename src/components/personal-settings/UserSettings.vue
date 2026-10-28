@@ -26,16 +26,14 @@
     <div :id="entry.children[0]?.id" class="settings-subsection">
       <h3>{{ entry.children[0]?.name }}</h3>
       <template v-for="setting in checkboxSettings" :key="setting.id">
-        <div v-if="setting.key !== 'showDisabled' || settings.expertMode">
-          <input :id="setting.id"
-                 type="checkbox"
-                 :class="['checkbox', setting.class]"
-                 :checked="settings[setting.key]"
-                 :disabled="saving[setting.key]"
-                 @change="saveSetting(setting, $event)"
-          />
-          <label :for="setting.id">{{ t(appId, setting.label) }}</label>
-        </div>
+        <NcCheckboxRadioSwitch v-if="setting.key !== 'showDisabled' || settings.expertMode"
+                               :id="setting.id"
+                               :model-value="settings[setting.key]"
+                               :disabled="saving[setting.key]"
+                               @update:model-value="saveSetting(setting, $event)"
+        >
+          {{ t(appId, setting.label) }}
+        </NcCheckboxRadioSwitch>
       </template>
     </div>
     <div :id="entry.children[1]?.id" class="settings-subsection">
@@ -46,7 +44,7 @@
 
 <script setup lang="ts">
 import { translate as t } from '@nextcloud/l10n'
-import { NcSettingsSection } from '@nextcloud/vue'
+import { NcCheckboxRadioSwitch, NcSettingsSection } from '@nextcloud/vue'
 import { reactive } from 'vue'
 import { appName as appId } from '../../config.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
@@ -96,14 +94,9 @@ const emit = defineEmits<{
   error: [error: Error],
 }>()
 
-const saveSetting = async ({ key }: CheckboxSetting, event: Event) => {
-  const control = event.currentTarget
-  if (!(control instanceof HTMLInputElement)) {
-    emit('error', new Error('Personal setting control is not an input element.'))
-    return
-  }
+const saveSetting = async ({ key }: CheckboxSetting, checked: boolean|string[]) => {
   const previousValue = settings[key]
-  settings[key] = control.checked
+  settings[key] = checked === true
   saving[key] = true
   try {
     await setPersonalSetting(key, settings[key])
