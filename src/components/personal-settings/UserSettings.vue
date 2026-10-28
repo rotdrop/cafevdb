@@ -28,6 +28,7 @@
       <template v-for="setting in checkboxSettings" :key="setting.id">
         <NcCheckboxRadioSwitch v-if="setting.key !== 'showDisabled' || settings.expertMode"
                                :id="setting.id"
+                               v-tooltip="hints[setting.tooltipKey]"
                                :model-value="settings[setting.key]"
                                :disabled="saving[setting.key]"
                                @update:model-value="saveSetting(setting, $event)"
@@ -50,6 +51,7 @@ import { appName as appId } from '../../config.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
 import { setPersonalSetting } from '../../services/personal-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
+import useTooltipsStore from '../../stores/tooltips.ts'
 import type { TabEntry } from './settings-tree.ts'
 
 type CheckboxSetting = {
@@ -57,6 +59,7 @@ type CheckboxSetting = {
   class: string,
   key: PersonalSettingKey,
   label: string,
+  tooltipKey: string,
 }
 
 const initialState = getInitialState<Partial<Record<CheckboxSetting['key'], boolean|string>> & {
@@ -64,22 +67,27 @@ const initialState = getInitialState<Partial<Record<CheckboxSetting['key'], bool
 }>({ section: 'CAFEVDB', defaults: {} })
 
 const checkboxSettings: CheckboxSetting[] = [
-  { id: 'tooltips', class: 'tooltips', key: 'toolTipsEnabled', label: 'Tool-Tips' },
-  { id: 'restorehistory', class: 'restorehistory', key: 'restoreHistory', label: 'Restore Last View' },
-  { id: 'filtervisibility', class: 'filtervisibility', key: 'initialFilterVisibility', label: 'Filter-Controls' },
-  { id: 'directchange', class: 'directchange', key: 'directChange', label: 'Quick Change-Dialog' },
-  { id: 'deselect-invisible-misc-recs', class: 'deselect-invisible-misc-recs', key: 'deselectInvisibleMiscRecs', label: 'Deselect Invisible' },
+  { id: 'tooltips', class: 'tooltips', key: 'toolTipsEnabled', label: 'Tool-Tips', tooltipKey: 'show-tool-tips' },
+  { id: 'restorehistory', class: 'restorehistory', key: 'restoreHistory', label: 'Restore Last View', tooltipKey: 'restore-history' },
+  { id: 'filtervisibility', class: 'filtervisibility', key: 'initialFilterVisibility', label: 'Filter-Controls', tooltipKey: 'filter-visibility' },
+  { id: 'directchange', class: 'directchange', key: 'directChange', label: 'Quick Change-Dialog', tooltipKey: 'direct-change' },
+  { id: 'deselect-invisible-misc-recs', class: 'deselect-invisible-misc-recs', key: 'deselectInvisibleMiscRecs', label: 'Deselect Invisible', tooltipKey: 'deselect-invisible-misc-recs' },
   ...(initialState?.financeModeAllowed
     ? [{
         id: 'finance-mode',
         class: 'finance-mode',
         key: 'financeMode',
         label: 'Finance-Mode',
+        tooltipKey: 'finance-mode',
       } as const]
     : []),
-  { id: 'expert-mode', class: 'expert-mode', key: 'expertMode', label: 'Expert-Mode' },
-  { id: 'showdisabled', class: 'showdisabled', key: 'showDisabled', label: 'Show Disabled Data-Sets' },
+  { id: 'expert-mode', class: 'expert-mode', key: 'expertMode', label: 'Expert-Mode', tooltipKey: 'expert-mode' },
+  { id: 'showdisabled', class: 'showdisabled', key: 'showDisabled', label: 'Show Disabled Data-Sets', tooltipKey: 'show-disabled' },
 ]
+
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(checkboxSettings.map(({ tooltipKey }) => tooltipKey))
+const hints = tooltipsProvider.tooltipsData
 
 const isEnabled = (value: boolean|string|undefined) => value === true || value === 'on'
 
