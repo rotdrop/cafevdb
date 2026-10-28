@@ -97,17 +97,18 @@ const tabsSelector = '#personal-settings-container';
 
 let timeStampTimer: NodeJS.Timeout;
 
-const localeUpdateOne = function(element: HTMLElement|JQuery) {
+const localeUpdateOne = async function(element: HTMLElement|JQuery) {
   const $element = $(element);
   if (!$element.is(':visible')) {
     // avoid update if the element currently is hidden
     return;
   }
-  return $.post(getUrl('locale-info'), { scope: $element.data('scope') })
-  // .fail(function(xhr, status, errorThrown) { ignore }
-    .done(function(data) {
-      $element.find('.locale.time').replaceWith($(data.contents).find('.locale.time'));
-    });
+  try {
+    const response = await axios.post(getUrl('locale-info'), { scope: $element.data('scope') });
+    $element.find('.locale.time').replaceWith($(response.data.contents).find('.locale.time'));
+  } catch {
+    // ignore
+  }
 };
 
 const localeUpdater = async function($localeInfo: JQuery) {
@@ -115,9 +116,9 @@ const localeUpdater = async function($localeInfo: JQuery) {
     clearTimeout(timeStampTimer);
     return;
   }
-  const promises: JQuery.jqXHR<any>[] = [];
+  const promises: Promise<void>[] = [];
   for (const element of $localeInfo) {
-    promises.push(localeUpdateOne(element)!);
+    promises.push(localeUpdateOne(element));
   }
   for (const promise of promises) {
     await promise;
@@ -248,7 +249,7 @@ const afterLoad = function(container?: JQuery) {
 
         Notification.show(t(appName, 'Please standby, the operation will take some time!'));
 
-        $.post(
+        axios.post(
           setAppUrl('systemkey'),
           {
             value: {
@@ -257,7 +258,7 @@ const afterLoad = function(container?: JQuery) {
             },
           },
         )
-          .done(function(data) {
+          .then(function({ data }) {
             // re-enable all forms
             $(tabsSelector + ' fieldset').prop('disabled', false);
             $(tabsSelector).tabs('enable');
@@ -281,8 +282,8 @@ const afterLoad = function(container?: JQuery) {
               container.find('.statusmessage.general').html(data.message).show();
             }
           })
-          .fail(async (xhr, status, errorThrown) => {
-            const failData = await Ajax.handleError(xhr, status, errorThrown);
+          .catch(async (error) => {
+            const failData = await Ajax.handleAxiosError(error);
             $(tabsSelector + ' fieldset').prop('disabled', false);
             $(tabsSelector).tabs('enable');
             container.find('.statusmessage.standby').hide();
@@ -311,17 +312,15 @@ const afterLoad = function(container?: JQuery) {
         $('#systemkey-show').trigger('click');
       }
 
-      $.post(
-        getUrl('passwordgenerate'),
-      )
-        .fail(function(xhr, status, errorThrown) {
-          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        })
-        .done(function(data) {
+      axios.post(getUrl('passwordgenerate'))
+        .then(function({ data }) {
           // Make sure both inputs have the same value
           keyInput.val(data.value);
           keyInputClone.val(data.value);
           Notification.messages(data.message);
+        })
+        .catch(function(error) {
+          msg.html(Ajax.axiosFailMessage(error)).show();
         });
       return false;
     });
@@ -330,13 +329,13 @@ const afterLoad = function(container?: JQuery) {
       const msg = form.find('fieldset.keydistribute .statusmessage');
       form.find('.statusmessage').hide();
       const name = $(this).attr('name') as string;
-      $.post(setAppUrl(name))
-        .fail(async (xhr, status, errorThrown) => {
-          const failData = await Ajax.handleError(xhr, status, errorThrown);
-          msg.html(failData.messages.join(' ')).show();
-        })
-        .done(function(data) {
+      axios.post(setAppUrl(name))
+        .then(function({ data }) {
           Notification.messages(data.message);
+        })
+        .catch(async (error) => {
+          const failData = await Ajax.handleAxiosError(error);
+          msg.html(failData.messages.join(' ')).show();
         });
       return false;
     });
@@ -489,19 +488,17 @@ const afterLoad = function(container?: JQuery) {
         $('#shareownerpassword-show').trigger('click');
       }
 
-      $.post(
-        getUrl('passwordgenerate'),
-      )
-        .fail(function(xhr, status, errorThrown) {
-          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        })
-        .done(function(data) {
+      axios.post(getUrl('passwordgenerate'))
+        .then(function({ data }) {
           // TODO check integrity of return etc.
           password.val(data.value);
           passwordClone.val(data.value);
           if (data.message !== '') {
             msg.html(data.message).show();
           }
+        })
+        .catch(function(error) {
+          msg.html(Ajax.axiosFailMessage(error)).show();
         });
       return false;
     });
@@ -846,15 +843,12 @@ const afterLoad = function(container?: JQuery) {
         const value = $input.val()!;
         const name = $input.attr('name')!;
         if (value !== '') {
-          $.post(
-            setAppUrl(name),
-            { value },
-          )
-            .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-            })
-            .done(function(data: DTO.SimpleSetValueResponse) {
+          axios.post<DTO.SimpleSetValueResponse>(setAppUrl(name), { value })
+            .then(function({ data }) {
               Notification.messages(data.messages);
+            })
+            .catch(function(error) {
+              Ajax.handleAxiosError(error);
             });
         } else {
           Notification.messages([t(appName, 'Password field must not be empty.')], { timeout: TOAST_PERMANENT_TIMEOUT });
@@ -880,19 +874,16 @@ const afterLoad = function(container?: JQuery) {
       $serverSelects.on('change', function(this: HTMLSelectElement, _event) {
         const name = $(this).attr('name')!;
         const value = $(this).val();
-        $.post(
-          setAppUrl(name),
-          { value },
-        )
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown);
-          })
-          .done(function(data) {
+        axios.post(setAppUrl(name), { value })
+          .then(function({ data }) {
             console.info('SECURITY RESPONSE', { data });
             if (data.port) {
               $('#' + data.proto + 'port').val(data.port);
             }
             Notification.messages(data.messages);
+          })
+          .catch(function(error) {
+            Ajax.handleAxiosError(error);
           });
         return false;
       });
@@ -1102,7 +1093,7 @@ const afterLoad = function(container?: JQuery) {
                   data.feedback.title,
                   function(decision: boolean) {
                     if (decision === true) {
-                      $.post(
+                      axios.post<DTO.SpecialProjectsResponse>(
                         setAppUrl(name + camelcase(action)),
                         {
                           value: {
@@ -1112,10 +1103,7 @@ const afterLoad = function(container?: JQuery) {
                           },
                         },
                       )
-                        .fail(function(xhr, status, errorThrown) {
-                          Ajax.handleError(xhr, status, errorThrown);
-                        })
-                        .done(function(data: DTO.SpecialProjectsResponse) {
+                        .then(function({ data }) {
                           if (data.messages) {
                             data.messages = Notification.messages(data.messages, { timeout: 15 });
                             msg.html(data.messages.join('; ')).show();
@@ -1127,6 +1115,9 @@ const afterLoad = function(container?: JQuery) {
                           if (data.projectId) {
                             $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
                           }
+                        })
+                        .catch(function(error) {
+                          Ajax.handleAxiosError(error);
                         });
                     }
                   },
@@ -1254,15 +1245,11 @@ const afterLoad = function(container?: JQuery) {
       $container: JQuery,
       $trigger: JQuery,
     ) {
-      return $.post(
+      return axios.post<ResponseData<DTO.MessagesResponse>>(
         setAppUrl($container.data('documentTemplate')),
         { value: fileName },
       )
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown);
-          $trigger.removeClass('busy');
-        })
-        .done(function(data: ResponseData<DTO.MessagesResponse>) {
+        .then(function({ data }) {
           if (!Ajax.validateResponse(data, ['messages'])) {
             $trigger.removeClass('busy');
             return;
@@ -1276,6 +1263,10 @@ const afterLoad = function(container?: JQuery) {
             .show();
           $container.find('.auto-fill-test').prop('disabled', false).show();
           $container.find('.delete').prop('disabled', false);
+          $trigger.removeClass('busy');
+        })
+        .catch(function(error) {
+          Ajax.handleAxiosError(error);
           $trigger.removeClass('busy');
         });
     };
@@ -1295,7 +1286,7 @@ const afterLoad = function(container?: JQuery) {
             + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
             + '/' + file.original_name;
 
-      $.post(
+      axios.post<ResponseData<DTO.FileUploadMoveResponse>>(
         generateAppUrl(UploadsController.END_POINT_MOVE),
         {
           stashedFile: file.tmp_name,
@@ -1304,11 +1295,7 @@ const afterLoad = function(container?: JQuery) {
           uploadMode: EnumFileUploadMode.COPY,
         },
       )
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown);
-          $trigger.removeClass('busy');
-        })
-        .done(function(data: ResponseData<DTO.FileUploadMoveResponse>) {
+        .then(function({ data }) {
           if (!Ajax.validateResponse(data, ['messages', 'fileName', 'downloadLink'])) {
             $trigger.removeClass('busy');
             return;
@@ -1317,7 +1304,11 @@ const afterLoad = function(container?: JQuery) {
           const fileName = data.fileName;
           const downloadLink = data.downloadLink;
 
-          updateTemplateSettings(fileName, downloadLink, $container, $trigger);
+          return updateTemplateSettings(fileName, downloadLink, $container, $trigger);
+        })
+        .catch(function(error) {
+          Ajax.handleAxiosError(error);
+          $trigger.removeClass('busy');
         });
     };
 

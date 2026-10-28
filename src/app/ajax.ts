@@ -506,10 +506,22 @@ const axiosHandleError = <T = unknown>(
   userCallbacks,
 );
 
+/**
+ * Generate a diagnostic message from an error caught from an axios request.
+ *
+ * @param error The caught error.
+ */
+const axiosFailMessage = (error: unknown) => ajaxFailMessage(
+  axiosErrorToXhr(error),
+  isAxiosError(error) && error.response ? 'error' : 'abort',
+  isAxiosError(error) ? (error.response?.statusText || error.message) : String(error),
+);
+
 $(Dialogs.attachDialogHandlers);
 
 export {
   axiosErrorToXhr,
+  axiosFailMessage,
   ajaxFailData as failData,
   ajaxFailMessage as failMessage,
   ajaxFailMessages as failMessages,

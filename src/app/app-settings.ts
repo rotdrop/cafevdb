@@ -25,11 +25,14 @@
  * @module
  */
 
+import axios from '@nextcloud/axios';
 import { translate as t } from '@nextcloud/l10n';
 import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { isAxiosError } from 'axios';
 import { appName } from '../config.ts';
 import { APP_SETTINGS_POPUP, POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bus-events.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
 import { unfocus } from './cafevdb.ts';
 import $ from './jquery.ts';
 import { unmountPersonalSettings } from './personal-settings-vue.ts';
@@ -71,8 +74,8 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
     } else {
       // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
       const route = 'settings/personal/form';
-      $.get(generateAppUrl(route))
-        .done(function(data) {
+      axios.get<string>(generateAppUrl(route))
+        .then(function({ data }) {
           $popup.html(data);
           // assume the first element is a container div
           if ($popup.find('.popup-title').length > 0) {
@@ -92,11 +95,12 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
           console.info('RESOLVE SETTINGS PROMISE true');
           resolve(true);
         })
-        .fail(function(xhr, status, errorThrown) {
-          callbacks.fail?.apply($popup.get(0)!, [xhr, status, errorThrown]);
+        .catch(function(error) {
+          const errorThrown = isAxiosError(error) ? (error.response?.statusText || error.message) : String(error);
+          callbacks.fail?.apply($popup.get(0)!, [Ajax.axiosErrorToXhr(error), 'error', errorThrown]);
           reject(new Error(errorThrown));
         })
-        .always(() => callbacks.always?.apply($popup.get(0)!));
+        .finally(() => callbacks.always?.apply($popup.get(0)!));
     }
   });
 };
