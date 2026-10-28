@@ -124,5 +124,10 @@ onBeforeUnmount(() => observer?.disconnect())
       font-weight: bold;
     }
   }
+
+  // Same breakpoint at which Nextcloud collapses the left navigation.
+  @media only screen and (width < 1024px) {
+    display: none;
+  }
 }
 </style>
