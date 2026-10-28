@@ -185,9 +185,26 @@ class WordSplitterService
   {
     try {
       $this->startService();
+      if (empty($this->pendingProblems)) {
+        $this->clearProblemNotifications();
+      }
     } finally {
       // report once, also if the start fails with an exception
       $this->reportPendingProblems();
+    }
+  }
+
+  /**
+   * Remove stale locale notifications after a problem-free start.
+   *
+   * @return void
+   */
+  private function clearProblemNotifications(): void
+  {
+    try {
+      $this->notifications->clearLocaleProblems();
+    } catch (\Throwable $t) {
+      $this->logger->warning('Unable to clear the word splitter locale notifications.', [ 'exception' => $t ]);
     }
   }
 

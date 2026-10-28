@@ -98,6 +98,27 @@ class WordSplitterNotificationService
   }
 
   /**
+   * Remove all pending locale notifications from all recipients, to be called
+   * when the service starts without any locale problem.
+   *
+   * @return void
+   */
+  public function clearLocaleProblems(): void
+  {
+    $problemSets = [
+      self::PROBLEM_LOCAL_SERVICE,
+      self::PROBLEM_SYSTEM_SERVICE,
+      self::PROBLEM_LOCAL_SERVICE . ',' . self::PROBLEM_SYSTEM_SERVICE,
+    ];
+    foreach ($problemSets as $objectId) {
+      $notification = $this->notificationManager->createNotification();
+      $notification->setApp($this->appName)
+        ->setObject(self::OBJECT_TYPE, $objectId);
+      $this->notificationManager->markProcessed($notification);
+    }
+  }
+
+  /**
    * @return string[] The user ids of the cloud admins and the group admins.
    */
   private function recipients(): array
