@@ -177,7 +177,7 @@ const distributeSystemKey = async () => {
   keyError.value = false
   savingKey.value = true
   try {
-    const response = await setAdminSetting('keydistribute', '')
+    const response = await setAdminSetting('keydistribute')
     keyMessage.value = responseMessage(response.data) || t(appId, 'Encryption key distributed.')
   } catch (error) {
     keyError.value = true

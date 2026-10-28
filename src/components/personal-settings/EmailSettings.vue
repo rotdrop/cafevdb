@@ -148,7 +148,7 @@ const runAction = async (endpoint: string) => {
     actionError.value = false
   }
   try {
-    const response = await setAdminSetting(endpoint, '')
+    const response = await setAdminSetting(endpoint)
     const messages = response.data.messages ?? response.data.message ?? ''
     const result = Array.isArray(messages) ? messages.join(' ') : messages
     if (isEmailTest) {

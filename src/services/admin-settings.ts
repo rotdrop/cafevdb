@@ -15,8 +15,9 @@ export type AdminSettingResponse = PersonalSettingResponse & {
   number?: string;
 };
 
-export const setAdminSetting = (key: string, value: unknown) =>
-  axios.post<AdminSettingResponse>(setAppUrl(key), { value });
+// Pure actions (no value) are sent without a request body, like the legacy code did.
+export const setAdminSetting = (key: string, value?: unknown) =>
+  axios.post<AdminSettingResponse>(setAppUrl(key), value === undefined ? undefined : { value });
 
 export const getAdminSetting = (key: string, value?: unknown) =>
   axios.post<AdminSettingResponse>(getUrl(key), value === undefined ? {} : { value });

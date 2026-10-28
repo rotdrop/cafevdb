@@ -178,7 +178,7 @@ const runAction = async (endpoint: string) => {
   actionMessage.value = ''
   actionError.value = false
   try {
-    const response = await setAdminSetting(endpoint, '')
+    const response = await setAdminSetting(endpoint)
     actionMessage.value = (response.data.messages ?? []).join(' ')
   } catch (error) {
     actionError.value = true
