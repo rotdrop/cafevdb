@@ -72,13 +72,24 @@ onBeforeUnmount(() => clearInterval(timer))
 
 <style lang="scss" scoped>
 .locale-information {
-  margin-block-start: calc(var(--default-grid-baseline) * 4);
+  margin-block-start: 1ex;
 
   .locale {
     margin-inline-end: calc(var(--default-grid-baseline) * 2);
 
     &.heading {
-      font-weight: bold;
+      font-weight: normal;
+      font-style: italic;
+    }
+
+    &.time,
+    &.thelocale {
+      color: blue;
+    }
+
+    &.timezone,
+    &.currency {
+      color: red;
     }
   }
 }
