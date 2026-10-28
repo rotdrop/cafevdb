@@ -35,7 +35,6 @@ import { documentReady as insurancesDocumentReady } from './app/insurance.ts';
 import { documentReady as invoicesReady } from './app/invoices.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
 import { documentReady as pageDocumentReady } from './app/page.ts';
-import personalSettings from './app/personal-settings.ts';
 import { documentReady as phpMyEditDocumentReady } from './app/pme.ts';
 import { documentReady as projectInstrumentationNumbersDocumentReady } from './app/project-instrumentation-numbers.js';
 import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.ts';
@@ -49,6 +48,7 @@ import { documentReady as taxExemptionNoticesReady } from './app/tax-exemption-n
 import attachWindowResizeHandler from './app/window-resize.ts';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
+import './app/personal-settings.ts';
 import './app/jquery-extensions.ts';
 import 'jquery-ui';
 import 'core-js/actual';
@@ -78,6 +78,5 @@ onDocumentLoaded(() => {
   phpMyEditDocumentReady();
   settings();
   appSettings();
-  personalSettings();
   beforeReady();
 });

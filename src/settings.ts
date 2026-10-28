@@ -27,10 +27,10 @@
 
 import { runReadyCallbacks } from './app/cafevdb.ts';
 import { attachDialogHandlers } from './app/dialogs.js';
-import personalSettings from './app/personal-settings.js';
 import appSettings from './app/settings.js';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
+import './app/personal-settings.ts';
 import './app/jquery-extensions.ts';
 
 require('personal-settings.scss');
@@ -38,6 +38,5 @@ require('personal-settings.scss');
 onDocumentLoaded(() => {
   attachDialogHandlers();
   appSettings();
-  personalSettings();
   runReadyCallbacks();
 });

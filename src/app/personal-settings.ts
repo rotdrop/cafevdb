@@ -25,222 +25,25 @@
  * @module
  */
 
-import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
-import { appName } from '../config.ts';
-import * as Ajax from './ajax.ts';
-import * as CAFEVDB from './cafevdb.ts';
 import globalState from './globalstate.ts';
 import $ from './jquery.ts';
-import * as Notification from './notification.ts';
-import { chosenActive, selected as selectedValues } from './select-utils.ts';
-import { setPersonalUrl } from './settings-urls.ts';
-import setDebugModes from './settings/debug-modes.ts';
-import setDeselectInvisible from './settings/deselect-invisible.ts';
-import setDirectChange from './settings/direct-change.ts';
-import setExpertMode from './settings/expert-mode.ts';
-import setFinanceMode from './settings/finance-mode.ts';
-import setInitialFilterVisibility from './settings/initial-filter-visibility.ts';
-import setPageRows from './settings/pagerows.ts';
-import setRestoreHistory from './settings/restore-history.ts';
-import setShowDisabled from './settings/show-disabled.ts';
-import setTooltipsMode from './settings/tooltips.ts';
-import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 
+// The setters subscribe to the event-bus on import, they have to be
+// available even if the personal settings form is never opened.
+import './settings/debug-modes.ts';
 import './settings/debug-query-sql-filter.ts';
+import './settings/deselect-invisible.ts';
+import './settings/direct-change.ts';
+import './settings/expert-mode.ts';
+import './settings/finance-mode.ts';
+import './settings/initial-filter-visibility.ts';
+import './settings/pagerows.ts';
+import './settings/restore-history.ts';
+import './settings/show-disabled.ts';
+import './settings/tooltips.ts';
 import { appNameTag, hiddenCssClass } from 'variables.module.scss';
 
 require('nav-area-settings.scss');
-
-type JQSelect = JQuery<HTMLSelectElement>;
-
-const documentReady = function() {
-
-  const container = $('.personal-settings');
-  let msgElement = $('form.personal-settings .statusmessage');
-
-  const showMessage = function(message: undefined|string|string[]) {
-    if (message === undefined) {
-      return [];
-    }
-    if (!Array.isArray(message)) {
-      message = [message];
-    }
-    msgElement.html(message.join(' ')).show();
-    return Notification.messages(message);
-  };
-
-  const chosenInit = function($container: JQuery) {
-    ($container.find('select.pagerows') as JQSelect).each(function() {
-      const self = $(this);
-      // console.log("chosen pagerows", self);
-      if (chosenActive(self)) {
-        self.chosen('destroy');
-      }
-      self.chosen({
-        disable_search: true,
-        inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-        width: '10ex',
-      });
-    });
-
-    ($container.find(`select.${WYSIWYG_EDITOR}`) as JQSelect).each(function() {
-      const self = $(this);
-      if (chosenActive(self)) {
-        console.debug('destroy chosen', self);
-        self.chosen('destroy');
-      }
-      console.info('call chosen', self);
-      self.chosen('destroy');
-      self.show();
-      self.chosen({
-        inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-        disable_search: true,
-        width: 'auto',
-      });
-    });
-
-    ($container.find('select.debugmode') as JQSelect).each(function() {
-      const self = $(this);
-      // console.log("chosen debugmode", self);
-      if (chosenActive(self)) {
-        self.chosen('destroy');
-      }
-      self.chosen({
-        inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-        disable_search: true,
-        width: '100%',
-      });
-    });
-
-    $container.find('.chosen-container').cafevTooltip();
-  };
-
-  container.on(appName + ':content-update', function(event) {
-    if (event.target === this) {
-      chosenInit($(this));
-      msgElement = $('form.personal-settings .statusmessage');
-    }
-  });
-
-  let firstReadyCallbackInvocation = true;
-  CAFEVDB.addReadyCallback(async () => {
-    console.debug('PERSONAL READY CALLBACK');
-    if (firstReadyCallbackInvocation) {
-      firstReadyCallbackInvocation = false;
-      return;
-    }
-    chosenInit(container);
-  });
-
-  chosenInit(container);
-
-  // help-menu entries
-  handleUserManualMenu(container);
-
-  // tool-tips toggle
-  container.on('change', '.tooltips', function(_event) {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setTooltipsMode(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.restorehistory', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setRestoreHistory(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.filtervisibility', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setInitialFilterVisibility(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.directchange', function(_event) {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setDirectChange(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.deselect-invisible-misc-recs', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setDeselectInvisible(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.showdisabled', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setShowDisabled(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.expert-mode', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setExpertMode(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.finance-mode', function() {
-    const $this = $(this);
-    const checked = $this.prop('checked');
-    setFinanceMode(checked, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', 'select.pagerows', function(this: HTMLSelectElement, _event) {
-    const $this = $(this);
-    const value = parseInt($this.val() as string);
-    setPageRows(value, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', '.debugmode', function() {
-    const $this = $(this);
-    const post = $this.serializeArray();
-    setDebugModes(post, showMessage, $this);
-    return false;
-  });
-
-  container.on('change', `select.${WYSIWYG_EDITOR}`, function() {
-    const $this = $(this);
-    const value = $this.val() as string;
-    $.post(setPersonalUrl('wysiwygEditor'), { value })
-      .done(function(data) {
-        showMessage(data.message);
-        globalState.wysiwygEditor = value;
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    ($(`.personal-settings select.${WYSIWYG_EDITOR}`) as JQuery<HTMLSelectElement>).each(function() {
-      if (this !== $this[0]) {
-        selectedValues($(this), selectedValues($this) as string);
-      }
-    });
-    return false;
-  });
-
-  /****************************************************************************
-   *
-   * Tooltips
-   *
-   ***************************************************************************/
-
-  CAFEVDB.toolTipsInit('#personal-settings-container');
-  console.info('PERSONAL INIT');
-};
 
 /****************************************************************************
  * Credits list
@@ -280,5 +83,3 @@ export const updateCreditsTimer = function() {
   }, 60000);
 
 };
-
-export default documentReady;

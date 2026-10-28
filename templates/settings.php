@@ -24,34 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
-
-$tooltipstitle  = $toolTips['show-tool-tips'];
-$restorehistorytitle = $toolTips['restore-history'];
-$filtervistitle = $toolTips['filter-visibility'];
-$directchgtitle = $toolTips['direct-change'];
-$showdistitle   = $toolTips['show-disabled'];
-$pagerowstitle  = $toolTips['table-rows-per-page'];
-$wysiwygtitle   = $toolTips['settings-wysiwyg-editor'];
-$experttitle    = $toolTips['expert-operations'];
-$financetitle   = $toolTips['finance-operations'];
-$debugtitle     = $toolTips['debug-mode'];
-
-$pageRowsDefault = $_[EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value];
-$pageRows = floor($pageRowsDefault / 10) * 10;
-$pageRowsOptions = array(-1 => '&infin;');
-$maxRows = 100;
-for ($i = 10; $i <= $maxRows; $i += 10) {
-  $pageRowsOptions[$i] = $i;
-}
-if ($pageRows > $maxRows) {
-  $pageRows = 0;
-}
-
-$expertClass = $expertMode == 'on' ? '' : ' hidden';
-$toolTipsPos = 'right';
-$toolTipClass = "tooltip-" . $toolTipsPos;
-
 ?>
 <div id="personal-settings-container" class="app-admin-settings hidden <?php p($appNameTag); ?>">
   <div class="popup-title">
@@ -73,26 +45,7 @@ $toolTipClass = "tooltip-" . $toolTipsPos;
     </ul>
     <?php
     $tabNo = 1;
-    echo $this->inc("settings/personal-settings", [
-      'tabNr' => $tabNo++,
-      'toolTipsPos' => $toolTipsPos,
-      'toolTipClass' => $toolTipClass,
-      'tooltipstitle' => $tooltipstitle,
-      'restorehistorytitle' => $restorehistorytitle,
-      'filtervistitle' => $filtervistitle,
-      'directchgtitle' => $directchgtitle,
-      'showdistitle' => $showdistitle,
-      'pagerowstitle' => $pagerowstitle,
-      'wysiwygtitle' => $wysiwygtitle,
-      'experttitle' => $experttitle,
-      'financetitle' => $financetitle,
-      'debugtitle' => $debugtitle,
-      'pageRowsOptions' => $pageRowsOptions,
-      'pageRows' => $pageRows,
-      'expertClass' => $expertClass,
-      // 'timestamp' => $timestamp,
-      // 'time' => $time,
-    ]);
+    echo $this->inc("settings/personal-settings", [ 'tabNr' => $tabNo++ ]);
     if ($adminsettings === true) {
       echo $this->inc("settings/app-settings", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/orchestra-settings", [ 'tabNr' => $tabNo++ ]);

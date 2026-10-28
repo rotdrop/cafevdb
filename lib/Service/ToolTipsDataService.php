@@ -1638,7 +1638,7 @@ configuration storage if the test can be performed successfully.'),
 
       'transfer-registered-instruments' => self::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
 
-      'wysiwyg-edtior' => self::t('Change to another WYSIWYG editor.'),
+      'wysiwyg-editor' => self::t('Change to another WYSIWYG editor.'),
     ];
   }
 }

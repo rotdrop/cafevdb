@@ -42,7 +42,6 @@ import camelcase from 'camelcase';
 import {
   CssClasses,
   EnumFileUploadMode,
-  EnumPersonalSettingsKey,
   EnumSettingsGetApp,
   EnumSpecialProjectsAction,
 } from '../../build/ts-types/php-modules/Controller.ts';
@@ -63,10 +62,11 @@ import fileDownload from './file-download.ts';
 import * as FileUpload from './file-upload.ts';
 import $ from './jquery.js';
 import * as Notification from './notification.ts';
-import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
+import { mountPersonalSettings, unmountPersonalSettings } from './personal-settings-vue.ts';
+import { updateCreditsTimer } from './personal-settings.ts';
 import * as SelectUtils from './select-utils.ts';
 import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
-import { generateUrl as generateSettingsUrl, getUrl, setAppUrl, setPersonalUrl } from './settings-urls.ts';
+import { generateUrl as generateSettingsUrl, getUrl, setAppUrl } from './settings-urls.ts';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
@@ -150,72 +150,22 @@ const afterLoad = function(container?: JQuery) {
 
   tabsHolder.tabs({ active: 0 });
 
-  // Work around showPassword erasing the value and returns the
-  // text input clone.
-  const showPassword = function(element: JQuery) {
-    const tmp = element.val();
-    let showElement: JQuery;
-    // @ts-expect-error 2339 CUSTOM LEGACY OVERRIDE
-    element.showPassword(function(args: { input: JQuery; checkbox: JQuery; clone: JQuery }) {
-      showElement = args.clone;
-    });
-    element.val(tmp || '');
-    return showElement!;
-  };
-
-  // 'show password' checkbox
-  const encryptionKey = $(`#userkey #${EnumPersonalSettingsKey.ENCRYPTION_KEY}`);
-  const loginPassword = $('#userkey #password');
-  showPassword(encryptionKey);
-  showPassword(loginPassword);
-
-  $('#userkey input.button').on('click', function() {
-    // We allow empty keys, meaning no encryption
-    $('div.statusmessage').hide();
-    $('span.statusmessage').hide();
-    if (loginPassword.val() === '') {
-      $('#userkey .info').html(t(appName, 'You must type in your login password.'));
-      $('#userkey .info').show();
-      $('#userkey .error').show();
-      return false;
-    }
-    $.post(
-      setPersonalUrl(EnumPersonalSettingsKey.ENCRYPTION_KEY),
-      {
-        value: {
-          [EnumPersonalSettingsKey.ENCRYPTION_KEY]: encryptionKey.val(),
-          loginpassword: loginPassword.val(),
-        },
-      },
-    )
-      .done(function(data) {
-        console.log(data);
-        $('#userkey input[name="dbkey1"]').val('');
-        $('#userkey input[name="userkey"]').val('');
-        $('#userkey input[name="userkey-clone"]').val('');
-        $('#userkey .info').html(data.message);
-        $('#userkey .info').show();
-        $('#userkey .changed').show();
-        showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
-        const url = generateSettingsUrl(END_POINT_PERSONAL_FORM);
-        $.get(url)
-          .done((data) => {
-            $('#personal-settings-container').replaceWith(data);
-            console.info('CALL AFTER LOAD');
-            afterLoad($('#personal-settings-container'));
-            personalSettingsAfterLoad();
-          })
-          .fail((xhr, textStatus, errorThrown) => {
-            Ajax.handleError(xhr, textStatus, errorThrown);
-          });
-      })
-      .fail(async (xhr, status, errorThrown) => {
-        const failData = await Ajax.handleError(xhr, status, errorThrown);
-        $('#userkey .info').html(failData.messages.join(' '));
-        $('#userkey .info').show();
-        $('#userkey .error').show();
-      });
-    return false;
+  // The personal tab is a Vue component. A changed encryption key may
+  // change the available tabs, so the entire form is reloaded then.
+  mountPersonalSettings(container.find('#personal-settings-vue'), {
+    onEncryptionKeySet() {
+      showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
+      $.get(generateSettingsUrl(END_POINT_PERSONAL_FORM))
+        .done((data) => {
+          unmountPersonalSettings();
+          $('#personal-settings-container').replaceWith(data);
+          console.info('CALL AFTER LOAD');
+          afterLoad($('#personal-settings-container'));
+        })
+        .fail((xhr, textStatus, errorThrown) => {
+          Ajax.handleError(xhr, textStatus, errorThrown);
+        });
+    },
   });
 
   /****************************************************************************

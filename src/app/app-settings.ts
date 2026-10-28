@@ -32,6 +32,7 @@ import { APP_SETTINGS_POPUP, POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bu
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { unfocus } from './cafevdb.ts';
 import $ from './jquery.ts';
+import { unmountPersonalSettings } from './personal-settings-vue.ts';
 
 import '../legacy/nextcloud/jquery/requesttoken.js';
 import 'personal-settings-popup.scss';
@@ -62,6 +63,7 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
 
   await new Promise((resolve, reject) => {
     if ($popup.is(':visible')) {
+      unmountPersonalSettings();
       $popup.addClass(hiddenCssClass).html('');
       callbacks.always?.apply($popup.get(0)!);
       console.info('RESOLVE SETTINGS PROMISE false');
@@ -80,6 +82,7 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
             $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
           }
           $popup.find('.close').on('click', function() {
+            unmountPersonalSettings();
             $popup.addClass(hiddenCssClass).html('');
           });
           $popup.trigger(appName + ':content-update'); // trigger jq ui initialization etc.

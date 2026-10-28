@@ -185,6 +185,23 @@ class PersonalForm
         EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, self::DEFAULT_EDITOR),
         'toolTips' => $this->toolTipsService(),
         'wysiwygOptions' => ConfigConstants::WYSIWYG_EDITORS,
+        // configuration for the Vue component src/components/PersonalSettings.vue
+        'personalSettingsConfig' => [
+          'userId' => $this->userId(),
+          'isTreasurer' => $this->roles->inTreasurerGroup(),
+          'wysiwygOptions' => ConfigConstants::WYSIWYG_EDITORS,
+          EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserBoolean(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, true),
+          EnumPersonalSettingsKey::RESTORE_HISTORY->value => $this->getUserBoolean(EnumPersonalSettingsKey::RESTORE_HISTORY),
+          EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $this->getUserBoolean(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY),
+          EnumPersonalSettingsKey::DIRECT_CHANGE->value => $this->getUserBoolean(EnumPersonalSettingsKey::DIRECT_CHANGE),
+          EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $this->getUserBoolean(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS),
+          EnumPersonalSettingsKey::SHOW_DISABLED->value => $this->getUserBoolean(EnumPersonalSettingsKey::SHOW_DISABLED),
+          EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserBoolean(EnumPersonalSettingsKey::EXPERT_MODE),
+          EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserBoolean(EnumPersonalSettingsKey::FINANCE_MODE),
+          EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => (int)$this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20),
+          EnumPersonalSettingsKey::DEBUG_MODE->value => (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0),
+          EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, self::DEFAULT_EDITOR),
+        ],
         'webPageCategories' => $webPageCategories,
         'webPageTemplates' => $webPageTemplates,
         'webPageModules' => $webPageModules,
@@ -454,6 +471,23 @@ class PersonalForm
     } catch (\Exception $e) {
       return $this->errorService->exceptionTemplate($e);
     }
+  }
+
+  /**
+   * Fetch a user-setting stored as "on"/"off" as boolean.
+   *
+   * @param EnumPersonalSettingsKey $key
+   *
+   * @param bool $default
+   *
+   * @return bool
+   */
+  private function getUserBoolean(EnumPersonalSettingsKey $key, bool $default = false):bool
+  {
+    return filter_var(
+      $this->getUserValue($key, $default ? 'on' : 'off'),
+      FILTER_VALIDATE_BOOLEAN,
+    );
   }
 
   /**
