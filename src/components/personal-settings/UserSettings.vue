@@ -111,15 +111,16 @@
       >
         {{ t(appId, 'Show Disabled Data-Sets') }}
       </NcCheckboxRadioSwitch>
-      <NcSelect v-if="settings.expertMode"
-                v-model="debugModes"
-                v-tooltip="hints['debug-mode']"
-                input-id="debug-modes-select"
-                :input-label="t(appId, 'Debug')"
-                :options="debugOptions"
-                :multiple="true"
-                :disabled="saving.debugMode"
-      />
+      <div v-if="settings.expertMode" class="settings-control">
+        <NcSelect v-model="debugModes"
+                  v-tooltip="hints['debug-mode']"
+                  input-id="debug-modes-select"
+                  :input-label="t(appId, 'Debug')"
+                  :options="debugOptions"
+                  :multiple="true"
+                  :disabled="saving.debugMode"
+        />
+      </div>
       <NcTextField v-if="settings.expertMode && isDebugQuery"
                    v-model="sqlFilter"
                    :label="t(appId, 'SQL Filter')"
