@@ -22,7 +22,7 @@
  -->
 <template>
   <div class="templateroot personal-settings">
-    <div class="personal-settings-content">
+    <div class="personal-settings-content" :class="{ 'with-wide-margin': isGroupAdmin }">
       <component :is="tabComponents[tab.key]"
                  v-for="tab in tree"
                  :key="tab.key"
@@ -116,7 +116,7 @@ onUnmounted(() => {
 
     // Leave room for the app-navigation toggle which is rendered by the server.
     @media only screen and (width >= 1024px) {
-      :deep(.settings-section) {
+      &.with-wide-margin :deep(.settings-section) {
         margin-left: calc(var(--default-grid-baseline) * 10);
         width: min(900px, 100% - var(--default-grid-baseline) * 17);
       }
