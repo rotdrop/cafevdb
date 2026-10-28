@@ -999,7 +999,7 @@ class MailingListsService
       }
     }
     /* $result = */ $this->restClient->delete(
-      $this->restUri . $selfLink, [
+      $this->absoluteUri($selfLink), [
         'auth' => $this->restAuth,
         'json' => $unsubscriptionData,
       ],
@@ -1034,7 +1034,7 @@ class MailingListsService
       return null;
     }
 
-    $response = $this->restClient->get($this->restUri . $selfLink . '/preferences', [
+    $response = $this->restClient->get($this->absoluteUri($selfLink) . '/preferences', [
       'auth' => $this->restAuth,
     ]);
     $body = $response->getBody();
@@ -1076,7 +1076,7 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    /* $response = */ $this->restClient->patch($this->restUri . $selfLink . '/preferences', [
+    /* $response = */ $this->restClient->patch($this->absoluteUri($selfLink) . '/preferences', [
       'json' => $preferences,
       'auth' => $this->restAuth,
     ]);
@@ -1152,11 +1152,26 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    /* $response = */ $this->restClient->patch($this->restUri . $selfLink, [
+    /* $response = */ $this->restClient->patch($this->absoluteUri($selfLink), [
       'json' => $data,
       'auth' => $this->restAuth,
     ]);
     return true;
+  }
+
+  /**
+   * Mailman returns absolute "self_link" URLs, but accept relative ones too.
+   *
+   * @param string $link
+   *
+   * @return string
+   */
+  private function absoluteUri(string $link):string
+  {
+    if (preg_match('|^https?://|i', $link)) {
+      return $link;
+    }
+    return $this->restUri . ltrim($link, '/');
   }
 
   /**
