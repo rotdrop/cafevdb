@@ -36,6 +36,23 @@
           {{ t(appId, setting.label) }}
         </NcCheckboxRadioSwitch>
       </template>
+      <NcSelect v-model="pageRows"
+                input-id="table-pagerows"
+                v-tooltip="hints['table-rows-per-page']"
+                :input-label="t(appId, '#Rows/Page in Tables')"
+                :options="pageRowsOptions"
+                :clearable="false"
+                :disabled="saving.pageRowsDefault"
+      />
+      <NcSelect v-if="settings.expertMode"
+                v-model="debugModes"
+                input-id="debug-modes-select"
+                v-tooltip="hints['debug-mode']"
+                :input-label="t(appId, 'Debug')"
+                :options="debugOptions"
+                :multiple="true"
+                :disabled="saving.debugMode"
+      />
     </div>
     <div :id="entry.children[1]?.id" class="settings-subsection">
       <h3>{{ entry.children[1]?.name }}</h3>
@@ -45,8 +62,9 @@
 
 <script setup lang="ts">
 import { translate as t } from '@nextcloud/l10n'
-import { NcCheckboxRadioSwitch, NcSettingsSection } from '@nextcloud/vue'
-import { reactive } from 'vue'
+import { NcCheckboxRadioSwitch, NcSelect, NcSettingsSection } from '@nextcloud/vue'
+import { nextTick, reactive, ref, watch } from 'vue'
+import allDebugOptions from '../../debug-modes.ts'
 import { appName as appId } from '../../config.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
 import { setPersonalSetting } from '../../services/personal-settings.ts'
@@ -64,6 +82,8 @@ type CheckboxSetting = {
 
 const initialState = getInitialState<Partial<Record<CheckboxSetting['key'], boolean|string>> & {
   financeModeAllowed?: boolean,
+  pageRowsDefault?: number|string,
+  debugMode?: number|string,
 }>({ section: 'CAFEVDB', defaults: {} })
 
 const checkboxSettings: CheckboxSetting[] = [
@@ -86,7 +106,11 @@ const checkboxSettings: CheckboxSetting[] = [
 ]
 
 const tooltipsProvider = useTooltipsStore()
-tooltipsProvider.provideTooltips(checkboxSettings.map(({ tooltipKey }) => tooltipKey))
+tooltipsProvider.provideTooltips([
+  ...checkboxSettings.map(({ tooltipKey }) => tooltipKey),
+  'table-rows-per-page',
+  'debug-mode',
+])
 const hints = tooltipsProvider.tooltipsData
 
 const isEnabled = (value: boolean|string|undefined) => value === true || value === 'on'
@@ -94,9 +118,11 @@ const isEnabled = (value: boolean|string|undefined) => value === true || value =
 const settings = reactive(Object.fromEntries(
   checkboxSettings.map(({ key }) => [key, isEnabled(initialState?.[key])]),
 ) as Record<CheckboxSetting['key'], boolean>)
-const saving = reactive(Object.fromEntries(
-  checkboxSettings.map(({ key }) => [key, false]),
-) as Record<CheckboxSetting['key'], boolean>)
+const saving = reactive({
+  ...Object.fromEntries(checkboxSettings.map(({ key }) => [key, false])),
+  pageRowsDefault: false,
+  debugMode: false,
+} as Record<CheckboxSetting['key']|'pageRowsDefault'|'debugMode', boolean>)
 
 const emit = defineEmits<{
   error: [error: Error],
@@ -115,6 +141,54 @@ const saveSetting = async ({ key }: CheckboxSetting, checked: boolean|string[]) 
     saving[key] = false
   }
 }
+
+type SelectOption = { value: number, label: string }
+
+const pageRowsOptions: SelectOption[] = [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+  .map((value) => ({ value, label: value === -1 ? '∞' : '' + value }))
+const debugOptions: SelectOption[] = Object.entries(allDebugOptions)
+  .map(([value, label]) => ({ value: +value, label }))
+
+const pageRows = ref<SelectOption>(
+  pageRowsOptions.find(({ value }) => value === +(initialState?.pageRowsDefault ?? 20)) ?? pageRowsOptions[2],
+)
+const debugModes = ref<SelectOption[]>(
+  debugOptions.filter(({ value }) => (+(initialState?.debugMode ?? 0) & value) !== 0),
+)
+
+const emitError = (error: unknown) => emit('error', error instanceof Error ? error : new Error(String(error)))
+
+watch(pageRows, async (value, oldValue) => {
+  if (saving.pageRowsDefault || !value || value.value === oldValue?.value) {
+    return
+  }
+  saving.pageRowsDefault = true
+  try {
+    await setPersonalSetting('pageRowsDefault', value.value)
+  } catch (error) {
+    pageRows.value = oldValue
+    emitError(error)
+  } finally {
+    await nextTick()
+    saving.pageRowsDefault = false
+  }
+})
+
+watch(debugModes, async (value, oldValue) => {
+  if (saving.debugMode) {
+    return
+  }
+  saving.debugMode = true
+  try {
+    await setPersonalSetting('debugMode', value.map(({ value }) => ({ value })))
+  } catch (error) {
+    debugModes.value = oldValue
+    emitError(error)
+  } finally {
+    await nextTick()
+    saving.debugMode = false
+  }
+})
 
 defineProps<{ entry: TabEntry }>()
 </script>

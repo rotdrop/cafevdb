@@ -21,7 +21,7 @@ export type PersonalSettingKey =
   | 'expertMode'
   | 'showDisabled'
 
-export const setPersonalSetting = (key: PersonalSettingKey, value: boolean) => {
+export const setPersonalSetting = (key: PersonalSettingKey, value: unknown) => {
   const url = generateAppUrl(`${BASE_PATH}/${END_POINT_PERSONAL_SET}/{parameter}`, { parameter: key })
   return axios.post(url, { value })
 }
