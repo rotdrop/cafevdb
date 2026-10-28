@@ -536,6 +536,7 @@ class PersonalForm
         }
         usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
         $adminSettings['localeOptions'] = $localeOptions;
+        [$adminSettings[ConfigConstants::ORCHESTRA_LOCALE_KEY],] = explode('.', $this->appLocale(), 2);
         $this->initialStateService->provideInitialState(
           $this->appName(),
           'adminSettings',
