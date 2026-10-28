@@ -14,19 +14,19 @@ const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const field = (key: string, label: string): AdminSettingField => ({
   key,
-  label: t(appId, label),
+  label,
   type: 'text',
 })
 const groups: AdminSettingGroup[] = [{
   id: props.entry.children[0]?.id ?? 'links',
   name: props.entry.children[0]?.name ?? t(appId, 'Links'),
   fields: [
-    field('phpmyadmin', `Link to the database ${appId}@phpMyAdmin`),
-    field('phpmyadmincloud', 'Link to the database Cloud@phpMyAdmin'),
-    field('sourcecode', 'Link to the source-code'),
-    field('sourcedocs', 'Link to the source-code documentation'),
-    field('clouddev', 'Link to cloud Developer Information'),
-    field('cspfailurereporting', 'Link for uploading CSP failure information'),
+    field('phpmyadmin', t(appId, 'Link to the database {appId}@phpMyAdmin', { appId })),
+    field('phpmyadmincloud', t(appId, 'Link to the database Cloud@phpMyAdmin')),
+    field('sourcecode', t(appId, 'Link to the source-code')),
+    field('sourcedocs', t(appId, 'Link to the source-code documentation')),
+    field('clouddev', t(appId, 'Link to cloud Developer Information')),
+    field('cspfailurereporting', t(appId, 'Link for uploading CSP failure information')),
   ],
 }]
 </script>

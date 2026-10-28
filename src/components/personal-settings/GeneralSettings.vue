@@ -56,19 +56,13 @@ import getInitialState from '../../toolkit/util/initial-state.ts'
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
-  locales?: Array<{ code: string, name?: string }>
+  localeOptions?: Array<{ value: string, name: string }>
 }>({ section: 'adminSettings', defaults: {} })
-const locales = Array.isArray(state?.locales) ? state.locales : []
-const localeOptions = locales
-  .filter((locale) => !!locale.code)
-  .map((locale) => ({
-    value: locale.code,
-    label: locale.name ?? locale.code,
-  }))
+const localeOptions = (state?.localeOptions ?? []).map(({ value, name }) => ({ value, label: name }))
 
 const field = (key: string, label: string, type: AdminSettingField['type'] = 'text'): AdminSettingField => ({
   key,
-  label: t(appId, label),
+  label,
   type,
 })
 
@@ -77,8 +71,8 @@ const groups: AdminSettingGroup[] = [
     id: props.entry.children[0]?.id ?? 'general-settings',
     name: props.entry.children[0]?.name ?? t(appId, 'General settings'),
     fields: [
-      field(ORCHESTRA_NAME_KEY, 'Name of orchestra'),
-      { ...field(ORCHESTRA_LOCALE_KEY, 'Locale of the orchestra', 'select'), options: localeOptions },
+      field(ORCHESTRA_NAME_KEY, t(appId, 'Name of orchestra')),
+      { ...field(ORCHESTRA_LOCALE_KEY, t(appId, 'Locale of the orchestra'), 'select'), options: localeOptions },
     ],
   },
   {
@@ -92,9 +86,9 @@ const groups: AdminSettingGroup[] = [
     name: props.entry.children[2]?.name ?? t(appId, 'Database settings'),
     slot: 'database-settings',
     fields: [
-      field(APP_DB_SERVER, 'Database server'),
-      field(APP_DB_NAME, 'Database name'),
-      field(APP_DB_USER, 'Database user'),
+      field(APP_DB_SERVER, t(appId, 'Database server')),
+      field(APP_DB_NAME, t(appId, 'Database name')),
+      field(APP_DB_USER, t(appId, 'Database user')),
     ],
   },
 ]

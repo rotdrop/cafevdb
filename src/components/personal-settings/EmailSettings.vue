@@ -64,15 +64,15 @@ const field = (
   label: string,
   type: AdminSettingField['type'] = 'text',
   options?: AdminSettingOption[],
-): AdminSettingField => ({ key, label: t(appId, label), type, options })
+): AdminSettingField => ({ key, label, type, options })
 const group = (
   index: number,
   fallback: string,
   fields: AdminSettingField[],
   slot?: string,
 ): AdminSettingGroup => ({
-  id: props.entry.children[index]?.id ?? fallback,
-  name: props.entry.children[index]?.name ?? t(appId, fallback),
+  id: props.entry.children[index]?.id ?? `group-${index}`,
+  name: props.entry.children[index]?.name ?? fallback,
   fields,
   slot,
 })
@@ -81,49 +81,49 @@ const transportOptions: AdminSettingOption[] = ['insecure', 'starttls', 'ssl'].m
   label: value.toUpperCase(),
 }))
 const groups = [
-  group(0, 'Server Settings', [
-    field(SMTP_SERVER, 'SMTP Server'),
-    field(SMTP_PORT, 'SMTP Port', 'number'),
-    field(SMTP_SECURITY, 'SMTP Security', 'select', transportOptions),
-    field(IMAP_SERVER, 'IMAP Server'),
-    field(IMAP_PORT, 'IMAP Port', 'number'),
-    field(IMAP_SECURITY, 'IMAP Security', 'select', transportOptions),
+  group(0, t(appId, 'Server Settings'), [
+    field(SMTP_SERVER, t(appId, 'SMTP Server')),
+    field(SMTP_PORT, t(appId, 'SMTP Port'), 'number'),
+    field(SMTP_SECURITY, t(appId, 'SMTP Security'), 'select', transportOptions),
+    field(IMAP_SERVER, t(appId, 'IMAP Server')),
+    field(IMAP_PORT, t(appId, 'IMAP Port'), 'number'),
+    field(IMAP_SECURITY, t(appId, 'IMAP Security'), 'select', transportOptions),
   ]),
-  group(1, 'Email Account', [
-    field(EMAIL_USER, 'Email user'),
-    field(EMAIL_PASSWORD, 'Email password', 'password'),
+  group(1, t(appId, 'Email Account'), [
+    field(EMAIL_USER, t(appId, 'Email user')),
+    field(EMAIL_PASSWORD, t(appId, 'Email password'), 'password'),
   ]),
-  group(2, 'Bulk Email Composition', [
-    field(ANNOUNCEMENTS_MAILING_LIST_KEY, 'Announcements mailing list'),
+  group(2, t(appId, 'Bulk Email Composition'), [
+    field(ANNOUNCEMENTS_MAILING_LIST_KEY, t(appId, 'Announcements mailing list')),
     {
-      ...field(EMAIL_FROM_ADDRESS_KEY, 'Sender email address'),
+      ...field(EMAIL_FROM_ADDRESS_KEY, t(appId, 'Sender email address')),
       initialValue: state?.[EMAIL_FROM_NAME_KEY]
         ? `${state[EMAIL_FROM_NAME_KEY]} <${state[EMAIL_FROM_ADDRESS_KEY] ?? ''}>`
         : state?.[EMAIL_FROM_ADDRESS_KEY],
     },
-    field(EMAIL_FROM_DOMAIN_KEY, 'Sender email domain'),
-    field(BULK_EMAIL_SUBJECT_TAG, 'Bulk email subject tag'),
-    field(ATTACHMENT_LINK_SIZE_LIMIT, 'Attachment link size limit'),
-    field(ATTACHMENT_LINK_EXPIRATION_LIMIT, 'Attachment link expiration limit'),
-    field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, 'Verify external-link SSL certificates', 'checkbox'),
-    field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, 'Require HTTPS for external links', 'checkbox'),
+    field(EMAIL_FROM_DOMAIN_KEY, t(appId, 'Sender email domain')),
+    field(BULK_EMAIL_SUBJECT_TAG, t(appId, 'Bulk email subject tag')),
+    field(ATTACHMENT_LINK_SIZE_LIMIT, t(appId, 'Attachment link size limit')),
+    field(ATTACHMENT_LINK_EXPIRATION_LIMIT, t(appId, 'Attachment link expiration limit')),
+    field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, t(appId, 'Verify external-link SSL certificates'), 'checkbox'),
+    field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, t(appId, 'Require HTTPS for external links'), 'checkbox'),
   ]),
-  group(3, 'Bulk Email Privacy Notice', [
-    field(BULK_EMAIL_PRIVACY_NOTICE, 'Bulk Email Privacy Notice', 'textarea'),
+  group(3, t(appId, 'Bulk Email Privacy Notice'), [
+    field(BULK_EMAIL_PRIVACY_NOTICE, t(appId, 'Bulk Email Privacy Notice'), 'textarea'),
   ]),
-  group(4, 'Mailing List Service', [
-    field(MAILING_LIST_REST_CONFIG.url, 'Mailing list service URL'),
-    field(MAILING_LIST_REST_CONFIG.user, 'Mailing list service user'),
-    field(MAILING_LIST_REST_CONFIG.password, 'Mailing list service password', 'password'),
-    field(MAILING_LIST_CONFIG.domain, 'Mailing list email domain'),
-    field(MAILING_LIST_CONFIG.web, 'Mailing list web pages'),
-    field(MAILING_LIST_CONFIG.owner, 'Default mailing list owner'),
-    field(MAILING_LIST_CONFIG.moderator, 'Default mailing list moderator'),
+  group(4, t(appId, 'Mailing List Service'), [
+    field(MAILING_LIST_REST_CONFIG.url, t(appId, 'Mailing list service URL')),
+    field(MAILING_LIST_REST_CONFIG.user, t(appId, 'Mailing list service user')),
+    field(MAILING_LIST_REST_CONFIG.password, t(appId, 'Mailing list service password'), 'password'),
+    field(MAILING_LIST_CONFIG.domain, t(appId, 'Mailing list email domain')),
+    field(MAILING_LIST_CONFIG.web, t(appId, 'Mailing list web pages')),
+    field(MAILING_LIST_CONFIG.owner, t(appId, 'Default mailing list owner')),
+    field(MAILING_LIST_CONFIG.moderator, t(appId, 'Default mailing list moderator')),
   ], 'mailing-list-actions'),
-  group(5, 'Test Settings', [
-    field(EMAIL_TEST_MODE, 'Email test mode', 'checkbox'),
+  group(5, t(appId, 'Test Settings'), [
+    field(EMAIL_TEST_MODE, t(appId, 'Email test mode'), 'checkbox'),
     {
-      ...field(EMAIL_TEST_ADDRESS_KEY, 'Test recipient address'),
+      ...field(EMAIL_TEST_ADDRESS_KEY, t(appId, 'Test recipient address')),
       initialValue: state?.[EMAIL_TEST_NAME_KEY]
         ? `${state[EMAIL_TEST_NAME_KEY]} <${state[EMAIL_TEST_ADDRESS_KEY] ?? ''}>`
         : state?.[EMAIL_TEST_ADDRESS_KEY],

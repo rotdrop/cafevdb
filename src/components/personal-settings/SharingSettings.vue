@@ -82,15 +82,15 @@ const field = (
   key: string,
   label: string,
   type: AdminSettingField['type'] = 'text',
-): AdminSettingField => ({ key, label: t(appId, label), type })
+): AdminSettingField => ({ key, label, type })
 const group = (
   index: number,
   fallback: string,
   fields: AdminSettingField[],
   slot?: string,
 ): AdminSettingGroup => ({
-  id: props.entry.children[index]?.id ?? fallback,
-  name: props.entry.children[index]?.name ?? t(appId, fallback),
+  id: props.entry.children[index]?.id ?? `group-${index}`,
+  name: props.entry.children[index]?.name ?? fallback,
   fields,
   slot,
 })
@@ -115,19 +115,19 @@ const displayName = (key: string) => key
   .replace(/^./, (letter) => letter.toUpperCase())
 
 const groups: AdminSettingGroup[] = [
-  group(0, 'Share owner', [
-    field(SHARE_OWNER_KEY, 'Share owner user ID', 'owner'),
+  group(0, t(appId, 'Share owner'), [
+    field(SHARE_OWNER_KEY, t(appId, 'Share owner user ID'), 'owner'),
   ], 'share-owner-password'),
-  group(1, 'Calendars', calendarKeys.map((key) => field(key, displayName(key)))),
-  group(2, 'Contacts', [
-    field(GENERAL_ADDRESS_BOOK_KEY, 'General address book'),
-    field(MUSICIANS_ADDRESS_BOOK_KEY, 'Musicians address book'),
+  group(1, t(appId, 'Calendars'), calendarKeys.map((key) => field(key, displayName(key)))),
+  group(2, t(appId, 'Contacts'), [
+    field(GENERAL_ADDRESS_BOOK_KEY, t(appId, 'General address book')),
+    field(MUSICIANS_ADDRESS_BOOK_KEY, t(appId, 'Musicians address book')),
   ]),
-  group(3, 'Shared folder', folderKeys.map((key) => field(key, displayName(key), 'folder'))),
-  group(4, 'Members as Cloud-Users', [
-    field('importClubMembersAsCloudUsers', 'Import club members as cloud users', 'checkbox'),
-    field('cloudUserViewsDatabase', 'Cloud-user views database'),
-    field('musicianPersonalizedViews', 'Musician personalized views', 'checkbox'),
+  group(3, t(appId, 'Shared folder'), folderKeys.map((key) => field(key, displayName(key), 'folder'))),
+  group(4, t(appId, 'Members as Cloud-Users'), [
+    field('importClubMembersAsCloudUsers', t(appId, 'Import club members as cloud users'), 'checkbox'),
+    field('cloudUserViewsDatabase', t(appId, 'Cloud-user views database')),
+    field('musicianPersonalizedViews', t(appId, 'Musician personalized views'), 'checkbox'),
   ], 'members-as-cloud-users'),
 ]
 

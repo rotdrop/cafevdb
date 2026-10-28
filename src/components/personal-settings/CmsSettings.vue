@@ -30,7 +30,7 @@ const keyFor = (slug: string) => CMS_PREFIX + slug
   .join('')
 const field = (key: string, label: string): AdminSettingField => ({
   key,
-  label: t(appId, label),
+  label,
   type: 'text',
 })
 const options = (items: Array<{ id: number|string, name: string, level?: number }> = []): AdminSettingOption[] =>
@@ -39,31 +39,31 @@ const options = (items: Array<{ id: number|string, name: string, level?: number 
     label: `${'   '.repeat(level)}${name} [${id}]`,
   }))
 const group = (index: number, fallback: string, fields: AdminSettingField[]): AdminSettingGroup => ({
-  id: props.entry.children[index]?.id ?? fallback,
-  name: props.entry.children[index]?.name ?? t(appId, fallback),
+  id: props.entry.children[index]?.id ?? `group-${index}`,
+  name: props.entry.children[index]?.name ?? fallback,
   fields,
 })
 
 const groups = [
-  group(0, 'Redaxo Categories', CMS_CATEGORIES.map((slug) => ({
+  group(0, t(appId, 'Redaxo Categories'), CMS_CATEGORIES.map((slug) => ({
     ...field(
       keyFor(slug),
-      `Id of Redaxo ${slug.charAt(0).toUpperCase() + slug.slice(1)} Category`,
+      t(appId, 'Id of Redaxo {slug} Category', { slug: slug.charAt(0).toUpperCase() + slug.slice(1) }),
     ),
     ...(state?.webPageCategories?.length
       ? { type: 'select' as const, options: options(state.webPageCategories) }
       : {}),
   }))),
-  group(1, 'Redaxo Templates', CMS_TEMPLATES.map((slug) => ({
-    ...field(keyFor(slug) + 'Template', `Id of Redaxo ${slug} Template`),
+  group(1, t(appId, 'Redaxo Templates'), CMS_TEMPLATES.map((slug) => ({
+    ...field(keyFor(slug) + 'Template', t(appId, 'Id of Redaxo {slug} Template', { slug })),
     ...(state?.webPageTemplates?.length
       ? { type: 'select' as const, options: options(state.webPageTemplates) }
       : {}),
   }))),
-  group(2, 'Redaxo Modules', CMS_MODULES.map((slug) => ({
+  group(2, t(appId, 'Redaxo Modules'), CMS_MODULES.map((slug) => ({
     ...field(
       keyFor(slug) + 'Module',
-      `Id of Redaxo ${slug.charAt(0).toUpperCase() + slug.slice(1)} Module`,
+      t(appId, 'Id of Redaxo {slug} Module', { slug: slug.charAt(0).toUpperCase() + slug.slice(1) }),
     ),
     ...(state?.webPageModules?.length
       ? { type: 'select' as const, options: options(state.webPageModules) }

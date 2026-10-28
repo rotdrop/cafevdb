@@ -523,6 +523,19 @@ class PersonalForm
             unset($adminSettings[$key]);
           }
         }
+        $localeOptions = [];
+        foreach ($templateParameters['locales'] ?? [] as $localeInfo) {
+          $code = $localeInfo['code'] ?? null;
+          if (empty($code) || empty(locale_get_region($code))) {
+            continue;
+          }
+          $localeOptions[] = [
+            'value' => $code,
+            'name' => locale_get_display_name($code, $this->getLocale()),
+          ];
+        }
+        usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
+        $adminSettings['localeOptions'] = $localeOptions;
         $this->initialStateService->provideInitialState(
           $this->appName(),
           'adminSettings',
