@@ -207,7 +207,7 @@ class WordSplitterServiceTest extends TestCase
     );
   }
 
-  public function testMissingAppLocaleInRunningSystemServiceIsLogged(): void
+  public function testSystemServiceWithoutAppLocaleIsLoggedAndNotUsed(): void
   {
     $client = $this->createStub(IClient::class);
     $response = $this->createStub(IResponse::class);
@@ -222,9 +222,18 @@ class WordSplitterServiceTest extends TestCase
 
     $service = $this->createService($client, true, appLocale: 'de_DE.UTF-8', logger: $logger);
     (new \ReflectionProperty($service, 'systemSocket'))->setValue($service, $this->systemSocket);
+    // no local executable: reaching the local start proves the system service is skipped
+    (new \ReflectionProperty($service, 'bin'))->setValue($service, '/nonexistent/german-word-splitter');
 
-    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
-    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
+    $ensureStarted = new \ReflectionMethod($service, 'ensureStarted');
+    for ($i = 0; $i < 2; $i++) {
+      try {
+        $ensureStarted->invoke($service);
+        $this->fail('Expected the app-local service start to be attempted.');
+      } catch (\RuntimeException $e) {
+        $this->assertSame('Splitter executable not found.', $e->getMessage());
+      }
+    }
   }
 
   public function testSplitWrapsHttpClientFailures(): void

@@ -61,8 +61,8 @@ class WordSplitterService
   /** @var string The app locale which should be known to the service. */
   private string $appLocale;
 
-  /** @var bool Whether the locales of a running system service have been checked. */
-  private bool $systemLocalesChecked = false;
+  /** @var null|bool Cached decision whether the running system service can be used. */
+  private ?bool $systemServiceUsable = null;
 
   /** @var bool Whether the app-specific socket was explicitly configured. */
   private bool $allowSystemSocket;
@@ -165,9 +165,8 @@ class WordSplitterService
    */
   private function ensureStarted(): void
   {
-    if ($this->allowSystemSocket && $this->isUp($this->systemSocket)) {
+    if ($this->useSystemService()) {
       $this->socket = $this->systemSocket;
-      $this->checkSystemServiceLocales();
       return;
     }
     if ($this->isUp($this->socket)) {
@@ -178,7 +177,7 @@ class WordSplitterService
     }
     $lock = fopen(sys_get_temp_dir() . '/german-word-splitter.lock', 'c');
     flock($lock, LOCK_EX); // serialize concurrent launches
-    $systemServiceUp = $this->allowSystemSocket && $this->isUp($this->systemSocket);
+    $systemServiceUp = $this->useSystemService();
     if ($systemServiceUp) {
       $this->socket = $this->systemSocket;
     } elseif (!$this->isUp($this->socket)) {
@@ -188,7 +187,6 @@ class WordSplitterService
     flock($lock, LOCK_UN);
     fclose($lock);
     if ($systemServiceUp) {
-      $this->checkSystemServiceLocales();
       return;
     }
 
@@ -215,37 +213,82 @@ class WordSplitterService
   }
 
   /**
-   * Log an error if the running system-wide service does not know the app
-   * locale. Its locales are fixed at its start and cannot be changed from here.
+   * Check whether the system-wide service is running and knows the app
+   * locale. If it is running but lacks the app locale an error is logged
+   * and the service is not used, such that an app-local service is started
+   * instead. The decision is cached.
    *
-   * @return void
+   * @return bool
    */
-  private function checkSystemServiceLocales(): void
+  private function useSystemService(): bool
   {
-    if ($this->systemLocalesChecked) {
-      return;
+    if (!$this->allowSystemSocket || !$this->isUp($this->systemSocket)) {
+      return false;
     }
-    $this->systemLocalesChecked = true;
+    if ($this->systemServiceUsable === null) {
+      $this->systemServiceUsable = $this->systemServiceKnowsAppLocale();
+    }
+    return $this->systemServiceUsable;
+  }
+
+  /**
+   * The locales of a running system-wide service are fixed at its start and
+   * cannot be changed from here.
+   *
+   * @return bool False if the service reports locales not containing the
+   * language of the app locale, true otherwise, also if the service does not
+   * provide the info endpoint (older versions).
+   */
+  private function systemServiceKnowsAppLocale(): bool
+  {
     try {
-      $locales = $this->info()['transliteration_locales'] ?? null;
+      $locales = $this->fetchInfo($this->systemSocket)['transliteration_locales'] ?? null;
     } catch (\Throwable $t) {
-      return; // older services do not provide the info endpoint
+      return true;
     }
     if (!is_array($locales)) {
-      return;
+      return true;
     }
     $appLanguage = locale_get_primary_language($this->appLocale);
     foreach ($locales as $locale) {
       if (locale_get_primary_language((string)$locale) === $appLanguage) {
-        return;
+        return true;
       }
     }
-    $this->logger->error('The running word splitter service is not configured for the app locale ' . $this->appLocale
-      . ', configured locales: ' . implode(', ', $locales));
+    $this->logger->error('The running system-wide word splitter service is not configured for the app locale '
+      . $this->appLocale . ' (configured locales: ' . implode(', ', $locales)
+      . '), starting an app-local service instead.');
+    return false;
   }
 
   /**
-   * Get the service information.
+   * Get the service information from the given socket without starting anything.
+   *
+   * @param string $socket
+   *
+   * @return array{version: string, default_method: string, transliteration_locales: string[]}
+   *
+   * @throws RuntimeException If the request fails.
+   * @throws \JsonException If the reply is not valid JSON.
+   */
+  private function fetchInfo(string $socket): array
+  {
+    try {
+      $response = $this->clientService->newClient()->get('http://localhost/info', [
+        'timeout' => 30,
+        'curl' => [CURLOPT_UNIX_SOCKET_PATH => $socket],
+        'proxy' => null,
+        'nextcloud' => ['allow_local_address' => true],
+      ]);
+    } catch (\Throwable $e) {
+      throw new RuntimeException('Splitter info request failed: ' . $e->getMessage(), 0, $e);
+    }
+
+    return json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+  }
+
+  /**
+   * Get the information of the service in use.
    *
    * @return array{version: string, default_method: string, transliteration_locales: string[]}
    *
@@ -257,18 +300,7 @@ class WordSplitterService
   {
     $this->ensureStarted();
 
-    try {
-      $response = $this->clientService->newClient()->get('http://localhost/info', [
-        'timeout' => 30,
-        'curl' => [CURLOPT_UNIX_SOCKET_PATH => $this->socket],
-        'proxy' => null,
-        'nextcloud' => ['allow_local_address' => true],
-      ]);
-    } catch (\Throwable $e) {
-      throw new RuntimeException('Splitter info request failed: ' . $e->getMessage(), 0, $e);
-    }
-
-    return json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+    return $this->fetchInfo($this->socket);
   }
 
   /**
