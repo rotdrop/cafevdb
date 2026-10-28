@@ -23,7 +23,12 @@
 <template>
   <div class="templateroot personal-settings">
     <div class="personal-settings-content">
-      <component :is="tabComponents[tab.key]" v-for="tab in tree" :key="tab.key" :entry="tab" />
+      <component :is="tabComponents[tab.key]"
+                 v-for="tab in tree"
+                 :key="tab.key"
+                 :entry="tab"
+                 @error="handleSettingsError"
+      />
     </div>
     <SettingsNavigation :tree="tree" />
     <div v-if="!!appError" class="flex-container flex-justify-center">
@@ -72,6 +77,14 @@ const errorHandler = <E extends AppError>(error: E) => {
   }
 }
 errorHandlerProvider.pushHandler(errorHandler)
+
+const handleSettingsError = (error: Error) => {
+  errorHandler(new AppError(
+    { component: COMPONENT_NAME },
+    t(appId, 'Unable to save personal setting.'),
+    { cause: error },
+  ))
+}
 
 const initialState = getInitialState<{ isGroupAdmin?: boolean }>({ section: 'CAFEVDB', defaults: {} })
 const isGroupAdmin = !!initialState?.isGroupAdmin

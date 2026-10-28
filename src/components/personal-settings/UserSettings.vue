@@ -25,20 +25,18 @@
   <NcSettingsSection :id="entry.id" class="user-settings" :name="entry.name">
     <div :id="entry.children[0]?.id" class="settings-subsection">
       <h3>{{ entry.children[0]?.name }}</h3>
-      <div v-for="setting in checkboxSettings"
-           :key="setting.id"
-           :class="[
-             setting.key === 'showDisabled' ? 'expert-mode-container' : '',
-             setting.key === 'showDisabled' && !isEnabled(initialState?.expertMode) ? hiddenCssClass : '',
-           ]"
-      >
-        <input :id="setting.id"
-               type="checkbox"
-               :class="['checkbox', setting.class]"
-               :checked="isEnabled(initialState?.[setting.key])"
-        />
-        <label :for="setting.id">{{ t(appId, setting.label) }}</label>
-      </div>
+      <template v-for="setting in checkboxSettings" :key="setting.id">
+        <div v-if="setting.key !== 'showDisabled' || settings.expertMode">
+          <input :id="setting.id"
+                 type="checkbox"
+                 :class="['checkbox', setting.class]"
+                 :checked="settings[setting.key]"
+                 :disabled="saving[setting.key]"
+                 @change="saveSetting(setting, $event)"
+          />
+          <label :for="setting.id">{{ t(appId, setting.label) }}</label>
+        </div>
+      </template>
     </div>
     <div :id="entry.children[1]?.id" class="settings-subsection">
       <h3>{{ entry.children[1]?.name }}</h3>
@@ -49,23 +47,17 @@
 <script setup lang="ts">
 import { translate as t } from '@nextcloud/l10n'
 import { NcSettingsSection } from '@nextcloud/vue'
+import { reactive } from 'vue'
 import { appName as appId } from '../../config.ts'
+import type { PersonalSettingKey } from '../../services/personal-settings.ts'
+import { setPersonalSetting } from '../../services/personal-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 import type { TabEntry } from './settings-tree.ts'
-import { hiddenCssClass } from 'variables.module.scss'
 
 type CheckboxSetting = {
   id: string,
   class: string,
-  key:
-    | 'toolTipsEnabled'
-    | 'restoreHistory'
-    | 'initialFilterVisibility'
-    | 'directChange'
-    | 'deselectInvisibleMiscRecs'
-    | 'financeMode'
-    | 'expertMode'
-    | 'showDisabled',
+  key: PersonalSettingKey,
   label: string,
 }
 
@@ -92,6 +84,36 @@ const checkboxSettings: CheckboxSetting[] = [
 ]
 
 const isEnabled = (value: boolean|string|undefined) => value === true || value === 'on'
+
+const settings = reactive(Object.fromEntries(
+  checkboxSettings.map(({ key }) => [key, isEnabled(initialState?.[key])]),
+) as Record<CheckboxSetting['key'], boolean>)
+const saving = reactive(Object.fromEntries(
+  checkboxSettings.map(({ key }) => [key, false]),
+) as Record<CheckboxSetting['key'], boolean>)
+
+const emit = defineEmits<{
+  error: [error: Error],
+}>()
+
+const saveSetting = async ({ key }: CheckboxSetting, event: Event) => {
+  const control = event.currentTarget
+  if (!(control instanceof HTMLInputElement)) {
+    emit('error', new Error('Personal setting control is not an input element.'))
+    return
+  }
+  const previousValue = settings[key]
+  settings[key] = control.checked
+  saving[key] = true
+  try {
+    await setPersonalSetting(key, settings[key])
+  } catch (error) {
+    settings[key] = previousValue
+    emit('error', error instanceof Error ? error : new Error(String(error)))
+  } finally {
+    saving[key] = false
+  }
+}
 
 defineProps<{ entry: TabEntry }>()
 </script>
