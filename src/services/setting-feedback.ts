@@ -28,34 +28,35 @@ export const showSettingFeedback = (data: FeedbackData|undefined, label: string)
 };
 
 /**
- * Tell the user that the controller rejected a setting (HTTP 4xx with a
- * message, e.g. a validation failure). Suggestions of the controller are
- * appended.
+ * Tell the user that the controller rejected a setting with HTTP 400 and an
+ * explanation (JSON data with a non-empty "message" or "messages", each of
+ * which may be a string or an array). The concatenated messages, plus any
+ * suggestions, are shown as permanent error toast.
  *
  * @param error The error thrown by the request.
  *
- * @param label Human-readable name of the setting for the fallback text.
- *
- * @return True if the failure was a controller rejection and has been
- * reported, false if it is some other error which the caller must handle.
+ * @return True if the failure was such a rejection and has been reported,
+ * false if it is some other error which the caller must forward.
  */
-export const showSettingError = (error: unknown, label: string): boolean => {
+export const showSettingError = (error: unknown): boolean => {
   const response = (error as { response?: { status?: number; data?: FeedbackData & { suggestions?: string[] } } })?.response;
-  const status = response?.status ?? 0;
-  if (status < 400 || status >= 500) {
+  if (response?.status !== 400) {
     return false;
   }
-  const raw = response?.data?.messages ?? response?.data?.message ?? [];
-  let text = (Array.isArray(raw) ? raw : [raw])
-    .filter((message): message is string => typeof message === 'string' && message.trim() !== '')
-    .join(' ');
-  if (!text) {
-    text = t(appId, 'Setting "{label}" could not be saved.', { label });
+  const collect = (raw: unknown) => (Array.isArray(raw) ? raw : [raw])
+    .filter((message): message is string => typeof message === 'string' && message.trim() !== '');
+  const messages = [
+    ...collect(response.data?.messages),
+    ...collect(response.data?.message),
+  ];
+  if (messages.length === 0) {
+    return false;
   }
-  const suggestions = response?.data?.suggestions ?? [];
+  let text = [...new Set(messages)].join(' ');
+  const suggestions = response.data?.suggestions ?? [];
   if (suggestions.length > 0) {
     text += ' ' + t(appId, 'Did you mean: {suggestions}?', { suggestions: suggestions.join(', ') });
   }
-  showError(text);
+  showError(text, { timeout: -1 });
   return true;
 };

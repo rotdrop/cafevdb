@@ -234,7 +234,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
     emit('saved', field.key, values[field.key])
   } catch (error) {
     values[field.key] = previous
-    if (!showSettingError(error, field.label)) {
+    if (!showSettingError(error)) {
       emit('error', error instanceof Error ? error : new Error(String(error)))
     }
   } finally {
