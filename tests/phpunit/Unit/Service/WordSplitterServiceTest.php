@@ -134,15 +134,15 @@ class WordSplitterServiceTest extends TestCase
     $this->assertSame(['Handschuh'], $service->split('Handschuh', 'german_compound_splitter'));
   }
 
-  public function testLocalServiceStartsWithAppLocaleAndConfiguredTransliterationLocales(): void
+  public function testLocalServiceStartsWithInstalledLocalesOnly(): void
   {
     $client = $this->createStub(IClient::class);
-    $service = $this->createService($client, transliterationLocales: 'en_US.UTF-8 de_DE.UTF-8');
+    $service = $this->createService($client, transliterationLocales: 'C.UTF-8 xx_XX.UTF-8', appLocale: 'yy_YY.UTF-8');
 
     $command = (new \ReflectionMethod($service, 'startupCommand'))->invoke($service);
 
     $this->assertStringContainsString(
-      "GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='de_DE.UTF-8,en_US.UTF-8'",
+      "GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='C.UTF-8'",
       $command,
     );
     $this->assertStringContainsString(
@@ -192,6 +192,7 @@ class WordSplitterServiceTest extends TestCase
     IClient $client,
     bool $useDefaultSocket = false,
     string $transliterationLocales = '',
+    string $appLocale = 'C.UTF-8',
   ): WordSplitterService {
     $config = $this->createStub(IConfig::class);
     $config->method('getAppValue')->willReturnCallback(
@@ -211,6 +212,6 @@ class WordSplitterServiceTest extends TestCase
     $clientService = $this->createStub(IClientService::class);
     $clientService->method('newClient')->willReturn($client);
 
-    return new WordSplitterService($config, $clientService, 'testapp', 'de_DE.UTF-8');
+    return new WordSplitterService($config, $clientService, 'testapp', $appLocale);
   }
 }

@@ -54,8 +54,8 @@ class WordSplitterService
   /** @var string Socket path of the system-wide service. */
   private string $systemSocket = self::SYSTEM_SOCKET;
 
-  /** @var string Comma- or whitespace-separated locales for service transliteration. */
-  private string $transliterationLocales;
+  /** @var string[] Locales requested for service transliteration. */
+  private array $transliterationLocales;
 
   /** @var bool Whether the app-specific socket was explicitly configured. */
   private bool $allowSystemSocket;
@@ -80,7 +80,24 @@ class WordSplitterService
     $this->allowSystemSocket = $configuredSocket === '';
     $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
     $extraLocales = preg_split('/[\s,]+/', $config->getAppValue($this->appName, 'splitter_transliteration_locales', ''), -1, PREG_SPLIT_NO_EMPTY);
-    $this->transliterationLocales = implode(',', array_unique([$appLocale, ...$extraLocales]));
+    $this->transliterationLocales = array_values(array_unique([$appLocale, ...$extraLocales]));
+  }
+
+  /**
+   * Restrict the given locales to those installed on this system. The
+   * splitter refuses to start if one of its locales is missing, so
+   * uninstalled ones are dropped.
+   *
+   * @param string[] $locales
+   *
+   * @return string[]
+   */
+  private function installedLocales(array $locales): array
+  {
+    $previous = setlocale(LC_CTYPE, '0');
+    $installed = array_values(array_filter($locales, fn(string $locale) => setlocale(LC_CTYPE, $locale) !== false));
+    setlocale(LC_CTYPE, $previous);
+    return $installed;
   }
 
   /**
@@ -176,7 +193,8 @@ class WordSplitterService
   private function startupCommand(): string
   {
     return 'env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
-      . ' GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES=' . escapeshellarg($this->transliterationLocales)
+      . ' GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='
+      . escapeshellarg(implode(',', $this->installedLocales($this->transliterationLocales)))
       . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &';
   }
 
