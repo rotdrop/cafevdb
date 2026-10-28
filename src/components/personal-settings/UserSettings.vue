@@ -141,6 +141,7 @@
 import { translate as t } from '@nextcloud/l10n'
 import { NcCheckboxRadioSwitch, NcSelect, NcSettingsSection, NcTextField } from '@nextcloud/vue'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
+import { WYSIWYG_EDITORS } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
 import allDebugOptions, { DEBUG_QUERY } from '../../debug-modes.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
@@ -160,7 +161,6 @@ const initialState = getInitialState<Partial<Record<CheckboxKey, boolean|string>
   debugMode?: number|string,
   debugQuerySqlFilter?: string,
   wysiwygEditor?: string,
-  wysiwygOptions?: Record<string, { name: string, enabled: boolean }>,
 }>({ section: 'CAFEVDB', defaults: {} })
 
 const financeModeAllowed = !!initialState?.financeModeAllowed
@@ -223,7 +223,8 @@ const pageRowsOptions: SelectOption[] = [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90,
   .map((value) => ({ value, label: value === -1 ? '∞' : '' + value }))
 const debugOptions: SelectOption[] = Object.entries(allDebugOptions)
   .map(([value, label]) => ({ value: +value, label }))
-const wysiwygOptions: SelectOption<string>[] = Object.entries(initialState?.wysiwygOptions ?? {})
+const wysiwygOptions: SelectOption<string>[] = Object.entries(WYSIWYG_EDITORS)
+  .filter(([, { enabled }]) => enabled)
   .map(([value, { name }]) => ({ value, label: name }))
 
 const pageRows = ref<SelectOption>(
