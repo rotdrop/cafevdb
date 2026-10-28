@@ -134,6 +134,23 @@ class WordSplitterServiceTest extends TestCase
     $this->assertSame(['Handschuh'], $service->split('Handschuh', 'german_compound_splitter'));
   }
 
+  public function testLocalServiceStartsWithConfiguredTransliterationLocales(): void
+  {
+    $client = $this->createStub(IClient::class);
+    $service = $this->createService($client, transliterationLocales: 'de_DE.UTF-8,en_US.UTF-8');
+
+    $command = (new \ReflectionMethod($service, 'startupCommand'))->invoke($service);
+
+    $this->assertStringContainsString(
+      "GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='de_DE.UTF-8,en_US.UTF-8'",
+      $command,
+    );
+    $this->assertStringContainsString(
+      'GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket),
+      $command,
+    );
+  }
+
   public function testSplitUsesRunningSystemServiceWithoutStartingAppService(): void
   {
     $client = $this->createMock(IClient::class);
@@ -171,10 +188,21 @@ class WordSplitterServiceTest extends TestCase
     $service->split('Handschuh');
   }
 
-  private function createService(IClient $client, bool $useDefaultSocket = false): WordSplitterService
-  {
+  private function createService(
+    IClient $client,
+    bool $useDefaultSocket = false,
+    string $transliterationLocales = '',
+  ): WordSplitterService {
     $config = $this->createStub(IConfig::class);
-    $config->method('getAppValue')->willReturn($useDefaultSocket ? '' : $this->socket);
+    $config->method('getAppValue')->willReturnCallback(
+      function(string $appName, string $key, string $default = '') use ($useDefaultSocket, $transliterationLocales): string {
+        return match ($key) {
+          'splitter_socket' => $useDefaultSocket ? '' : $this->socket,
+          'splitter_transliteration_locales' => $transliterationLocales,
+          default => $default,
+        };
+      },
+    );
     $config->method('getSystemValue')->willReturnMap([
       ['datadirectory', $this->appDataRoot],
       ['instanceid', 'word-splitter-test'],

@@ -54,6 +54,9 @@ class WordSplitterService
   /** @var string Socket path of the system-wide service. */
   private string $systemSocket = self::SYSTEM_SOCKET;
 
+  /** @var string Comma- or whitespace-separated locales for service transliteration. */
+  private string $transliterationLocales;
+
   /** @var bool Whether the app-specific socket was explicitly configured. */
   private bool $allowSystemSocket;
 
@@ -72,6 +75,7 @@ class WordSplitterService
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
     $this->allowSystemSocket = $configuredSocket === '';
     $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
+    $this->transliterationLocales = $config->getAppValue($this->appName, 'splitter_transliteration_locales', '');
   }
 
   /**
@@ -142,8 +146,7 @@ class WordSplitterService
       $this->socket = $this->systemSocket;
     } elseif (!$this->isUp($this->socket)) {
       @unlink($this->socket); // remove a stale socket file
-      exec('env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
-        . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &');
+      exec($this->startupCommand());
     }
     flock($lock, LOCK_UN);
     fclose($lock);
@@ -158,6 +161,18 @@ class WordSplitterService
       }
       usleep(200000);
     }
+  }
+
+  /**
+   * Build the command which starts the app-local service.
+   *
+   * @return string
+   */
+  private function startupCommand(): string
+  {
+    return 'env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
+      . ' GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES=' . escapeshellarg($this->transliterationLocales)
+      . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &';
   }
 
   /**
