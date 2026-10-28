@@ -78,15 +78,24 @@
                          @update:modelValue="values[field.key] = $event"
                          @blur="save(field, values[field.key])"
         />
-        <NcTextField v-else
-                     :id="field.key"
-                     :label="field.label"
-                     :type="field.type === 'number' ? 'number' : 'text'"
-                     :modelValue="String(values[field.key] ?? '')"
-                     :disabled="saving[field.key]"
-                     @update:modelValue="values[field.key] = $event"
-                     @blur="save(field, values[field.key])"
-        />
+        <template v-else>
+          <NcButton v-if="field.linkTest"
+                    :href="String(values[field.key] ?? '') || undefined"
+                    :disabled="!values[field.key]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+          >
+            {{ t(appId, 'Test Link') }}
+          </NcButton>
+          <NcTextField :id="field.key"
+                       :label="field.label"
+                       :type="field.type === 'number' ? 'number' : 'text'"
+                       :modelValue="String(values[field.key] ?? '')"
+                       :disabled="saving[field.key]"
+                       @update:modelValue="values[field.key] = $event"
+                       @blur="save(field, values[field.key])"
+          />
+        </template>
       </div>
       <slot v-if="group.slot" :name="group.slot" />
     </div>
@@ -111,6 +120,7 @@ export type AdminSettingField = {
   type: 'text'|'number'|'textarea'|'checkbox'|'select'|'password'|'folder'|'owner'
   options?: AdminSettingOption[]
   initialValueKey?: string
+  linkTest?: boolean
   initialValue?: unknown
 }
 export type AdminSettingGroup = {

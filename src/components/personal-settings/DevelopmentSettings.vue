@@ -16,6 +16,7 @@ const field = (key: string, label: string): AdminSettingField => ({
   key,
   label,
   type: 'text',
+  linkTest: true,
 })
 const groups: AdminSettingGroup[] = [{
   id: props.entry.children[0]?.id ?? 'links',
