@@ -31,7 +31,6 @@ import { createApp } from 'vue';
 import PersonalSettings from './components/PersonalSettings.vue';
 import { appName } from './config.ts';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
-import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
 import 'core-js/actual';
 
@@ -44,6 +43,4 @@ app.provide('appId', appName);
 app.mixin(globalMixin);
 app.use(pinia);
 
-onDocumentLoaded(() => {
-  app.mount('#personal-settings-vue');
-});
+app.mount('#personal-settings-vue');
