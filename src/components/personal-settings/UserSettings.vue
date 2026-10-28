@@ -172,6 +172,7 @@ import { appName as appId } from '../../config.ts'
 import allDebugOptions, { DEBUG_QUERY } from '../../debug-modes.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
 import { setEncryptionKey, setPersonalSetting } from '../../services/personal-settings.ts'
+import { showSettingFeedback } from '../../services/setting-feedback.ts'
 import useTooltipsStore from '../../stores/tooltips.ts'
 import { showInfo } from '../../toolkit/util/toasts.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
@@ -241,7 +242,7 @@ const saveSetting = async (key: CheckboxKey, checked: boolean|string[]) => {
   settings[key] = checked === true
   saving[key] = true
   try {
-    await setPersonalSetting(key, settings[key])
+    showSettingFeedback((await setPersonalSetting(key, settings[key])).data, key)
   } catch (error) {
     settings[key] = previousValue
     emitError(error)
@@ -283,7 +284,7 @@ const persistWatcher = <T,>(
   }
   saving[key] = true
   try {
-    await setPersonalSetting(key, payload(value))
+    showSettingFeedback((await setPersonalSetting(key, payload(value))).data, key)
   } catch (error) {
     target.value = oldValue
     emitError(error)
@@ -303,7 +304,7 @@ const saveSqlFilter = async () => {
   }
   saving.debugQuerySqlFilter = true
   try {
-    await setPersonalSetting('debugQuerySqlFilter', sqlFilter.value)
+    showSettingFeedback((await setPersonalSetting('debugQuerySqlFilter', sqlFilter.value)).data, 'debugQuerySqlFilter')
     savedSqlFilter = sqlFilter.value
   } catch (error) {
     sqlFilter.value = savedSqlFilter

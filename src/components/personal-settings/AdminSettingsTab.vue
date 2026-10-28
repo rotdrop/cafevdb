@@ -120,8 +120,8 @@ import { reactive } from 'vue'
 import WysiwygField from './WysiwygField.vue'
 import { appName as appId } from '../../config.ts'
 import { setAdminSetting } from '../../services/admin-settings.ts'
+import { showSettingFeedback } from '../../services/setting-feedback.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
-import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 export type AdminSettingOption = { value: string|number|boolean, label: string }
 export type AdminSettingField = {
@@ -204,11 +204,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
       saved[field.key] = values[field.key]
     }
     force[field.key] = false
-    const message = response.data.messages ?? response.data.message
-    const text = Array.isArray(message) ? message.join(' ') : message
-    if (text) {
-      showSuccess(text)
-    }
+    showSettingFeedback(response.data, field.label)
     emit('saved', field.key, values[field.key])
   } catch (error) {
     values[field.key] = previous
