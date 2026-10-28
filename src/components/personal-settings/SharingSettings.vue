@@ -1,5 +1,9 @@
 <template>
-  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
+  <AdminSettingsTab :entry="entry"
+                    :groups="groups"
+                    @error="emit('error', $event)"
+                    @saved="onSaved"
+  >
     <template #share-owner-password>
       <div class="admin-actions">
         <NcPasswordField v-model="shareOwnerPassword" :label="t(appId, 'Share-owner password')" autocomplete="new-password" />
@@ -20,11 +24,17 @@
           {{ requirement }}
         </li>
       </ul>
+      <NcNoteCard v-if="dbUser" type="info">
+        {{ t(appId, 'Please make sure the database user "{user}@{server}" has all -- and in particular GRANT -- privileges on the dedicated database. The views must live in a dedicated database, otherwise the cloud core could alter the view definitions.', { user: dbUser, server: dbServer }) }}
+      </NcNoteCard>
+      <NcNoteCard v-if="!viewsDatabase" type="warning">
+        {{ t(appId, 'Please enter the name of a dedicated database for the SQL-views.') }}
+      </NcNoteCard>
       <div class="admin-actions">
-        <NcButton :disabled="runningAction" @click="runAction('userSqlBackendRecreateViews')">
+        <NcButton :disabled="runningAction || !viewsDatabase" @click="runAction('userSqlBackendRecreateViews')">
           {{ t(appId, 'Recreate cloud-user views') }}
         </NcButton>
-        <NcButton :disabled="runningAction" @click="runAction('musicianPersonalizedViewsRecreateViews')">
+        <NcButton :disabled="runningAction || !viewsDatabase" @click="runAction('musicianPersonalizedViewsRecreateViews')">
           {{ t(appId, 'Recreate personalized views') }}
         </NcButton>
       </div>
@@ -71,7 +81,18 @@ const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
   cloudUserRequirements?: { hints?: string[] }|string[]
+  cloudUserViewsDatabase?: string
+  dbuser?: string
+  dbserver?: string
 }>({ section: 'adminSettings', defaults: {} })
+const viewsDatabase = ref(String(state?.cloudUserViewsDatabase ?? '').trim())
+const dbUser = computed(() => state?.dbuser ?? '')
+const dbServer = computed(() => state?.dbserver ?? '')
+const onSaved = (key: string, value: unknown) => {
+  if (key === 'cloudUserViewsDatabase') {
+    viewsDatabase.value = String(value ?? '').trim()
+  }
+}
 const cloudUserRequirements = computed(() => {
   const requirements = state?.cloudUserRequirements
   if (Array.isArray(requirements)) {
@@ -127,7 +148,7 @@ const groups: AdminSettingGroup[] = [
   group(3, t(appId, 'Shared folder'), folderKeys.map((key) => field(key, displayName(key), 'folder'))),
   group(4, t(appId, 'Members as Cloud-Users'), [
     field('importClubMembersAsCloudUsers', t(appId, 'Import club members as cloud users'), 'checkbox'),
-    field('cloudUserViewsDatabase', t(appId, 'Cloud-user views database')),
+    field('cloudUserViewsDatabase', t(appId, 'Dedicated views database')),
     field('musicianPersonalizedViews', t(appId, 'Musician personalized views'), 'checkbox'),
   ], 'members-as-cloud-users'),
 ]
