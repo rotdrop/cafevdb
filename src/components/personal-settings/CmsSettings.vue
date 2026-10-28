@@ -1,41 +1,73 @@
-<!--
- - Orchestra member, musicion and project management application.
- -
- - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- -
- - @author Claus-Justus Heine
- - @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
- - @license AGPL-3.0-or-later
- -
- - This program is free software: you can redistribute it and/or modify
- - it under the terms of the GNU Affero General Public License as
- - published by the Free Software Foundation, either version 3 of the
- - License, or (at your option) any later version.
- -
- - This program is distributed in the hope that it will be useful,
- - but WITHOUT ANY WARRANTY; without even the implied warranty of
- - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- - GNU Affero General Public License for more details.
- -
- - You should have received a copy of the GNU Affero General Public License
- - along with this program. If not, see <http://www.gnu.org/licenses/>.
- -->
-<!-- Ported from templates/settings/cms-settings.php. Sub-sections replace the legacy accordion/fieldsets. -->
 <template>
-  <NcSettingsSection :id="entry.id" class="cms-settings" :name="entry.name">
-    <div v-for="subSection in entry.children"
-         :id="subSection.id"
-         :key="subSection.id"
-         class="settings-subsection"
-    >
-      <h3>{{ subSection.name }}</h3>
-    </div>
-  </NcSettingsSection>
+  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)" />
 </template>
 
 <script setup lang="ts">
-import { NcSettingsSection } from '@nextcloud/vue'
+import type { AdminSettingField, AdminSettingGroup, AdminSettingOption } from './AdminSettingsTab.vue'
 import type { TabEntry } from './settings-tree.ts'
 
-defineProps<{ entry: TabEntry }>()
+import { translate as t } from '@nextcloud/l10n'
+import AdminSettingsTab from './AdminSettingsTab.vue'
+import {
+  CMS_CATEGORIES,
+  CMS_MODULES,
+  CMS_PREFIX,
+  CMS_TEMPLATES,
+} from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
+import { appName as appId } from '../../config.ts'
+import getInitialState from '../../toolkit/util/initial-state.ts'
+
+const props = defineProps<{ entry: TabEntry }>()
+const emit = defineEmits<{ error: [error: Error] }>()
+const state = getInitialState<{
+  webPageCategories?: Array<{ id: number|string, name: string, level?: number }>
+  webPageTemplates?: Array<{ id: number|string, name: string }>
+  webPageModules?: Array<{ id: number|string, name: string }>
+}>({ section: 'adminSettings', defaults: {} })
+const keyFor = (slug: string) => CMS_PREFIX + slug
+  .split('-')
+  .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+  .join('')
+const field = (key: string, label: string): AdminSettingField => ({
+  key,
+  label: t(appId, label),
+  type: 'text',
+})
+const options = (items: Array<{ id: number|string, name: string, level?: number }> = []): AdminSettingOption[] =>
+  items.map(({ id, name, level = 0 }) => ({
+    value: id,
+    label: `${'   '.repeat(level)}${name} [${id}]`,
+  }))
+const group = (index: number, fallback: string, fields: AdminSettingField[]): AdminSettingGroup => ({
+  id: props.entry.children[index]?.id ?? fallback,
+  name: props.entry.children[index]?.name ?? t(appId, fallback),
+  fields,
+})
+
+const groups = [
+  group(0, 'Redaxo Categories', CMS_CATEGORIES.map((slug) => ({
+    ...field(
+      keyFor(slug),
+      `Id of Redaxo ${slug.charAt(0).toUpperCase() + slug.slice(1)} Category`,
+    ),
+    ...(state?.webPageCategories?.length
+      ? { type: 'select' as const, options: options(state.webPageCategories) }
+      : {}),
+  }))),
+  group(1, 'Redaxo Templates', CMS_TEMPLATES.map((slug) => ({
+    ...field(keyFor(slug) + 'Template', `Id of Redaxo ${slug} Template`),
+    ...(state?.webPageTemplates?.length
+      ? { type: 'select' as const, options: options(state.webPageTemplates) }
+      : {}),
+  }))),
+  group(2, 'Redaxo Modules', CMS_MODULES.map((slug) => ({
+    ...field(
+      keyFor(slug) + 'Module',
+      `Id of Redaxo ${slug.charAt(0).toUpperCase() + slug.slice(1)} Module`,
+    ),
+    ...(state?.webPageModules?.length
+      ? { type: 'select' as const, options: options(state.webPageModules) }
+      : {}),
+  }))),
+]
 </script>

@@ -492,6 +492,44 @@ class PersonalForm
         }
       }
 
+      if ($isGroupAdmin) {
+        $sanitizeAdminSettings = static function(array $settings) use (&$sanitizeAdminSettings): array {
+          $safeSettings = [];
+          foreach ($settings as $key => $value) {
+            if (preg_match('/password|encryption.?key|request.?token|secret/i', (string)$key)) {
+              continue;
+            }
+            if (is_array($value)) {
+              $safeSettings[$key] = $sanitizeAdminSettings($value);
+            } elseif (is_scalar($value) || $value === null) {
+              $safeSettings[$key] = $value;
+            }
+          }
+          return $safeSettings;
+        };
+        $adminSettings = $sanitizeAdminSettings($templateParameters);
+        foreach (array_keys($adminSettings) as $key) {
+          if (
+            in_array($key, [
+              'assets',
+              'appInfo',
+              'roles',
+              'toolTips',
+              'translations',
+              'dateTimeFormatter',
+              'userId',
+            ], true)
+          ) {
+            unset($adminSettings[$key]);
+          }
+        }
+        $this->initialStateService->provideInitialState(
+          $this->appName(),
+          'adminSettings',
+          $adminSettings,
+        );
+      }
+
       return $this->templateResponse(
         self::TEMPLATE,
         $templateParameters,

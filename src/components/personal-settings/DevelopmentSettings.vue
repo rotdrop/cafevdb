@@ -1,41 +1,32 @@
-<!--
- - Orchestra member, musicion and project management application.
- -
- - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- -
- - @author Claus-Justus Heine
- - @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
- - @license AGPL-3.0-or-later
- -
- - This program is free software: you can redistribute it and/or modify
- - it under the terms of the GNU Affero General Public License as
- - published by the Free Software Foundation, either version 3 of the
- - License, or (at your option) any later version.
- -
- - This program is distributed in the hope that it will be useful,
- - but WITHOUT ANY WARRANTY; without even the implied warranty of
- - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- - GNU Affero General Public License for more details.
- -
- - You should have received a copy of the GNU Affero General Public License
- - along with this program. If not, see <http://www.gnu.org/licenses/>.
- -->
-<!-- Ported from templates/settings/devel-settings.php. Sub-sections replace the legacy accordion/fieldsets. -->
 <template>
-  <NcSettingsSection :id="entry.id" class="development-settings" :name="entry.name">
-    <div v-for="subSection in entry.children"
-         :id="subSection.id"
-         :key="subSection.id"
-         class="settings-subsection"
-    >
-      <h3>{{ subSection.name }}</h3>
-    </div>
-  </NcSettingsSection>
+  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)" />
 </template>
 
 <script setup lang="ts">
-import { NcSettingsSection } from '@nextcloud/vue'
+import type { AdminSettingField, AdminSettingGroup } from './AdminSettingsTab.vue'
 import type { TabEntry } from './settings-tree.ts'
 
-defineProps<{ entry: TabEntry }>()
+import { translate as t } from '@nextcloud/l10n'
+import AdminSettingsTab from './AdminSettingsTab.vue'
+import { appName as appId } from '../../config.ts'
+
+const props = defineProps<{ entry: TabEntry }>()
+const emit = defineEmits<{ error: [error: Error] }>()
+const field = (key: string, label: string): AdminSettingField => ({
+  key,
+  label: t(appId, label),
+  type: 'text',
+})
+const groups: AdminSettingGroup[] = [{
+  id: props.entry.children[0]?.id ?? 'links',
+  name: props.entry.children[0]?.name ?? t(appId, 'Links'),
+  fields: [
+    field('phpmyadmin', `Link to the database ${appId}@phpMyAdmin`),
+    field('phpmyadmincloud', 'Link to the database Cloud@phpMyAdmin'),
+    field('sourcecode', 'Link to the source-code'),
+    field('sourcedocs', 'Link to the source-code documentation'),
+    field('clouddev', 'Link to cloud Developer Information'),
+    field('cspfailurereporting', 'Link for uploading CSP failure information'),
+  ],
+}]
 </script>
