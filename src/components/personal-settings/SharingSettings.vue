@@ -19,16 +19,8 @@
       </NcNoteCard>
     </template>
     <template #members-as-cloud-users>
-      <ul v-if="cloudUserRequirements.length" class="requirements">
-        <li v-for="(requirement, index) in cloudUserRequirements" :key="index">
-          {{ requirement }}
-        </li>
-      </ul>
-      <NcNoteCard v-if="dbUser" type="info">
-        {{ t(appId, 'Please make sure the database user "{user}@{server}" has all -- and in particular GRANT -- privileges on the dedicated database. The views must live in a dedicated database, otherwise the cloud core could alter the view definitions.', { user: dbUser, server: dbServer }) }}
-      </NcNoteCard>
-      <NcNoteCard v-if="!viewsDatabase" type="warning">
-        {{ t(appId, 'Please enter the name of a dedicated database for the SQL-views.') }}
+      <NcNoteCard v-for="(requirement, index) in cloudUserRequirements" :key="index" type="info">
+        {{ requirement }}
       </NcNoteCard>
       <div class="admin-actions">
         <NcButton :disabled="runningAction || !viewsDatabase" @click="runAction('userSqlBackendRecreateViews')">
@@ -82,12 +74,8 @@ const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
   cloudUserRequirements?: { hints?: string[] }|string[]
   cloudUserViewsDatabase?: string
-  dbuser?: string
-  dbserver?: string
 }>({ section: 'adminSettings', defaults: {} })
 const viewsDatabase = ref(String(state?.cloudUserViewsDatabase ?? '').trim())
-const dbUser = computed(() => state?.dbuser ?? '')
-const dbServer = computed(() => state?.dbserver ?? '')
 const onSaved = (key: string, value: unknown) => {
   if (key === 'cloudUserViewsDatabase') {
     viewsDatabase.value = String(value ?? '').trim()
@@ -219,11 +207,6 @@ const runAction = async (endpoint: string) => {
 </script>
 
 <style lang="scss" scoped>
-.requirements {
-  padding-inline-start: 2rem;
-  list-style: disc;
-}
-
 .admin-actions {
   display: flex;
   flex-wrap: wrap;
