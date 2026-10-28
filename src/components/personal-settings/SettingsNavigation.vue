@@ -21,7 +21,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcButton v-if="collapsible && narrowScreen"
+  <NcButton v-if="narrowScreen"
             class="personal-settings-navigation-toggle"
             variant="primary"
             :aria-label="t(appId, 'Toggle settings navigation')"
@@ -64,9 +64,9 @@ import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue'
 import type { TabEntry } from './settings-tree.ts'
 import { appName as appId } from '../../config.ts'
 
-// On narrow screens the navigation is hidden unless "collapsible" is set,
-// in which case a floating toggle button opens it as an overlay.
-const props = defineProps<{ tree: TabEntry[], collapsible?: boolean }>()
+// On narrow screens the navigation is hidden and a floating toggle button
+// opens it as an overlay.
+const props = defineProps<{ tree: TabEntry[] }>()
 
 const navigationOpen = ref(false)
 

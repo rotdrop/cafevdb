@@ -30,7 +30,7 @@
                  @error="handleSettingsError"
       />
     </div>
-    <SettingsNavigation :tree="tree" :collapsible="isGroupAdmin" />
+    <SettingsNavigation v-if="isGroupAdmin" :tree="tree" />
     <div v-if="!!appError" class="flex-container flex-justify-center">
       <ErrorPageModal :show="!!appError"
                       :error="appError"
