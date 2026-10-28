@@ -37,8 +37,8 @@
           {{ field.label }}
         </NcCheckboxRadioSwitch>
         <template v-else-if="field.type === 'folder' || field.type === 'owner'">
-          <label :for="field.key">{{ field.label }}</label>
           <NcTextField :id="field.key"
+                       :label="field.label"
                        :modelValue="String(values[field.key] ?? '')"
                        :disabled="saving[field.key] || (!!saved[field.key] && !force[field.key])"
                        @update:modelValue="values[field.key] = $event"
@@ -52,21 +52,23 @@
             {{ t(appId, field.type === 'folder' || field.type === 'owner' ? 'Check' : 'Set') }}
           </NcButton>
         </template>
-        <label v-else-if="field.type !== 'password'" :for="field.key">{{ field.label }}</label>
-        <NcSelect v-if="field.type === 'select'"
+        <NcSelect v-else-if="field.type === 'select'"
                   :inputId="field.key"
+                  :inputLabel="field.label"
                   :modelValue="selectedOption(field)"
                   :options="field.options ?? []"
                   :clearable="false"
                   :disabled="saving[field.key]"
                   @update:modelValue="save(field, $event?.value)"
         />
-        <textarea v-else-if="field.type === 'textarea'"
-                  :id="field.key"
-                  v-model="values[field.key]"
-                  :disabled="saving[field.key]"
-                  rows="4"
-                  @blur="save(field, values[field.key])"
+        <NcTextArea v-else-if="field.type === 'textarea'"
+                    :id="field.key"
+                    :label="field.label"
+                    :modelValue="String(values[field.key] ?? '')"
+                    :disabled="saving[field.key]"
+                    rows="4"
+                    @update:modelValue="values[field.key] = $event"
+                    @blur="save(field, values[field.key])"
         />
         <NcPasswordField v-else-if="field.type === 'password'"
                          :id="field.key"
@@ -76,8 +78,9 @@
                          @update:modelValue="values[field.key] = $event"
                          @blur="save(field, values[field.key])"
         />
-        <NcTextField v-else-if="field.type !== 'checkbox' && field.type !== 'folder' && field.type !== 'owner'"
+        <NcTextField v-else
                      :id="field.key"
+                     :label="field.label"
                      :type="field.type === 'number' ? 'number' : 'text'"
                      :modelValue="String(values[field.key] ?? '')"
                      :disabled="saving[field.key]"
@@ -94,7 +97,7 @@
 import type { TabEntry } from './settings-tree.ts'
 
 import { translate as t } from '@nextcloud/l10n'
-import { NcCheckboxRadioSwitch, NcPasswordField, NcSelect, NcSettingsSection, NcTextField } from '@nextcloud/vue'
+import { NcCheckboxRadioSwitch, NcPasswordField, NcSelect, NcSettingsSection, NcTextArea, NcTextField } from '@nextcloud/vue'
 import { NcButton } from '@nextcloud/vue'
 import { reactive } from 'vue'
 import { appName as appId } from '../../config.ts'
@@ -202,12 +205,8 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
   gap: calc(var(--default-grid-baseline) * 2);
   margin-block: calc(var(--default-grid-baseline) * 2);
 
-  > label {
-    flex: 0 0 min(18rem, 100%);
-  }
-
   :deep(.input-field),
-  textarea {
+  :deep(.select) {
     flex: 1 1 18rem;
     min-width: 12rem;
   }
