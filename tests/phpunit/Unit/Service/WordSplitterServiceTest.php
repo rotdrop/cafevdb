@@ -134,10 +134,10 @@ class WordSplitterServiceTest extends TestCase
     $this->assertSame(['Handschuh'], $service->split('Handschuh', 'german_compound_splitter'));
   }
 
-  public function testLocalServiceStartsWithConfiguredTransliterationLocales(): void
+  public function testLocalServiceStartsWithAppLocaleAndConfiguredTransliterationLocales(): void
   {
     $client = $this->createStub(IClient::class);
-    $service = $this->createService($client, transliterationLocales: 'de_DE.UTF-8,en_US.UTF-8');
+    $service = $this->createService($client, transliterationLocales: 'en_US.UTF-8 de_DE.UTF-8');
 
     $command = (new \ReflectionMethod($service, 'startupCommand'))->invoke($service);
 
@@ -211,6 +211,6 @@ class WordSplitterServiceTest extends TestCase
     $clientService = $this->createStub(IClientService::class);
     $clientService->method('newClient')->willReturn($client);
 
-    return new WordSplitterService($config, $clientService, 'testapp');
+    return new WordSplitterService($config, $clientService, 'testapp', 'de_DE.UTF-8');
   }
 }

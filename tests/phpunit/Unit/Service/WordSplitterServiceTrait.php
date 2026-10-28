@@ -113,6 +113,7 @@ trait WordSplitterServiceTrait
       config: $config,
       clientService: $this->getWordSplitterEndPointStub($splits),
       appName: $this->mockProvider->appName,
+      appLocale: 'de_DE.UTF-8',
     );
   }
 

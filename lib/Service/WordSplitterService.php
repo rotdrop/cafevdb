@@ -63,6 +63,9 @@ class WordSplitterService
   /**
    * @param IConfig $config Nextcloud configuration access.
    * @param IClientService $clientService Factory for HTTP clients.
+   * @param string $appName The app id.
+   * @param string $appLocale The configured app locale, always made
+   * available to the service for transliteration.
    *
    * @throws RuntimeException If the app-data directory cannot be created.
    */
@@ -70,12 +73,14 @@ class WordSplitterService
     private IConfig $config,
     private IClientService $clientService,
     private string $appName,
+    string $appLocale,
   ) {
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
     $this->allowSystemSocket = $configuredSocket === '';
     $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
-    $this->transliterationLocales = $config->getAppValue($this->appName, 'splitter_transliteration_locales', '');
+    $extraLocales = preg_split('/[\s,]+/', $config->getAppValue($this->appName, 'splitter_transliteration_locales', ''), -1, PREG_SPLIT_NO_EMPTY);
+    $this->transliterationLocales = implode(',', array_unique([$appLocale, ...$extraLocales]));
   }
 
   /**
