@@ -115,6 +115,12 @@ onUnmounted(() => {
   .personal-settings-content {
     flex: 1 1 auto;
     min-width: 0;
+
+    // Leave room for the app-navigation toggle which is rendered by the server.
+    :deep(.settings-section) {
+      margin-left: calc(var(--default-grid-baseline) * 10);
+      width: min(900px, 100% - var(--default-grid-baseline) * 17);
+    }
   }
 }
 </style>
