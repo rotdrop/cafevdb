@@ -88,7 +88,7 @@ const groups = [
     field(IMAP_SERVER, t(appId, 'IMAP Server')),
     field(IMAP_PORT, t(appId, 'IMAP Port'), 'number'),
     field(IMAP_SECURITY, t(appId, 'IMAP Security'), 'select', transportOptions),
-  ]),
+  ], 'email-test-actions'),
   group(1, t(appId, 'Email Account'), [
     field(EMAIL_USER, t(appId, 'Email user')),
     field(EMAIL_PASSWORD, t(appId, 'Email password'), 'password'),
@@ -128,7 +128,7 @@ const groups = [
         ? `${state[EMAIL_TEST_NAME_KEY]} <${state[EMAIL_TEST_ADDRESS_KEY] ?? ''}>`
         : state?.[EMAIL_TEST_ADDRESS_KEY],
     },
-  ], 'email-test-actions'),
+  ]),
 ]
 
 const runningAction = ref(false)
