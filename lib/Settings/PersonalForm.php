@@ -447,6 +447,13 @@ class PersonalForm
         }
         $templateParameters[ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY] = $announcementsMailingList;
         // $this->parameterFromConfig($templateParameters, ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
+        foreach ([
+          ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
+          ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS,
+        ] as $key) {
+          // stored as per-user values, "on" unless explicitly switched off
+          $templateParameters[$key] = $this->getUserValue($key, 'on');
+        }
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
         $this->parameterFromConfig($templateParameters, 'bulkEmailPrivacyNotice');
 
