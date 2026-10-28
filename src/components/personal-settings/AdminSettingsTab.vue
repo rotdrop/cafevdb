@@ -28,83 +28,89 @@
          class="settings-subsection"
     >
       <h3>{{ group.name }}</h3>
-      <div v-for="field in group.fields" :key="field.key" class="admin-setting">
-        <NcCheckboxRadioSwitch v-if="field.type === 'checkbox'"
-                               :modelValue="values[field.key] === true || values[field.key] === 'on'"
-                               :disabled="saving[field.key]"
-                               @update:modelValue="save(field, $event)"
-        >
-          {{ field.label }}
-        </NcCheckboxRadioSwitch>
-        <template v-else-if="field.type === 'folder' || field.type === 'owner'">
-          <NcTextField :id="field.key"
-                       :label="field.label"
-                       :modelValue="String(values[field.key] ?? '')"
-                       :disabled="saving[field.key] || (!!saved[field.key] && !force[field.key])"
-                       @update:modelValue="values[field.key] = $event"
-          />
-          <NcCheckboxRadioSwitch v-model="force[field.key]">
-            {{ t(appId, 'Force') }}
-          </NcCheckboxRadioSwitch>
-          <NcButton :disabled="saving[field.key] || (!values[field.key] && field.type === 'owner')"
-                    @click="save(field, values[field.key], true)"
+      <template v-for="field in group.fields" :key="field.key">
+        <div v-if="field.heading" class="admin-setting-heading">
+          <hr>
+          <h4>{{ field.heading }}</h4>
+        </div>
+        <div class="admin-setting">
+          <NcCheckboxRadioSwitch v-if="field.type === 'checkbox'"
+                                 :modelValue="values[field.key] === true || values[field.key] === 'on'"
+                                 :disabled="saving[field.key]"
+                                 @update:modelValue="save(field, $event)"
           >
-            {{ t(appId, field.type === 'folder' || field.type === 'owner' ? 'Check' : 'Set') }}
-          </NcButton>
-        </template>
-        <NcSelect v-else-if="field.type === 'select'"
-                  :inputId="field.key"
-                  :inputLabel="field.label"
-                  :modelValue="selectedOption(field)"
-                  :options="field.options ?? []"
-                  :clearable="false"
-                  :disabled="saving[field.key]"
-                  @update:modelValue="save(field, $event?.value)"
-        />
-        <WysiwygField v-else-if="field.type === 'wysiwyg'"
+            {{ field.label }}
+          </NcCheckboxRadioSwitch>
+          <template v-else-if="field.type === 'folder' || field.type === 'owner'">
+            <NcTextField :id="field.key"
+                         :label="field.label"
+                         :modelValue="String(values[field.key] ?? '')"
+                         :disabled="saving[field.key] || (!!saved[field.key] && !force[field.key])"
+                         @update:modelValue="values[field.key] = $event"
+            />
+            <NcCheckboxRadioSwitch v-model="force[field.key]">
+              {{ t(appId, 'Force') }}
+            </NcCheckboxRadioSwitch>
+            <NcButton :disabled="saving[field.key] || (!values[field.key] && field.type === 'owner')"
+                      @click="save(field, values[field.key], true)"
+            >
+              {{ t(appId, field.type === 'folder' || field.type === 'owner' ? 'Check' : 'Set') }}
+            </NcButton>
+          </template>
+          <NcSelect v-else-if="field.type === 'select'"
+                    :inputId="field.key"
+                    :inputLabel="field.label"
+                    :modelValue="selectedOption(field)"
+                    :options="field.options ?? []"
+                    :clearable="false"
+                    :disabled="saving[field.key]"
+                    @update:modelValue="save(field, $event?.value)"
+          />
+          <WysiwygField v-else-if="field.type === 'wysiwyg'"
+                        :label="field.label"
+                        :modelValue="String(values[field.key] ?? '')"
+                        :disabled="saving[field.key]"
+                        @update:modelValue="values[field.key] = $event"
+                        @blur="save(field, $event)"
+                        @error="emit('error', $event)"
+          />
+          <NcTextArea v-else-if="field.type === 'textarea'"
+                      :id="field.key"
                       :label="field.label"
                       :modelValue="String(values[field.key] ?? '')"
                       :disabled="saving[field.key]"
+                      rows="4"
                       @update:modelValue="values[field.key] = $event"
-                      @blur="save(field, $event)"
-                      @error="emit('error', $event)"
-        />
-        <NcTextArea v-else-if="field.type === 'textarea'"
-                    :id="field.key"
-                    :label="field.label"
-                    :modelValue="String(values[field.key] ?? '')"
-                    :disabled="saving[field.key]"
-                    rows="4"
-                    @update:modelValue="values[field.key] = $event"
-                    @blur="save(field, values[field.key])"
-        />
-        <NcPasswordField v-else-if="field.type === 'password'"
-                         :id="field.key"
+                      @blur="save(field, values[field.key])"
+          />
+          <NcPasswordField v-else-if="field.type === 'password'"
+                           :id="field.key"
+                           :label="field.label"
+                           :modelValue="String(values[field.key] ?? '')"
+                           :disabled="saving[field.key]"
+                           @update:modelValue="values[field.key] = $event"
+                           @blur="save(field, values[field.key])"
+          />
+          <template v-else>
+            <NcButton v-if="field.linkTest"
+                      :href="String(values[field.key] ?? '') || undefined"
+                      :disabled="!values[field.key]"
+                      target="_blank"
+                      rel="noopener noreferrer"
+            >
+              {{ t(appId, 'Test Link') }}
+            </NcButton>
+            <NcTextField :id="field.key"
                          :label="field.label"
+                         :type="field.type === 'number' ? 'number' : 'text'"
                          :modelValue="String(values[field.key] ?? '')"
                          :disabled="saving[field.key]"
                          @update:modelValue="values[field.key] = $event"
                          @blur="save(field, values[field.key])"
-        />
-        <template v-else>
-          <NcButton v-if="field.linkTest"
-                    :href="String(values[field.key] ?? '') || undefined"
-                    :disabled="!values[field.key]"
-                    target="_blank"
-                    rel="noopener noreferrer"
-          >
-            {{ t(appId, 'Test Link') }}
-          </NcButton>
-          <NcTextField :id="field.key"
-                       :label="field.label"
-                       :type="field.type === 'number' ? 'number' : 'text'"
-                       :modelValue="String(values[field.key] ?? '')"
-                       :disabled="saving[field.key]"
-                       @update:modelValue="values[field.key] = $event"
-                       @blur="save(field, values[field.key])"
-          />
-        </template>
-      </div>
+            />
+          </template>
+        </div>
+      </template>
       <slot v-if="group.slot" :name="group.slot" />
     </div>
   </NcSettingsSection>
@@ -130,6 +136,7 @@ export type AdminSettingField = {
   type: 'text'|'number'|'textarea'|'checkbox'|'select'|'password'|'wysiwyg'|'folder'|'owner'
   options?: AdminSettingOption[]
   initialValueKey?: string
+  heading?: string
   linkTest?: boolean
   initialValue?: unknown
 }
@@ -218,6 +225,20 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
 <style lang="scss" scoped>
 .settings-subsection {
   margin-block-end: calc(var(--default-grid-baseline) * 4);
+}
+
+.admin-setting-heading {
+  margin-block-start: calc(var(--default-grid-baseline) * 4);
+
+  hr {
+    border: none;
+    border-block-start: 1px solid var(--color-border-dark);
+  }
+
+  h4 {
+    margin-block: calc(var(--default-grid-baseline) * 2) 0;
+    font-weight: bold;
+  }
 }
 
 .admin-setting {

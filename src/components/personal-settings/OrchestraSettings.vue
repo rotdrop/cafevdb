@@ -88,6 +88,7 @@ const groups: AdminSettingGroup[] = [
     ...(['president', 'secretary', 'treasurer'] as const).flatMap((role) => [
       {
         ...field(`${role}Id`, t(appId, '{role} participant', { role }), 'select'),
+        heading: role === 'president' ? t(appId, 'President') : undefined,
         options: options(state?.executiveBoardMembers),
       },
       {
