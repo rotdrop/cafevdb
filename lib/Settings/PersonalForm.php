@@ -166,21 +166,21 @@ class PersonalForm
       );
 
       try {
-        $webPageCategories = $this->webPagesRPC->getCategories();
+        $webPageCategories = array_values($this->webPagesRPC->getCategories() ?? []);
       } catch (\Throwable $t) {
         $webPageCategories = [];
         $this->logException($t);
       }
 
       try {
-        $webPageModules = $this->webPagesRPC->getModules();
+        $webPageModules = array_values($this->webPagesRPC->getModules() ?? []);
       } catch (\Throwable $t) {
         $webPageModules = [];
         $this->logException($t);
       }
 
       try {
-        $webPageTemplates = $this->webPagesRPC->getTemplates();
+        $webPageTemplates = array_values($this->webPagesRPC->getTemplates() ?? []);
       } catch (\Throwable $t) {
         $webPageTemplates = [];
         $this->logException($t);

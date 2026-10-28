@@ -141,7 +141,7 @@ const saving = reactive<Record<string, boolean>>({})
 const force = reactive<Record<string, boolean>>({})
 
 const selectedOption = (field: AdminSettingField) =>
-  field.options?.find(({ value }) => value === values[field.key]) ?? null
+  field.options?.find(({ value }) => String(value) === String(values[field.key] ?? '')) ?? null
 
 const save = async (field: AdminSettingField, value: unknown, forceSubmit = false) => {
   const previous = saved[field.key]
