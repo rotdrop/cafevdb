@@ -133,21 +133,49 @@
     </div>
     <div :id="entry.children[1]?.id" class="settings-subsection">
       <h3>{{ entry.children[1]?.name }}</h3>
+      <form class="encryption-key-form" @submit.prevent="submitEncryptionKey">
+        <input type="hidden" name="userId" :value="userId" autocomplete="username" />
+        <NcPasswordField v-model="loginPassword"
+                         v-tooltip="hints['settings:personal:encryptionKey:own-password']"
+                         :label="t(appId, 'Own Password')"
+                         autocomplete="current-password"
+                         :required="true"
+                         :disabled="settingEncryptionKey"
+        />
+        <NcPasswordField v-model="encryptionKey"
+                         v-tooltip="hints['settings:personal:encryptionKey']"
+                         :label="t(appId, 'DB Encryption Key')"
+                         autocomplete="new-password"
+                         :disabled="settingEncryptionKey"
+        />
+        <NcButton type="submit"
+                  variant="primary"
+                  :disabled="settingEncryptionKey"
+        >
+          {{ t(appId, 'Set Encryption Key') }}
+        </NcButton>
+        <NcNoteCard v-if="keyMessage" :type="keyMessageType">
+          {{ keyMessage }}
+        </NcNoteCard>
+      </form>
     </div>
+    <LocaleInfo />
   </NcSettingsSection>
 </template>
 
 <script setup lang="ts">
 import { translate as t } from '@nextcloud/l10n'
-import { NcCheckboxRadioSwitch, NcSelect, NcSettingsSection, NcTextField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcNoteCard, NcPasswordField, NcSelect, NcSettingsSection, NcTextField } from '@nextcloud/vue'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { WYSIWYG_EDITORS } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
 import allDebugOptions, { DEBUG_QUERY } from '../../debug-modes.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
-import { setPersonalSetting } from '../../services/personal-settings.ts'
+import { setEncryptionKey, setPersonalSetting } from '../../services/personal-settings.ts'
 import useTooltipsStore from '../../stores/tooltips.ts'
+import { showInfo } from '../../toolkit/util/toasts.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
+import LocaleInfo from './LocaleInfo.vue'
 import type { TabEntry } from './settings-tree.ts'
 
 type CheckboxKey = 'toolTipsEnabled' | 'restoreHistory' | 'initialFilterVisibility' | 'directChange'
@@ -161,6 +189,7 @@ const initialState = getInitialState<Partial<Record<CheckboxKey, boolean|string>
   debugMode?: number|string,
   debugQuerySqlFilter?: string,
   wysiwygEditor?: string,
+  userId?: string,
 }>({ section: 'CAFEVDB', defaults: {} })
 
 const financeModeAllowed = !!initialState?.financeModeAllowed
@@ -178,6 +207,8 @@ tooltipsProvider.provideTooltips([
   'expert-mode',
   'show-disabled',
   'debug-mode',
+  'settings:personal:encryptionKey',
+  'settings:personal:encryptionKey:own-password',
 ])
 const hints = tooltipsProvider.tooltipsData
 
@@ -279,6 +310,46 @@ const saveSqlFilter = async () => {
     emitError(error)
   } finally {
     saving.debugQuerySqlFilter = false
+  }
+}
+
+const userId = initialState?.userId ?? ''
+const loginPassword = ref('')
+const encryptionKey = ref('')
+const settingEncryptionKey = ref(false)
+const keyMessage = ref('')
+const keyMessageType = ref<'success'|'error'>('success')
+
+const submitEncryptionKey = async () => {
+  keyMessage.value = ''
+  if (loginPassword.value === '') {
+    keyMessageType.value = 'error'
+    keyMessage.value = t(appId, 'You must type in your login password.')
+    return
+  }
+  settingEncryptionKey.value = true
+  try {
+    // An empty key is allowed, it means "no encryption".
+    await setEncryptionKey(encryptionKey.value, loginPassword.value)
+    loginPassword.value = ''
+    encryptionKey.value = ''
+    keyMessageType.value = 'success'
+    keyMessage.value = t(appId, 'The encryption key has been set successfully.')
+    showInfo(t(appId, 'Encryption key changed, reloading settings form.'))
+    // The set of available settings depends on the encryption key.
+    window.location.reload()
+  } catch (error) {
+    const messages = (error as { response?: { data?: { messages?: string[] } } })?.response?.data?.messages
+    if (messages?.length) {
+      keyMessageType.value = 'error'
+      keyMessage.value = messages.join(' ')
+    } else {
+      keyMessageType.value = 'error'
+      keyMessage.value = t(appId, 'Unable to set the encryption key.')
+      emitError(error)
+    }
+  } finally {
+    settingEncryptionKey.value = false
   }
 }
 

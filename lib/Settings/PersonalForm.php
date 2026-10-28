@@ -124,6 +124,14 @@ class PersonalForm
           'language' => $this->configService->getCloudUserConfig()->getValueString($this->userId(), 'core', 'lang', 'en'),
           EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce'),
           EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE),
+          EnumPersonalSettingsKey::DEBUG_MODE->value => (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0),
+          EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER->value => (string)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, ''),
+          EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => (int)$this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20),
+          'userId' => $this->userId(),
+          'localeSymbol' => $this->getLocale(),
+          'currencyCode' => $this->currencyCode(),
+          'currencySymbol' => $this->currencySymbol(),
+          'dateTimeZone' => $this->getDateTimeZone()->getName(),
           EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
