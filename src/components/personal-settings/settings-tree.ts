@@ -117,16 +117,6 @@ export const getSettingsTree = (isGroupAdmin: boolean): TabEntry[] => {
       ],
     },
     {
-      key: 'translations',
-      id: 'personal-settings-translations',
-      name: t(appId, 'Translations'),
-      adminOnly: true,
-      children: [
-      { id: 'translate', name: t(appId, 'Translate') },
-      { id: 'download', name: t(appId, 'Download') },
-      ],
-    },
-    {
       key: 'development',
       id: 'personal-settings-development',
       name: t(appId, 'Development'),

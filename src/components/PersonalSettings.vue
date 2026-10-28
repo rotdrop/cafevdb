@@ -52,7 +52,6 @@ import EmailSettings from './personal-settings/EmailSettings.vue'
 import GeneralSettings from './personal-settings/GeneralSettings.vue'
 import OrchestraSettings from './personal-settings/OrchestraSettings.vue'
 import SharingSettings from './personal-settings/SharingSettings.vue'
-import TranslationsSettings from './personal-settings/TranslationsSettings.vue'
 import SettingsNavigation from './personal-settings/SettingsNavigation.vue'
 import UserSettings from './personal-settings/UserSettings.vue'
 import { getSettingsTree } from './personal-settings/settings-tree.ts'
@@ -97,7 +96,6 @@ const tabComponents: Record<string, Component> = {
   sharing: SharingSettings,
   email: EmailSettings,
   cms: CmsSettings,
-  translations: TranslationsSettings,
   development: DevelopmentSettings,
   about: AboutSettings,
 }
