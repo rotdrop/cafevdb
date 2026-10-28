@@ -85,21 +85,25 @@ const groups: AdminSettingGroup[] = [
   group(3, t(appId, 'Executive board and club members'), [
     field('memberProject', t(appId, 'Club members project')),
     field('executiveBoardProject', t(appId, 'Executive board project')),
-    ...(['president', 'secretary', 'treasurer'] as const).flatMap((role) => [
+    ...([
+      ['president', t(appId, 'President')],
+      ['secretary', t(appId, 'Secretary')],
+      ['treasurer', t(appId, 'Treasurer')],
+    ] as const).flatMap(([role, roleName]) => [
       {
-        ...field(`${role}Id`, t(appId, '{role} participant', { role }), 'select'),
-        heading: role === 'president' ? t(appId, 'President') : undefined,
+        ...field(`${role}Id`, t(appId, '{role} participant', { role: roleName }), 'select'),
+        heading: roleName,
         options: options(state?.executiveBoardMembers),
       },
       {
-        ...field(`${role}UserId`, t(appId, '{role} cloud user', { role }), 'select'),
+        ...field(`${role}UserId`, t(appId, '{role} cloud user', { role: roleName }), 'select'),
         options: Object.values(state?.userGroupMembers ?? []).map((value) => ({ value, label: value })),
       },
       {
-        ...field(`${role}GroupId`, t(appId, '{role} group', { role }), 'select'),
+        ...field(`${role}GroupId`, t(appId, '{role} group', { role: roleName }), 'select'),
         options: options(state?.userGroups),
       },
-      field(`${role}Email`, t(appId, '{role} email', { role })),
+      field(`${role}Email`, t(appId, '{role} email', { role: roleName })),
     ]),
   ]),
 ]
