@@ -61,6 +61,9 @@ class WordSplitterService
   /** @var string The app locale which should be known to the service. */
   private string $appLocale;
 
+  /** @var string[] Locale problems detected but not yet reported to the admins. */
+  private array $pendingProblems = [];
+
   /** @var null|bool Cached decision whether the running system service can be used. */
   private ?bool $systemServiceUsable = null;
 
@@ -74,6 +77,8 @@ class WordSplitterService
    * @param string $appLocale The configured app locale, always made
    * available to the service for transliteration.
    * @param ILogger $logger Used to report missing locales.
+   * @param WordSplitterNotificationService $notifications Used to notify the
+   * admins about locale problems.
    *
    * @throws RuntimeException If the app-data directory cannot be created.
    */
@@ -83,6 +88,7 @@ class WordSplitterService
     private string $appName,
     string $appLocale,
     private ILogger $logger,
+    private WordSplitterNotificationService $notifications,
   ) {
     $this->appLocale = $appLocale;
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
@@ -104,13 +110,26 @@ class WordSplitterService
    */
   private function installedLocales(array $locales): array
   {
-    $previous = setlocale(LC_CTYPE, '0');
-    $installed = array_values(array_filter($locales, fn(string $locale) => setlocale(LC_CTYPE, $locale) !== false));
-    setlocale(LC_CTYPE, $previous);
+    $installed = array_values(array_filter($locales, fn(string $locale) => $this->isLocaleInstalled($locale)));
     $missing = array_diff($locales, $installed);
     if (!empty($missing)) {
       $this->logger->error('Locales required by the word splitter are not installed: ' . implode(', ', $missing));
     }
+    return $installed;
+  }
+
+  /**
+   * Check whether the given locale is installed on this system.
+   *
+   * @param string $locale
+   *
+   * @return bool
+   */
+  private function isLocaleInstalled(string $locale): bool
+  {
+    $previous = setlocale(LC_CTYPE, '0');
+    $installed = setlocale(LC_CTYPE, $locale) !== false;
+    setlocale(LC_CTYPE, $previous);
     return $installed;
   }
 
@@ -158,12 +177,48 @@ class WordSplitterService
    *
    * @return void
    *
-   * @throws RuntimeException If the executable is missing or the service
-   *                          does not come up within STARTUP_TIMEOUT.
+   * @throws RuntimeException If the app locale is not installed, the
+   *                          executable is missing or the service does not
+   *                          come up within STARTUP_TIMEOUT.
+   */
+  private function ensureStarted(): void
+  {
+    try {
+      $this->startService();
+    } finally {
+      // report once, also if the start fails with an exception
+      $this->reportPendingProblems();
+    }
+  }
+
+  /**
+   * Notify the admins about all problems found while starting the service
+   * with a single notification.
+   *
+   * @return void
+   */
+  private function reportPendingProblems(): void
+  {
+    if (empty($this->pendingProblems)) {
+      return;
+    }
+    $problems = $this->pendingProblems;
+    $this->pendingProblems = [];
+    try {
+      $this->notifications->notifyLocaleProblems($this->appLocale, $problems);
+    } catch (\Throwable $t) {
+      $this->logger->error('Unable to notify the admins about the word splitter locale problems.', [ 'exception' => $t ]);
+    }
+  }
+
+  /**
+   * @return void
+   *
+   * @throws RuntimeException
    *
    * @SuppressWarnings(PHPMD.ErrorControlOperator)
    */
-  private function ensureStarted(): void
+  private function startService(): void
   {
     if ($this->useSystemService()) {
       $this->socket = $this->systemSocket;
@@ -171,6 +226,12 @@ class WordSplitterService
     }
     if ($this->isUp($this->socket)) {
       return;
+    }
+    if (!$this->isLocaleInstalled($this->appLocale)) {
+      $this->pendingProblems[] = WordSplitterNotificationService::PROBLEM_LOCAL_SERVICE;
+      $message = 'The app locale ' . $this->appLocale . ' is not installed, the word splitter cannot be started.';
+      $this->logger->error($message);
+      throw new RuntimeException($message);
     }
     if (!is_executable($this->bin)) {
       throw new RuntimeException('Splitter executable not found.');
@@ -249,16 +310,27 @@ class WordSplitterService
     if (!is_array($locales)) {
       return true;
     }
-    $appLanguage = locale_get_primary_language($this->appLocale);
+    $appLanguage = $this->primaryLanguage($this->appLocale);
     foreach ($locales as $locale) {
-      if (locale_get_primary_language((string)$locale) === $appLanguage) {
+      if ($this->primaryLanguage((string)$locale) === $appLanguage) {
         return true;
       }
     }
     $this->logger->error('The running system-wide word splitter service is not configured for the app locale '
       . $this->appLocale . ' (configured locales: ' . implode(', ', $locales)
       . '), starting an app-local service instead.');
+    $this->pendingProblems[] = WordSplitterNotificationService::PROBLEM_SYSTEM_SERVICE;
     return false;
+  }
+
+  /**
+   * @param string $locale A locale like de_DE.UTF-8.
+   *
+   * @return string The lower-case language part.
+   */
+  private function primaryLanguage(string $locale): string
+  {
+    return strtolower(preg_split('/[_.@-]/', $locale)[0]);
   }
 
   /**

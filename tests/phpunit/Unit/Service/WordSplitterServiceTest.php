@@ -33,6 +33,7 @@ use OCP\Http\Client\IResponse;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB\Service\WordSplitterNotificationService;
 use OCA\CAFEVDB\Service\WordSplitterService;
 
 #[Attributes\CoversClass(WordSplitterService::class)]
@@ -207,33 +208,85 @@ class WordSplitterServiceTest extends TestCase
     );
   }
 
-  public function testSystemServiceWithoutAppLocaleIsLoggedAndNotUsed(): void
-  {
+  private function createServiceWithMisconfiguredSystemService(
+    string $appLocale,
+    WordSplitterNotificationService $notifications,
+    ?LoggerInterface $logger = null,
+  ): WordSplitterService {
     $client = $this->createStub(IClient::class);
     $response = $this->createStub(IResponse::class);
     $response->method('getBody')->willReturn(
       '{"version":"0.7.0","default_method":"gcs","transliteration_locales":["en_US.UTF-8"]}'
     );
     $client->method('get')->willReturn($response);
+
+    $service = $this->createService(
+      $client,
+      true,
+      appLocale: $appLocale,
+      logger: $logger,
+      notifications: $notifications,
+    );
+    (new \ReflectionProperty($service, 'systemSocket'))->setValue($service, $this->systemSocket);
+    return $service;
+  }
+
+  public function testSystemServiceWithoutAppLocaleFallsBackToLocalServiceAndNotifiesOnce(): void
+  {
     $logger = $this->createMock(LoggerInterface::class);
     $logger->expects($this->once())
       ->method('error')
-      ->with($this->stringContains('de_DE.UTF-8'));
+      ->with($this->stringContains('C.UTF-8'));
+    $notifications = $this->createMock(WordSplitterNotificationService::class);
+    $notifications->expects($this->once())
+      ->method('notifyLocaleProblems')
+      ->with('C.UTF-8', [WordSplitterNotificationService::PROBLEM_SYSTEM_SERVICE]);
 
-    $service = $this->createService($client, true, appLocale: 'de_DE.UTF-8', logger: $logger);
-    (new \ReflectionProperty($service, 'systemSocket'))->setValue($service, $this->systemSocket);
-    // no local executable: reaching the local start proves the system service is skipped
-    (new \ReflectionProperty($service, 'bin'))->setValue($service, '/nonexistent/german-word-splitter');
+    // system service is misconfigured for the app locale 'C.UTF-8'
+    $service = $this->createServiceWithMisconfiguredSystemService('C.UTF-8', $notifications, $logger);
+    // an already running local service stands in for the freshly started one
+    (new \ReflectionProperty($service, 'socket'))->setValue($service, $this->socket);
 
     $ensureStarted = new \ReflectionMethod($service, 'ensureStarted');
-    for ($i = 0; $i < 2; $i++) {
-      try {
-        $ensureStarted->invoke($service);
-        $this->fail('Expected the app-local service start to be attempted.');
-      } catch (\RuntimeException $e) {
-        $this->assertSame('Splitter executable not found.', $e->getMessage());
-      }
-    }
+    $ensureStarted->invoke($service);
+    $ensureStarted->invoke($service);
+    $this->assertSame(
+      $this->socket,
+      (new \ReflectionProperty($service, 'socket'))->getValue($service),
+    );
+  }
+
+  public function testUninstalledAppLocaleThrowsAfterNotifyingAboutBothProblemsOnce(): void
+  {
+    $notifications = $this->createMock(WordSplitterNotificationService::class);
+    $notifications->expects($this->once())
+      ->method('notifyLocaleProblems')
+      ->with(
+        'yy_YY.UTF-8',
+        [WordSplitterNotificationService::PROBLEM_SYSTEM_SERVICE, WordSplitterNotificationService::PROBLEM_LOCAL_SERVICE],
+      );
+
+    $service = $this->createServiceWithMisconfiguredSystemService('yy_YY.UTF-8', $notifications);
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('yy_YY.UTF-8 is not installed');
+    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
+  }
+
+  public function testUninstalledAppLocaleWithoutRunningServiceNotifiesAboutLocalProblemOnly(): void
+  {
+    $notifications = $this->createMock(WordSplitterNotificationService::class);
+    $notifications->expects($this->once())
+      ->method('notifyLocaleProblems')
+      ->with('yy_YY.UTF-8', [WordSplitterNotificationService::PROBLEM_LOCAL_SERVICE]);
+
+    $client = $this->createStub(IClient::class);
+    $service = $this->createService($client, appLocale: 'yy_YY.UTF-8', notifications: $notifications);
+    // no running local service
+    (new \ReflectionProperty($service, 'socket'))->setValue($service, $this->socket . '.missing');
+
+    $this->expectException(\RuntimeException::class);
+    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
   }
 
   public function testSplitWrapsHttpClientFailures(): void
@@ -256,6 +309,7 @@ class WordSplitterServiceTest extends TestCase
     string $transliterationLocales = '',
     string $appLocale = 'C.UTF-8',
     ?LoggerInterface $logger = null,
+    ?WordSplitterNotificationService $notifications = null,
   ): WordSplitterService {
     $config = $this->createStub(IConfig::class);
     $config->method('getAppValue')->willReturnCallback(
@@ -275,6 +329,6 @@ class WordSplitterServiceTest extends TestCase
     $clientService = $this->createStub(IClientService::class);
     $clientService->method('newClient')->willReturn($client);
 
-    return new WordSplitterService($config, $clientService, 'testapp', $appLocale, $logger ?? $this->createStub(LoggerInterface::class));
+    return new WordSplitterService($config, $clientService, 'testapp', $appLocale, $logger ?? $this->createStub(LoggerInterface::class), $notifications ?? $this->createStub(WordSplitterNotificationService::class));
   }
 }

@@ -115,6 +115,7 @@ trait WordSplitterServiceTrait
       appName: $this->mockProvider->appName,
       appLocale: 'de_DE.UTF-8',
       logger: $this->createStub(\Psr\Log\LoggerInterface::class),
+      notifications: $this->createStub(\OCA\CAFEVDB\Service\WordSplitterNotificationService::class),
     );
   }
 
