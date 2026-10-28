@@ -65,6 +65,7 @@ import {
 import { appName as appId } from '../../config.ts'
 import { getAdminSetting, setAdminSetting } from '../../services/admin-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
+import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
@@ -163,6 +164,9 @@ const changeShareOwnerPassword = async () => {
     const response = await setAdminSetting(SHARE_OWNER_PASSWORD_KEY, shareOwnerPassword.value)
     const messages = response.data.messages ?? response.data.message ?? ''
     passwordMessage.value = Array.isArray(messages) ? messages.join(' ') : messages
+    if (passwordMessage.value) {
+      showSuccess(passwordMessage.value)
+    }
     shareOwnerPassword.value = ''
   } catch (error) {
     passwordError.value = true
@@ -180,6 +184,9 @@ const runAction = async (endpoint: string) => {
   try {
     const response = await setAdminSetting(endpoint)
     actionMessage.value = (response.data.messages ?? []).join(' ')
+    if (actionMessage.value) {
+      showSuccess(actionMessage.value)
+    }
   } catch (error) {
     actionError.value = true
     actionMessage.value = t(appId, 'Unable to update cloud-user views.')

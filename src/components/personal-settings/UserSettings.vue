@@ -174,7 +174,8 @@ import type { PersonalSettingKey } from '../../services/personal-settings.ts'
 import { setEncryptionKey, setPersonalSetting } from '../../services/personal-settings.ts'
 import { showSettingFeedback } from '../../services/setting-feedback.ts'
 import useTooltipsStore from '../../stores/tooltips.ts'
-import { showInfo } from '../../toolkit/util/toasts.ts'
+import { showInfo, showSuccess } from '../../toolkit/util/toasts.ts'
+
 import getInitialState from '../../toolkit/util/initial-state.ts'
 import LocaleInfo from './LocaleInfo.vue'
 import type { TabEntry } from './settings-tree.ts'
@@ -336,6 +337,7 @@ const submitEncryptionKey = async () => {
     encryptionKey.value = ''
     keyMessageType.value = 'success'
     keyMessage.value = t(appId, 'The encryption key has been set successfully.')
+    showSuccess(keyMessage.value)
     showInfo(t(appId, 'Encryption key changed, reloading settings form.'))
     // The set of available settings depends on the encryption key.
     window.location.reload()

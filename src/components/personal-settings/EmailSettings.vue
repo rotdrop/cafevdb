@@ -55,6 +55,7 @@ import {
 import { appName as appId } from '../../config.ts'
 import { setAdminSetting } from '../../services/admin-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
+import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
@@ -149,6 +150,9 @@ const runAction = async (endpoint: string) => {
     const response = await setAdminSetting(endpoint)
     const messages = response.data.messages ?? response.data.message ?? ''
     const result = Array.isArray(messages) ? messages.join(' ') : messages
+    if (result) {
+      showSuccess(result)
+    }
     if (isEmailTest) {
       testMessage.value = result
     } else {

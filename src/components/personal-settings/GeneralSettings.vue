@@ -64,6 +64,7 @@ import {
 import { appName as appId } from '../../config.ts'
 import { getAdminSetting, getLocaleInfo, setAdminSetting } from '../../services/admin-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
+import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
@@ -161,6 +162,7 @@ const changeSystemKey = async () => {
       oldkey: oldSystemKey.value,
     })
     keyMessage.value = responseMessage(response.data) || t(appId, 'Encryption key changed.')
+    showSuccess(keyMessage.value)
     oldSystemKey.value = ''
     newSystemKey.value = ''
   } catch (error) {
@@ -179,6 +181,7 @@ const distributeSystemKey = async () => {
   try {
     const response = await setAdminSetting('keydistribute')
     keyMessage.value = responseMessage(response.data) || t(appId, 'Encryption key distributed.')
+    showSuccess(keyMessage.value)
   } catch (error) {
     keyError.value = true
     keyMessage.value = t(appId, 'Unable to distribute the encryption key.')
@@ -195,6 +198,9 @@ const testDatabasePassword = async () => {
   try {
     const response = await setAdminSetting(APP_DB_PASSWORD, databasePassword.value)
     databaseMessage.value = responseMessage(response.data)
+    if (databaseMessage.value) {
+      showSuccess(databaseMessage.value)
+    }
     databasePassword.value = ''
   } catch (error) {
     databaseError.value = true
