@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use Composer\Spdx\SpdxLicenses;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -135,6 +136,34 @@ class PersonalForm
           EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
+
+      $aboutInfo = $this->appManager->getAppInfo($this->appName());
+      $licence = trim($aboutInfo['licence'] ?? '');
+      $longLicence = (new SpdxLicenses)->getLicenseByIdentifier($licence);
+      $credits = $aboutInfo['credits']['item'] ?? [];
+      if (isset($credits['title'])) {
+        $credits = [ $credits ];
+      }
+      $this->initialStateService->provideInitialState(
+        $this->appName(),
+        'about',
+        [
+          'name' => $aboutInfo['name'] ?? $this->appName(),
+          'version' => $aboutInfo['version'] ?? '',
+          'codeName' => trim($aboutInfo['codename'] ?? ''),
+          'description' => $this->l->t($aboutInfo['description'] ?? ''),
+          'lifetime' => $aboutInfo['lifetime'] ?? '',
+          'licence' => $licence,
+          'licenceName' => $longLicence[0] ?? $licence,
+          'author' => $aboutInfo['author']['@value'] ?? '',
+          'authorEmail' => $aboutInfo['author']['@attributes']['mail'] ?? '',
+          'homePage' => $aboutInfo['author']['@attributes']['homepage'] ?? '',
+          'credits' => array_values(array_map(
+            fn(array $item) => [ 'title' => (string)$item['title'], 'link' => (string)$item['link'] ],
+            $credits,
+          )),
+        ],
+      );
 
       try {
         $webPageCategories = $this->webPagesRPC->getCategories();
