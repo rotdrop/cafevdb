@@ -33,6 +33,7 @@ import l10nHttpStatus from '@http-util/status-i18n';
 import { getLanguage, translate as t } from '@nextcloud/l10n';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
 import { emit as asyncEmit, hasSubscriptions } from '@rotdrop/async-nextcloud-event-bus';
+import { isAxiosError } from 'axios';
 import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 import { isPlainObject } from 'is-plain-object';
 import { appName } from '../config.ts';
@@ -462,12 +463,57 @@ const ajaxFailMessage = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, err
 const ajaxFailMessages = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) =>
   ajaxFailData(xhr, textStatus, errorThrown).messages;
 
+/**
+ * Emulate the parts of a jqXHR the error handlers rely on from an
+ * axios error, such that the legacy error reporting can be re-used by
+ * code which has been converted to axios.
+ *
+ * @param error The error caught from an axios request.
+ */
+const axiosErrorToXhr = (error: unknown) => {
+  const response = isAxiosError(error) ? error.response : undefined;
+  const headers = response?.headers ?? {};
+  const data = response?.data;
+  const isText = typeof data === 'string';
+  const xhr = {
+    status: response?.status ?? 0,
+    statusText: response?.statusText ?? '',
+    responseText: isText ? data : (data === undefined ? '' : JSON.stringify(data)),
+    responseJSON: (!isText && data && typeof data === 'object') ? data : undefined,
+    getResponseHeader: (name: string) => {
+      const value = headers[name.toLowerCase()];
+      return value === undefined || value === null ? null : '' + value;
+    },
+  };
+  return xhr as unknown as JQuery.jqXHR;
+};
+
+/**
+ * Run the legacy error handler for an error caught from an axios
+ * request.
+ *
+ * @param error The caught error.
+ *
+ * @param userCallbacks See ajaxHandleError().
+ */
+const axiosHandleError = <T = unknown>(
+  error: unknown,
+  userCallbacks?: Callbacks<T>['cleanup']|Partial<Callbacks<T>>,
+) => ajaxHandleError<T>(
+  axiosErrorToXhr(error),
+  isAxiosError(error) && error.response ? 'error' : 'abort',
+  isAxiosError(error) ? (error.response?.statusText || error.message) : String(error),
+  userCallbacks,
+);
+
 $(Dialogs.attachDialogHandlers);
 
 export {
+  axiosErrorToXhr,
   ajaxFailData as failData,
   ajaxFailMessage as failMessage,
   ajaxFailMessages as failMessages,
+  axiosHandleError as handleAxiosError,
   ajaxHandleError as handleError,
   ajaxValidateResponse as validateResponse,
 };

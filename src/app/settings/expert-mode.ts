@@ -28,15 +28,13 @@
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { appPrefix } from '../../config.ts';
 import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
 import * as PHPMyEdit from './../pme-selectors.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
+import postSetting from './post-setting.ts';
 
 import './../jquery-cafevdb-tooltips.ts';
-import '../../legacy/nextcloud/jquery/requesttoken.js';
 import { hiddenCssClass } from 'variables.module.scss';
 
 /**
@@ -47,7 +45,7 @@ import { hiddenCssClass } from 'variables.module.scss';
  *
  * @param _$control Originating select, may be undefined.
  */
-const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+const setter = async (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
   $('.expert-mode-container').toggleClass(hiddenCssClass, !value);
   $('body').toggleClass(appPrefix('expert-mode'), value);
@@ -55,23 +53,16 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
   $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
   $.fn.cafevTooltip.remove(); // remove any left-over items.
   globalState.expertMode = value;
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('expertMode'), { value })
-      .done(function(data) {
-        showMessage(data.messages);
-        if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-          pmeForm.each(function() {
-            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
-            reload.trigger('click');
-          });
-        }
-        resolve(data);
-      })
-      .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
-        reject(xhr);
-      }));
+  const data = await postSetting('expertMode', value);
+  showMessage(data.messages);
+  if (globalState.PHPMyEdit !== undefined) {
+    const pmeForm = $('#content ' + PHPMyEdit.formSelector);
+    pmeForm.each(function() {
+      const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
+      reload.trigger('click');
+    });
+  }
+  return data;
 };
 
 subscribe(SET_EXPERT_MODE, (event) => {

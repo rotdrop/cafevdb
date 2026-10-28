@@ -27,14 +27,11 @@
 
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import { toolTipsOnOff } from './../cafevdb.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-
-import '../../legacy/nextcloud/jquery/requesttoken.js';
+import postSetting from './post-setting.ts';
 
 /**
  * @param value Value to set.
@@ -44,7 +41,7 @@ import '../../legacy/nextcloud/jquery/requesttoken.js';
  *
  * @param $control Originating select, may be undefined.
  */
-const setter = (value: boolean, showMessage?: typeof Notification.messages, $control?: JQuery) => {
+const setter = async (value: boolean, showMessage?: typeof Notification.messages, $control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
   toolTipsOnOff(value);
   $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
@@ -53,18 +50,11 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, $con
   } else {
     $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
   }
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('toolTipsEnabled'), { value: globalState.toolTipsEnabled })
-      .done(function(data) {
-        if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
-          showMessage(data.messages);
-        }
-        resolve(data);
-      })
-      .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
-        reject(xhr);
-      }));
+  const data = await postSetting('toolTipsEnabled', globalState.toolTipsEnabled);
+  if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
+    showMessage(data.messages);
+  }
+  return data;
 };
 
 subscribe(SET_TOOLTIPS_MODE, (event) => {

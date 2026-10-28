@@ -30,6 +30,7 @@ import type * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { GetValueResult } from './simple-set-value.ts';
 
+import axios from '@nextcloud/axios';
 import { emit } from '@nextcloud/event-bus';
 import {
   defaultRootPath,
@@ -153,18 +154,17 @@ const afterLoad = function(container?: JQuery) {
   // The personal tab is a Vue component. A changed encryption key may
   // change the available tabs, so the entire form is reloaded then.
   mountPersonalSettings(container.find('#personal-settings-vue'), {
-    onEncryptionKeySet() {
+    async onEncryptionKeySet() {
       showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
-      $.get(generateSettingsUrl(END_POINT_PERSONAL_FORM))
-        .done((data) => {
-          unmountPersonalSettings();
-          $('#personal-settings-container').replaceWith(data);
-          console.info('CALL AFTER LOAD');
-          afterLoad($('#personal-settings-container'));
-        })
-        .fail((xhr, textStatus, errorThrown) => {
-          Ajax.handleError(xhr, textStatus, errorThrown);
-        });
+      try {
+        const response = await axios.get<string>(generateSettingsUrl(END_POINT_PERSONAL_FORM));
+        unmountPersonalSettings();
+        $('#personal-settings-container').replaceWith(response.data);
+        console.info('CALL AFTER LOAD');
+        afterLoad($('#personal-settings-container'));
+      } catch (error) {
+        Ajax.handleAxiosError(error);
+      }
     },
   });
 

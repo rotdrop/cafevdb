@@ -28,14 +28,12 @@
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SHOW_HIDE_DISABLED } from '../../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
 import { SET_SHOW_DISABLED } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
 import * as PHPMyEdit from './../pme-selectors.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
+import postSetting from './post-setting.ts';
 
-import '../../legacy/nextcloud/jquery/requesttoken.js';
 import { hideDisabledCssClass, showDisabledCssClass } from 'variables.module.scss';
 
 /**
@@ -46,38 +44,31 @@ import { hideDisabledCssClass, showDisabledCssClass } from 'variables.module.scs
  *
  * @param _$control Originating select, may be undefined.
  */
-const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+const setter = async (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
   globalState.PHPMyEdit.showDisabled = value;
   $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', value);
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('showDisabled'), { value })
-      .done(function(data) {
-        showMessage(data.messages);
-        const $content = $('#content, #content-vue');
-        const $pmeForm = $content.find(`${PHPMyEdit.formSelector}.${SHOW_HIDE_DISABLED}`);
-        console.log('form', $pmeForm);
-        $pmeForm.each(function() {
-          const $form = $(this);
-          const $reload = $form.find(PHPMyEdit.classSelector('input', 'reload')).first();
-          if ($reload.length > 0) {
-            $form.append('<input type="hidden"'
-              + ' name="' + PHPMyEdit.sys('sw') + '"'
-              + ' value="Clear"/>');
-            $reload.trigger('click');
-          }
-          if (value) {
-            $form.addClass(showDisabledCssClass).removeClass(hideDisabledCssClass);
-          } else {
-            $form.removeClass(showDisabledCssClass).addClass(hideDisabledCssClass);
-          }
-        });
-        resolve(data);
-      })
-      .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
-        reject(xhr);
-      }));
+  const data = await postSetting('showDisabled', value);
+  showMessage(data.messages);
+  const $content = $('#content, #content-vue');
+  const $pmeForm = $content.find(`${PHPMyEdit.formSelector}.${SHOW_HIDE_DISABLED}`);
+  console.log('form', $pmeForm);
+  $pmeForm.each(function() {
+    const $form = $(this);
+    const $reload = $form.find(PHPMyEdit.classSelector('input', 'reload')).first();
+    if ($reload.length > 0) {
+      $form.append('<input type="hidden"'
+        + ' name="' + PHPMyEdit.sys('sw') + '"'
+        + ' value="Clear"/>');
+      $reload.trigger('click');
+    }
+    if (value) {
+      $form.addClass(showDisabledCssClass).removeClass(hideDisabledCssClass);
+    } else {
+      $form.removeClass(showDisabledCssClass).addClass(hideDisabledCssClass);
+    }
+  });
+  return data;
 };
 
 subscribe(SET_SHOW_DISABLED, (event) => {

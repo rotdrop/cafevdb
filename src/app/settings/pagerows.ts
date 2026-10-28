@@ -27,14 +27,11 @@
 
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_PAGE_ROWS } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
 import { selected as selectedValues } from './../select-utils.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-
-import '../../legacy/nextcloud/jquery/requesttoken.js';
+import postSetting from './post-setting.ts';
 
 /**
  * @param value Value to store and propagate to all selects.
@@ -44,7 +41,7 @@ import '../../legacy/nextcloud/jquery/requesttoken.js';
  *
  * @param $control Originating select, may be undefined.
  */
-const setter = (value: number, showMessage?: typeof Notification.messages, $control?: JQuery<HTMLSelectElement>) => {
+const setter = async (value: number, showMessage?: typeof Notification.messages, $control?: JQuery<HTMLSelectElement>) => {
   showMessage = showMessage || Notification.messages;
   $('.personal-settings').find<HTMLSelectElement>('select.pagerows').each(function() {
     if (this !== $control?.[0]) {
@@ -52,18 +49,9 @@ const setter = (value: number, showMessage?: typeof Notification.messages, $cont
     }
   });
   globalState.PHPMyEdit.pageRowsDefault = value;
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('pageRowsDefault'), { value })
-      .done(function(data) {
-        showMessage(data.messages);
-        console.log(data);
-        resolve(data);
-      })
-      .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
-        // console.error(data);
-        reject(xhr);
-      }));
+  const data = await postSetting('pageRowsDefault', value);
+  showMessage(data.messages);
+  return data;
 };
 
 subscribe(SET_PAGE_ROWS, (event) => {

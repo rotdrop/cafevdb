@@ -27,13 +27,9 @@
 
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_DEBUG_QUERY_SQL_FILTER } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
-import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-
-import '../../legacy/nextcloud/jquery/requesttoken.js';
+import postSetting from './post-setting.ts';
 
 /**
  * @param value Value to store and propagate to all selects.
@@ -43,21 +39,12 @@ import '../../legacy/nextcloud/jquery/requesttoken.js';
  *
  * @param _$control Originating select, may be undefined.
  */
-const setter = (value: string, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+const setter = async (value: string, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
   globalState.debugQuerySqlFilter = value;
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('debugQuerySqlFilter'), { value })
-      .done(function(data) {
-        showMessage(data.messages);
-        console.log(data);
-        resolve(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown);
-        // console.error(data);
-        reject(xhr);
-      }));
+  const data = await postSetting('debugQuerySqlFilter', value);
+  showMessage(data.messages);
+  return data;
 };
 
 subscribe(SET_DEBUG_QUERY_SQL_FILTER, (event) => {

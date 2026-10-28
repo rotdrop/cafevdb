@@ -26,7 +26,7 @@ import $ from './jquery.ts';
 import 'core-js/actual';
 
 export interface MountCallbacks {
-  onEncryptionKeySet?: () => void;
+  onEncryptionKeySet?: () => void|Promise<void>;
 }
 
 let app: App|undefined;

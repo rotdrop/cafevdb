@@ -27,14 +27,11 @@
 
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_DEBUG_MODES } from '../../event-bus-events.ts';
-import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
 import { selected as selectedValues } from './../select-utils.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-
-import '../../legacy/nextcloud/jquery/requesttoken.js';
+import postSetting from './post-setting.ts';
 
 /**
  * @param selection Array of objects with a value attribute.
@@ -44,7 +41,7 @@ import '../../legacy/nextcloud/jquery/requesttoken.js';
  *
  * @param $control Originating select, may be undefined.
  */
-const setter = (
+const setter = async (
   selection: { value: number|string; name?: string }[],
   showMessage?: typeof Notification.messages,
   $control?: JQuery<HTMLSelectElement>,
@@ -56,18 +53,10 @@ const setter = (
       selectedValues($(this), values);
     }
   });
-  return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('debugMode'), { value: selection })
-      .done(async function(data) {
-        showMessage(data.messages);
-        console.log(data);
-        globalState.debugMode = data.value;
-        resolve(data);
-      })
-      .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
-        reject(xhr);
-      }));
+  const data = await postSetting<number>('debugMode', selection);
+  showMessage(data.messages);
+  globalState.debugMode = data.value!;
+  return data;
 };
 
 subscribe(SET_DEBUG_MODES, (event) => {
