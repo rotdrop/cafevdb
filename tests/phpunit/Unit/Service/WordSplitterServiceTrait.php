@@ -114,6 +114,7 @@ trait WordSplitterServiceTrait
       clientService: $this->getWordSplitterEndPointStub($splits),
       appName: $this->mockProvider->appName,
       appLocale: 'de_DE.UTF-8',
+      logger: $this->createStub(\Psr\Log\LoggerInterface::class),
     );
   }
 

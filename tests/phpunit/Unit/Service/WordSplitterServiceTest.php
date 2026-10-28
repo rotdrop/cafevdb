@@ -31,6 +31,7 @@ use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Service\WordSplitterService;
 
@@ -137,7 +138,16 @@ class WordSplitterServiceTest extends TestCase
   public function testLocalServiceStartsWithInstalledLocalesOnly(): void
   {
     $client = $this->createStub(IClient::class);
-    $service = $this->createService($client, transliterationLocales: 'C.UTF-8 xx_XX.UTF-8', appLocale: 'yy_YY.UTF-8');
+    $logger = $this->createMock(LoggerInterface::class);
+    $logger->expects($this->once())
+      ->method('error')
+      ->with($this->stringContains('yy_YY.UTF-8, xx_XX.UTF-8'));
+    $service = $this->createService(
+      $client,
+      transliterationLocales: 'C.UTF-8 xx_XX.UTF-8',
+      appLocale: 'yy_YY.UTF-8',
+      logger: $logger,
+    );
 
     $command = (new \ReflectionMethod($service, 'startupCommand'))->invoke($service);
 
@@ -193,6 +203,7 @@ class WordSplitterServiceTest extends TestCase
     bool $useDefaultSocket = false,
     string $transliterationLocales = '',
     string $appLocale = 'C.UTF-8',
+    ?LoggerInterface $logger = null,
   ): WordSplitterService {
     $config = $this->createStub(IConfig::class);
     $config->method('getAppValue')->willReturnCallback(
@@ -212,6 +223,6 @@ class WordSplitterServiceTest extends TestCase
     $clientService = $this->createStub(IClientService::class);
     $clientService->method('newClient')->willReturn($client);
 
-    return new WordSplitterService($config, $clientService, 'testapp', $appLocale);
+    return new WordSplitterService($config, $clientService, 'testapp', $appLocale, $logger ?? $this->createStub(LoggerInterface::class));
   }
 }

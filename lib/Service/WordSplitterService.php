@@ -29,6 +29,7 @@ use RuntimeException;
 
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * Client for the german-word-splitter Python microservice.
@@ -66,6 +67,7 @@ class WordSplitterService
    * @param string $appName The app id.
    * @param string $appLocale The configured app locale, always made
    * available to the service for transliteration.
+   * @param ILogger $logger Used to report missing locales.
    *
    * @throws RuntimeException If the app-data directory cannot be created.
    */
@@ -74,6 +76,7 @@ class WordSplitterService
     private IClientService $clientService,
     private string $appName,
     string $appLocale,
+    private ILogger $logger,
   ) {
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
@@ -97,6 +100,10 @@ class WordSplitterService
     $previous = setlocale(LC_CTYPE, '0');
     $installed = array_values(array_filter($locales, fn(string $locale) => setlocale(LC_CTYPE, $locale) !== false));
     setlocale(LC_CTYPE, $previous);
+    $missing = array_diff($locales, $installed);
+    if (!empty($missing)) {
+      $this->logger->error('Locales required by the word splitter are not installed: ' . implode(', ', $missing));
+    }
     return $installed;
   }
 
