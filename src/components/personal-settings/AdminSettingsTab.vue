@@ -61,6 +61,14 @@
                   :disabled="saving[field.key]"
                   @update:modelValue="save(field, $event?.value)"
         />
+        <WysiwygField v-else-if="field.type === 'wysiwyg'"
+                      :label="field.label"
+                      :modelValue="String(values[field.key] ?? '')"
+                      :disabled="saving[field.key]"
+                      @update:modelValue="values[field.key] = $event"
+                      @blur="save(field, $event)"
+                      @error="emit('error', $event)"
+        />
         <NcTextArea v-else-if="field.type === 'textarea'"
                     :id="field.key"
                     :label="field.label"
@@ -109,6 +117,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { NcCheckboxRadioSwitch, NcPasswordField, NcSelect, NcSettingsSection, NcTextArea, NcTextField } from '@nextcloud/vue'
 import { NcButton } from '@nextcloud/vue'
 import { reactive } from 'vue'
+import WysiwygField from './WysiwygField.vue'
 import { appName as appId } from '../../config.ts'
 import { setAdminSetting } from '../../services/admin-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
@@ -117,7 +126,7 @@ export type AdminSettingOption = { value: string|number|boolean, label: string }
 export type AdminSettingField = {
   key: string
   label: string
-  type: 'text'|'number'|'textarea'|'checkbox'|'select'|'password'|'folder'|'owner'
+  type: 'text'|'number'|'textarea'|'checkbox'|'select'|'password'|'wysiwyg'|'folder'|'owner'
   options?: AdminSettingOption[]
   initialValueKey?: string
   linkTest?: boolean

@@ -109,7 +109,7 @@ const groups = [
     field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, t(appId, 'Require HTTPS for external links'), 'checkbox'),
   ]),
   group(3, t(appId, 'Bulk Email Privacy Notice'), [
-    field(BULK_EMAIL_PRIVACY_NOTICE, t(appId, 'Bulk Email Privacy Notice'), 'textarea'),
+    field(BULK_EMAIL_PRIVACY_NOTICE, t(appId, 'Bulk Email Privacy Notice'), 'wysiwyg'),
   ]),
   group(4, t(appId, 'Mailing List Service'), [
     field(MAILING_LIST_REST_CONFIG.url, t(appId, 'Mailing list service URL')),
