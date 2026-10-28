@@ -84,12 +84,12 @@ onBeforeUnmount(() => clearInterval(timer))
 
     &.time,
     &.thelocale {
-      color: blue;
+      color: var(--color-primary-element);
     }
 
     &.timezone,
     &.currency {
-      color: red;
+      color: var(--color-element-error, var(--color-error));
     }
   }
 }
