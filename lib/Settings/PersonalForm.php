@@ -181,6 +181,7 @@ class PersonalForm
         EnumPersonalSettingsKey::ENCRYPTION_KEY->value => $this->getAppEncryptionKey(),
         EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED),
         EnumPersonalSettingsKey::DEBUG_MODE->value => (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0),
+        EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER->value => (string)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, ''),
         EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => (int)$this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20),
         EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'off'),
         EnumPersonalSettingsKey::RESTORE_HISTORY->value => $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off'),
