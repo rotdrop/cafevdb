@@ -34,7 +34,7 @@ const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
   executiveBoardMembers?: Array<{ value: string|number, name: string }>
   localeCountryNames?: Record<string, string>
-  userGroupMembers?: string[]
+  userGroupMembers?: string[]|Record<string, string>
   userGroups?: Array<{ value: string, name: string }>
 }>({ section: 'adminSettings', defaults: {} })
 const field = (key: string, label: string, type: AdminSettingField['type'] = 'text'): AdminSettingField => ({
@@ -47,8 +47,8 @@ const group = (index: number, fallback: string, fields: AdminSettingField[]): Ad
   name: props.entry.children[index]?.name ?? fallback,
   fields,
 })
-const options = (values: Array<{ value: string|number, name: string }> = []) =>
-  values.map(({ value, name }) => ({ value, label: name }))
+const options = (values: Array<{ value: string|number, name: string }>|Record<string, { value: string|number, name: string }> = []) =>
+  Object.values(values).map(({ value, name }) => ({ value, label: name }))
 
 const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Street Address'), [
@@ -92,7 +92,7 @@ const groups: AdminSettingGroup[] = [
       },
       {
         ...field(`${role}UserId`, t(appId, '{role} cloud user', { role }), 'select'),
-        options: (state?.userGroupMembers ?? []).map((value) => ({ value, label: value })),
+        options: Object.values(state?.userGroupMembers ?? []).map((value) => ({ value, label: value })),
       },
       {
         ...field(`${role}GroupId`, t(appId, '{role} group', { role }), 'select'),

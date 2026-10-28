@@ -329,10 +329,10 @@ class PersonalForm
             'executiveBoardProject' => $executiveBoardProject,
             'executiveBoardProjectId' => $executiveBoardProjectId,
             'executiveBoardMembers' => $executiveBoardMembers,
-            'userGroupMembers' => array_map(fn($user) => $user->getUID(), $this->group()->getUsers()),
-            'userGroups' => array_map(function($group) {
+            'userGroupMembers' => array_values(array_map(fn($user) => $user->getUID(), $this->group()->getUsers())),
+            'userGroups' => array_values(array_map(function($group) {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
-            }, $this->groupManager()->search('')),
+            }, $this->groupManager()->search(''))),
             ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY),
 
             'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
