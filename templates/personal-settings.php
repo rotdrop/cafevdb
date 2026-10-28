@@ -53,6 +53,7 @@ $toolTipsPos = 'right';
 $toolTipClass = "tooltip-" . $toolTipsPos;
 
 ?>
+<div id="personal-settings-vue"></div>
 <div id="personal-settings-container" class="app-admin-settings hidden <?php p($appNameTag); ?>">
   <div class="popup-title">
     <h2 class="heading"><?php p($l->t('Settings')); ?></h2>

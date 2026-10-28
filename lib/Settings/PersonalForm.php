@@ -57,7 +57,7 @@ class PersonalForm
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const ERROR_TEMPLATE = "errorpage";
-  public const TEMPLATE = "settings";
+  public const TEMPLATE = "personal-settings";
   public const DEFAULT_EDITOR = 'tinymce';
 
   public const CSP_FAILURE_REPORTING_KEY = 'cspfailurereporting';
@@ -104,12 +104,16 @@ class PersonalForm
       );
     }
     try {
+      // Are we a group-admin?
+      $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();
+
       // Initial state injecton for JS
       $this->initialStateService->provideInitialState(
         $this->appName(),
         'CAFEVDB',
         [
           'appName' => $this->appName(),
+          'isGroupAdmin' => $isGroupAdmin,
           EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on'),
           'language' => $this->configService->getCloudUserConfig()->getValueString($this->userId(), 'core', 'lang', 'en'),
           EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce'),
@@ -117,9 +121,6 @@ class PersonalForm
           EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
-
-      // Are we a group-admin?
-      $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();
 
       try {
         $webPageCategories = $this->webPagesRPC->getCategories();

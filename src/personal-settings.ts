@@ -25,17 +25,32 @@
  * @module
  */
 
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
 import { runReadyCallbacks } from './app/cafevdb.ts';
 import { attachDialogHandlers } from './app/dialogs.js';
 import personalSettings from './app/personal-settings.js';
 import appSettings from './app/settings.js';
+import PersonalSettings from './components/PersonalSettings.vue';
+import { appName } from './config.ts';
+import { mixin as globalMixin } from './mixins/global-mixin.ts';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
+import 'core-js/actual';
 import './app/jquery-extensions.ts';
 
 require('personal-settings.scss');
 
+const pinia = createPinia();
+
+const app = createApp(PersonalSettings);
+app.config.performance = !!(import.meta?.env?.DEV);
+app.provide('appId', appName);
+app.mixin(globalMixin);
+app.use(pinia);
+
 onDocumentLoaded(() => {
+  app.mount('#personal-settings-vue');
   attachDialogHandlers();
   appSettings();
   personalSettings();
