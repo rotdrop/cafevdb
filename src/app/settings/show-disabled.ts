@@ -25,9 +25,9 @@
  * @module
  */
 
-import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SHOW_HIDE_DISABLED } from '../../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import { SET_SHOW_DISABLED } from '../../event-bus-events.ts';
+import { LEGACY_PAGE_RELOAD, SET_SHOW_DISABLED } from '../../event-bus-events.ts';
 import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
@@ -64,7 +64,6 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
             $form.append('<input type="hidden"'
               + ' name="' + PHPMyEdit.sys('sw') + '"'
               + ' value="Clear"/>');
-            $reload.trigger('click');
           }
           if (value) {
             $form.addClass(showDisabledCssClass).removeClass(hideDisabledCssClass);
@@ -72,6 +71,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
             $form.removeClass(showDisabledCssClass).addClass(hideDisabledCssClass);
           }
         });
+        asyncEmit(LEGACY_PAGE_RELOAD);
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {

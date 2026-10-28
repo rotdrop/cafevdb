@@ -62,6 +62,7 @@ export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
+export const LEGACY_PAGE_RELOAD = appEventName('legacy-page-reload');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
 /**
  * Push or replace a complete history record.

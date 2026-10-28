@@ -25,14 +25,13 @@
  * @module
  */
 
-import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { appPrefix } from '../../config.ts';
-import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
+import { LEGACY_PAGE_RELOAD, SET_EXPERT_MODE } from '../../event-bus-events.ts';
 import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
 import * as Notification from './../notification.ts';
-import * as PHPMyEdit from './../pme-selectors.ts';
 import { setPersonalUrl } from './../settings-urls.ts';
 
 import './../jquery-cafevdb-tooltips.ts';
@@ -59,13 +58,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
     $.post(setPersonalUrl('expertMode'), { value })
       .done(function(data) {
         showMessage(data.messages);
-        if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-          pmeForm.each(function() {
-            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
-            reload.trigger('click');
-          });
-        }
+        asyncEmit(LEGACY_PAGE_RELOAD);
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {

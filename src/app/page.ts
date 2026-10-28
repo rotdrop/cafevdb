@@ -29,11 +29,13 @@ import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus';
 
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { parse as qsParse } from 'qs';
-import { LEGACY_PAGE_CLEANUP, LEGACY_PAGE_LOAD } from '../event-bus-events.ts';
+import { LEGACY_PAGE_CLEANUP, LEGACY_PAGE_LOAD, LEGACY_PAGE_RELOAD } from '../event-bus-events.ts';
 import pageBusyIcon from './busy-icon.ts';
+import globalState from './globalstate.ts';
 import $ from './jquery.ts';
 import modalizer from './modalizer.ts';
 import * as Notification from './notification.ts';
+import * as PHPMyEdit from './pme-selectors.ts';
 
 import './jquery-cafevdb-tooltips.ts';
 
@@ -54,6 +56,16 @@ const pageCleanup = () => {
 };
 
 asyncSubscribe(LEGACY_PAGE_CLEANUP, pageCleanup);
+
+asyncSubscribe(LEGACY_PAGE_RELOAD, () => {
+  if (globalState.PHPMyEdit !== undefined) {
+    const pmeForm = $('#content, #content-vue').find(PHPMyEdit.formSelector);
+    pmeForm.each(function() {
+      const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
+      reload.trigger('click');
+    });
+  }
+});
 
 /**
  * Load a page through the history-aware AJAX page loader.

@@ -42,6 +42,7 @@ import type {
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
+  LEGACY_PAGE_RELOAD,
   LEGACY_RECORD_POPUP,
   LEGACY_SANITIZE_POST_DATA,
   LEGACY_UPDATE_EVENTS_SELECTION,
@@ -105,6 +106,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR; message: string; html?: string; closeDetailsLabel?: string };
     [LEGACY_PAGE_CLEANUP]: undefined;
     [LEGACY_PAGE_FINALIZE]: undefined;
+    [LEGACY_PAGE_RELOAD]: undefined;
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData; template?: string|null; projectId?: number|null; projectName?: string|undefined; keepHistory: boolean };
     [LEGACY_HISTORY_UPDATE]: { post: TemplatePostData; htmlBody: string; action: 'push'|'replace' };
     [LEGACY_HISTORY_PATCH]: { patch: TemplatePostData; action: 'push'|'replace' };
