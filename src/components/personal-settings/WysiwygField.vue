@@ -138,6 +138,17 @@ onBeforeUnmount(() => {
     margin-block-end: calc(var(--default-grid-baseline) * 1);
   }
 
+  min-width: 0;
+
+  // Nextcloud core sets a fixed width on div[contenteditable="true"].
+  :deep(.ck.ck-editor),
+  :deep(.ck.ck-editor__main),
+  :deep(.ck.ck-editor__editable) {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   :deep(.ck-editor__editable) {
     min-height: 10em;
   }
