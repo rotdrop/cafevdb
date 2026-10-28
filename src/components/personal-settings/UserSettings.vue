@@ -355,3 +355,23 @@ const submitEncryptionKey = async () => {
 
 defineProps<{ entry: TabEntry }>()
 </script>
+
+<style lang="scss" scoped>
+.encryption-key-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: calc(var(--default-grid-baseline) * 2);
+
+  :deep(.input-field) {
+    flex: 1 1 14rem;
+    min-width: 12rem;
+    margin-block-start: 0;
+  }
+
+  // The note card spans the whole row below the controls.
+  :deep(.notecard) {
+    flex: 1 0 100%;
+  }
+}
+</style>
