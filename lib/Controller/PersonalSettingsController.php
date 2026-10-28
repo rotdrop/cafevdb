@@ -2052,9 +2052,15 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
+        $scope = $this->request->getParam('scope');
+        $localeInfo = $this->generateLocaleInfo($scope);
+        $localeSymbol = ($scope ?? 'personal') == 'personal' ? $this->getLocale() : $this->appLocale();
         return self::dataResponse([
           'contents' => $localeInfo,
+          'localeSymbol' => $localeSymbol,
+          'currencyCode' => $this->currencyCode($localeSymbol),
+          'currencySymbol' => $this->currencySymbol($localeSymbol),
+          'dateTimeZone' => $this->getDateTimeZone()->getName(),
         ]);
       case 'passwordgenerate':
       case 'generatepassword':

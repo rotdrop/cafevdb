@@ -20,3 +20,13 @@ export const setAdminSetting = (key: string, value: unknown) =>
 
 export const getAdminSetting = (key: string, value?: unknown) =>
   axios.post<AdminSettingResponse>(getUrl(key), value === undefined ? {} : { value });
+
+export type LocaleInfoResponse = {
+  localeSymbol: string;
+  currencySymbol: string;
+  currencyCode: string;
+  dateTimeZone: string;
+};
+
+export const getLocaleInfo = (scope: 'personal'|'app') =>
+  axios.post<LocaleInfoResponse>(getUrl('locale-info'), { scope });

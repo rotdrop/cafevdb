@@ -39,25 +39,32 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { appName as appId } from '../../config.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 
+const props = defineProps<{
+  localeSymbol?: string
+  currencySymbol?: string
+  currencyCode?: string
+  timeZone?: string
+}>()
+
 const initialState = getInitialState<{
-  localeSymbol?: string,
-  currencySymbol?: string,
-  currencyCode?: string,
-  dateTimeZone?: string,
+  localeSymbol?: string
+  currencySymbol?: string
+  currencyCode?: string
+  dateTimeZone?: string
 }>({ section: 'CAFEVDB', defaults: {} })
 
 // Strip the encoding, e.g. "de_DE.UTF-8" -> "de_DE".
-const localeSymbol = (initialState?.localeSymbol ?? '').split('.')[0]
-const currencySymbol = initialState?.currencySymbol ?? ''
-const currencyCode = initialState?.currencyCode ?? ''
-const timeZone = initialState?.dateTimeZone ?? 'UTC'
+const localeSymbol = computed(() => (props.localeSymbol ?? initialState?.localeSymbol ?? '').split('.')[0])
+const currencySymbol = computed(() => props.currencySymbol ?? initialState?.currencySymbol ?? '')
+const currencyCode = computed(() => props.currencyCode ?? initialState?.currencyCode ?? '')
+const timeZone = computed(() => props.timeZone ?? initialState?.dateTimeZone ?? 'UTC')
 
 const formatTime = (date: Date) => {
   try {
-    return new Intl.DateTimeFormat(localeSymbol.replace('_', '-') || undefined, {
+    return new Intl.DateTimeFormat(localeSymbol.value.replace('_', '-') || undefined, {
       dateStyle: 'medium',
       timeStyle: 'medium',
-      timeZone,
+      timeZone: timeZone.value,
     }).format(date)
   } catch {
     return date.toLocaleString()
@@ -66,7 +73,9 @@ const formatTime = (date: Date) => {
 
 const now = ref(new Date())
 const time = computed(() => formatTime(now.value))
-const timer = setInterval(() => { now.value = new Date() }, 1000)
+const timer = setInterval(() => {
+  now.value = new Date()
+}, 1000)
 onBeforeUnmount(() => clearInterval(timer))
 </script>
 

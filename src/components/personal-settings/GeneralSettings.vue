@@ -1,6 +1,17 @@
 <!-- General, encryption and database settings. -->
 <template>
-  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
+  <AdminSettingsTab :entry="entry"
+                    :groups="groups"
+                    @error="emit('error', $event)"
+                    @saved="onSaved"
+  >
+    <template #general-settings>
+      <LocaleInfo :localeSymbol="localeInfo.localeSymbol"
+                  :currencySymbol="localeInfo.currencySymbol"
+                  :currencyCode="localeInfo.currencyCode"
+                  :timeZone="localeInfo.dateTimeZone"
+      />
+    </template>
     <template #encryption-settings>
       <div class="admin-actions">
         <NcPasswordField v-model="oldSystemKey" :label="t(appId, 'Current Key')" autocomplete="current-password" />
@@ -39,8 +50,9 @@ import type { TabEntry } from './settings-tree.ts'
 
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton, NcNoteCard, NcPasswordField } from '@nextcloud/vue'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import AdminSettingsTab from './AdminSettingsTab.vue'
+import LocaleInfo from './LocaleInfo.vue'
 import {
   APP_DB_NAME,
   APP_DB_PASSWORD,
@@ -50,14 +62,34 @@ import {
   ORCHESTRA_NAME_KEY,
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
-import { getAdminSetting, setAdminSetting } from '../../services/admin-settings.ts'
+import { getAdminSetting, getLocaleInfo, setAdminSetting } from '../../services/admin-settings.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
   localeOptions?: Array<{ value: string, name: string }>
+  orchestraLocale?: string
+  orchestraCurrencySymbol?: string
+  orchestraCurrencyCode?: string
+  dateTimeZone?: string
 }>({ section: 'adminSettings', defaults: {} })
+const localeInfo = reactive({
+  localeSymbol: state?.orchestraLocale ?? '',
+  currencySymbol: state?.orchestraCurrencySymbol ?? '',
+  currencyCode: state?.orchestraCurrencyCode ?? '',
+  dateTimeZone: state?.dateTimeZone ?? 'UTC',
+})
+const onSaved = async (key: string) => {
+  if (key !== ORCHESTRA_LOCALE_KEY) {
+    return
+  }
+  try {
+    Object.assign(localeInfo, (await getLocaleInfo('app')).data)
+  } catch (error) {
+    emit('error', error instanceof Error ? error : new Error(String(error)))
+  }
+}
 const localeOptions = (state?.localeOptions ?? []).map(({ value, name }) => ({ value, label: name }))
 
 const field = (key: string, label: string, type: AdminSettingField['type'] = 'text'): AdminSettingField => ({
@@ -70,6 +102,7 @@ const groups: AdminSettingGroup[] = [
   {
     id: props.entry.children[0]?.id ?? 'general-settings',
     name: props.entry.children[0]?.name ?? t(appId, 'General settings'),
+    slot: 'general-settings',
     fields: [
       field(ORCHESTRA_NAME_KEY, t(appId, 'Name of orchestra')),
       { ...field(ORCHESTRA_LOCALE_KEY, t(appId, 'Locale of the orchestra'), 'select'), options: localeOptions },

@@ -121,7 +121,7 @@ export type AdminSettingGroup = {
 }
 
 const props = defineProps<{ entry: TabEntry, groups: AdminSettingGroup[] }>()
-const emit = defineEmits<{ error: [error: Error] }>()
+const emit = defineEmits<{ error: [error: Error], saved: [key: string, value: unknown] }>()
 
 const initialState = getInitialState<{ [key: string]: unknown }>({
   section: 'adminSettings',
@@ -184,6 +184,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
       saved[field.key] = values[field.key]
     }
     force[field.key] = false
+    emit('saved', field.key, values[field.key])
   } catch (error) {
     values[field.key] = previous
     emit('error', error instanceof Error ? error : new Error(String(error)))
