@@ -20,6 +20,8 @@ export type PersonalSettingKey =
   | 'financeMode'
   | 'expertMode'
   | 'showDisabled'
+  | 'pageRowsDefault'
+  | 'debugMode'
 
 export const setPersonalSetting = (key: PersonalSettingKey, value: unknown) => {
   const url = generateAppUrl(`${BASE_PATH}/${END_POINT_PERSONAL_SET}/{parameter}`, { parameter: key })
