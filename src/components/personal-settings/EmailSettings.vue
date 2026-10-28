@@ -81,19 +81,17 @@ const transportOptions: AdminSettingOption[] = ['insecure', 'starttls', 'ssl'].m
   label: value.toUpperCase(),
 }))
 const groups = [
-  group(0, t(appId, 'Server Settings'), [
+  group(0, t(appId, 'Email Server and Account'), [
     field(SMTP_SERVER, t(appId, 'SMTP Server')),
     field(SMTP_PORT, t(appId, 'SMTP Port'), 'number'),
     field(SMTP_SECURITY, t(appId, 'SMTP Security'), 'select', transportOptions),
     field(IMAP_SERVER, t(appId, 'IMAP Server')),
     field(IMAP_PORT, t(appId, 'IMAP Port'), 'number'),
     field(IMAP_SECURITY, t(appId, 'IMAP Security'), 'select', transportOptions),
-  ], 'email-test-actions'),
-  group(1, t(appId, 'Email Account'), [
     field(EMAIL_USER, t(appId, 'Email user')),
     field(EMAIL_PASSWORD, t(appId, 'Email password'), 'password'),
-  ]),
-  group(2, t(appId, 'Bulk Email Composition'), [
+  ], 'email-test-actions'),
+  group(1, t(appId, 'Bulk Email Composition'), [
     field(ANNOUNCEMENTS_MAILING_LIST_KEY, t(appId, 'Announcements mailing list')),
     {
       ...field(EMAIL_FROM_ADDRESS_KEY, t(appId, 'Sender email address')),
@@ -108,10 +106,10 @@ const groups = [
     field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, t(appId, 'Verify external-link SSL certificates'), 'checkbox'),
     field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, t(appId, 'Require HTTPS for external links'), 'checkbox'),
   ]),
-  group(3, t(appId, 'Bulk Email Privacy Notice'), [
+  group(2, t(appId, 'Bulk Email Privacy Notice'), [
     field(BULK_EMAIL_PRIVACY_NOTICE, t(appId, 'Bulk Email Privacy Notice'), 'wysiwyg'),
   ]),
-  group(4, t(appId, 'Mailing List Service'), [
+  group(3, t(appId, 'Mailing List Service'), [
     field(MAILING_LIST_REST_CONFIG.url, t(appId, 'Mailing list service URL')),
     field(MAILING_LIST_REST_CONFIG.user, t(appId, 'Mailing list service user')),
     field(MAILING_LIST_REST_CONFIG.password, t(appId, 'Mailing list service password'), 'password'),
@@ -120,7 +118,7 @@ const groups = [
     field(MAILING_LIST_CONFIG.owner, t(appId, 'Default mailing list owner')),
     field(MAILING_LIST_CONFIG.moderator, t(appId, 'Default mailing list moderator')),
   ], 'mailing-list-actions'),
-  group(5, t(appId, 'Test Settings'), [
+  group(4, t(appId, 'Test Settings'), [
     field(EMAIL_TEST_MODE, t(appId, 'Email test mode'), 'checkbox'),
     {
       ...field(EMAIL_TEST_ADDRESS_KEY, t(appId, 'Test recipient address')),

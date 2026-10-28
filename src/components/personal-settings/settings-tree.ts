@@ -97,8 +97,7 @@ export const getSettingsTree = (isGroupAdmin: boolean): TabEntry[] => {
       name: t(appId, 'Email'),
       adminOnly: true,
       children: [
-      { id: 'server-settings', name: t(appId, 'Server Settings') },
-      { id: 'email-account', name: t(appId, 'Email Account') },
+      { id: 'server-settings', name: t(appId, 'Email Server and Account') },
       { id: 'bulk-email-composition', name: t(appId, 'Bulk Email Composition') },
       { id: 'bulk-email-privacy-notice', name: t(appId, 'Bulk Email Privacy Notice') },
       { id: 'mailing-list-service', name: t(appId, 'Mailing List Service') },
