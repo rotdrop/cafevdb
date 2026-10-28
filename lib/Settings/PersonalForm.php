@@ -114,7 +114,13 @@ class PersonalForm
         [
           'appName' => $this->appName(),
           'isGroupAdmin' => $isGroupAdmin,
+          'financeModeAllowed' => $this->roles->inTreasurerGroup(),
           EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on'),
+          EnumPersonalSettingsKey::RESTORE_HISTORY->value => $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off'),
+          EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'off'),
+          EnumPersonalSettingsKey::DIRECT_CHANGE->value => $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE, 'off'),
+          EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, 'off'),
+          EnumPersonalSettingsKey::SHOW_DISABLED->value => $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, 'off'),
           'language' => $this->configService->getCloudUserConfig()->getValueString($this->userId(), 'core', 'lang', 'en'),
           EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce'),
           EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE),
