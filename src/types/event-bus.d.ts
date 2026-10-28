@@ -28,12 +28,10 @@
 // import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { jqXHR } from '@types/jquery/misc.d.ts';
 import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
-import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
 import type { GlobalState } from '../app/globalstate.ts';
 import type { messages } from '../app/notification.ts';
 import type {
   ADD_CONTACTS_TO_PROJECT,
-  APP_SETTINGS_POPUP,
   EMAIL_POPUP,
   GET_VUE_COMPONENT,
   GLOBAL_STATE_INITIALIZED,
@@ -96,7 +94,6 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   export interface EventArgs {
     // mapping of 'event name' => { arg: 'event type', res: result type }
     [ADD_CONTACTS_TO_PROJECT]: { projectName: string };
-    [APP_SETTINGS_POPUP]: AppSettingsCallbacks;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [EMAIL_POPUP]: { projectId?: number; projectName?: string; reopen?: boolean; post?: Record<string, any> };
     [GET_VUE_COMPONENT]: {

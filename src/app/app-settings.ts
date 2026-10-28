@@ -25,84 +25,8 @@
  * @module
  */
 
-import { translate as t } from '@nextcloud/l10n';
-import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { appName } from '../config.ts';
-import { APP_SETTINGS_POPUP, POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bus-events.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { unfocus } from './cafevdb.ts';
 import $ from './jquery.ts';
-
-import '../legacy/nextcloud/jquery/requesttoken.js';
-import 'personal-settings-popup.scss';
-import { hiddenCssClass, loadingCssClass } from 'variables.module.scss';
-
-export interface Callbacks {
-  done: <T extends HTMLElement>(this: T) => void;
-  fail: <T extends HTMLElement>(this: T, xhr: JQueryXHR, status: string, errorThrown: string) => void;
-  always: <T extends HTMLElement>(this: T) => void;
-}
-
-/**
- * A variant of the old fashioned appsettings with a callback
- * instead of script loading
- *
- * @param callbacks Object with done(), fail(), always() properties.
- */
-export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
-  const defaultCallbacks = {
-    done() {},
-    fail() {},
-    always() {},
-  };
-  callbacks = { ...defaultCallbacks, ...callbacks };
-  const $popup = $('#appsettings_popup');
-
-  console.info('POPUP ELEMENT', $popup);
-
-  await new Promise((resolve, reject) => {
-    if ($popup.is(':visible')) {
-      $popup.addClass(hiddenCssClass).html('');
-      callbacks.always?.apply($popup.get(0)!);
-      console.info('RESOLVE SETTINGS PROMISE false');
-      resolve(false);
-    } else {
-      // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
-      const route = 'settings/personal/form';
-      $.get(generateAppUrl(route))
-        .done(function(data) {
-          $popup.html(data);
-          // assume the first element is a container div
-          if ($popup.find('.popup-title').length > 0) {
-            $popup.find('.popup-title').append('<a class="close"></a>');
-            // $popup.find(">:first-child").prepend('<a class="close"></a>').show();
-          } else {
-            $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
-          }
-          $popup.find('.close').on('click', function() {
-            $popup.addClass(hiddenCssClass).html('');
-          });
-          $popup.trigger(appName + ':content-update'); // trigger jq ui initialization etc.
-          callbacks.done?.apply($popup.get(0)!);
-          $popup.find('>:first-child').removeClass(hiddenCssClass);
-          $popup.removeClass(hiddenCssClass);
-          console.info('RESOLVE SETTINGS PROMISE true');
-          resolve(true);
-        })
-        .fail(function(xhr, status, errorThrown) {
-          callbacks.fail?.apply($popup.get(0)!, [xhr, status, errorThrown]);
-          reject(new Error(errorThrown));
-        })
-        .always(() => callbacks.always?.apply($popup.get(0)!));
-    }
-  });
-};
-
-subscribe(APP_SETTINGS_POPUP, async (event) => {
-  console.info('EVENT', event);
-  emit(PUSH_BUSY_STATE);
-  await appSettingsPopup(event).finally(() => emit(POP_BUSY_STATE));
-});
 
 const documentReady = function() {
 
@@ -116,20 +40,6 @@ const documentReady = function() {
     }
     $('#app-settings-header').cafevTooltip('hide');
     unfocus();
-    return false;
-  });
-
-  appNav.on('click', '#app-settings-further-settings', function() {
-    const $self = $(this);
-    $self.addClass(loadingCssClass);
-    appSettingsPopup({
-      done() {
-      },
-      always() {
-        $self.removeClass(loadingCssClass);
-      },
-    });
-
     return false;
   });
 

@@ -60,7 +60,6 @@
       </template>
       <template #footer>
         <NcAppNavigationSettings :excludeClickOutsideSelectors="[
-          '#appsettings_popup *',
           '.vs__dropdown-menu',
           '.v-popper--theme-dropdown',
         ]"
@@ -170,13 +169,11 @@
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
                                      @submit="(filter) => { globalState.debugQuerySqlFilter = filter; } "
           />
-          <NcActions :forceName="true" :inline="1" :class="{ loading: appSettingsLoading }">
+          <NcActions :forceName="true" :inline="1">
             <NcActionLink v-tooltip="hints['further-settings']"
-                          :class="{ loading: appSettingsLoading }"
                           :name="t(appId, 'Further Settings')"
                           :href="personalSettingsUrl"
                           :target="md5(personalSettingsUrl)"
-                          @click="openSettingsPopup"
             >
               <template #icon>
                 <IconAppSettings />
@@ -211,15 +208,11 @@
     >
       <NcAppSidebarTab id="I-am-a-tab" name="I am a Tab!" />
     </NcAppSidebar>
-    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
     <div id="fullcalendar">
       <!-- used by legacy calendar stuff -->
     </div>
     <div id="dialog_holder" class="popup topleft hidden">
       <!-- used by legacy calendar, blog, legacy events -->
-    </div>
-    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden">
-      <!-- used by app-settings popup opened by the left side-bar -->
     </div>
     <form class="focusstealer">
       <!-- defeat auto-focus attempts -->
@@ -356,7 +349,6 @@ const loading = ref(true)
 const isMounted = ref(false)
 const debugModes = ref<DebugOption[]>([])
 const settingsLocked = ref(false)
-const appSettingsLoading = ref(false)
 const pageTemplate = ref<string|null>(null)
 const navigationItems = ref<NavigationItem[]>([])
 
@@ -447,16 +439,6 @@ const openProjectOverview = () => {
     projectId: currentProjectId.value,
     projectName: currentProjectName.value,
     template: 'projects',
-  })
-}
-
-const openSettingsPopup = (event: MouseEvent) => {
-  event.preventDefault()
-  appSettingsLoading.value = true
-  return asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
-    done() {},
-    fail() {},
-    always: () => { appSettingsLoading.value = false },
   })
 }
 
