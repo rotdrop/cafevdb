@@ -34,6 +34,7 @@ use Psr\Log\LoggerInterface;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\WordSplitterNotificationService;
 
 /** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
@@ -43,6 +44,7 @@ class Notifier implements \OCP\Notification\INotifier
   const RECRYPT_USER_SUBJECT = 'recrypt_user';
   const RECRYPT_USER_DENIED_SUBJECT = 'recrypt_user_denied';
   const RECRYPT_USER_HANDLED_SUBJECT = 'recrypt_user_handled';
+  const WORD_SPLITTER_LOCALE_SUBJECT = 'word_splitter_locale';
   const ACCEPT_ACTION = 'accept';
   const DECLINE_ACTION = 'decline';
   const PROTEST_ACTION = 'protest';
@@ -186,6 +188,30 @@ class Notifier implements \OCP\Notification\INotifier
           }
           $notification->addParsedAction($action);
         }
+        break;
+
+      case self::WORD_SPLITTER_LOCALE_SUBJECT:
+        $parameters = $notification->getSubjectParameters();
+        $problems = $parameters['problems'] ?? [];
+        $localeParameters = [
+          'locale' => [
+            'type' => 'highlight',
+            'id' => $parameters['locale'] ?? '',
+            'name' => $parameters['locale'] ?? '',
+          ],
+        ];
+
+        $subjectString = [];
+        if (in_array(WordSplitterNotificationService::PROBLEM_SYSTEM_SERVICE, $problems)) {
+          $subjectString[] = $l->t('The system-wide word-splitter service is not configured for the app locale {locale}.');
+        }
+        if (in_array(WordSplitterNotificationService::PROBLEM_LOCAL_SERVICE, $problems)) {
+          $subjectString[] = $l->t('The app locale {locale} is not installed on the server, the word-splitter service cannot be started.');
+        }
+
+        $notification
+          ->setLink($this->urlGenerator->linkToRouteAbsolute('settings.AdminSettings.index', [ 'section' => $this->appName ]))
+          ->setRichSubject(implode(' ', $subjectString), $localeParameters);
         break;
 
       default:

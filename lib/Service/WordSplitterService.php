@@ -29,6 +29,7 @@ use RuntimeException;
 
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * Client for the german-word-splitter Python microservice.
@@ -54,12 +55,30 @@ class WordSplitterService
   /** @var string Socket path of the system-wide service. */
   private string $systemSocket = self::SYSTEM_SOCKET;
 
+  /** @var string[] Locales requested for service transliteration. */
+  private array $transliterationLocales;
+
+  /** @var string The app locale which should be known to the service. */
+  private string $appLocale;
+
+  /** @var string[] Locale problems detected but not yet reported to the admins. */
+  private array $pendingProblems = [];
+
+  /** @var null|bool Cached decision whether the running system service can be used. */
+  private ?bool $systemServiceUsable = null;
+
   /** @var bool Whether the app-specific socket was explicitly configured. */
   private bool $allowSystemSocket;
 
   /**
    * @param IConfig $config Nextcloud configuration access.
    * @param IClientService $clientService Factory for HTTP clients.
+   * @param string $appName The app id.
+   * @param string $appLocale The configured app locale, always made
+   * available to the service for transliteration.
+   * @param ILogger $logger Used to report missing locales.
+   * @param WordSplitterNotificationService $notifications Used to notify the
+   * admins about locale problems.
    *
    * @throws RuntimeException If the app-data directory cannot be created.
    */
@@ -67,11 +86,51 @@ class WordSplitterService
     private IConfig $config,
     private IClientService $clientService,
     private string $appName,
+    string $appLocale,
+    private ILogger $logger,
+    private WordSplitterNotificationService $notifications,
   ) {
+    $this->appLocale = $appLocale;
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
     $this->allowSystemSocket = $configuredSocket === '';
     $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
+    $extraLocales = preg_split('/[\s,]+/', $config->getAppValue($this->appName, 'splitter_transliteration_locales', ''), -1, PREG_SPLIT_NO_EMPTY);
+    $this->transliterationLocales = array_values(array_unique([$appLocale, ...$extraLocales]));
+  }
+
+  /**
+   * Restrict the given locales to those installed on this system. The
+   * splitter refuses to start if one of its locales is missing, so
+   * uninstalled ones are dropped.
+   *
+   * @param string[] $locales
+   *
+   * @return string[]
+   */
+  private function installedLocales(array $locales): array
+  {
+    $installed = array_values(array_filter($locales, fn(string $locale) => $this->isLocaleInstalled($locale)));
+    $missing = array_diff($locales, $installed);
+    if (!empty($missing)) {
+      $this->logger->error('Locales required by the word splitter are not installed: ' . implode(', ', $missing));
+    }
+    return $installed;
+  }
+
+  /**
+   * Check whether the given locale is installed on this system.
+   *
+   * @param string $locale
+   *
+   * @return bool
+   */
+  private function isLocaleInstalled(string $locale): bool
+  {
+    $previous = setlocale(LC_CTYPE, '0');
+    $installed = setlocale(LC_CTYPE, $locale) !== false;
+    setlocale(LC_CTYPE, $previous);
+    return $installed;
   }
 
   /**
@@ -118,32 +177,90 @@ class WordSplitterService
    *
    * @return void
    *
-   * @throws RuntimeException If the executable is missing or the service
-   *                          does not come up within STARTUP_TIMEOUT.
-   *
-   * @SuppressWarnings(PHPMD.ErrorControlOperator)
+   * @throws RuntimeException If the app locale is not installed, the
+   *                          executable is missing or the service does not
+   *                          come up within STARTUP_TIMEOUT.
    */
   private function ensureStarted(): void
   {
-    if ($this->allowSystemSocket && $this->isUp($this->systemSocket)) {
+    try {
+      $this->startService();
+      if (empty($this->pendingProblems)) {
+        $this->clearProblemNotifications();
+      }
+    } finally {
+      // report once, also if the start fails with an exception
+      $this->reportPendingProblems();
+    }
+  }
+
+  /**
+   * Remove stale locale notifications after a problem-free start.
+   *
+   * @return void
+   */
+  private function clearProblemNotifications(): void
+  {
+    try {
+      $this->notifications->clearLocaleProblems();
+    } catch (\Throwable $t) {
+      $this->logger->warning('Unable to clear the word splitter locale notifications.', [ 'exception' => $t ]);
+    }
+  }
+
+  /**
+   * Notify the admins about all problems found while starting the service
+   * with a single notification.
+   *
+   * @return void
+   */
+  private function reportPendingProblems(): void
+  {
+    if (empty($this->pendingProblems)) {
+      return;
+    }
+    $problems = $this->pendingProblems;
+    $this->pendingProblems = [];
+    try {
+      $this->notifications->notifyLocaleProblems($this->appLocale, $problems);
+    } catch (\Throwable $t) {
+      $this->logger->error('Unable to notify the admins about the word splitter locale problems.', [ 'exception' => $t ]);
+    }
+  }
+
+  /**
+   * @return void
+   *
+   * @throws RuntimeException
+   *
+   * @SuppressWarnings(PHPMD.ErrorControlOperator)
+   */
+  private function startService(): void
+  {
+    if ($this->useSystemService()) {
       $this->socket = $this->systemSocket;
       return;
     }
     if ($this->isUp($this->socket)) {
       return;
     }
+    if (!$this->isLocaleInstalled($this->appLocale)) {
+      $this->pendingProblems[] = WordSplitterNotificationService::PROBLEM_LOCAL_SERVICE;
+      $message = 'The app locale ' . $this->appLocale . ' is not installed, the word splitter cannot be started.';
+      $this->logger->error($message);
+      throw new RuntimeException($message);
+    }
     if (!is_executable($this->bin)) {
       throw new RuntimeException('Splitter executable not found.');
     }
     $lock = fopen(sys_get_temp_dir() . '/german-word-splitter.lock', 'c');
     flock($lock, LOCK_EX); // serialize concurrent launches
-    $systemServiceUp = $this->allowSystemSocket && $this->isUp($this->systemSocket);
+    $systemServiceUp = $this->useSystemService();
     if ($systemServiceUp) {
       $this->socket = $this->systemSocket;
     } elseif (!$this->isUp($this->socket)) {
       @unlink($this->socket); // remove a stale socket file
-      exec('env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
-        . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &');
+      exec($this->startupCommand());
     }
     flock($lock, LOCK_UN);
     fclose($lock);
@@ -161,13 +278,128 @@ class WordSplitterService
   }
 
   /**
+   * Build the command which starts the app-local service.
+   *
+   * @return string
+   */
+  private function startupCommand(): string
+  {
+    return 'env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
+      . ' GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='
+      . escapeshellarg(implode(',', $this->installedLocales($this->transliterationLocales)))
+      . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &';
+  }
+
+  /**
+   * Check whether the system-wide service is running and knows the app
+   * locale. If it is running but lacks the app locale an error is logged
+   * and the service is not used, such that an app-local service is started
+   * instead. The decision is cached.
+   *
+   * @return bool
+   */
+  private function useSystemService(): bool
+  {
+    if (!$this->allowSystemSocket || !$this->isUp($this->systemSocket)) {
+      return false;
+    }
+    if ($this->systemServiceUsable === null) {
+      $this->systemServiceUsable = $this->systemServiceKnowsAppLocale();
+    }
+    return $this->systemServiceUsable;
+  }
+
+  /**
+   * The locales of a running system-wide service are fixed at its start and
+   * cannot be changed from here.
+   *
+   * @return bool False if the service reports locales not containing the
+   * language of the app locale, true otherwise, also if the service does not
+   * provide the info endpoint (older versions).
+   */
+  private function systemServiceKnowsAppLocale(): bool
+  {
+    try {
+      $locales = $this->fetchInfo($this->systemSocket)['transliteration_locales'] ?? null;
+    } catch (\Throwable $t) {
+      return true;
+    }
+    if (!is_array($locales)) {
+      return true;
+    }
+    $appLanguage = $this->primaryLanguage($this->appLocale);
+    foreach ($locales as $locale) {
+      if ($this->primaryLanguage((string)$locale) === $appLanguage) {
+        return true;
+      }
+    }
+    $this->logger->error('The running system-wide word splitter service is not configured for the app locale '
+      . $this->appLocale . ' (configured locales: ' . implode(', ', $locales)
+      . '), starting an app-local service instead.');
+    $this->pendingProblems[] = WordSplitterNotificationService::PROBLEM_SYSTEM_SERVICE;
+    return false;
+  }
+
+  /**
+   * @param string $locale A locale like de_DE.UTF-8.
+   *
+   * @return string The lower-case language part.
+   */
+  private function primaryLanguage(string $locale): string
+  {
+    return strtolower(preg_split('/[_.@-]/', $locale)[0]);
+  }
+
+  /**
+   * Get the service information from the given socket without starting anything.
+   *
+   * @param string $socket
+   *
+   * @return array{version: string, default_method: string, transliteration_locales: string[]}
+   *
+   * @throws RuntimeException If the request fails.
+   * @throws \JsonException If the reply is not valid JSON.
+   */
+  private function fetchInfo(string $socket): array
+  {
+    try {
+      $response = $this->clientService->newClient()->get('http://localhost/info', [
+        'timeout' => 30,
+        'curl' => [CURLOPT_UNIX_SOCKET_PATH => $socket],
+        'proxy' => null,
+        'nextcloud' => ['allow_local_address' => true],
+      ]);
+    } catch (\Throwable $e) {
+      throw new RuntimeException('Splitter info request failed: ' . $e->getMessage(), 0, $e);
+    }
+
+    return json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+  }
+
+  /**
+   * Get the information of the service in use.
+   *
+   * @return array{version: string, default_method: string, transliteration_locales: string[]}
+   *
+   * @throws RuntimeException If the service cannot be started or the
+   *                          request fails.
+   * @throws \JsonException If the reply is not valid JSON.
+   */
+  public function info(): array
+  {
+    $this->ensureStarted();
+
+    return $this->fetchInfo($this->socket);
+  }
+
+  /**
    * Split a German compound word into its components.
    *
    * Starts the service first if it is not yet running.
    *
    * @param string $word The word to split.
-   * @param string $method Splitting method, "charsplit" (default) or
-   *                       "german_compound_splitter".
+   * @param string $method Splitting method, "charsplit" (default),
+   *                       "german_compound_splitter" or its shortcut "gcs".
    *
    * @return string[] The components; contains just $word if it is not
    *                  splittable.
