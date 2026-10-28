@@ -1186,12 +1186,13 @@ class MailingListsService
   {
     // relative path
     $l = $this->appL10n();
+    // the unspecific leaf directory is the empty string which must not be translated
     $components = array_map(function($path) {
       return Util::dashesToCamelCase($this->transliterate($path), capitalizeFirstCharacter: true, dashes: '_- ');
     }, array_filter([
       $l->t(self::TEMPLATE_DIR_MAILING_LISTS),
       $l->t(self::TEMPLATE_DIR_AUTO_RESPONSES),
-      $l->t($leafDirectory),
+      $leafDirectory === '' ? '' : $l->t($leafDirectory),
     ]));
     array_unshift($components, $this->getDocumentTemplatesPath());
     $folderPath = implode('/', $components);
