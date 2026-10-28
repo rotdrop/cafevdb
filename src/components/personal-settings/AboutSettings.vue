@@ -26,7 +26,7 @@
     <div class="product name">
       {{ about.name }} v{{ about.version }}
       <template v-if="about.codeName">
-        AKA "<a target="_wikipedia" :href="wikipedia(about.codeName)">{{ about.codeName }}</a>"
+        AKA "{{ about.codeName }}"
       </template>
     </div>
     <div class="product description">
@@ -49,7 +49,6 @@
     <div class="product credits">
       <div class="product credits intro">
         {{ t(appId, 'There is a long list of free software projects this application depends on, coded in the spare-time of an amazingly long list of volunteers. We just randomly choose five projects and display them below. The list refreshes "itself" every {seconds} seconds.', { seconds: refreshSeconds }) }}
-        <a target="_wikipedia" href="http://en.wikipedia.org/wiki/Free_software">?</a>
       </div>
       <div class="product credits list">
         <ul>
