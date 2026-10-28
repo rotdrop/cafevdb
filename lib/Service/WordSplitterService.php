@@ -58,6 +58,12 @@ class WordSplitterService
   /** @var string[] Locales requested for service transliteration. */
   private array $transliterationLocales;
 
+  /** @var string The app locale which should be known to the service. */
+  private string $appLocale;
+
+  /** @var bool Whether the locales of a running system service have been checked. */
+  private bool $systemLocalesChecked = false;
+
   /** @var bool Whether the app-specific socket was explicitly configured. */
   private bool $allowSystemSocket;
 
@@ -78,6 +84,7 @@ class WordSplitterService
     string $appLocale,
     private ILogger $logger,
   ) {
+    $this->appLocale = $appLocale;
     $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
     $this->allowSystemSocket = $configuredSocket === '';
@@ -160,6 +167,7 @@ class WordSplitterService
   {
     if ($this->allowSystemSocket && $this->isUp($this->systemSocket)) {
       $this->socket = $this->systemSocket;
+      $this->checkSystemServiceLocales();
       return;
     }
     if ($this->isUp($this->socket)) {
@@ -180,6 +188,7 @@ class WordSplitterService
     flock($lock, LOCK_UN);
     fclose($lock);
     if ($systemServiceUp) {
+      $this->checkSystemServiceLocales();
       return;
     }
 
@@ -206,13 +215,70 @@ class WordSplitterService
   }
 
   /**
+   * Log an error if the running system-wide service does not know the app
+   * locale. Its locales are fixed at its start and cannot be changed from here.
+   *
+   * @return void
+   */
+  private function checkSystemServiceLocales(): void
+  {
+    if ($this->systemLocalesChecked) {
+      return;
+    }
+    $this->systemLocalesChecked = true;
+    try {
+      $locales = $this->info()['transliteration_locales'] ?? null;
+    } catch (\Throwable $t) {
+      return; // older services do not provide the info endpoint
+    }
+    if (!is_array($locales)) {
+      return;
+    }
+    $appLanguage = locale_get_primary_language($this->appLocale);
+    foreach ($locales as $locale) {
+      if (locale_get_primary_language((string)$locale) === $appLanguage) {
+        return;
+      }
+    }
+    $this->logger->error('The running word splitter service is not configured for the app locale ' . $this->appLocale
+      . ', configured locales: ' . implode(', ', $locales));
+  }
+
+  /**
+   * Get the service information.
+   *
+   * @return array{version: string, default_method: string, transliteration_locales: string[]}
+   *
+   * @throws RuntimeException If the service cannot be started or the
+   *                          request fails.
+   * @throws \JsonException If the reply is not valid JSON.
+   */
+  public function info(): array
+  {
+    $this->ensureStarted();
+
+    try {
+      $response = $this->clientService->newClient()->get('http://localhost/info', [
+        'timeout' => 30,
+        'curl' => [CURLOPT_UNIX_SOCKET_PATH => $this->socket],
+        'proxy' => null,
+        'nextcloud' => ['allow_local_address' => true],
+      ]);
+    } catch (\Throwable $e) {
+      throw new RuntimeException('Splitter info request failed: ' . $e->getMessage(), 0, $e);
+    }
+
+    return json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+  }
+
+  /**
    * Split a German compound word into its components.
    *
    * Starts the service first if it is not yet running.
    *
    * @param string $word The word to split.
-   * @param string $method Splitting method, "charsplit" (default) or
-   *                       "german_compound_splitter".
+   * @param string $method Splitting method, "charsplit" (default),
+   *                       "german_compound_splitter" or its shortcut "gcs".
    *
    * @return string[] The components; contains just $word if it is not
    *                  splittable.

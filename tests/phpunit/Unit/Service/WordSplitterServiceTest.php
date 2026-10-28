@@ -184,6 +184,49 @@ class WordSplitterServiceTest extends TestCase
     $this->assertSame(['Haus', 'Tür'], $service->split('Haustür'));
   }
 
+  public function testInfoReturnsServiceInformation(): void
+  {
+    $client = $this->createMock(IClient::class);
+    $response = $this->createStub(IResponse::class);
+    $response->method('getBody')->willReturn(
+      '{"version":"0.7.0","default_method":"gcs","transliteration_locales":["de_DE.UTF-8"]}'
+    );
+    $client->expects($this->once())
+      ->method('get')
+      ->with(
+        'http://localhost/info',
+        $this->callback(fn(array $options): bool => $options['curl'][CURLOPT_UNIX_SOCKET_PATH] === $this->socket),
+      )
+      ->willReturn($response);
+
+    $service = $this->createService($client);
+
+    $this->assertSame(
+      ['version' => '0.7.0', 'default_method' => 'gcs', 'transliteration_locales' => ['de_DE.UTF-8']],
+      $service->info(),
+    );
+  }
+
+  public function testMissingAppLocaleInRunningSystemServiceIsLogged(): void
+  {
+    $client = $this->createStub(IClient::class);
+    $response = $this->createStub(IResponse::class);
+    $response->method('getBody')->willReturn(
+      '{"version":"0.7.0","default_method":"gcs","transliteration_locales":["en_US.UTF-8"]}'
+    );
+    $client->method('get')->willReturn($response);
+    $logger = $this->createMock(LoggerInterface::class);
+    $logger->expects($this->once())
+      ->method('error')
+      ->with($this->stringContains('de_DE.UTF-8'));
+
+    $service = $this->createService($client, true, appLocale: 'de_DE.UTF-8', logger: $logger);
+    (new \ReflectionProperty($service, 'systemSocket'))->setValue($service, $this->systemSocket);
+
+    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
+    (new \ReflectionMethod($service, 'ensureStarted'))->invoke($service);
+  }
+
   public function testSplitWrapsHttpClientFailures(): void
   {
     $client = $this->createMock(IClient::class);
