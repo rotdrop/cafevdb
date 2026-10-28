@@ -170,6 +170,24 @@ const force = reactive<Record<string, boolean>>({})
 const selectedOption = (field: AdminSettingField) =>
   field.options?.find(({ value }) => String(value) === String(values[field.key] ?? '')) ?? null
 
+// A successful response may carry accepted values for sibling fields (e.g. the
+// bank code, BIC and bank name derived from an IBAN); show them.
+const syncRelatedFields = (current: AdminSettingField, data: Record<string, unknown>) => {
+  for (const group of props.groups) {
+    for (const other of group.fields) {
+      if (other.key === current.key || other.type === 'password' || other.type === 'checkbox'
+        || other.type === 'folder' || other.type === 'owner' || other.type === 'wysiwyg') {
+        continue
+      }
+      const incoming = data[other.key]
+      if (typeof incoming === 'string' || typeof incoming === 'number') {
+        values[other.key] = incoming
+        saved[other.key] = incoming
+      }
+    }
+  }
+}
+
 const save = async (field: AdminSettingField, value: unknown, forceSubmit = false) => {
   const previous = saved[field.key]
   if (Object.is(previous, value) && !forceSubmit) {
@@ -211,6 +229,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
       saved[field.key] = values[field.key]
     }
     force[field.key] = false
+    syncRelatedFields(field, response.data)
     showSettingFeedback(response.data, field.label)
     emit('saved', field.key, values[field.key])
   } catch (error) {
