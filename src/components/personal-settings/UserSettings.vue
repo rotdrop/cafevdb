@@ -65,22 +65,26 @@
       >
         {{ t(appId, 'Deselect Invisible') }}
       </NcCheckboxRadioSwitch>
-      <NcSelect v-model="pageRows"
-                v-tooltip="hints['table-rows-per-page']"
-                input-id="table-pagerows"
-                :input-label="t(appId, '#Rows/Page in Tables')"
-                :options="pageRowsOptions"
-                :clearable="false"
-                :disabled="saving.pageRowsDefault"
-      />
-      <NcSelect v-model="wysiwygEditor"
-                v-tooltip="hints['wysiwyg-editor']"
-                input-id="wysiwyg-editor"
-                :input-label="t(appId, 'WYSIWYG Text-Editor')"
-                :options="wysiwygOptions"
-                :clearable="false"
-                :disabled="saving.wysiwygEditor"
-      />
+      <div class="settings-control">
+        <NcSelect v-model="pageRows"
+                  v-tooltip="hints['table-rows-per-page']"
+                  input-id="table-pagerows"
+                  :input-label="t(appId, '#Rows/Page in Tables')"
+                  :options="pageRowsOptions"
+                  :clearable="false"
+                  :disabled="saving.pageRowsDefault"
+        />
+      </div>
+      <div class="settings-control">
+        <NcSelect v-model="wysiwygEditor"
+                  v-tooltip="hints['wysiwyg-editor']"
+                  input-id="wysiwyg-editor"
+                  :input-label="t(appId, 'WYSIWYG Text-Editor')"
+                  :options="wysiwygOptions"
+                  :clearable="false"
+                  :disabled="saving.wysiwygEditor"
+        />
+      </div>
       <NcCheckboxRadioSwitch v-if="financeModeAllowed"
                              id="finance-mode"
                              v-tooltip="hints['finance-mode']"
