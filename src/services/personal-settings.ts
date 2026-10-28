@@ -25,7 +25,9 @@ export type PersonalSettingKey =
   | 'wysiwygEditor'
   | 'debugQuerySqlFilter'
 
+export type PersonalSettingResponse = { messages?: string[], value?: unknown }
+
 export const setPersonalSetting = (key: PersonalSettingKey, value: unknown) => {
   const url = generateAppUrl(`${BASE_PATH}/${END_POINT_PERSONAL_SET}/{parameter}`, { parameter: key })
-  return axios.post(url, { value })
+  return axios.post<PersonalSettingResponse>(url, { value })
 }
