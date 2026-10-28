@@ -21,7 +21,21 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <nav class="personal-settings-navigation" :aria-label="t(appId, 'Settings navigation')">
+  <NcButton v-if="collapsible"
+            class="personal-settings-navigation-toggle"
+            variant="primary"
+            :aria-label="t(appId, 'Toggle settings navigation')"
+            :aria-expanded="navigationOpen"
+            @click="navigationOpen = !navigationOpen"
+  >
+    <template #icon>
+      <CloseIcon v-if="navigationOpen" :size="20" />
+      <ListIcon v-else :size="20" />
+    </template>
+  </NcButton>
+  <nav class="personal-settings-navigation"
+       :class="{ 'navigation-open': navigationOpen }"
+       :aria-label="t(appId, 'Settings navigation')">
     <ul>
       <li v-for="tab in tree" :key="tab.id">
         <a :href="'#' + tab.id"
@@ -43,11 +57,18 @@
 
 <script setup lang="ts">
 import { translate as t } from '@nextcloud/l10n'
+import { NcButton } from '@nextcloud/vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue'
 import type { TabEntry } from './settings-tree.ts'
 import { appName as appId } from '../../config.ts'
 
-const props = defineProps<{ tree: TabEntry[] }>()
+// On narrow screens the navigation is hidden unless "collapsible" is set,
+// in which case a floating toggle button opens it as an overlay.
+const props = defineProps<{ tree: TabEntry[], collapsible?: boolean }>()
+
+const navigationOpen = ref(false)
 
 const activeId = ref<string|null>(null)
 
@@ -57,6 +78,7 @@ const isChildActive = (tab: TabEntry) => tab.children.some((child) => child.id =
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  navigationOpen.value = false
   activeId.value = id
 }
 
@@ -128,6 +150,34 @@ onBeforeUnmount(() => observer?.disconnect())
   // Same breakpoint at which Nextcloud collapses the left navigation.
   @media only screen and (width < 1024px) {
     display: none;
+
+    &.navigation-open {
+      display: block;
+      position: fixed;
+      top: 5rem;
+      right: 1rem;
+      bottom: 5rem;
+      z-index: 1500;
+      max-height: none;
+      width: min(18rem, 100vw - 2rem);
+      padding: 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-large);
+      background-color: var(--color-main-background);
+      box-shadow: 0 0 10px var(--color-box-shadow);
+    }
+  }
+}
+
+.personal-settings-navigation-toggle {
+  display: none;
+
+  @media only screen and (width < 1024px) {
+    display: inline-flex;
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1501;
   }
 }
 </style>
