@@ -21,7 +21,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcButton v-if="collapsible"
+  <NcButton v-if="collapsible && narrowScreen"
             class="personal-settings-navigation-toggle"
             variant="primary"
             :aria-label="t(appId, 'Toggle settings navigation')"
@@ -70,6 +70,16 @@ const props = defineProps<{ tree: TabEntry[], collapsible?: boolean }>()
 
 const navigationOpen = ref(false)
 
+const narrowQuery = window.matchMedia('(width < 1024px)')
+const narrowScreen = ref(narrowQuery.matches)
+const updateNarrowScreen = (event: MediaQueryListEvent) => {
+  narrowScreen.value = event.matches
+  if (!event.matches) {
+    navigationOpen.value = false
+  }
+}
+narrowQuery.addEventListener('change', updateNarrowScreen)
+
 const activeId = ref<string|null>(null)
 
 const allIds = () => props.tree.flatMap((tab) => [tab.id, ...tab.children.map((child) => child.id)])
@@ -109,7 +119,10 @@ onMounted(() => {
   }
 })
 
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  narrowQuery.removeEventListener('change', updateNarrowScreen)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -170,14 +183,9 @@ onBeforeUnmount(() => observer?.disconnect())
 }
 
 .personal-settings-navigation-toggle {
-  display: none;
-
-  @media only screen and (width < 1024px) {
-    display: inline-flex;
-    position: fixed;
-    right: 1rem;
-    bottom: 1rem;
-    z-index: 1501;
-  }
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1501;
 }
 </style>

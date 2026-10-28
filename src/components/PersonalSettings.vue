@@ -117,9 +117,11 @@ onUnmounted(() => {
     min-width: 0;
 
     // Leave room for the app-navigation toggle which is rendered by the server.
-    :deep(.settings-section) {
-      margin-left: calc(var(--default-grid-baseline) * 10);
-      width: min(900px, 100% - var(--default-grid-baseline) * 17);
+    @media only screen and (width >= 1024px) {
+      :deep(.settings-section) {
+        margin-left: calc(var(--default-grid-baseline) * 10);
+        width: min(900px, 100% - var(--default-grid-baseline) * 17);
+      }
     }
   }
 }
