@@ -23,7 +23,7 @@
 namespace OCA\RotDrop\Tests;
 
 /** Database access parameters. */
-class DatabaseConfig extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
+class DatabaseConfig extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -54,7 +54,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 class GnuCashConnectorService
 {
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BracedPlaceholderTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE = 'gnucash/autocomplete-accounts.json';

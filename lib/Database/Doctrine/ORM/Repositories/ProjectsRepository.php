@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EnumOrderByOptions;
 class ProjectsRepository extends EntityRepository
 {
   // use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   const ALIAS = 'proj';
 

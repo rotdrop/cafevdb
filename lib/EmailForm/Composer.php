@@ -95,7 +95,7 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
  */
 class Composer
 {
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;

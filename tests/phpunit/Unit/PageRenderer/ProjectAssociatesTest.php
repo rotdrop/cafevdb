@@ -203,7 +203,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\FakeTranslationTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]

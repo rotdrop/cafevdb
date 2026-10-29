@@ -63,7 +63,7 @@ class ProjectParticipantsController extends Controller
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   public const BASE_PATH = 'projects/participants';
   public const END_POINT_ADD_MUSICIANS = 'add-musicians';

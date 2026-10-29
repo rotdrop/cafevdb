@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   const ROLE = 'role';
 

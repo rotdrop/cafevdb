@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 class OrganizationalRolesService
 {
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CloudAdminTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 

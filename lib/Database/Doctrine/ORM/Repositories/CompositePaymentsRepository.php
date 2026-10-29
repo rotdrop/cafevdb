@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Database repository for CompositePayments entities. */
 class CompositePaymentsRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   /**
    * Fetch the maximum due-date of the underlying receivables.

@@ -51,7 +51,7 @@ class ProjectInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   public const UNVOICED = 0;
   public const NOT_AN_INSTRUMENT_FAMILY = 'not an instrument';

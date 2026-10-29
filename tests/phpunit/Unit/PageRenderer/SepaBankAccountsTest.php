@@ -180,7 +180,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\FakeTranslationTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UserRootFolderTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
