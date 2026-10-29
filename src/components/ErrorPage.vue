@@ -350,7 +350,9 @@ watch(() => props.error, () => {
   showProblemReport.value = false
 })
 
-type StackedErrorObject = Omit<ErrorLike, 'stack'> & { stack?: string | string[] }
+type StackedErrorObject = Omit<ErrorLike, 'stack'> & {
+  stack?: string | string[]
+}
 
 // Remove the stack but for the first level. Actually, passing level
 // with a positive integer will also remove the stack from the
@@ -383,10 +385,20 @@ logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
 const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
 
 const stackTrace = ref<null|StackFrame[]>(null)
+const causeStackTrace = ref<null|StackFrame[]>(null)
+
 watch(stackTrace, (value) => {
   if (Array.isArray(value)) {
     serializedError.stack = value.map((arg) => arg.toString())
     systemErrorString.value = JSON.stringify(serializedError, undefined, 2)
+  }
+})
+watch(causeStackTrace, (value) => {
+  if (isErrorLike(props.error.cause)) {
+    if (Array.isArray(value)) {
+      (serializedError.cause as StackedErrorObject).stack = value.map((arg) => arg.toString())
+      systemErrorString.value = JSON.stringify(serializedError, undefined, 2)
+    }
   }
 })
 
@@ -483,6 +495,9 @@ const reportError = async () => {
 const parseStackTrace = async () => {
   try {
     stackTrace.value = await StackTrace.fromError(props.error, stackTraceOptions)
+    if (isErrorLike(props.error.cause)) {
+      causeStackTrace.value = await StackTrace.fromError(props.error.cause, stackTraceOptions)
+    }
   } catch (error) {
     logger.error('Unable to parse stack trace', error)
     stackTrace.value = null

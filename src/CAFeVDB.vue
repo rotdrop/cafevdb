@@ -60,7 +60,6 @@
       </template>
       <template #footer>
         <NcAppNavigationSettings :excludeClickOutsideSelectors="[
-          '#appsettings_popup *',
           '.vs__dropdown-menu',
           '.v-popper--theme-dropdown',
         ]"
@@ -170,13 +169,11 @@
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
                                      @submit="(filter) => { globalState.debugQuerySqlFilter = filter; } "
           />
-          <NcActions :forceName="true" :inline="1" :class="{ loading: appSettingsLoading }">
+          <NcActions :forceName="true" :inline="1">
             <NcActionLink v-tooltip="hints['further-settings']"
-                          :class="{ loading: appSettingsLoading }"
                           :name="t(appId, 'Further Settings')"
                           :href="personalSettingsUrl"
                           :target="md5(personalSettingsUrl)"
-                          @click="openSettingsPopup"
             >
               <template #icon>
                 <IconAppSettings />
@@ -211,15 +208,11 @@
     >
       <NcAppSidebarTab id="I-am-a-tab" name="I am a Tab!" />
     </NcAppSidebar>
-    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
     <div id="fullcalendar">
       <!-- used by legacy calendar stuff -->
     </div>
     <div id="dialog_holder" class="popup topleft hidden">
       <!-- used by legacy calendar, blog, legacy events -->
-    </div>
-    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden">
-      <!-- used by app-settings popup opened by the left side-bar -->
     </div>
     <form class="focusstealer">
       <!-- defeat auto-focus attempts -->
@@ -234,7 +227,6 @@
 </template>
 
 <script setup lang="ts">
-import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import type { AxiosResponse } from 'axios'
 import type {
   ConfigCheckResponse,
@@ -296,15 +288,18 @@ import IconPageTemplate from './components/PageTemplateIcon.vue'
 import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/Controller/ConfigCheckController.ts'
 import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
-import { appName as appId, appName } from './config.ts'
+import { appName as appId, appName, appPrefix } from './config.ts'
 import allDebugOptions, { DEBUG_QUERY } from './debug-modes.ts'
 import * as BusEvents from './event-bus-events.ts'
 import { globalState, synchronizeGlobalState } from './services/legacy-global-state.ts'
 import { closeNavigation } from './services/navigation.ts'
+import type { PersonalSettingKey } from './services/personal-settings.ts'
+import { setPersonalSetting } from './services/personal-settings.ts'
 import useAppDataStore from './stores/app-data.ts'
 import useErrorHandlerStore from './stores/error-handler.ts'
 import useHistoryStore, { HistoryActionPush } from './stores/history.ts'
 import useTooltipsStore from './stores/tooltips.ts'
+import { showInfo } from './toolkit/util/toasts.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -356,7 +351,6 @@ const loading = ref(true)
 const isMounted = ref(false)
 const debugModes = ref<DebugOption[]>([])
 const settingsLocked = ref(false)
-const appSettingsLoading = ref(false)
 const pageTemplate = ref<string|null>(null)
 const navigationItems = ref<NavigationItem[]>([])
 
@@ -450,23 +444,17 @@ const openProjectOverview = () => {
   })
 }
 
-const openSettingsPopup = (event: MouseEvent) => {
-  event.preventDefault()
-  appSettingsLoading.value = true
-  return asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
-    done() {},
-    fail() {},
-    always: () => { appSettingsLoading.value = false },
-  })
-}
+const legacyReloadKeys: PersonalSettingKey[] = ['financeMode', 'expertMode', 'showDisabled']
 
-const updatePersonalSettings = async (
-  event: keyof SetterEvents,
-  value: SetterEventValue<typeof event>,
-  oldValue: SetterEventValue<typeof event>|undefined,
+const updatePersonalSettings = async <T>(
+  key: PersonalSettingKey,
+  value: T,
+  oldValue: T|undefined,
+  revert: (oldValue: T) => void,
+  payload: unknown = value,
 ) => {
-  logger.debug('UPDATE PERSONAL SETTING TOOLTIPS', {
-    event,
+  logger.debug('UPDATE PERSONAL SETTING', {
+    key,
     value,
     oldValue,
     isMounted: isMounted.value,
@@ -476,9 +464,30 @@ const updatePersonalSettings = async (
     return
   }
   settingsLocked.value = true
-  await asyncEmit(event, {
-    value,
-  })
+  try {
+    const response = await setPersonalSetting(key, payload)
+    const messages = response.data?.messages
+    if (messages?.length) {
+      showInfo(messages.join(' '))
+    }
+    if (key === 'debugMode') {
+      globalState.debugMode = response.data.value as number
+    }
+    if (key === 'expertMode' || key === 'financeMode') {
+      document.body.classList.toggle(appPrefix(key === 'expertMode' ? 'expert-mode' : 'finance-mode'), !!value)
+    }
+    if (legacyReloadKeys.includes(key)) {
+      asyncEmit(BusEvents.LEGACY_PAGE_RELOAD)
+    }
+  } catch (error) {
+    logger.error('Unable to set personal setting', key, error)
+    revert(oldValue)
+    appError.value = new AppError(
+      { component: COMPONENT_NAME },
+      t(appName, 'Unable to save personal setting "{key}".', { key }),
+      { cause: error },
+    )
+  }
   await nextTick()
   settingsLocked.value = false
 }
@@ -612,25 +621,25 @@ synchronizeGlobalState().then((globalState) => {
       })
       tooltipOptions.themes.tooltip.disabled = !value
       toolTipsEnabled.value = value
-      updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
+      updatePersonalSettings('toolTipsEnabled', value, oldValue, (old) => { globalState.toolTipsEnabled = old })
     },
   )
   watch(
     () => globalState.financeMode,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_FINANCE_MODE, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('financeMode', value, oldValue, (old) => { globalState.financeMode = old }),
   )
   watch(
     () => globalState.expertMode,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('expertMode', value, oldValue, (old) => { globalState.expertMode = old }),
   )
   watch(() => globalState.debugMode, updateDebugModes)
   watch(
     () => globalState.debugQuerySqlFilter,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_QUERY_SQL_FILTER, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('debugQuerySqlFilter', value, oldValue, (old) => { globalState.debugQuerySqlFilter = old }),
   )
   watch(
     () => globalState.restoreHistory,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('restoreHistory', value, oldValue, (old) => { globalState.restoreHistory = old }),
   )
   watch(
     () => globalState.userPermissions,
@@ -641,23 +650,23 @@ synchronizeGlobalState().then((globalState) => {
   )
   watch(
     () => globalState.PHPMyEdit.showDisabled,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_SHOW_DISABLED, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('showDisabled', value, oldValue, (old) => { globalState.PHPMyEdit.showDisabled = old }),
   )
   watch(
     () => globalState.PHPMyEdit.pageRowsDefault,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_PAGE_ROWS, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('pageRowsDefault', value, oldValue, (old) => { globalState.PHPMyEdit.pageRowsDefault = old }),
   )
   watch(
     () => globalState.PHPMyEdit.deselectInvisibleMiscRecs,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DESELECT_INVISIBLE, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('deselectInvisibleMiscRecs', value, oldValue, (old) => { globalState.PHPMyEdit.deselectInvisibleMiscRecs = old }),
   )
   watch(
     () => globalState.PHPMyEdit.directChange,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DIRECT_CHANGE, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('directChange', value, oldValue, (old) => { globalState.PHPMyEdit.directChange = old }),
   )
   watch(
     () => globalState.PHPMyEdit.initialFilterVisibility,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_INITIAL_FILTER_VISIBILITY, value, oldValue),
+    (value, oldValue) => updatePersonalSettings('initialFilterVisibility', value, oldValue, (old) => { globalState.PHPMyEdit.initialFilterVisibility = old }),
   )
 })
 
@@ -675,7 +684,13 @@ const stopRedirectWatcher = watch(
 
 watch(
   debugModes,
-  (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_MODES, value, oldValue),
+  (value, oldValue) => updatePersonalSettings(
+    'debugMode',
+    value,
+    oldValue,
+    (old) => { debugModes.value.splice(0, Infinity, ...old) },
+    value.map(({ value }) => ({ value })),
+  ),
 )
 watch(
   pageTemplate,

@@ -32,7 +32,6 @@ enum EnumSettingsGetApp: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
-  case LOCALE_INFO = 'locale-info';
   case AUTO_FILL_TEST = 'auto-fill-test';
   case AUTO_FILL_TEST_DATA = 'auto-fill-test-data';
   case TRANSLATION_TEMPLATES = 'translation-templates';

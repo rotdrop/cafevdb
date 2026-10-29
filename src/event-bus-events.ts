@@ -31,7 +31,6 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
 export const ADD_CONTACTS_TO_PROJECT = appEventName('add-contacts-to-project');
-export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
 export const EMAIL_POPUP = appEventName('email-popup');
 export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const LEGACY_RECORD_POPUP = appEventName('legacy-record-popup');
@@ -63,6 +62,7 @@ export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
+export const LEGACY_PAGE_RELOAD = appEventName('legacy-page-reload');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
 /**
  * Push or replace a complete history record.
