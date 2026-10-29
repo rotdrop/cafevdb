@@ -1,10 +1,41 @@
 # PME select component
 
-`src/components/PmeSelect.vue` is a standalone Vue replacement for the Selectize
-features used by PME fields. It uses the existing Nextcloud select component,
-not Selectize or jQuery. Legacy mounting, PHP attribute parsing, and
-`select-utils.ts` integration are deliberately not implemented yet; existing
-pages continue to use Selectize.
+`src/components/PmeSelect.vue` is a Vue replacement for the Selectize features
+used by PME fields. It uses the existing Nextcloud select component, not
+Selectize or jQuery. The `mountSelectize` service adapts native selects to this
+SFC through the mountable-component event bus; the legacy PME initializer and
+`select-utils.ts` integration remain unchanged for now.
+
+```ts
+import { mountSelectize } from '../services/mountable-select.ts'
+
+// Mount all `.selectize` selects below a legacy PME container.
+const controls = await mountSelectize(document.querySelector('#pme-container')!)
+controls[0]?.setValue(['1', '2'])
+```
+
+`mountSelectize(target, options?)` accepts an `HTMLElement` (a select or a
+container) or a CSS selector. A selector may identify selects directly or
+containers whose descendant selects have the `selectize` class. Options parsed
+from `data-selectize-options` are overridden by the optional second argument.
+The function returns a promise of service instances. It does not import or call
+jQuery.
+
+The adapter hides but preserves the original `<select>`, mirrors Vue selection
+changes to its options, and dispatches native bubbling `change` events so
+existing PME listeners continue to work. It removes the original select's
+`name` while mounted to avoid duplicates and owns ordered hidden inputs for PHP
+form submission, updating them synchronously before dispatching `change` so
+legacy event handlers see the current ordered values. `refresh()` updates Vue
+options from the native element;
+native `change` events made elsewhere update the Vue selection. Instances are
+unmounted and the native selects restored on `LEGACY_PAGE_CLEANUP`.
+
+The returned service exposes `getValue()`, `setValue(value, silent?)`,
+`clear(silent?)`, `refresh()`, `focus()`, `lock()`, `unlock()`, `disable()`,
+`enable()`, `isLocked`, `isDisabled`, and `destroy()`. Single-select values are
+strings or `null`; multi-select values are ordered arrays of strings. Repeated
+calls are idempotent while an instance remains mounted.
 
 ```vue
 <PmeSelect v-model="instruments"
@@ -75,14 +106,14 @@ The exposed methods are `getValue()`, `setValue(value, silent = false)`,
 Programmatic setters can replace values even while interaction is locked.
 Unlocking/enabling does not override a corresponding prop.
 
-An optional `name` renders hidden form inputs in selection order. Pass the exact
-field name, including `[]` for PHP array fields. Disabled fields are omitted from
-submission; readonly/locked fields retain their submitted values. Do not supply
-`name` if a future bridge already synchronizes an existing native select.
-`required` uses native browser validation independently of `notEmpty`.
+In standalone use, an optional `name` renders hidden form inputs in selection
+order. The mount service does not pass `name` to the component because it
+manages the original select's field name and ordered hidden inputs itself.
+Disabled fields are omitted from submission; readonly/locked fields retain
+their submitted values. `required` uses native browser validation independently
+of `notEmpty`.
 
-The future bridge must map the PHP configuration to these props, synchronize
-the original select and its change events, connect the shared select utilities,
-and register instances for cleanup on legacy DOM replacement. Email-composer
-and SEPA-specific features, a Selectize-compatible instance facade, and arbitrary
-Selectize plugins are outside this component's current scope.
+The remaining PME integration work is to route the legacy initializer and
+`select-utils.ts` through this service. Email-composer and SEPA-specific
+features, a fully compatible Selectize instance facade, and arbitrary
+Selectize plugins are outside the current scope.

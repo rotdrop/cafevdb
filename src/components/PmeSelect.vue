@@ -3,8 +3,8 @@
  - SPDX-License-Identifier: AGPL-3.0-or-later
  -->
 <template>
-  <div class="pme-select" :aria-busy="creating">
-    <label :for="selectId">{{ label }}</label>
+  <div class="pme-select" :class="rootClass" :aria-busy="creating">
+    <label class="pme-select__label" :for="selectId">{{ label }}</label>
     <NcSelect :modelValue="selectedChoices"
               :options="choices"
               :multiple="multiple"
@@ -31,7 +31,7 @@
       <template #search="{ attributes, events }">
         <input v-bind="{ ...attributes, ref: undefined }"
                ref="searchInput"
-               class="vs__search"
+               class="vs__search selectize-input-element"
                :placeholder="selectedValues.length === 0 ? placeholder : ''"
                :required="required && selectedValues.length === 0"
                :aria-invalid="errorMessage ? true : undefined"
@@ -110,6 +110,7 @@
 <script setup lang="ts">
 import type {
   PmeSelectCreateOptions,
+  PmeSelectGroup,
   PmeSelectOption,
   PmeSelectProps,
   PmeSelectValue,
@@ -180,6 +181,8 @@ const isLocked = computed(() => props.locked || props.readonly || locallyLocked.
 const blocked = computed(() => isDisabled.value || isLocked.value)
 const draggedValue = ref<string>()
 const createdOptions = ref<PmeSelectOption[]>([])
+const suppliedOptions = ref<PmeSelectOption[]>()
+const suppliedGroups = ref<PmeSelectGroup[]>()
 let request: AbortController|undefined
 
 const normalize = (value: PmeSelectValue) => {
@@ -190,11 +193,12 @@ const selectedValues = ref(normalize(props.modelValue))
 const formValues = computed(() => props.multiple ? selectedValues.value : [selectedValues.value[0] ?? ''])
 const options = computed(() => {
   const result = new Map(createdOptions.value.map((option) => [option.value, option]))
-  for (const option of props.options) {
+  for (const option of suppliedOptions.value ?? props.options) {
     result.set(option.value, option)
   }
   return [...result.values()]
 })
+const groups = computed(() => suppliedGroups.value ?? props.groups)
 
 const optionChoice = (option: PmeSelectOption, group = ''): Choice => ({
   key: JSON.stringify(['option', group, option.value]),
@@ -210,13 +214,13 @@ const choices = computed(() => {
   const words = searchableText(search.value).trim().split(/\s+/).filter(Boolean)
   const matching = options.value.filter((option) => words.every((word) => searchableText(option.label).includes(word)))
   const result: Choice[] = []
-  const knownGroups = new Set(props.groups.map((group) => group.value))
+  const knownGroups = new Set(groups.value.map((group) => group.value))
   for (const option of matching) {
     if (!option.groups?.some((group) => knownGroups.has(group))) {
       result.push(optionChoice(option))
     }
   }
-  for (const group of props.groups) {
+  for (const group of groups.value) {
     const members = matching.filter((option) => option.groups?.includes(group.value))
     if (members.length === 0) {
       continue
@@ -324,7 +328,12 @@ const readCreatedOption = (data: unknown, configuration: PmeSelectCreateOptions)
 }
 
 const optionEnabled = (option: PmeSelectOption) => !option.disabled && (!option.groups?.length
-  || option.groups.some((value) => !props.groups.find((group) => group.value === value)?.disabled))
+  || option.groups.some((value) => !groups.value.find((group) => group.value === value)?.disabled))
+
+const setOptions = (options: PmeSelectOption[], nextGroups: PmeSelectGroup[] = groups.value) => {
+  suppliedOptions.value = options
+  suppliedGroups.value = nextGroups
+}
 
 const createItem = async (input: string): Promise<boolean> => {
   input = input.trim()
@@ -454,6 +463,7 @@ onBeforeUnmount(cancelCreation)
 defineExpose({
   getValue,
   setValue,
+  setOptions,
   clear,
   moveItem,
   createItem,
@@ -471,6 +481,15 @@ defineExpose({
 <style scoped lang="scss">
 .pme-select {
   min-width: 180px;
+
+  &__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 
   &__selected {
     display: inline-flex;

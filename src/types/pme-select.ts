@@ -30,6 +30,7 @@ export interface PmeSelectCreateOptions {
 export interface PmeSelectProps {
   options: PmeSelectOption[];
   label: string;
+  rootClass?: string;
   modelValue?: PmeSelectValue;
   groups?: PmeSelectGroup[];
   multiple?: boolean;
@@ -47,4 +48,8 @@ export interface PmeSelectProps {
   create?: boolean|PmeSelectCreateOptions;
   createOnBlur?: boolean;
   persist?: boolean;
+}
+
+export interface PmeSelectComponentProps extends PmeSelectProps {
+  onChange?: (value: PmeSelectValue) => void;
 }
