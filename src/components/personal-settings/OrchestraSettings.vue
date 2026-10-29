@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
 })
 
 const saveTemplate = async (template: DocumentTemplate, path: string, setValue: SetTemplateValue) => {
-  const result = await getClient().stat(path, { data: getDefaultPropfind() })
+  const result = await getClient().stat(path, { details: true, data: getDefaultPropfind() })
   const node = resultToNode('data' in result ? result.data : result)
   const response = await setAdminSetting(template, node.basename)
   setValue(node.basename, node.source)

@@ -144,6 +144,7 @@ describe('Orchestra document-template cloud picker', () => {
     expect(mocks.setAdminSetting).toHaveBeenCalledWith('standardLetter', 'letter.odt');
     expect(mocks.setValue).toHaveBeenCalledWith('letter.odt', mocks.destination.source);
     expect(mocks.showSettingFeedback).toHaveBeenCalled();
+    expect(mocks.stat).toHaveBeenCalledWith('/files/test/Shared/Templates/letter.odt', expect.objectContaining({ details: true }));
     expect(mocks.emitFileEvent).toHaveBeenCalledWith('files:node:created', mocks.destination);
     expect(cloudButton(wrapper).attributes('disabled')).toBeUndefined();
   });
