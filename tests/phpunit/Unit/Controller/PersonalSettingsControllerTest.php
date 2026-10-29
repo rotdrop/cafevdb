@@ -59,7 +59,6 @@ class PersonalSettingsControllerTest extends TestCase
 
   private const CONTROLLER_CLASS = Controller\PersonalSettingsController::class;
   private const EXPECTED_ROUTES = [
-    'form',
     'get',
     'getapp',
     'set',
