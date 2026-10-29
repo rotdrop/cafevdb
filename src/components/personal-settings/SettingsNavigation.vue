@@ -21,15 +21,15 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcButton v-if="!navigationShown"
-            class="personal-settings-navigation-toggle"
+  <NcButton class="personal-settings-navigation-toggle"
             variant="primary"
-            :aria-label="t(appId, 'Show settings navigation')"
-            :aria-expanded="false"
+            :aria-label="navigationShown ? t(appId, 'Hide settings navigation') : t(appId, 'Show settings navigation')"
+            :aria-expanded="navigationShown"
             @click="toggleNavigation"
   >
     <template #icon>
-      <ListIcon :size="20" />
+      <CloseIcon v-if="navigationShown" :size="20" />
+      <ListIcon v-else :size="20" />
     </template>
   </NcButton>
   <nav v-show="navigationShown"
@@ -37,16 +37,6 @@
        :class="{ 'narrow-screen': narrowScreen }"
        :aria-label="t(appId, 'Settings navigation')"
   >
-    <div class="navigation-header">
-      <NcButton variant="tertiary"
-                :aria-label="t(appId, 'Hide settings navigation')"
-                @click="toggleNavigation"
-      >
-        <template #icon>
-          <CloseIcon :size="20" />
-        </template>
-      </NcButton>
-    </div>
     <ul>
       <li v-for="tab in tree" :key="tab.id">
         <a :href="'#' + tab.id"
@@ -160,7 +150,7 @@ onBeforeUnmount(() => {
   flex: 0 0 14rem;
   max-height: calc(100vh - 6rem);
   overflow-y: auto;
-  padding: 0 1rem;
+  padding: 3rem 1rem 0;
   border-inline-start: 1px solid var(--color-border);
 
   ul ul {
@@ -185,15 +175,6 @@ onBeforeUnmount(() => {
     &.child-active {
       font-weight: bold;
     }
-  }
-
-  .navigation-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    display: flex;
-    justify-content: flex-end;
-    background-color: var(--color-main-background);
   }
 
   // Overlay below the breakpoint at which Nextcloud collapses the left navigation.
