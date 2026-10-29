@@ -398,12 +398,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rotdrop/php-to-typescript-.git",
-                "reference": "6796a2818a0fc31b94b560a1ddabc0063b0f801e"
+                "reference": "de1ae45ee2bf4c8ec6d357671ddaa3918c48b542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rotdrop/php-to-typescript-/zipball/6796a2818a0fc31b94b560a1ddabc0063b0f801e",
-                "reference": "6796a2818a0fc31b94b560a1ddabc0063b0f801e",
+                "url": "https://api.github.com/repos/rotdrop/php-to-typescript-/zipball/de1ae45ee2bf4c8ec6d357671ddaa3918c48b542",
+                "reference": "de1ae45ee2bf4c8ec6d357671ddaa3918c48b542",
                 "shasum": ""
             },
             "require": {
@@ -442,7 +442,7 @@
                 "source": "https://github.com/rotdrop/php-to-typescript-/tree/main",
                 "issues": "https://github.com/rotdrop/php-to-typescript-/issues"
             },
-            "time": "2026-10-29T16:36:58+00:00"
+            "time": "2026-10-29T20:11:48+00:00"
         },
         {
             "name": "spatie/typescript-transformer",

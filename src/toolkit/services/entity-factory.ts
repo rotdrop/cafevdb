@@ -34,7 +34,7 @@ import type {
   EntityMap,
   EntityNames,
   ExtraFieldNames,
-} from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+} from '../../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type {
   EntityReference,
   EntityReferenceCollection,
@@ -62,7 +62,7 @@ export type FrontEndEntity<N extends EntityNames, D extends NumberTuple = NonNeg
 const entityFactory = async <E extends EntityNames, D extends NumberTuple = Zero>(entityName: E, entityDto: EntityDto<E>): Promise<FrontEndEntity<E, D>> => {
   // const metadata: EntityMap[E]['metadata'] =
   const metadata: { [K in EntityFieldNames<E>]: EntityFieldMetadata<E, K>; } =
-    (await import(`../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
+    (await import(`../../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
 
   const dtoStructure = Object.fromEntries(Object.keys(entityDto).map((key) => [key, true])) as Record<keyof EntityDto<E>, true>;
   const entity: FrontEndEntity<E, D> = <FrontEndEntity<E, D> >{};

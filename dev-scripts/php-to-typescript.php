@@ -86,6 +86,7 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
     EnumCollector::class,
     DatabaseEntityCollector::class,
   ],
+  metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
   devScriptsFolder: __DIR__,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,

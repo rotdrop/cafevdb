@@ -25,7 +25,7 @@
  * @module
  */
 
-import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { EntityMap } from '../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type { SearchArguments, search as searchRepository } from '../toolkit/services/entity-repository.ts';
 
 import { emit as asyncEmit, getEmitResult } from '@rotdrop/async-nextcloud-event-bus';
