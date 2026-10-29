@@ -241,6 +241,9 @@ class EmailFormControllerTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
     $repository->method('list')->willReturn([]);
+    $repository->method('find')->willReturnCallback(
+      fn(int $id) => ($this->entities[Entities\EmailDraft::class] ?? null)?->get($id),
+    );
     $this->entityRepositories[Entities\EmailDraft::class] = $repository;
 
     $repository = $this->getMockBuilder(Repositories\ProjectParticipantsRepository::class)
@@ -550,6 +553,20 @@ class EmailFormControllerTest extends TestCase
     ],
   ];
 
+  /**
+   * @param string $class
+   * @param object $entity
+   * @param int $id
+   *
+   * @return void
+   */
+  private function setRepositoryStubFor(string $class, object $entity, int $id): void
+  {
+    $repository = $this->createStub(Repositories\EntityRepository::class);
+    $repository->method('find')->willReturnCallback(fn($searchId) => $searchId == $id ? $entity : null);
+    $this->entityRepositories[$class] = $repository;
+  }
+
   /** @return Entities\Invoice */
   private function setupInvoiceEmail(): Entities\Invoice
   {
@@ -629,6 +646,73 @@ class EmailFormControllerTest extends TestCase
     $this->assertNull(
       new ReflectionMethod($composer, 'getCompositePayment')->invoke($composer, new Entities\Musician()->setId(999)),
     );
+
+    $invoice->setInvoiceNumber('2099-001')->setPurpose('Invoice purpose')->setInvoiceDate('2099-12-01');
+    $key = fn(EmailForm\EnumMemberSubstitutionKey $key) => $member[$key->value];
+    $this->assertSame('2099-001', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_NUMBER)(['x'], $this->musician));
+    $this->assertSame($invoice->getSubject(), $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_SUBJECT)(['x'], $this->musician));
+    $this->assertSame('Invoice purpose', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_PURPOSE)(['x'], $this->musician));
+    $this->assertSame($money->invoke($composer, 90), $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_AMOUNT)(['x'], $this->musician));
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_DUE_DATE)(['x'], $this->musician));
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_DATE)(['x'], $this->musician));
+    $this->assertSame($parts, $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_ITEMS)(
+      ['parts', '', '[PURPOSE]|[INVOICED]|[TOTALS]|[RECEIVED]|[REMAINING]', ''],
+      $this->musician,
+    ));
+    // other recipients keep the placeholder
+    $other = new Entities\Musician()->setId(999);
+    $this->assertSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_NUMBER)(['x'], $other));
+  }
+
+  /** @return void */
+  public function testDonationReceiptSubstitutions(): void
+  {
+    $receivable = $this->createStub(Entities\ProjectParticipantFieldDatum::class);
+    $receivable->method('amountPayable')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(100));
+    $receivable->method('amountPaid')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(100));
+    $donation = new Entities\CompositePayment()
+      ->setId(46)
+      ->setMusician($this->musician)
+      ->setAmount(100)
+      ->setSubject('Donation')
+      ->setDateOfReceipt('2099-01-02');
+    $donation->addProjectPayment(
+      new Entities\ProjectPayment()
+        ->setAmount(60)->setSubject('Donated part')->setIsDonation(true)->setReceivable($receivable),
+    );
+    $donation->addProjectPayment(
+      new Entities\ProjectPayment()
+        ->setAmount(40)->setSubject('Waived part')->setIsDonation(false)->setReceivable($receivable),
+    );
+    $receipt = new Entities\DonationReceipt()->setDonation($donation);
+    $this->setRepositoryStubFor(Entities\DonationReceipt::class, $receipt, 7);
+    $this->generateProjectWebFormParameters([
+      EmailForm\ComposerCgiKeys::DONATION_RECEIPT_ID => 7,
+    ]);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    new ReflectionMethod($composer, 'generateSubstitutionHandlers')->invoke($composer);
+    $member = new ReflectionProperty($composer, 'substitutions')->getValue($composer)[
+      EmailForm\EnumSubstitutionNamespace::MEMBER->value];
+    $money = new ReflectionMethod($composer, 'moneyValue');
+    $key = fn(EmailForm\EnumMemberSubstitutionKey $key) => $member[$key->value];
+    $this->assertSame(
+      $money->invoke($composer, 60),
+      $key(EmailForm\EnumMemberSubstitutionKey::DONATION_AMOUNT)(['x'], $this->musician),
+    );
+    $this->assertSame(
+      $money->invoke($composer, 40),
+      $key(EmailForm\EnumMemberSubstitutionKey::WAIVED_AMOUNT)(['x'], $this->musician),
+    );
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::DONATION_RECEIPT_DATE)(['x'], $this->musician));
+    $parts = $key(EmailForm\EnumMemberSubstitutionKey::DONATION_PARTS)(
+      ['parts', '', '[PURPOSE]|', ''],
+      $this->musician,
+    );
+    $this->assertStringContainsString('Donated part|', $parts);
+    $this->assertStringContainsString('Waived part|', $parts);
+    $this->assertSame('x', $key(EmailForm\EnumMemberSubstitutionKey::DONATION_PARTS)(['x'], new Entities\Musician()->setId(999)));
   }
 
   /** @return void */
@@ -724,7 +808,7 @@ class EmailFormControllerTest extends TestCase
     $this->setupInvoiceEmail();
     $this->postData[EmailForm\ComposerCgiKeys::INVOICE_ID] = 999;
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unable to find the invoice with id 999.');
+    $this->expectExceptionMessage('Konnte keine Rechnung mit der Id 999 finden.');
     $this->appContainer->get(EmailForm\Composer::class)->bind($this->postData);
   }
 

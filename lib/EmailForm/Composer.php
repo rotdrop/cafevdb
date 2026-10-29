@@ -670,7 +670,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
         $loadedTag = $template->getTag();
-        if ((empty($this->bulkTransaction) && empty($this->donationReceipt) && empty($this->invoice)) || str_ends_with($loadedTag, $initialTemplate)) {
+        if ((empty($this->bulkTransaction) && empty($this->donationReceipt) && empty($this->invoice)) || str_ends_with($loadedTag, $initialTemplate)
+            || (!empty($this->invoice) && $loadedTag === Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE)
+            || (!empty($this->donationReceipt) && $loadedTag === Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE)) {
           $initialTemplate = $template->getTag();
           $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $initialTemplate;
           $this->templateName = $initialTemplate;
@@ -758,6 +760,120 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     return $compositePayment;
+  }
+
+  /**
+   * Generate the HTML table with the parts (payments or invoice items) of a
+   * composite payment or invoice.
+   *
+   * @param array $keyArg The arguments of the substitution key.
+   *
+   * @param Entities\CompositePayment|Entities\Invoice $compositePayment
+   *
+   * @return string
+   */
+  private function generateTransactionPartsTable(array $keyArg, Entities\CompositePayment|Entities\Invoice $compositePayment):string
+  {
+    $keyArg = array_map(
+      function($value) {
+        return html_entity_decode($value, ENT_HTML5, 'UTF-8');
+      },
+      $keyArg);
+
+    $tableTemplate = [
+      'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+      'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+      'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
+    ];
+
+    $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
+    $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
+    $totalSum['purpose'] = $this->l->t('Total Amount');
+
+    $rowTemplate = $tableTemplate['row'];
+
+    // in order to have the chance to emit a more simple table
+    $receivedIsZero = true;
+
+    $rowHtml = '';
+    $payments = $compositePayment instanceof Entities\Invoice
+      ? $compositePayment->getInvoiceItems()
+      : $compositePayment->getProjectPayments();
+    /** @var Entities\ProjectPayment|Entities\InvoiceItem $payment */
+    foreach ($payments as $payment) {
+      $invoiced = $payment->getAmount()->mul($this->paymentSign);
+
+      $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
+      $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
+
+      if (!($compositePayment instanceof Entities\Invoice)) {
+        // Payments are already included in amountPaid; invoices are not.
+        $received->subEq($invoiced);
+      }
+
+      if (!$received->eq(0)) {
+        $receivedIsZero = false;
+      }
+
+      $remaining = $totals->sub($received);
+
+      $purpose = $payment->getSubject();
+
+      $replacements = [];
+      foreach ($replacementKeys as $key) {
+        if ($key == 'purpose') {
+          $replacements[$key] = ${$key};
+          continue;
+        }
+        $totalSum[$key]->addEq(${$key});
+        $replacements[$key] = $this->moneyValue(${$key});
+      }
+
+      $row = $rowTemplate;
+      foreach ($replacementKeys as $key) {
+        $keyVariants = array_map(
+          fn($key) => '['.$key.']',
+          $this->translationVariants($key)
+        );
+        $row = str_ireplace($keyVariants, $replacements[$key], $row);
+      }
+      $rowHtml .= $row;
+    }
+
+    $headerReplacements = [
+      'purpose' => $this->l->t('Purpose'),
+      'invoiced' => $this->l->t('Invoice Amount'),
+      'totals' => $this->l->t('Total Amount'),
+      'received' => $this->l->t('Received'),
+      'remaining' => $this->l->t('Remaining'),
+    ];
+    $headerHtml = $tableTemplate['header'];
+    foreach ($replacementKeys as $key) {
+      $keyVariants = array_map(
+        fn($key) => '['.$key.']',
+        $this->translationVariants($key)
+      );
+      $headerHtml = str_ireplace($keyVariants, $headerReplacements[$key], $headerHtml);
+    }
+    $cssClass = '';
+    if ($receivedIsZero) {
+      $cssClass = ' nothing-received-yet';
+    }
+    $headerHtml = str_replace('[CSSCLASS]', $cssClass, $headerHtml);
+
+    $footerHtml = $tableTemplate['footer'];
+    foreach ($replacementKeys as $key) {
+      if ($key != 'purpose') {
+        $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+      }
+      $keyVariants = array_map(
+        fn($key) => '['.$key.']',
+        $this->translationVariants($key)
+      );
+      $footerHtml = str_ireplace($keyVariants, $totalSum[$key], $footerHtml);
+    }
+
+    return $headerHtml . $rowHtml . $footerHtml;
   }
 
   /**
@@ -1439,6 +1555,22 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_RECEIPT_DATE->value] = function(array $keyArg, ?Entities\Musician $musician) {
+          $date = $this->donationReceipt->getDateOfReceipt();
+          if (empty($musician) || $date === null || $this->getCompositePayment($musician) === null) {
+            return $keyArg[0];
+          }
+          return $this->formatDate($date, $keyArg[1] ?? 'medium');
+        };
+
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_PARTS->value] = function(array $keyArg, ?Entities\Musician $musician) {
+          $compositePayment = $this->getCompositePayment($musician);
+          if (empty($compositePayment)) {
+            return $keyArg[0];
+          }
+          return $this->generateTransactionPartsTable($keyArg, $compositePayment);
+        };
+
         // maybe add more, however, the proper receipt will be send out as attachjment.
       }
 
@@ -1588,113 +1720,42 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
-
-          $keyArg = array_map(
-            function($value) {
-              return html_entity_decode($value, ENT_HTML5, 'UTF-8');
-            },
-            $keyArg);
-
-          $tableTemplate = [
-            'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
-            'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
-            'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
-          ];
-
-          $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
-          $totalSum['purpose'] = $this->l->t('Total Amount');
-
-          $rowTemplate = $tableTemplate['row'];
-
-          // in order to have the chance to emit a more simple table
-          $receivedIsZero = true;
-
-          $rowHtml = '';
-          $payments = $compositePayment instanceof Entities\Invoice
-            ? $compositePayment->getInvoiceItems()
-            : $compositePayment->getProjectPayments();
-          /** @var Entities\ProjectPayment|Entities\InvoiceItem $payment */
-          foreach ($payments as $payment) {
-            $invoiced = $payment->getAmount()->mul($this->paymentSign);
-
-            $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
-            $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
-
-            if (!($compositePayment instanceof Entities\Invoice)) {
-              // Payments are already included in amountPaid; invoices are not.
-              $received->subEq($invoiced);
-            }
-
-            if (!$received->eq(0)) {
-              $receivedIsZero = false;
-            }
-
-            $remaining = $totals->sub($received);
-
-            $purpose = $payment->getSubject();
-
-            $replacements = [];
-            foreach ($replacementKeys as $key) {
-              if ($key == 'purpose') {
-                $replacements[$key] = ${$key};
-                continue;
-              }
-              $totalSum[$key]->addEq(${$key});
-              $replacements[$key] = $this->moneyValue(${$key});
-            }
-
-            $row = $rowTemplate;
-            foreach ($replacementKeys as $key) {
-              $keyVariants = array_map(
-                fn($key) => '['.$key.']',
-                $this->translationVariants($key)
-              );
-              $row = str_ireplace($keyVariants, $replacements[$key], $row);
-            }
-            $rowHtml .= $row;
-          }
-
-          $headerReplacements = [
-            'purpose' => $this->l->t('Purpose'),
-            'invoiced' => $this->l->t('Invoice Amount'),
-            'totals' => $this->l->t('Total Amount'),
-            'received' => $this->l->t('Received'),
-            'remaining' => $this->l->t('Remaining'),
-          ];
-          $headerHtml = $tableTemplate['header'];
-          foreach ($replacementKeys as $key) {
-            $keyVariants = array_map(
-              fn($key) => '['.$key.']',
-              $this->translationVariants($key)
-            );
-            $headerHtml = str_ireplace($keyVariants, $headerReplacements[$key], $headerHtml);
-          }
-          $cssClass = '';
-          if ($receivedIsZero) {
-            $cssClass = ' nothing-received-yet';
-          }
-          $headerHtml = str_replace('[CSSCLASS]', $cssClass, $headerHtml);
-
-          $footerHtml = $tableTemplate['footer'];
-          foreach ($replacementKeys as $key) {
-            if ($key != 'purpose') {
-              $totalSum[$key] = $this->moneyValue($totalSum[$key]);
-            }
-            $keyVariants = array_map(
-              fn($key) => '['.$key.']',
-              $this->translationVariants($key)
-            );
-            $footerHtml = str_ireplace($keyVariants, $totalSum[$key], $footerHtml);
-          }
-
-          return $headerHtml . $rowHtml . $footerHtml;
+          return $this->generateTransactionPartsTable($keyArg, $compositePayment);
         }
 
         return $keyArg[0];
       };
 
     } // bulk-transaction fields
+
+    if (!empty($this->invoice)) {
+      $invoiceHandler = fn(callable $getter) => function(array $keyArg, ?Entities\Musician $musician) use ($getter) {
+        if (empty($musician) || $this->getCompositePayment($musician) !== $this->invoice) {
+          return $keyArg[0];
+        }
+        return $getter($keyArg, $this->invoice) ?? $keyArg[0];
+      };
+      $formatInvoiceDate = fn(array $keyArg, ?\DateTimeInterface $date) => $date === null
+        ? null
+        : $this->formatDate($date, $keyArg[1] ?? 'medium');
+
+      $substitutions = &$this->substitutions[EnumSubstitutionNamespace::MEMBER->value];
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_NUMBER->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getInvoiceNumber());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_DATE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $formatInvoiceDate($keyArg, $invoice->getInvoiceDate()));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_DUE_DATE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $formatInvoiceDate($keyArg, $invoice->getDueDate()));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_AMOUNT->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $this->moneyValue($invoice->getAmount()->mul($this->paymentSign)));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_SUBJECT->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getSubject());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_PURPOSE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getPurpose());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_ITEMS->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $this->generateTransactionPartsTable($keyArg, $invoice));
+      unset($substitutions);
+    }
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
@@ -3585,6 +3646,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         returnLogEntry: true,
         shift: PHP_INT_MIN,
       );
+      $logEntry = $logEntry ?? [];
       array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
       $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
         'message' => $this->formatExceptionMessage($t),
