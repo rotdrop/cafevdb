@@ -282,6 +282,9 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
 
 .admin-setting--inline {
   flex-wrap: nowrap;
+  padding: calc(var(--default-grid-baseline) * 2);
+  border-radius: var(--border-radius-element);
+  background-color: var(--color-background-dark);
 
   :deep(.input-field) {
     flex: 0 1 12rem;
