@@ -279,6 +279,12 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
   }
 }
 
+// The tooltip is attached to the root element, which would otherwise span the
+// whole row and show the tooltip at its horizontal center.
+:deep(.checkbox-radio-switch) {
+  width: fit-content;
+}
+
 .admin-setting {
   display: flex;
   flex-wrap: wrap;

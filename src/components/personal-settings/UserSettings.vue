@@ -360,6 +360,12 @@ defineProps<{ entry: TabEntry }>()
 </script>
 
 <style lang="scss" scoped>
+// The tooltip is attached to the root element, which would otherwise span the
+// whole row and show the tooltip at its horizontal center.
+:deep(.checkbox-radio-switch) {
+  width: fit-content;
+}
+
 .encryption-key-form {
   display: flex;
   flex-wrap: wrap;
