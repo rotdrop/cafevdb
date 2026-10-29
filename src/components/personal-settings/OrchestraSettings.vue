@@ -2,31 +2,31 @@
   <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
     <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value }">
       <NcButton v-tooltip="hints['templates:auto-fill-test']"
+                :aria-label="t(appId, 'Auto-fill test')"
                 :disabled="!value || !!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'native' })"
       >
         <template #icon>
           <FileDocumentIcon :size="20" />
         </template>
-        {{ t(appId, 'Auto-fill test') }}
       </NcButton>
       <NcButton v-tooltip="hints['templates:auto-fill-test:pdf']"
+                :aria-label="t(appId, 'Auto-fill test (PDF)')"
                 :disabled="!value || !!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'pdf' })"
       >
         <template #icon>
           <FilePdfIcon :size="20" />
         </template>
-        {{ t(appId, 'Auto-fill test (PDF)') }}
       </NcButton>
       <NcButton v-tooltip="hints['templates:auto-fill-test:data']"
+                :aria-label="t(appId, 'Test data')"
                 :disabled="!!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST_DATA)"
       >
         <template #icon>
           <DownloadIcon :size="20" />
         </template>
-        {{ t(appId, 'Test data') }}
       </NcButton>
     </template>
   </AdminSettingsTab>
