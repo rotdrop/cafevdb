@@ -42,6 +42,7 @@ class ComposerCgiKeys
   public const DELETE_ALL_ATTACHMENTS = 'deleteAllAttachments';
   public const DELETE_MESSAGE = 'deleteMessage';
   public const DISCLOSED_RECIPIENTS = 'disclosedRecipients';
+  public const DONATION_RECEIPT_ID = 'donationReceiptId';
   public const DRAFT_AUTO_SAVE = 'draftAutoSave';
   public const DRAFT_MESSAGES_SELECTOR = 'draftMessagesSelector';
   public const EDIT_SUBJECT_TAG = 'editSubjectTag';
@@ -52,6 +53,7 @@ class ComposerCgiKeys
   public const FORM_STATUS = 'formStatus';
   public const FROM_TAG = 'fromTag';
   public const IN_REPLY_TO = 'inReplyTo';
+  public const INVOICE_ID = 'invoiceId';
   public const MESSAGE_DRAFT_ID = 'messageDraftId';
   public const MESSAGE_EXPORT = 'messageExport';
   public const MESSAGE_TEXT = 'messageText';

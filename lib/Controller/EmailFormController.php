@@ -115,6 +115,10 @@ class EmailFormController extends Controller
    *
    * @param null|string $emailTemplate Name of an email template.
    *
+   * @param int $donationReceiptId Optional donation receipt id.
+   *
+   * @param int $invoiceId Optional invoice id.
+   *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
@@ -123,7 +127,9 @@ class EmailFormController extends Controller
     int $projectId = 0,
     ?string $projectName = null,
     int $bulkTransactionId = 0,
-    ?string $emailTemplate = null
+    ?string $emailTemplate = null,
+    int $donationReceiptId = 0,
+    int $invoiceId = 0,
   ): DataResponse|JSONResponse {
 
     // try to fetch filter information from the base-table if possible.
@@ -180,6 +186,8 @@ class EmailFormController extends Controller
       PersistentCGIKeys::PROJECT_ID => $projectId,
       ConfigConstants::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
       ComposerCgiKeys::BULK_TRANSACTION_ID => $bulkTransactionId,
+      ComposerCgiKeys::DONATION_RECEIPT_ID => $donationReceiptId,
+      ComposerCgiKeys::INVOICE_ID => $invoiceId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
       // form submit in javascript and simply close the dialog. Most of
@@ -190,6 +198,8 @@ class EmailFormController extends Controller
         PersistentCGIKeys::TEMPLATE => $this->request->getParam('template'),
         // 'renderer' => ???? @todo check
         ComposerCgiKeys::BULK_TRANSACTION_ID => $bulkTransactionId,
+        ComposerCgiKeys::DONATION_RECEIPT_ID => $donationReceiptId,
+        ComposerCgiKeys::INVOICE_ID => $invoiceId,
         'requesttoken' => \OCP\Util::callRegister(),
         'emailKey' => $this->pme->cgiSysName(PHPMyEdit::MRECS_KEY),
       ],
@@ -361,6 +371,8 @@ class EmailFormController extends Controller
       ComposerCgiKeys::PROJECT_ID => $projectId,
       ComposerCgiKeys::PROJECT_NAME => $projectName,
       ComposerCgiKeys::BULK_TRANSACTION_ID => -1,
+      ComposerCgiKeys::DONATION_RECEIPT_ID => -1,
+      ComposerCgiKeys::INVOICE_ID => -1,
     ];
     $requestData = DTO\EmailFormComposerRequestData::fromArray(
       array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, [])),
@@ -695,7 +707,7 @@ class EmailFormController extends Controller
             // Loading a draft message means that the project-relation of the
             // stored draft should be re-established. Unfortunately, it is stored
             // in two redundant positions ...
-            foreach (['projectId', 'projectName', 'bulkTransactionId'] as $draftPriorityKey) {
+            foreach (['projectId', 'projectName', 'bulkTransactionId', 'donationReceiptId', 'invoiceId'] as $draftPriorityKey) {
               $requestParameters[$draftPriorityKey] = null;
               $requestParameters[Composer::POST_TAG][$draftPriorityKey] = null;
             }
@@ -710,7 +722,8 @@ class EmailFormController extends Controller
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
 
             $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
-
+            $requestData[ComposerCgiKeys::DONATION_RECEIPT_ID] = $requestParameters[ComposerCgiKeys::DONATION_RECEIPT_ID];
+            $requestData[ComposerCgiKeys::INVOICE_ID] = $requestParameters[ComposerCgiKeys::INVOICE_ID];
 
             $requestData['errorStatus'] = $composer->errorStatus();
             $requestData['diagnostics'] = $composer->statusDiagnostics();

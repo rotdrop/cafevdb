@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -470,6 +471,53 @@ class FinanceService
     }
 
     return $templateData;
+  }
+
+  /**
+   * Generate the standard invoice PDF for an email attachment.
+   *
+   * @param Entities\Invoice $invoice
+   *
+   * @return array [FILE_DATA, MIME_TYPE, FILE_NAME]
+   */
+  public function invoiceDocument(Entities\Invoice $invoice): array
+  {
+    $templateFileName = $this->getDocumentTemplatesPath(ConfigConstants::DOCUMENT_TEMPLATE_INVOICE);
+    if (empty($templateFileName)) {
+      throw new RuntimeException($this->l->t('The invoice document template is not configured.'));
+    }
+
+    $templateData = $this->generateInvoiceMailMergeData($invoice);
+    $templateData['project'] = EntityArrayAdapter::create($invoice->getProject(), depth: 1);
+    $sender = $invoice->getOriginator();
+    $blocks = [];
+    foreach (OrganizationalRolesService::BOARD_MEMBERS as $role) {
+      if ($this->rolesService->isDedicatedBoardMember($role, $sender->getUserIdSlug())) {
+        $blocks['sender'] = 'org.' . $role;
+        break;
+      }
+    }
+    if (empty($blocks['sender'])) {
+      $templateData['sender'] = EntityArrayAdapter::create($sender, depth: 0);
+      $signature = $this->rolesService->dedicatedBoardMemberSignature(
+        OrganizationalRolesService::BOARD_MEMBER_ROLE, $sender->getId(),
+      );
+      if (!empty($signature)) {
+        /** @var ImagesService $imagesService */
+        $imagesService = $this->di(ImagesService::class);
+        $signature = $imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
+      }
+      $templateData['sender']['signature'] = $signature;
+    }
+
+    /** @var OpenDocumentFiller $documentFiller */
+    $documentFiller = $this->di(OpenDocumentFiller::class);
+    return $documentFiller->fill(
+      templateFileName: $templateFileName,
+      templateData: $templateData,
+      blocks: $blocks,
+      asPdf: true,
+    );
   }
 
   /**
