@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
   }
 }
 
-.personal-settings-navigation-toggle {
+.personal-settings-navigation-toggle.button-vue {
   // Same mechanism as the navigation itself, which is known not to scroll away.
   position: sticky;
   top: 1rem;
