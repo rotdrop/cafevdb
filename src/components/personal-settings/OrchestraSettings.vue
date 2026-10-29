@@ -1,15 +1,6 @@
 <template>
   <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
     <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value, setValue }">
-      <NcButton v-tooltip="hints['templates:delete']"
-                :aria-label="t(appId, 'Delete')"
-                :disabled="!value || !!busy[template]"
-                @click="remove(template, setValue)"
-      >
-        <template #icon>
-          <DeleteIcon :size="20" />
-        </template>
-      </NcButton>
       <NcButton v-tooltip="hints['templates:auto-fill-test']"
                 :aria-label="t(appId, 'Auto-fill test')"
                 :disabled="!value || !!busy[template]"
@@ -37,6 +28,17 @@
           <DownloadIcon :size="20" />
         </template>
       </NcButton>
+      <span class="document-template-delete">
+        <NcButton v-tooltip="hints['templates:delete']"
+                  :aria-label="t(appId, 'Delete')"
+                  :disabled="!value || !!busy[template]"
+                  @click="remove(template, setValue)"
+        >
+          <template #icon>
+            <DeleteIcon :size="20" />
+          </template>
+        </NcButton>
+      </span>
     </template>
   </AdminSettingsTab>
 </template>
@@ -203,3 +205,12 @@ const groups: AdminSettingGroup[] = [
   ]),
 ]
 </script>
+
+<style lang="scss" scoped>
+.document-template-delete {
+  display: inline-flex;
+  margin-inline-start: var(--default-grid-baseline, 4px);
+  padding-inline-start: calc(2 * var(--default-grid-baseline, 4px));
+  border-inline-start: 1px solid var(--color-border);
+}
+</style>
