@@ -22,6 +22,7 @@
  -->
 <template>
   <NcButton class="personal-settings-navigation-toggle"
+            :class="{ 'navigation-open': navigationShown && !narrowScreen }"
             variant="primary"
             :aria-label="navigationShown ? t(appId, 'Hide settings navigation') : t(appId, 'Show settings navigation')"
             :aria-expanded="navigationShown"
@@ -143,14 +144,19 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.personal-settings-navigation,
+.personal-settings-navigation-toggle {
+  --personal-settings-navigation-width: 14rem;
+}
+
 .personal-settings-navigation {
   position: sticky;
   top: 1rem;
   align-self: flex-start;
-  flex: 0 0 14rem;
+  flex: 0 0 var(--personal-settings-navigation-width);
   max-height: calc(100vh - 6rem);
   overflow-y: auto;
-  padding: 3rem 1rem 0;
+  padding: 0 1rem;
   border-inline-start: 1px solid var(--color-border);
 
   ul ul {
@@ -202,5 +208,12 @@ onBeforeUnmount(() => {
   top: calc(var(--default-grid-baseline, 4px) * 2);
   inset-inline-end: calc(var(--default-grid-baseline, 4px) * 2);
   z-index: 1501;
+  transition: inset-inline-end var(--animation-quick, 100ms) ease;
+
+  // Wide screens: the navigation sits at the right edge, move the toggle
+  // to its left. On narrow screens the overlay starts below the toggle.
+  &.navigation-open {
+    inset-inline-end: calc(var(--personal-settings-navigation-width) + var(--default-grid-baseline, 4px) * 2);
+  }
 }
 </style>
