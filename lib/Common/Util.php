@@ -36,11 +36,11 @@ use OCP\IL10N;
 /** General static utility routines. */
 class Util
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait {
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait {
     camelCaseToDashes as public;
     dashesToCamelCase as public;
   }
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait {
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait {
     convertToDateTime as public;
   }
 

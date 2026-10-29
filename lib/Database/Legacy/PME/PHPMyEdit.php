@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
  */
 class PHPMyEdit extends LegacyPHPMyEdit
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var Connection */

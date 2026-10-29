@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 
 use OCP\ILogger;
-use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Common\ConsoleLogger;
 
 /** Test the RationalNumber class. */

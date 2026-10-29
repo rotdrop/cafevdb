@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\AbstractDecimalRational;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Unit-test class. */

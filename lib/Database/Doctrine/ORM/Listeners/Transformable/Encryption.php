@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Handle transparent multi-user encryption/decryption */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var string */
   private $managementGroupId;

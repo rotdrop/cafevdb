@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 #[PhpToTypeScript\Attributes\TypeScript]
 class Blog extends AbstractPageRenderer
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /**
    * @var string

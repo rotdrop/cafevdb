@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Traits\UserPreferencesTrait;
 /** Key-storage base-class. */
 abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use UserPreferencesTrait {
     UserPreferencesTrait::setUserValue as protected setUserValueCloud;
     UserPreferencesTrait::getUserValue as protected getUserValueCloud;

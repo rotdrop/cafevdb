@@ -34,7 +34,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
-use OCA\CAFEVDB\Toolkit\Traits as ToolkitTraits;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits as ToolkitTraits;
 
 /**
  * Like Toolkit\DateTimeTrait, but convert to Carbon.

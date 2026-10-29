@@ -35,32 +35,43 @@ try {
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once($appDir . '/vendor/autoload.php');
   require_once($appDir . '/vendor-wrapped/autoload.php');
-  require_once($appDir . '/vendor-bin/typescript-transformer/vendor/autoload.php');
+  require_once($appDir . '/vendor-bin/php-to-typescript/vendor/autoload.php');
 } catch (\Throwable $t) {
   fwrite(STDERR, 'Composer autoloads not set up: ' . $t->getMessage() . PHP_EOL);
   exit(1);
 }
 
-$autoloader->addPsr4(
-  \OCA\RotDrop\DevScripts\PhpToTypeScript::class . '\\',
-  __DIR__ . '/lib/scripts/php-to-typescript',
-  true,
-);
-$autoloader->addPsr4(
-  \OCA\RotDrop\Toolkit::class . '\\',
-  $appDir . '/php-toolkit/',
-  true,
-);
-
-use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Console\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO;
+use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector as BaseDTOCollector;
+
+// The upstream DTO collector expects the toolkit at OCA\<App>\Toolkit, however
+// the toolkit lives in the scoped namespace OCA\<App>\Wrapped\OCA\RotDrop\Toolkit.
+class WrappedToolkitDTOCollector extends BaseDTOCollector
+{
+  protected function shouldCollect(ClassTypeReflector $reflector): bool
+  {
+    $transformers = array_map('get_class', $this->config->getTransformers());
+    $hasTransformer = array_filter(
+      $transformers,
+      fn(string $transformer) => $transformer === DtoTransformer::class || is_subclass_of($transformer, DtoTransformer::class),
+    ) !== [];
+
+    return $hasTransformer && $reflector->getReflectionClass()->isSubclassOf(AbstractDTO::class);
+  }
+}
 
 // store output of different transformers in different files
 
 $excludes = [
-  'lib/Toolkit/Service/ArchiveService.php',
-  'lib/Toolkit/Backend/ArchiveBackend.php',
-  'lib/Toolkit/Backend/ArchiveFormats.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Service/ArchiveService.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Backend/ArchiveBackend.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Backend/ArchiveFormats.php',
 ];
 
 $scopedNamespaces = [
@@ -70,12 +81,16 @@ $scopedNamespaces = [
 ];
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
+  collectors: [
+    WrappedToolkitDTOCollector::class,
+    EnumCollector::class,
+    DatabaseEntityCollector::class,
+  ],
+  metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
   devScriptsFolder: __DIR__,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
 );
-
-require_once __DIR__ . '/../lib/Toolkit/Console/ConsoleOutput.php';
 
 try {
   $phpToTypeScript->run(

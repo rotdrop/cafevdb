@@ -54,7 +54,7 @@ use OCA\CAFEVDB\Database\Cloud\Mapper\TOSExceptionMapper;
  */
 class ByPassToSService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const TERM_UUID_KEY = 'term_uuid';
 

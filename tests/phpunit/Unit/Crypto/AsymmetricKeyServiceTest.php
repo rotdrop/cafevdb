@@ -47,7 +47,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(Crypto\Registration::class)]
 #[Attributes\CoversClass(Events\AfterEncryptionKeyPairChanged::class)]
 #[Attributes\CoversClass(Events\BeforeEncryptionKeyPairChanged::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication::class)]
 class AsymmetricKeyServiceTest extends TestCase
 {
   private MockProvider $mockProvider;

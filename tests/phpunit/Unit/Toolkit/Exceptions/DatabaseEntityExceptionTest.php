@@ -29,7 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Toolkit;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit;
 
 /**
  * Test the Toolkit\Exceptions\DatabaseEntityException class and some of its child

@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes\ElementData;
   'Operation extends ' . Operation::class . ' = ' . Operation::class,
   'Topic extends ' . Topic::class . " = " . Topic::class,
 ])]
-class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class EmailFormComposerRequestData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

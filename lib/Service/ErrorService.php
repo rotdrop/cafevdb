@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Constants;
 class ErrorService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 

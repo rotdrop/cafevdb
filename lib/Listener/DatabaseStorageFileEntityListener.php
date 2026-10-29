@@ -44,9 +44,9 @@ use OCA\CAFEVDB\Common\GenericUndoable;
  */
 class DatabaseStorageFileEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\SanitizeFilenameTrait
   {
     sanitizeFilename as private systemSanitizeFilename;
   }

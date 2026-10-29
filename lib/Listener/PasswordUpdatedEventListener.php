@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 /** Perform re-recryption action when the user password has been updated. */
 class PasswordUpdatedEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

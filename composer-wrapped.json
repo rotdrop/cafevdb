@@ -29,6 +29,7 @@
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^2.0",
+    "rotdrop/nextcloud-app-toolkit": "dev-main",
     "symfony/cache": "^6",
     "symfony/string": "*"
   },
@@ -40,6 +41,10 @@
     "symfony/polyfill-php86": "*"
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/nextcloud-app-toolkit"
+    },
     {
       "type": "path",
       "url": "3rdparty/doctrine-orm",

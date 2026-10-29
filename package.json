@@ -177,6 +177,9 @@
   "bugs": {
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
+  "overrides": {
+    "p-queue": "^9.3.5"
+  },
   "engines": {
     "node": "^24.0.0 || ^26.0.0",
     "npm": "^11.0.0"

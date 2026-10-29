@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\ProjectService;
  */
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use DatabaseStorageNodeNameTrait;
 
   /** @var ProjectService */

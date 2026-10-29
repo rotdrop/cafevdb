@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class GroupListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ GroupCreatedEvent::class, GroupChangedEvent::class ];
 

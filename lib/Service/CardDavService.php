@@ -47,7 +47,7 @@ use OCA\DAV\CardDAV\CardDavBackend;
 class CardDavService
 {
   use \OCA\CAFEVDB\Traits\GetUserTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var null|string */
   private ?string $addressBookUserId;

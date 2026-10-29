@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /** Response of the MigrationsController. */
-class ApplyMigrationsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ApplyMigrationsResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

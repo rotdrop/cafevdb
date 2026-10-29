@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Service\WebPagesRPC;
 class PersonalForm
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const ERROR_TEMPLATE = "errorpage";
   public const TEMPLATE = "personal-settings";

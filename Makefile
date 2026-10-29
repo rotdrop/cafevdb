@@ -37,7 +37,7 @@ PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
-TS_PHP_SOURCE_DIRS = lib
+TS_PHP_SOURCE_DIRS = lib vendor-wrapped/rotdrop/nextcloud-app-toolkit/src
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -147,7 +147,7 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 all: help
 
 #@private
-pre-build: php-scoper-install app-toolkit-stamp
+pre-build: php-scoper-install
 #	git submodule update --init
 #	$(OCC) maintenance:mode --on
 .PHONY: pre-build
@@ -235,9 +235,10 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
 # scoper does not preserve executable bits
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
+# scoper does not rewrite the composer autoload maps, regenerate them
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 vendor-wrapped/autoload.php: vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 .PHONY: namespace-wrapper
 namespace-wrapper: vendor-wrapped/autoload.php
@@ -255,21 +256,6 @@ namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
  -e 's/([( ])\\$(WRAPPER_NAMESPACE)\\$(NS)/\1\\$(NS)/g'\
 }\
  $(NAMESPACE_WRAPPER_VICTIMS)
-
-#
-# Another namespace wrapper, but less complicated, in order to
-# decouple our shared Nextcloud traits collection from other apps.
-#
-
-APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
-APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
-APP_TOOLKIT_NS = CAFEVDB
-APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
-
-include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
-
-app-toolkit-stamp: $(APP_TOOLKIT_DEST)/README.md $(MAKEFILE_DEP)
-	date > $@
 
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
@@ -356,7 +342,6 @@ distclean: clean
 	rm -rf vendor-wrapped
 	rm -rf vendor-bin/*/vendor
 	rm -rf node_modules
-	rm -rf lib/Toolkit/*
 	rm -rf 3rdparty/tinymce/*
 .PHONY: distclean
 
@@ -514,7 +499,6 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
  -d $(SRCDIR)/lib \
- -d $(SRCDIR)/php-toolkit \
  -d $(SRCDIR)/tests/phpunit \
  --defaultpackagename $(APP_NAME) \
  --force \

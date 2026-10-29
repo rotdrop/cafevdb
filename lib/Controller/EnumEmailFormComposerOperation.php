@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumEmailFormComposerOperation: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case SEND = 'send';
   case PREVIEW = 'preview';

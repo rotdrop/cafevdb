@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Common\Util;
 
 /** Test aspects of the Util class. */
 #[Attributes\CoversClass(Util::class)]
-#[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
+#[Attributes\CoversTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 class UtilTest extends TestCase
 {
   private const CAMEL_CASE_TO_DASHES_DATA = [

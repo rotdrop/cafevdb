@@ -53,8 +53,8 @@ use OCA\CAFEVDB\Service\UserEncryptionService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class EncryptionController extends OCSController
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const API_VERSION = 'v1';

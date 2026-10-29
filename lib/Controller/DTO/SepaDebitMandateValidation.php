@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 /**
  * DTO for a debit mandate, only the bare minimum of data.
  */
-class SepaDebitMandateValidation extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class SepaDebitMandateValidation extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

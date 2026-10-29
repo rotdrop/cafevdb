@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class MailingListsEmailChangedListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [

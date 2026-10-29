@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 class ReadMeFactory extends AbstractReadMeFactory
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * @var array<string, null|InMemoryFileNode>

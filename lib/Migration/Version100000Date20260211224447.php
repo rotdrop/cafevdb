@@ -35,7 +35,7 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 use OCA\CAFEVDB\Database\Cloud\Entities\TOSException;
-use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppInfoService;
 
 /**
  * Generate a table to store ToS exceptions for public shares s.t. those are

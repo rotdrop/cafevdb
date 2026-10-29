@@ -77,7 +77,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const TEMPLATE = EnumTemplate::PROJECT_PARTICIPANTS->value;
 

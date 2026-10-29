@@ -44,7 +44,7 @@ use OCP\Share\IShare;
  */
 class CleanupExpiredDownloads extends TimedJob
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * @var int Additional grace time to keep even expired downloads. This is

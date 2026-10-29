@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary;
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
 
 /**

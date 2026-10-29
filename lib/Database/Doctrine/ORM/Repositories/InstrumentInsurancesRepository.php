@@ -28,7 +28,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 /** Repository for instrument insurances. */
 class InstrumentInsurancesRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * Get the very first start date over all insurances.

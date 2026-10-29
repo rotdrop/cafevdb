@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO for communication prompts to the frontend.
  */
-class ConfirmFeedback extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class ConfirmFeedback extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ValidationController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const END_POINT_VALIDATE_GENERAL = 'validate/general';

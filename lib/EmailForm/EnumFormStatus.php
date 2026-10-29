@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\EmailForm;
  */
 enum EnumFormStatus: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case SUBMITTED = 'submitted';
 }

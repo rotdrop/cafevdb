@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder implements PhpSpreadSheet\Cell\IValueBinder
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(

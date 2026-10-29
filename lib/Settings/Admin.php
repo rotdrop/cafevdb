@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\WikiRPC;
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = "admin-settings";
 

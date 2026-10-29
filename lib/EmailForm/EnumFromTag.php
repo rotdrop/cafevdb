@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 /** Some constants also used in the frontend code. */
 enum EnumFromTag: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case ORCHESTRA = 'orchestra';
   case PERSONAL = 'personal';

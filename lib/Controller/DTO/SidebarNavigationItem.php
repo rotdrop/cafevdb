@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
  * DTO for the page navigation item of a template renderer, this is used to
  * generate navigation links in the left side-bar of the vue-app.
  */
-class SidebarNavigationItem extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class SidebarNavigationItem extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -22,7 +22,7 @@
  */
 
 import type { OCSResponse } from '@nextcloud/typings/ocs';
-import type { EntityResponse } from '~/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import type { EntityResponse } from '~/build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
 import type { ObjectEntries } from '~/src/toolkit/types/type-traits.d.ts';
 

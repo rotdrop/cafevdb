@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 /** Search scope for MusiciansController::search(). */
 enum EnumMusiciansSearchScope: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case MUSICIANS = 'musicians';
   case CLUB_MEMBERS = 'club-members';

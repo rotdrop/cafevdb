@@ -65,8 +65,8 @@ class SepaDebitMandatesController extends Controller
 {
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 

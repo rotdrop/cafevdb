@@ -31,7 +31,7 @@ use Symfony\Component\Console;
 
 use OCP\ILogger;
 
-use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Console\ConsoleOutput;
 
 /** A PSR logger which logs to the console if in CLI mode. */
 class ConsoleLogger extends AbstractLogger

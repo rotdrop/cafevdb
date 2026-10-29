@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
  * and config / enum keys is ensured by unit testing with the fromArray
  * method.
  */
-class PMEInitialState extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class PMEInitialState extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

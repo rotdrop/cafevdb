@@ -27,7 +27,7 @@
 
 import type { EnumParticipantFieldPropertyGet } from '../../build/ts-types/php-modules/Controller.ts';
 import type { ParticipantFieldPropertyGetDefaultValue, ParticipantFieldPropertyGetResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import type { RationalNumber } from '../../build/ts-types/php-modules/Toolkit/Common.ts';
+import type { RationalNumber } from '../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Common.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { TableDialogCallbackData } from './pme-state.ts';
 import type { UpdateStrategy } from './project-participant-fields.ts';

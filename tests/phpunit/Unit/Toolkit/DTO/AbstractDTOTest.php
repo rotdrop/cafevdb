@@ -37,7 +37,7 @@ use PHPUnit\Framework\TestCase;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
-use OCA\CAFEVDB\Toolkit\DTO;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 

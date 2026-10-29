@@ -66,7 +66,7 @@ class ProjectAssociates extends ProjectParticipants
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const TEMPLATE = EnumTemplate::PROJECT_ASSOCIATES->value;
 

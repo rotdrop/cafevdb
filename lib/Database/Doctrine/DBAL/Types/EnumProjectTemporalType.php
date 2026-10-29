@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  */
 enum EnumProjectTemporalType: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   /**
    * The standard type for ordinary transient projects.

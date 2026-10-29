@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
  */
 class UserLoggedInEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ Event1::class, Event2::class ];
 

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * Response DTO of the email-form controller.
  */
-class EmailFormListContactsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class EmailFormListContactsResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

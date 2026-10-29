@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Controller\EnumFileUploadMode;
 /**
  * DTO response for testing available upload modes.
  */
-class UploadModeTest extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class UploadModeTest extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

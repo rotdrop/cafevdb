@@ -31,8 +31,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
-use OCA\CAFEVDB\Toolkit\Constants;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppInfoService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Constants;
 
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversClass(AppInfoService::class)]

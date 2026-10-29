@@ -37,7 +37,7 @@ use OCP\IL10N;
 use OCP\ITempManager;
 use OCP\Image;
 
-use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class ImagesService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const CACHE_HASH_ALGORITHM = 'sha256';
 

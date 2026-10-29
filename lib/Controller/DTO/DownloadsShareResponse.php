@@ -31,9 +31,9 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 /**
  * Response DTO for querying the music sheets download folder.
  */
-class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class DownloadsShareResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   public readonly ?CarbonImmutable $expires;
 

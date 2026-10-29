@@ -1,9 +1,9 @@
 <?php
 /**
- * A collection of reusable traits classes for Nextcloud apps.
+ * Orchestra member, musicion and project management application.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,26 +20,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\RotDrop\Toolkit\Traits;
+namespace OCA\CAFEVDB\Traits;
 
-use OCA\RotDrop\Toolkit\Service\AppInfoService;
+use \OCP\IL10N;
 
 /**
- * Trait which extracts the app-name from the info.xml file for cases where it
- * cannot be supplied by the cloud.
+ * Supply a dummy t() function in order to inject strings into the translation
+ * machinery.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
-trait AppNameTrait
+trait FakeTranslationTrait
 {
   /**
-   * @param string $classDir The value of __DIR__ of the consuming class.
+   * @param string $text
    *
-   * @return null|string The app-name from the info.xml file or null if that
-   * cannot be found.
+   * @param string|array $parameters
    *
-   * @todo Remove unused parameter.
+   * @param ?IL10N $l
+   *
+   * @return string
    */
-  protected static function getAppInfoAppName(string $classDir): ?string
+  protected static function t(string $text, string|array $parameters = [], ?IL10N $l = null):string
   {
-    return AppInfoService::getAppInfoAppName();
+    if (!is_array($parameters)) {
+      $parameters = [ $parameters ];
+    }
+    return $l
+      ? $l->t($text, $parameters)
+      : (empty($parameters) ? $text : vsprintf($text, $parameters));
   }
 }

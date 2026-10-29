@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 /**
  * Helper trait in order to fake HTTP requests to the user-sql app.  The faked
  * IClient instance will finally be consumed by
- * \OCA\CAFEVDB\Toolkit\Service\RequestService.
+ * \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\RequestService.
  */
 trait UserSqlRequestsTrait
 {

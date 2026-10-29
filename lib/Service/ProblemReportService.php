@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class ProblemReportService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const REPORT_METHOD_EMAIL = 'email';
 

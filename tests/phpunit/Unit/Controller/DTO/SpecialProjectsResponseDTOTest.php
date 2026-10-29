@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Controller\DTO\SpecialProjectsResponse as TestedDTO;
 #[Attributes\CoversClass(ConfirmFeedback::class)]
 #[Attributes\CoversClass(TestedDTO::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Controller\DTO\ConfirmFeedback::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class SpecialProjectsResponseDTOTest extends TestCase
 {
   use TestResponseDTOTrait;

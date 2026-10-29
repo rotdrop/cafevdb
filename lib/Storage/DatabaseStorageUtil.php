@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 /** Support functions for the database storage backend. */
 class DatabaseStorageUtil
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const PATH_SEP = '/';

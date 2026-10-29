@@ -38,8 +38,8 @@ use OCA\CAFEVDB\Service\AuthorizationService;
  */
 class Personal implements ISettings
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 

@@ -67,7 +67,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * matrix. It should be extended to also cover the various events emitted by
  * the dav app.
  */
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 trait SetupEventsServiceTrait
 {
   use EntityGeneratorTrait;

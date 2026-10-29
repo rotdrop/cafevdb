@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class ProjectEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var EventsService */
   protected $eventsService;

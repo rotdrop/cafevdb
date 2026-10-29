@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Controller\EnumSharedCalendarUri;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversClass(EnumSharedCalendarUri::class)]

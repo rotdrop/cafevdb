@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 /** Valid keys for ${GLOBAL::KEY} substitutions. */
 enum EnumGlobalSubstitutionKey: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case ADDRESS = 'ADDRESS';
   case BANK_ACCOUNT = 'BANK_ACCOUNT';

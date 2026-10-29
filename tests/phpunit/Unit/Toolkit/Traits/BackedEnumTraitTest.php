@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
 /** Example enum for testing. */
 enum StringEnumExample: string

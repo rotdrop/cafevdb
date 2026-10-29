@@ -38,12 +38,12 @@ use Psr\Log\LoggerInterface;
 
 use OCA\RotDrop\Tests\Logger;
 
-use OCA\RotDrop\Toolkit\Service\ExecutableFinder;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\ExecutableFinder;
 
 /** Setup a real database server in order to avoid excessive mocking. */
 class DatabaseProvider
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const DATABASE_SETUP_SCRIPT = 'mariadb-install-db';
 

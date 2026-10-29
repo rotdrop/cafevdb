@@ -60,7 +60,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -72,8 +72,8 @@ class ProjectService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\UnusedMethodTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UnusedMethodTrait;
 
   const DBTABLE = 'Projects';
 

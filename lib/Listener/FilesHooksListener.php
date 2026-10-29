@@ -56,9 +56,9 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 /** Listener for hooking up an additional context menu entry. */
 class FilesHooksListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ApiRequestTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ApiRequestTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CloudAdminTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 

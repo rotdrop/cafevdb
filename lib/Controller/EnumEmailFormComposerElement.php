@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumEmailFormComposerElement: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case TO = 'to';
   case SUBJECT_TAG = 'subjectTag';
