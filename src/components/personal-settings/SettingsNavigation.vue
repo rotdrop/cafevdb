@@ -21,21 +21,32 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcButton v-if="narrowScreen"
+  <NcButton v-if="!navigationShown"
             class="personal-settings-navigation-toggle"
             variant="primary"
-            :aria-label="t(appId, 'Toggle settings navigation')"
-            :aria-expanded="navigationOpen"
-            @click="navigationOpen = !navigationOpen"
+            :aria-label="t(appId, 'Show settings navigation')"
+            :aria-expanded="false"
+            @click="toggleNavigation"
   >
     <template #icon>
-      <CloseIcon v-if="navigationOpen" :size="20" />
-      <ListIcon v-else :size="20" />
+      <ListIcon :size="20" />
     </template>
   </NcButton>
-  <nav class="personal-settings-navigation"
-       :class="{ 'navigation-open': navigationOpen }"
-       :aria-label="t(appId, 'Settings navigation')">
+  <nav v-show="navigationShown"
+       class="personal-settings-navigation"
+       :class="{ 'narrow-screen': narrowScreen }"
+       :aria-label="t(appId, 'Settings navigation')"
+  >
+    <div class="navigation-header">
+      <NcButton variant="tertiary"
+                :aria-label="t(appId, 'Hide settings navigation')"
+                @click="toggleNavigation"
+      >
+        <template #icon>
+          <CloseIcon :size="20" />
+        </template>
+      </NcButton>
+    </div>
     <ul>
       <li v-for="tab in tree" :key="tab.id">
         <a :href="'#' + tab.id"
@@ -56,18 +67,23 @@
 </template>
 
 <script setup lang="ts">
+import type { TabEntry } from './settings-tree.ts'
+
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue'
-import type { TabEntry } from './settings-tree.ts'
 import { appName as appId } from '../../config.ts'
 
 // On narrow screens the navigation is hidden and a floating toggle button
 // opens it as an overlay.
 const props = defineProps<{ tree: TabEntry[] }>()
 
+const STORAGE_KEY = `${appId}:personal-settings-navigation-hidden`
+// Wide screens: visible unless the user hid it (remembered). Narrow screens:
+// hidden unless opened.
+const hiddenOnWideScreen = ref(window.localStorage.getItem(STORAGE_KEY) === '1')
 const navigationOpen = ref(false)
 
 const narrowQuery = window.matchMedia('(width < 1024px)')
@@ -79,6 +95,17 @@ const updateNarrowScreen = (event: MediaQueryListEvent) => {
   }
 }
 narrowQuery.addEventListener('change', updateNarrowScreen)
+
+const navigationShown = computed(() => narrowScreen.value ? navigationOpen.value : !hiddenOnWideScreen.value)
+
+const toggleNavigation = () => {
+  if (narrowScreen.value) {
+    navigationOpen.value = !navigationOpen.value
+  } else {
+    hiddenOnWideScreen.value = !hiddenOnWideScreen.value
+    window.localStorage.setItem(STORAGE_KEY, hiddenOnWideScreen.value ? '1' : '0')
+  }
+}
 
 const activeId = ref<string|null>(null)
 
@@ -160,25 +187,29 @@ onBeforeUnmount(() => {
     }
   }
 
-  // Same breakpoint at which Nextcloud collapses the left navigation.
-  @media only screen and (width < 1024px) {
-    display: none;
+  .navigation-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    background-color: var(--color-main-background);
+  }
 
-    &.navigation-open {
-      display: block;
-      position: fixed;
-      top: 5rem;
-      right: 1rem;
-      bottom: 5rem;
-      z-index: 1500;
-      max-height: none;
-      width: min(18rem, 100vw - 2rem);
-      padding: 1rem;
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-large);
-      background-color: var(--color-main-background);
-      box-shadow: 0 0 10px var(--color-box-shadow);
-    }
+  // Overlay below the breakpoint at which Nextcloud collapses the left navigation.
+  &.narrow-screen {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    bottom: 5rem;
+    z-index: 1500;
+    max-height: none;
+    width: min(18rem, 100vw - 2rem);
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-large);
+    background-color: var(--color-main-background);
+    box-shadow: 0 0 10px var(--color-box-shadow);
   }
 }
 
