@@ -131,7 +131,8 @@
             <slot :name="`field-${field.key}`"
                   :field="field"
                   :value="values[field.key]"
-                  :setValue="(value: unknown) => { values[field.key] = value; saved[field.key] = value }"
+                  :settings="saved"
+                  :setValue="(value: unknown, downloadLink?: string) => setFieldValue(field, value, downloadLink)"
             />
           </template>
         </div>
@@ -194,6 +195,14 @@ for (const field of props.groups.flatMap(({ fields }) => fields)) {
 }
 const values = reactive<Record<string, unknown>>(initialValues)
 const saved = reactive<Record<string, unknown>>({ ...initialValues })
+const setFieldValue = (field: AdminSettingField, value: unknown, downloadLink = '') => {
+  values[field.key] = value
+  saved[field.key] = value
+  if (field.downloadLinkKey) {
+    values[field.downloadLinkKey] = downloadLink
+    saved[field.downloadLinkKey] = downloadLink
+  }
+}
 const affix = (value: Affix) => typeof value === 'function' ? value(saved) : value
 const saving = reactive<Record<string, boolean>>({})
 const force = reactive<Record<string, boolean>>({})

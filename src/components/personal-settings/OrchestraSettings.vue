@@ -1,7 +1,17 @@
 <template>
   <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
-    <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value, setValue }">
-      <NcButton v-tooltip="hints['templates:auto-fill-test']"
+    <template v-for="template in documentTemplates" :key="template" #[`field-${template}`]="{ value, setValue, settings }">
+      <NcButton v-tooltip="hints[`templates:upload:cloud:${template}`]"
+                :aria-label="t(appId, 'Choose a template file from the cloud storage.')"
+                :disabled="!!busy[template] || !templateFolder(template, settings)"
+                @click="chooseCloudTemplate(template, settings, setValue)"
+      >
+        <template #icon>
+          <CloudIcon :size="20" />
+        </template>
+      </NcButton>
+      <NcButton v-if="DOCUMENT_TEMPLATES[template].type === DOCUMENT_TYPE_TEMPLATE"
+                v-tooltip="hints['templates:auto-fill-test']"
                 :aria-label="t(appId, 'Auto-fill test')"
                 :disabled="!value || !!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'native' })"
@@ -10,7 +20,8 @@
           <FileDocumentIcon :size="20" />
         </template>
       </NcButton>
-      <NcButton v-tooltip="hints['templates:auto-fill-test:pdf']"
+      <NcButton v-if="DOCUMENT_TEMPLATES[template].type === DOCUMENT_TYPE_TEMPLATE"
+                v-tooltip="hints['templates:auto-fill-test:pdf']"
                 :aria-label="t(appId, 'Auto-fill test (PDF)')"
                 :disabled="!value || !!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'pdf' })"
@@ -19,7 +30,8 @@
           <FilePdfIcon :size="20" />
         </template>
       </NcButton>
-      <NcButton v-tooltip="hints['templates:auto-fill-test:data']"
+      <NcButton v-if="DOCUMENT_TEMPLATES[template].type === DOCUMENT_TYPE_TEMPLATE"
+                v-tooltip="hints['templates:auto-fill-test:data']"
                 :aria-label="t(appId, 'Test data')"
                 :disabled="!!busy[template]"
                 @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST_DATA)"
@@ -47,9 +59,14 @@
 import type { AdminSettingField, AdminSettingGroup } from './AdminSettingsTab.vue'
 import type { TabEntry } from './settings-tree.ts'
 
+import { FilePickerClosed, getFilePickerBuilder } from '@nextcloud/dialogs'
+import { emit as emitFileEvent } from '@nextcloud/event-bus'
+import { FileType } from '@nextcloud/files'
+import { defaultRootPath, getClient, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
 import { reactive } from 'vue'
+import CloudIcon from 'vue-material-design-icons/Cloud.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
@@ -65,8 +82,10 @@ import {
   BANK_ACCOUNT_IBAN,
   BANK_ACCOUNT_OWNER,
   DOCUMENT_TEMPLATES,
+  DOCUMENT_TEMPLATES_FOLDER,
   DOCUMENT_TYPE_TEMPLATE,
   EVENT_DURATION_KEY,
+  SHARED_FOLDER,
   STREET_ADDRESS_CITY,
   STREET_ADDRESS_COUNTRY,
   STREET_ADDRESS_HOUSE_NUMBER,
@@ -104,20 +123,90 @@ const group = (index: number, fallback: string, fields: AdminSettingField[]): Ad
 const options = (values: Array<{ value: string|number, name: string }>|Record<string, { value: string|number, name: string }> = []) =>
   Object.values(values).map(({ value, name }) => ({ value, label: name }))
 
+type DocumentTemplate = keyof typeof DOCUMENT_TEMPLATES
+type SetTemplateValue = (value: unknown, downloadLink?: string) => void
+const documentTemplates = Object.keys(DOCUMENT_TEMPLATES) as DocumentTemplate[]
 const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips([
   'templates:delete',
   'templates:auto-fill-test',
   'templates:auto-fill-test:pdf',
   'templates:auto-fill-test:data',
+  ...documentTemplates.map((template) => `templates:upload:cloud:${template}`),
 ])
 const hints = tooltipsProvider.tooltipsData
 
-const autoFillTemplates = Object.entries(DOCUMENT_TEMPLATES)
-  .filter(([, info]) => info.type === DOCUMENT_TYPE_TEMPLATE)
-  .map(([key]) => key)
+const templateFolder = (template: DocumentTemplate, settings: Record<string, unknown>) => {
+  if (!settings[SHARED_FOLDER] || !settings[DOCUMENT_TEMPLATES_FOLDER]) {
+    return ''
+  }
+  const subFolderKey = DOCUMENT_TEMPLATES[template].folder
+  return '/' + [
+    settings[SHARED_FOLDER],
+    settings[DOCUMENT_TEMPLATES_FOLDER],
+    subFolderKey ? settings[subFolderKey] : '',
+  ].filter(Boolean).join('/').split('/').filter(Boolean).join('/') + '/'
+}
 
 const busy = reactive<Record<string, boolean>>({})
+const chooseCloudTemplate = async (
+  template: DocumentTemplate,
+  settings: Record<string, unknown>,
+  setValue: SetTemplateValue,
+) => {
+  const folder = templateFolder(template, settings)
+  if (!folder || busy[template]) {
+    return
+  }
+  busy[template] = true
+  try {
+    let move = false
+    const picker = getFilePickerBuilder(t(appId, 'Choose a template file from the cloud storage.'))
+      .setMultiSelect(false)
+      .allowDirectories(false)
+      .setButtonFactory((nodes) => [
+        {
+          label: t(appId, 'Copy'),
+          variant: 'secondary',
+          disabled: nodes.length !== 1 || nodes[0]?.type !== FileType.File,
+          callback: () => { move = false },
+        },
+        {
+          label: t(appId, 'Move'),
+          variant: 'primary',
+          disabled: nodes.length !== 1 || nodes[0]?.type !== FileType.File,
+          callback: () => { move = true },
+        },
+      ])
+      .build()
+    const [node] = await picker.pickNodes()
+    const sourcePath = `${node.root}${node.path}`
+    const destinationPath = `${defaultRootPath}${folder}${node.basename}`
+    const client = getClient()
+    if (sourcePath !== destinationPath) {
+      if (move) {
+        await client.moveFile(sourcePath, destinationPath)
+      } else {
+        await client.copyFile(sourcePath, destinationPath)
+      }
+    }
+    const result = await client.stat(destinationPath, { data: getDefaultPropfind() })
+    const newNode = resultToNode('data' in result ? result.data : result)
+    if (sourcePath !== destinationPath) {
+      emitFileEvent(move ? 'files:node:updated' : 'files:node:created', newNode)
+    }
+    const response = await setAdminSetting(template, newNode.basename)
+    setValue(newNode.basename, newNode.source)
+    showSettingFeedback(response.data, t(appId, DOCUMENT_TEMPLATES[template].name))
+  } catch (error) {
+    if (!(error instanceof FilePickerClosed)) {
+      handleSettingError(error, (forwarded) => emit('error', forwarded))
+    }
+  } finally {
+    busy[template] = false
+  }
+}
+
 const download = async (
   template: string,
   endpoint: EnumSettingsGetApp,
@@ -133,7 +222,7 @@ const download = async (
   }
 }
 
-const remove = async (template: string, setValue: (value: unknown) => void) => {
+const remove = async (template: string, setValue: SetTemplateValue) => {
   busy[template] = true
   try {
     const response = await setAdminSetting(`${template}Delete`, '')
