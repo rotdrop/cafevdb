@@ -224,9 +224,9 @@ onBeforeUnmount(() => {
 
   &.narrow-screen {
     position: fixed;
-    top: auto;
+    // Same vertical position as the toggle of the left navigation of Nextcloud.
+    top: calc(var(--header-height, 50px) + var(--default-grid-baseline));
     right: 1rem;
-    bottom: 1rem;
   }
 }
 </style>
