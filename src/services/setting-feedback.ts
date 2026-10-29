@@ -6,7 +6,7 @@
 
 import { translate as t } from '@nextcloud/l10n';
 import { appName as appId } from '../config.ts';
-import { showError, showSuccess } from '../toolkit/util/toasts.ts';
+import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts';
 
 type FeedbackData = { messages?: Array<string|null>|string|null; message?: string|string[]|null };
 
@@ -57,6 +57,6 @@ export const showSettingError = (error: unknown): boolean => {
   if (suggestions.length > 0) {
     text += ' ' + t(appId, 'Did you mean: {suggestions}?', { suggestions: suggestions.join(', ') });
   }
-  showError(text, { timeout: -1 });
+  showError(text, { timeout: TOAST_PERMANENT_TIMEOUT });
   return true;
 };

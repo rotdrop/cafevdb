@@ -28,7 +28,7 @@
            :hasPrevious="false"
            :labelId="errorPageHeadingId"
            size="large"
-           container="#body-user"
+           :container="container"
            v-bind="$attrs"
   >
     <template #default>
@@ -79,6 +79,8 @@ withDefaults(defineProps<{
 
 const errorPageHeadingId = ref<string>(uuidv4())
 const modal = ref<null|typeof NcModal>(null)
+// The settings pages of Nextcloud have a different body id than the user pages.
+const container = document.querySelector('#body-user') ? '#body-user' : 'body'
 
 </script>
 
