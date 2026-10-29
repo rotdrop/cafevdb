@@ -51,7 +51,7 @@
             />
             <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
             <NcCheckboxRadioSwitch v-model="force[field.key]">
-              {{ t(appId, 'Force') }}
+              {{ t(appId, 'force') }}
             </NcCheckboxRadioSwitch>
             <NcButton :disabled="saving[field.key] || (!values[field.key] && field.type === 'owner')"
                       @click="save(field, values[field.key], true)"
