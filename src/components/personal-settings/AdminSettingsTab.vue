@@ -266,19 +266,6 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
   }
 }
 
-.admin-setting--inline {
-  flex-wrap: nowrap;
-
-  :deep(.input-field) {
-    flex: 0 1 12rem;
-    min-width: 6rem;
-  }
-}
-
-.admin-setting-affix {
-  white-space: nowrap;
-}
-
 .admin-setting {
   display: flex;
   flex-wrap: wrap;
@@ -291,5 +278,18 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
     flex: 1 1 18rem;
     min-width: 12rem;
   }
+}
+
+.admin-setting--inline {
+  flex-wrap: nowrap;
+
+  :deep(.input-field) {
+    flex: 0 1 12rem;
+    min-width: 6rem;
+  }
+}
+
+.admin-setting-affix {
+  white-space: nowrap;
 }
 </style>
