@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Maintenance\SanitizerRegistration;
 /** Make sure that known sanitizations are performed. */
 class MusicianEmailPersistanceListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [

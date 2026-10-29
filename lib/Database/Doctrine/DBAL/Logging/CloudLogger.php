@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Firehed\DbalLogger\QueryLogger;
 /** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements QueryLogger
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var bool */
   private $enabled;

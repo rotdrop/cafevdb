@@ -43,8 +43,8 @@ use OCA\CAFEVDB\Service\ProgressStatusService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ProgressStatusController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const GET_URL = '/foregroundjob/progress/{id}';
   public const POST_URL = '/foregroundjob/progress/{operation}';

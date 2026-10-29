@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 /** Tool-tips management with translations. */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const SUBKEY_PREFIXES = [ 'pme' ];
 

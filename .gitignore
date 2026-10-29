@@ -3,7 +3,6 @@ js/**
 css/**
 statistics/**
 *~
-lib/Toolkit/[A-Z]*
 lib/tooltips.php.new
 \#*\#
 .#*
@@ -36,10 +35,10 @@ build-flavour
 .phpunit.result.cache
 /vendor-bin/**/vendor/
 /vendor-bin/**/composer.lock
+!/vendor-bin/php-to-typescript/composer.lock
 .php-cs-fixer.cache
 .phpunit.cache
 dev-scripts/playground/php/*.php
 **/.ac-php-conf.json
 *.log
-app-toolkit-stamp
 .vite

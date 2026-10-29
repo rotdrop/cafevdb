@@ -45,8 +45,8 @@ use OCA\CAFEVDB\Service\AuthorizationService;
  */
 class GroupMemberMiddleware extends Middleware
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

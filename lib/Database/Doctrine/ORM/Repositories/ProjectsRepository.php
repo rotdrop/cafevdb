@@ -27,13 +27,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EnumOrderByOptions;
 
 /** Entity repository for projects. */
 class ProjectsRepository extends EntityRepository
 {
   // use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
 
   const ALIAS = 'proj';
 

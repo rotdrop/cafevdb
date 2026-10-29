@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\EmailForm;
  */
 enum EnumLargeAttachmentTemplateSubstitution: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case EXPIRATION_DATE = 'EXPIRATION_DATE';
   case FILENAME = 'FILENAME';

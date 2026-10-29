@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumEmailFormContactsPostParams: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case FREE_FORM_RECIPIENTS = 'freeFormRecipients';
   case ADDRESS_BOOK_CANDIDATES = 'addressBookCandidates';

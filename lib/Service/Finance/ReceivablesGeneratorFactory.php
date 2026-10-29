@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 /** Factory for receivables generators. */
 class ReceivablesGeneratorFactory
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const GENERATORS_FOLDER = __DIR__ . '/../../';
   const GENERATOR_LABEL = IRecurringReceivablesGenerator::GENERATOR_LABEL;

@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[PhpToTypeScript\Attributes\TypeScript]
 class AuthorizationService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\AppConfigTrait;
 
   public const MANAGEMENT = 'management';

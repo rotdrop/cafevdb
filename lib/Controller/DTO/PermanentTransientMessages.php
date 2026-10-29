@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * Used by the AdminSettingsResponse.
  */
-class PermanentTransientMessages extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class PermanentTransientMessages extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** @var array<string> */
   public readonly ?array $permanent;

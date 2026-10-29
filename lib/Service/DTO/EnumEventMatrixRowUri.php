@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[TSAttributes\InlineTypeScriptType]
 enum EnumEventMatrixRowUri: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case CONCERTS = ConfigConstants::CONCERTS_CALENDAR_URI;
   case FINANCE = ConfigConstants::FINANCE_CALENDAR_URI;

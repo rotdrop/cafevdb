@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /** Base for file-system related IUndoable implementations. */
 abstract class AbstractFileSystemUndoable extends AbstractUndoable
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
   protected IL10N $l;

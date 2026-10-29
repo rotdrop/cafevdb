@@ -38,7 +38,7 @@ import type {
 import type {
   EntityReference,
   EntityReferenceCollection,
-} from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+} from '../../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import type { DecToZero, NonNegInt, NullableIf, NumberTuple, Zero } from '../types/type-traits.ts';
 
 import * as EntityRepository from './entity-repository.ts';

@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Settings\Admin;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumInitialStateKey: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case CAFEVDB = 'CAFEVDB';
   case PHP_MY_EDIT = 'PHPMyEdit';

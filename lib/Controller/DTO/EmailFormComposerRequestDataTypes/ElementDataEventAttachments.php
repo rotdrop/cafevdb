@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes;
 /**
  * Response DTO of the email-form controller.
  */
-class ElementDataEventAttachments extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class ElementDataEventAttachments extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

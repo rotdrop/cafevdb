@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus;
 /**
  * DTO for a debit mandate, only the bare minimum of data.
  */
-class SepaBankAccount extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class SepaBankAccount extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

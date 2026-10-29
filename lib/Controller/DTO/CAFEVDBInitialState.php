@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * Intial state emitted for key CAFEVDB.
  */
-class CAFEVDBInitialState extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class CAFEVDBInitialState extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

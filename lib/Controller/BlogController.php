@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 class BlogController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const BASE_PATH = 'blog';
   public const END_POINT_EDIT = 'editentry';

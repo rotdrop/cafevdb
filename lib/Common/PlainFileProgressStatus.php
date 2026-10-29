@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Storage\AppStorage;
 /** Progress status with a plain local file as storage. */
 class PlainFileProgressStatus extends AbstractProgressStatus
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const READ_RETRY_LIMIT = 10;
 

@@ -26,7 +26,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Common;
 
-use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\AbstractDecimalRational;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test quasi-fixed-point numbers. */

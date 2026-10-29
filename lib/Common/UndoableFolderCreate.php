@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;

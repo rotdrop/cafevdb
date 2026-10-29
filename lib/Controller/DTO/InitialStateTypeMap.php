@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
  * possible to deduce the type of the initial state record from the used
  * initial state key.
  */
-class InitialStateTypeMap extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class InitialStateTypeMap extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -28,14 +28,14 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
 /**
  * Duplicate musician DTO.
  */
 #[TSAttributes\InlineTypeScriptType]
-class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class DuplicateMusician extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   #[PhpToTypeScript\Attributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
   public readonly EntityArrayAdapter $musician;

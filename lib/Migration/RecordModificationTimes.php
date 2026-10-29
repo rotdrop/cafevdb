@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\AppMTimeService;
  */
 class RecordModificationTimes implements IRepairStep
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const ASSETS_MTIME_KEY = 'assets_mtime';
   public const L10N_MTIME_KEY = 'l10n_mtime';

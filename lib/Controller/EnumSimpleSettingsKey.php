@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 enum EnumSimpleSettingsKey: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case IMPORT_CLUB_MEMBERS_AS_CLOUD_USERS = 'importClubMembersAsCloudUsers';
   case CLOUD_USER_VIEWS_DATABASE = 'cloudUserViewsDatabase';

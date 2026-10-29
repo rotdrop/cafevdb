@@ -30,7 +30,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
  * DTO for the page navigation item of a template renderer, this is used to
  * generate navigation links in the left side-bar of the vue-app.
  */
-class NavigationItemsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class NavigationItemsResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** Array of navigation items of array of arrays */
   #[PhpToTypeScript\Attributes\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]

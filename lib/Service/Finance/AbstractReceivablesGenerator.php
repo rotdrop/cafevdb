@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Exceptions;
 abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
 
   /** @var Entities\ProjectParticipantField */
   protected $serviceFeeField;

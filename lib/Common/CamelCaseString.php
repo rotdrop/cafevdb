@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Service\WordSplitterService;
 /** General static utility routines. */
 class CamelCaseString
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait {
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait {
     camelCaseToDashes as public;
     dashesToCamelCase as public;
   }

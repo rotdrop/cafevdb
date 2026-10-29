@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Common\Uuid;
 /**
  * DTO for the orchestra locale.
  */
-class EventTimes extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class EventTimes extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   public readonly HumanDateTime $start;
   public readonly HumanDateTime $end;

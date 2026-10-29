@@ -44,7 +44,7 @@ use OCP\IRequest;
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const HASH_KEY = '__post_data_hash__';
   const FRONTEND_URL_PATH_KEY = '__frontend_url_path__';

@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Toolkit\Exceptions;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Exceptions;
 
 /**
  * Test the Exceptions\DatabaseEntityException class and some of its child

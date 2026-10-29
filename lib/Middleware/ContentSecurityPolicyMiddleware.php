@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Attributes;
  */
 class ContentSecurityPolicyMiddleware extends Middleware
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
   /**
    * @param IControllerMethodReflector $reflector

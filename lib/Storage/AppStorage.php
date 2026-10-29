@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Constants;
  */
 class AppStorage
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const UPLOAD_FOLDER = 'uploads';
   public const DRAFTS_FOLDER = 'drafts';

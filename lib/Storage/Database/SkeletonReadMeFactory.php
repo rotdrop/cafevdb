@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class SkeletonReadMeFactory extends ReadMeFactory
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * @param ContainerInterface $appContainer

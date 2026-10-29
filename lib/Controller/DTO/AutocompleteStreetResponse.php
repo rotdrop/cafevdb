@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /** Response to an autocomplete street requests, asserted by the MusicianValidationController. */
-class AutocompleteStreetResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class AutocompleteStreetResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

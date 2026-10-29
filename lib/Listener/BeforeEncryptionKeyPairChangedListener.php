@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Events\BeforeEncryptionKeyPairChanged as HandledEvent;
  */
 class BeforeEncryptionKeyPairChangedListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

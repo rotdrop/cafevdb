@@ -190,6 +190,6 @@ use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 $dependencyFactory = \OCP\Server::get(DoctrineMigrationsService::class)->getDependencyFactory();
 MigrationsConsoleRunner::addCommands($cli, $dependencyFactory);
 
-use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Console\ConsoleOutput;
 
 $cli->run(output: \OCP\Server::get(ConsoleOutput::class));

@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 class Navigation
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const DISABLED = 1;
   const SELECTED = 2;

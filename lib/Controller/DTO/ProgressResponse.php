@@ -29,7 +29,7 @@ use InvalidArgumentException;
 /**
  * DTO for progress status reporting.
  */
-class ProgressResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ProgressResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

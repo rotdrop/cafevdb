@@ -41,8 +41,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ToolTipsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const END_POINT = 'tooltips';
 

@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /** DTO for transferring addressbook info to the frontend. */
-class AddressBook extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class AddressBook extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

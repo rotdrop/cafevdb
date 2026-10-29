@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
  */
 trait RootFolderStubTrait
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UserRootFolderTrait;
 
   private IStorage $storage;
 

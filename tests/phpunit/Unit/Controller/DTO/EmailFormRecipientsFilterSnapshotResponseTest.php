@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterSnapshotResponse as Test
 /** Test consistency. */
 #[Attributes\CoversClass(TestedDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class EmailFormRecipientsFilterSnapshotResponseTest extends TestCase
 {
   use TestResponseDTOTrait;

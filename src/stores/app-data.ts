@@ -29,7 +29,7 @@ import type { AxiosResponse } from 'axios';
 import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
 import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
-import type { EntityReference } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import type { EntityReference } from '../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 import type { ErrorContext, ErrorHandler } from '../toolkit/types/errors.ts';
 import type { AnyPromise } from '../types/promise.d.ts';

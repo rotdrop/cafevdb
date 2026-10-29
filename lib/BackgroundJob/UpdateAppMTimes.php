@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\AppMTimeService;
  */
 class UpdateAppMTimes extends TimedJob
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

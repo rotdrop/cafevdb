@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCA\CAFEVDB\Service\DTO\FontFileNames;
-use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO;
 
 /** Initialstate-DTO for admin-settings. */
 class AdminInitialState extends AbstractDTO

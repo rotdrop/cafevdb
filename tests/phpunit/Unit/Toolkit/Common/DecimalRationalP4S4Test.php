@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as NumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4 as NumberType;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the given number type class */

@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 /**
  * DTO for the event matrix rows
  */
-class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class EventMatrixRow extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Exceptions;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ProjectWebPagesController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const END_POINT = 'project/webpages';

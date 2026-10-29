@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[PhpToTypeScript\Attributes\TypeScript]
 class MailingListsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const END_POINT = 'mailing-lists';
