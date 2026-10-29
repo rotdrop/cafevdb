@@ -4,8 +4,9 @@
 used by PME fields. It uses the existing Nextcloud select component, not
 Selectize or jQuery. The `mountSelectize` service adapts native selects to this
 SFC through the mountable-component event bus. PME's initializer now mounts
-`.selectize` fields through the service, routes its refresh/clear actions to
-mounted instances, and destroys them when replacing the PME container. Other
+`.selectize` fields through the service and destroys them when replacing the
+PME container. The shared `select-utils.ts` functions dispatch to Vue-backed
+controls as well as native, Chosen, and jQuery Selectize controls. Other
 legacy Selectize consumers remain unchanged.
 
 ```ts
@@ -34,10 +35,24 @@ native `change` events made elsewhere update the Vue selection. Instances are
 unmounted and the native selects restored on `LEGACY_PAGE_CLEANUP`.
 
 The returned service exposes `getValue()`, `setValue(value, silent?)`,
-`clear(silent?)`, `refresh()`, `focus()`, `lock()`, `unlock()`, `disable()`,
-`enable()`, `isLocked`, `isDisabled`, and `destroy()`. Single-select values are
+`clear(silent?)`, `refresh()`, `refreshProperties()`, `focus()`, `lock()`,
+`unlock()`, `disable()`, `enable()`, `isLocked`, `isDisabled`, the visible host
+`element`, and `destroy()`. Single-select values are
 strings or `null`; multi-select values are ordered arrays of strings. Repeated
 calls are idempotent while an instance remains mounted.
+
+Legacy callers can continue using `selected`, `deselectAll`, option lookup,
+`replaceOptions`, `refreshWidget`, `refreshWidgetProperties`, `locked`, and
+widget lookup from `select-utils.ts`. Ordered values and the existing silent
+setter / explicit change-event behavior are preserved. Changes to native
+options require `refreshWidget`; changes only to disabled/readonly properties
+can use `refreshWidgetProperties`. The readonly shim leaves form-input
+management to the Vue adapter, avoiding duplicate placeholder inputs.
+
+`getControlObject` returns the Vue service for Vue-backed selects.
+`vueSelectActive` detects those controls; `getSelectize`, `selectizeActive`, and
+`isSelectizedJQuery` continue to describe only genuine jQuery Selectize instances.
+Code using Selectize-specific internals must not use them for Vue controls.
 
 ```vue
 <PmeSelect v-model="instruments"
@@ -102,7 +117,8 @@ on blur when `createOnBlur` is enabled.
 `change` and `update:modelValue` report selection changes, including reordering.
 `open` and `close` are available for legacy dropdown-visibility handling.
 The exposed methods are `getValue()`, `setValue(value, silent = false)`,
-`clear(silent = false)`, `moveItem(index, offset)`, `createItem(input)`,
+`getOptions()`, `setOptions(options, groups?)`, `clear(silent = false)`,
+`moveItem(index, offset)`, `createItem(input)`,
 `focus()`, `lock()`, `unlock()`, `disable()`, and `enable()`.
 `isLocked`, `isDisabled`, and `creating` expose current state.
 Programmatic setters can replace values even while interaction is locked.
@@ -115,6 +131,5 @@ Disabled fields are omitted from submission; readonly/locked fields retain
 their submitted values. `required` uses native browser validation independently
 of `notEmpty`.
 
-Email-composer and SEPA-specific features, a full `select-utils.ts` migration,
-a fully compatible Selectize instance facade, and arbitrary Selectize plugins
-are outside the current scope.
+Email-composer and SEPA-specific features, a fully compatible Selectize instance
+facade, and arbitrary Selectize plugins are outside the current scope.

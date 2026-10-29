@@ -6,6 +6,10 @@
 import type { PmeSelectComponentProps, PmeSelectValue } from '~/src/types/pme-select.ts';
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import $ from '~/src/app/jquery.ts';
+import * as SelectUtils from '~/src/app/select-utils.ts';
+
+import '~/src/app/jquery-readonly.ts';
 
 interface FakeMountable {
   props: PmeSelectComponentProps;
@@ -15,6 +19,7 @@ interface FakeMountable {
   unmount(): void;
   destroy(): void;
   getValue(): PmeSelectValue;
+  getOptions(): PmeSelectComponentProps['options'];
   setValue(value: PmeSelectValue, silent?: boolean): void;
   setOptions: ReturnType<typeof vi.fn>;
   clear: ReturnType<typeof vi.fn>;
@@ -67,6 +72,7 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
     },
     destroy() {},
     getValue: () => selected,
+    getOptions: () => props.options,
     setValue(value: PmeSelectValue, silent = false) {
       selected = value;
       if (!silent) {
@@ -110,6 +116,7 @@ const makeSelect = (html: string) => {
 };
 
 afterEach(() => {
+  subscriptions.get('cleanup')?.();
   for (const instance of mountables.splice(0)) {
     instance.unmount();
     instance.destroy();
@@ -165,6 +172,181 @@ describe('mountSelectize', () => {
     expect(valuesSeenByChangeListener).toEqual([['violin']]);
     expect(new FormData(form).getAll('instrument')).toEqual(['violin']);
     expect(instance.getValue()).toBe('violin');
+  });
+
+  describe('select-utils with Vue-backed selects', () => {
+    const makeForm = (multiple = true) => {
+      const container = makeSelect(`
+          <form><select class="selectize" name="field${multiple ? '[]' : ''}" ${multiple ? 'multiple' : ''}>
+            <optgroup label="Group"><option value="a">Alpha</option><option value="b">Beta</option></optgroup>
+            <option value="c" disabled>Gamma</option>
+          </select></form>
+        `);
+      return {
+        select: container.querySelector('select')!,
+        form: container.querySelector('form')!,
+      };
+    };
+
+    it('detects the Vue widget without pretending it is a jQuery Selectize instance', async () => {
+      const { select } = makeForm();
+      const $select = $(select);
+      expect(SelectUtils.isVanilla($select)).toBe(true);
+      const [service] = await mountSelectize(select);
+      expect(SelectUtils.isVanilla($select)).toBe(false);
+      expect(SelectUtils.vueSelectActive($select)).toBe(true);
+      expect(SelectUtils.selectizeActive($select)).toBe(false);
+      expect(SelectUtils.isSelectizedJQuery($select)).toBe(false);
+      expect(SelectUtils.getSelectize($select)).toBeUndefined();
+      expect(SelectUtils.getControlObject($select)).toBe(service);
+      expect(SelectUtils.widget($select)[0]).toBe(service.element);
+      expect(SelectUtils.selectFromWidget(SelectUtils.widget($select))[0]).toBe(select);
+      select.dataset.placeholder = 'Choose';
+      SelectUtils.makePlaceholder($select);
+      expect(select.options[0].value).toBe('a');
+      service.destroy();
+      expect(SelectUtils.isVanilla($select)).toBe(true);
+      expect(SelectUtils.widget($select)[0]).toBe(select);
+    });
+
+    it('preserves legacy updates made while the asynchronous component is mounting', async () => {
+      const { select, form } = makeForm();
+      const $select = $(select);
+      const request = mountSelectize(select);
+      SelectUtils.selected($select, ['b', 'a']);
+      SelectUtils.locked($select, true);
+      $select.prop('disabled', true);
+      SelectUtils.refreshWidgetProperties($select);
+      expect(form.querySelectorAll('input[type="hidden"]')).toHaveLength(0);
+      const [service] = await request;
+      expect(service.getValue()).toEqual(['b', 'a']);
+      expect(mountables[0].getValue()).toEqual(['b', 'a']);
+      expect(service.isLocked).toBe(true);
+      expect(service.isDisabled).toBe(true);
+      expect(new FormData(form).getAll('field[]')).toEqual([]);
+    });
+
+    it('sets ordered values silently and preserves the explicit change-event contract', async () => {
+      const { select, form } = makeForm();
+      const $select = $(select);
+      await mountSelectize(select);
+      const changes = vi.fn(() => {
+        expect(new FormData(form).getAll('field[]')).toEqual(['b', 'a']);
+      });
+      $select.on('change', changes);
+      expect(SelectUtils.selected($select, ['b', 'a'])).toEqual([]);
+      expect(changes).not.toHaveBeenCalled();
+      expect(SelectUtils.selected($select)).toEqual(['b', 'a']);
+      expect(mountables[0].getValue()).toEqual(['b', 'a']);
+      expect(SelectUtils.selected($select, ['b', 'a'], true)).toEqual(['b', 'a']);
+      expect(changes).toHaveBeenCalledOnce();
+      SelectUtils.refreshWidget($select);
+      expect(SelectUtils.selected($select)).toEqual(['b', 'a']);
+      expect(SelectUtils.children($select)).toHaveLength(2);
+      expect(SelectUtils.options($select)).toHaveLength(3);
+      expect(SelectUtils.optionValues($select)).toEqual(['a', 'b']);
+      expect(SelectUtils.optionByValue($select, 'b').text()).toBe('Beta');
+      expect(SelectUtils.selectedOptions($select).map((_, option) => option.value).get()).toEqual(['a', 'b']);
+      SelectUtils.deselectAll($select);
+      expect(SelectUtils.selected($select)).toEqual([]);
+      expect(SelectUtils.selectedOptions($select)).toHaveLength(0);
+      expect(new FormData(form).getAll('field[]')).toEqual([]);
+      expect(changes).toHaveBeenCalledOnce();
+    });
+
+    it('handles single-selection arrays and clears without a native fallback selection', async () => {
+      const { select, form } = makeForm(false);
+      const $select = $(select);
+      await mountSelectize(select);
+      expect(SelectUtils.selected($select, ['b', 'a'])).toBe('a');
+      expect(SelectUtils.selected($select)).toBe('b');
+      expect(mountables[0].getValue()).toBe('b');
+      SelectUtils.selected($select, false);
+      expect(SelectUtils.selected($select)).toBeNull();
+      expect(select.selectedIndex).toBe(-1);
+      SelectUtils.refreshWidget($select);
+      expect(SelectUtils.selected($select)).toBeNull();
+      expect(new FormData(form).has('field')).toBe(false);
+    });
+
+    it('refreshes native options and replaces options without remounting', async () => {
+      const { select } = makeForm();
+      const $select = $(select);
+      await mountSelectize(select);
+      SelectUtils.selected($select, ['b', 'a']);
+      SelectUtils.optionByValue($select, 'b').text('Updated');
+      SelectUtils.optionByValue($select, 'a').prop('disabled', true);
+      SelectUtils.refreshWidget($select);
+      expect(mountables[0].setOptions).toHaveBeenLastCalledWith([
+        { value: 'a', label: 'Alpha', groups: ['0'], disabled: true },
+        { value: 'b', label: 'Updated', groups: ['0'], disabled: false },
+        { value: 'c', label: 'Gamma', groups: [], disabled: true },
+      ], [{ value: '0', label: 'Group', disabled: false }]);
+      SelectUtils.replaceOptions($select, '<option value="d" selected>Delta</option>');
+      expect(SelectUtils.selected($select)).toEqual(['d']);
+      expect(mountables[0].getValue()).toEqual(['d']);
+      SelectUtils.replaceOptions($select, $('<option value="e" selected>Echo</option>'));
+      expect(SelectUtils.selected($select)).toEqual(['e']);
+      expect(mountables).toHaveLength(1);
+    });
+
+    it('locks without dropping submitted values and synchronizes disabled/readonly properties', async () => {
+      const { select, form } = makeForm();
+      const $select = $(select);
+      await mountSelectize(select);
+      SelectUtils.selected($select, ['b', 'a']);
+      SelectUtils.locked($select, true);
+      expect(SelectUtils.locked($select)).toBe(true);
+      expect(new FormData(form).getAll('field[]')).toEqual(['b', 'a']);
+      SelectUtils.locked($select, false);
+      expect(SelectUtils.locked($select)).toBe(false);
+      $select.prop('disabled', true);
+      SelectUtils.refreshWidgetProperties($select);
+      expect(SelectUtils.locked($select)).toBe(true);
+      expect(new FormData(form).getAll('field[]')).toEqual([]);
+      $select.prop('disabled', false).prop('readonly', true);
+      SelectUtils.refreshWidgetProperties($select);
+      expect(SelectUtils.locked($select)).toBe(true);
+      expect(new FormData(form).getAll('field[]')).toEqual(['b', 'a']);
+      $select.prop('readonly', false);
+      SelectUtils.refreshWidgetProperties($select);
+      expect(SelectUtils.locked($select)).toBe(false);
+      expect(SelectUtils.selected($select)).toEqual(['b', 'a']);
+    });
+
+    it.each([false, true])('lets jquery-readonly lock Vue controls without duplicate placeholders (multiple=%s)', async (multiple) => {
+      const { select, form } = makeForm(multiple);
+      const $select = $(select);
+      await mountSelectize(select);
+      SelectUtils.selected($select, ['b', 'a']);
+      const name = multiple ? 'field[]' : 'field';
+      const values = multiple ? ['b', 'a'] : ['b'];
+      $select.readonly(true);
+      expect(SelectUtils.locked($select)).toBe(true);
+      expect(select.disabled).toBe(false);
+      expect(select.options[0].disabled).toBe(false);
+      expect(form.querySelectorAll('.__jquery-readonly-placeholder__')).toHaveLength(0);
+      expect(new FormData(form).getAll(name)).toEqual(values);
+      $select.prop('disabled', true);
+      expect(new FormData(form).getAll(name)).toEqual([]);
+      $select.prop('disabled', false);
+      expect(new FormData(form).getAll(name)).toEqual(values);
+      $select.readonly(false);
+      expect(SelectUtils.locked($select)).toBe(false);
+    });
+
+    it.each([false, true])('mirrors created Vue options for legacy lookup and submission (persist=%s)', async (persist) => {
+      const { select, form } = makeForm();
+      const $select = $(select);
+      await mountSelectize(select, { create: true, persist });
+      mountables[0].props.options.push({ value: 'new', label: 'New option' });
+      mountables[0].setValue(['new']);
+      expect(SelectUtils.selected($select)).toEqual(['new']);
+      expect(SelectUtils.selectedOptions($select).text()).toBe('New option');
+      expect(new FormData(form).getAll('field[]')).toEqual(['new']);
+      SelectUtils.deselectAll($select);
+      expect(SelectUtils.optionByValue($select, 'new')).toHaveLength(persist ? 1 : 0);
+    });
   });
 
   it('reads legacy data attributes, converts option values, and maps plugin settings', async () => {

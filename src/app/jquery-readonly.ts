@@ -27,9 +27,9 @@
 
 import generateId from './generate-id.ts';
 import $, { isJQuerySelect } from './jquery.ts';
-import { isVanilla as isSelectVanilla, refreshWidgetProperties, widget as selectWidget } from './select-utils.ts';
+import { isVanilla as isSelectVanilla, refreshWidgetProperties, widget as selectWidget, vueSelectActive } from './select-utils.ts';
 
-require('jquery-readonly.scss');
+import 'jquery-readonly.scss';
 
 const topDataKey = '__jquery_readonly__';
 const placeholderCssClass = '__jquery-readonly-placeholder__';
@@ -127,6 +127,12 @@ const overrideProp: VanillaPropertyFunction = function<T extends HTMLElement>(
           vanillaProp.call($optionPlaceholder, property, optionDisabled);
         }
       } else if (isJQuerySelect($this)) {
+        if (vueSelectActive($this)) {
+          // @ts-expect-error 2554 Why???
+          vanillaProp.call($this, property, value);
+          refreshWidgetProperties($this);
+          return;
+        }
         // we have to disable/enable the placeholders as needed
         $this.find('option').each(function() {
           const $option = $(this);
@@ -247,6 +253,11 @@ $.fn.readonly = function(state?: boolean|string) {
       $this.removeAttr('readonly');
     }
     if (isJQuerySelect($this)) {
+      if (vueSelectActive($this)) {
+        refreshWidgetProperties($this);
+        selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);
+        return;
+      }
       // Single-select can be handled like radio buttons, that is, we
       // disable all options safe the selected one. This essentially
       // makes for a read-only single-select element.

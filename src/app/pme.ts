@@ -57,7 +57,7 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
-import { getMountedSelectize, mountSelectize } from '../services/mountable-select.ts';
+import { mountSelectize } from '../services/mountable-select.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import clear from '../util/clear-object.ts';
 import { close as closeActionMenus } from './action-menu.ts';
@@ -1731,24 +1731,6 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
 
 }
 
-const refreshPmeSelectWidget = ($select: JQuery<HTMLSelectElement>) => {
-  const service = getMountedSelectize($select[0]);
-  if (service) {
-    service.refresh();
-    return;
-  }
-  refreshSelectWidget($select);
-};
-
-const deselectPmeSelect = ($select: JQuery<HTMLSelectElement>) => {
-  const service = getMountedSelectize($select[0]);
-  if (service) {
-    service.clear(true);
-    return;
-  }
-  selectDeselectAll($select);
-};
-
 /**
  * @param containerSel TBD.
  *
@@ -2278,7 +2260,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
       }
       $input.toggleClass('readonly', locked);
       if (isJQuerySelect($input)) {
-        refreshPmeSelectWidget($input);
+        refreshSelectWidget($input);
       }
       return false;
     },
@@ -2299,7 +2281,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
       }
       $input.toggleClass('readonly', locked);
       if (isJQuerySelect($input)) {
-        refreshPmeSelectWidget($input);
+        refreshSelectWidget($input);
       }
       const mceInstance = $input.data('mceInstance');
       if (mceInstance) {
@@ -2317,7 +2299,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
       const $this = $(this);
       const $element = $this.parent().find('.' + pmeToken('input')).first();
       if (isJQuerySelect($element)) {
-        deselectPmeSelect($element);
+        selectDeselectAll($element);
       } else if ($element.is('input')) {
         $element.val('');
       }

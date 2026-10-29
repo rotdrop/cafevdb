@@ -45,6 +45,7 @@ export interface SelectizeAdapterOptions {
 
 type ExposedSelect = {
   getValue(): PmeSelectValue;
+  getOptions(): PmeSelectOption[];
   setValue(value: PmeSelectValue, silent?: boolean): void;
   setOptions(options: PmeSelectOption[], groups?: PmeSelectGroup[]): void;
   clear(silent?: boolean): void;
@@ -74,7 +75,6 @@ export class SelectizeService {
   private readonly originalRequired: boolean;
   private readonly originalHidden: string|null;
   private readonly originalAriaHidden: string|null;
-  private readonly originalDisabled: boolean;
   private readonly mountHost: HTMLElement;
   private readonly mountPoint: HTMLElement;
   private component?: MountableComponent<typeof PME_SELECT>&ExposedSelect;
@@ -84,6 +84,9 @@ export class SelectizeService {
   private readonly handleNativeChange: () => void;
   private readonly selectizeOptions: SelectizeAdapterOptions;
   private ready: Promise<void> = Promise.resolve();
+  private pendingLock?: boolean;
+  private pendingDisabled?: boolean;
+  private readonly transientOptions = new Set<HTMLOptionElement>();
 
   private constructor(
     readonly select: HTMLSelectElement,
@@ -94,7 +97,6 @@ export class SelectizeService {
     this.originalRequired = select.required;
     this.originalHidden = select.getAttribute('hidden');
     this.originalAriaHidden = select.getAttribute('aria-hidden');
-    this.originalDisabled = select.disabled;
     this.previousValue = this.readInitialValues(options);
     this.handleNativeChange = () => {
       if (!this.updatingNativeSelect && this.component) {
@@ -234,6 +236,16 @@ export class SelectizeService {
   }
 
   private readonly handleComponentChange = (value: PmeSelectValue) => {
+    const values = value === null ? [] : Array.isArray(value) ? value : [value];
+    for (const option of this.component?.getOptions() ?? []) {
+      if (values.includes(option.value) && !this.findOption(option.value)) {
+        const nativeOption = new Option(option.label, option.value);
+        this.select.add(nativeOption);
+        if (!this.selectizeOptions.persist && !this.selectizeOptions.options?.some((configured) => configured.value === option.value)) {
+          this.transientOptions.add(nativeOption);
+        }
+      }
+    }
     this.applyValue(value, false, false);
     this.selectizeOptions.onChange?.(value);
   };
@@ -258,7 +270,26 @@ export class SelectizeService {
     this.select.removeAttribute('name');
 
     this.component.mount(this.mountPoint);
-    this.syncControlState();
+    const { options, groups } = this.optionData();
+    this.component.setOptions(this.selectizeOptions.options ?? options, groups);
+    this.component.setValue(this.getValue(), true);
+    this.refreshProperties();
+    if (this.pendingLock !== undefined) {
+      if (this.pendingLock) {
+        this.lock();
+      } else {
+        this.unlock();
+      }
+    }
+    if (this.pendingDisabled !== undefined) {
+      if (this.pendingDisabled) {
+        this.disable();
+      } else {
+        this.enable();
+      }
+    }
+    this.pendingLock = undefined;
+    this.pendingDisabled = undefined;
     this.writeNativeValues(this.previousValue, false);
   }
 
@@ -269,8 +300,23 @@ export class SelectizeService {
     this.previousValue = normalized;
     this.updatingNativeSelect = true;
     try {
+      let removedTransientOption = false;
+      for (const option of this.transientOptions) {
+        if (!normalized.includes(option.value)) {
+          option.remove();
+          this.transientOptions.delete(option);
+          removedTransientOption = true;
+        }
+      }
+      if (removedTransientOption) {
+        const { options, groups } = this.optionData();
+        this.component?.setOptions(this.selectizeOptions.options ?? options, groups);
+      }
       for (const option of Array.from(this.select.options)) {
         option.selected = normalized.includes(option.value);
+      }
+      if (normalized.length === 0) {
+        this.select.selectedIndex = -1;
       }
       this.writeFormValues(normalized);
       if (dispatchChange && changed) {
@@ -282,11 +328,14 @@ export class SelectizeService {
   }
 
   private writeFormValues(values: string[]) {
+    if (!this.component) {
+      return;
+    }
     this.mountHost.querySelectorAll('[data-pme-select-value]').forEach((input) => input.remove());
     if (this.originalName === null) {
       return;
     }
-    const disabled = this.component?.isDisabled ?? this.originalDisabled;
+    const disabled = this.component?.isDisabled ?? this.pendingDisabled ?? this.select.disabled;
     for (const value of values) {
       const input = document.createElement('input');
       input.type = 'hidden';
@@ -300,7 +349,7 @@ export class SelectizeService {
 
   private applyValue(value: PmeSelectValue, silent: boolean, updateComponent: boolean) {
     const values = value === null ? [] : Array.isArray(value) ? value : [value];
-    const normalized = this.normalizeValues(values);
+    const normalized = this.normalizeValues(this.select.multiple ? values : values.slice(0, 1));
     if (updateComponent) {
       this.component?.setValue(this.select.multiple ? normalized : normalized[0] ?? null, true);
     }
@@ -335,21 +384,28 @@ export class SelectizeService {
     const selectionUnchanged = nativeValues.length === previousValues.length
       && nativeValues.every((value) => previousValues.includes(value));
     this.applyValue(selectionUnchanged ? previousValues : nativeValues, true, true);
-    this.syncControlState();
-    this.writeFormValues(this.previousValue);
+    this.refreshProperties();
   }
 
-  private syncControlState() {
+  /** Synchronize interaction state without replacing options or selection. */
+  refreshProperties() {
     if (this.select.disabled) {
       this.component?.disable();
     } else {
       this.component?.enable();
     }
-    if (this.select.hasAttribute('readonly') || this.select.classList.contains('readonly')) {
+    if (this.select.hasAttribute('readonly') || this.select.classList.contains('readonly')
+      || ('readOnly' in this.select && this.select.readOnly)) {
       this.component?.lock();
     } else {
       this.component?.unlock();
     }
+    this.writeFormValues(this.previousValue);
+  }
+
+  /** Visible host for legacy styling, tooltips, and validation feedback. */
+  get element() {
+    return this.mountHost;
   }
 
   focus() {
@@ -357,29 +413,43 @@ export class SelectizeService {
   }
 
   lock() {
+    if (!this.component) {
+      this.pendingLock = true;
+    }
     this.component?.lock();
   }
 
   unlock() {
+    if (!this.component) {
+      this.pendingLock = false;
+    }
     this.component?.unlock();
   }
 
   disable() {
+    if (!this.component) {
+      this.pendingDisabled = true;
+    }
     this.component?.disable();
     this.writeFormValues(this.previousValue);
   }
 
   enable() {
+    if (!this.component) {
+      this.pendingDisabled = false;
+    }
     this.component?.enable();
     this.writeFormValues(this.previousValue);
   }
 
   get isLocked() {
-    return this.component?.isLocked ?? this.select.disabled;
+    return this.component?.isLocked ?? this.pendingLock ??
+      (this.select.hasAttribute('readonly') || this.select.classList.contains('readonly')
+        || ('readOnly' in this.select && !!this.select.readOnly));
   }
 
   get isDisabled() {
-    return this.component?.isDisabled ?? this.select.disabled;
+    return this.component?.isDisabled ?? this.pendingDisabled ?? this.select.disabled;
   }
 
   destroy() {

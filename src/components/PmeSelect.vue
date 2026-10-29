@@ -462,6 +462,7 @@ onBeforeUnmount(cancelCreation)
 
 defineExpose({
   getValue,
+  getOptions: () => options.value,
   setValue,
   setOptions,
   clear,
