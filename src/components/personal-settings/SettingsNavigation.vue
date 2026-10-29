@@ -33,6 +33,7 @@
       <ListIcon v-else :size="20" />
     </template>
   </NcButton>
+  <div v-if="navigationShown && !narrowScreen" class="personal-settings-navigation-spacer" />
   <nav v-show="navigationShown"
        class="personal-settings-navigation"
        :class="{ 'narrow-screen': narrowScreen }"
@@ -145,15 +146,23 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .personal-settings-navigation,
+.personal-settings-navigation-spacer,
 .personal-settings-navigation-toggle {
   --personal-settings-navigation-width: 14rem;
 }
 
-.personal-settings-navigation {
-  position: sticky;
-  top: 1rem;
-  align-self: flex-start;
+// Fixed instead of sticky: sticky jitters while scrolling. The spacer keeps
+// the room in the flex layout which the fixed navigation no longer occupies.
+.personal-settings-navigation-spacer {
   flex: 0 0 var(--personal-settings-navigation-width);
+}
+
+.personal-settings-navigation {
+  position: fixed;
+  top: 1rem;
+  inset-inline-end: 0;
+  box-sizing: border-box;
+  width: var(--personal-settings-navigation-width);
   max-height: calc(100vh - 6rem);
   overflow-y: auto;
   padding: 0 1rem;
