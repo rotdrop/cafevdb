@@ -235,9 +235,10 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
 # scoper does not preserve executable bits
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
+# scoper does not rewrite the composer autoload maps, regenerate them
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 vendor-wrapped/autoload.php: vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 .PHONY: namespace-wrapper
 namespace-wrapper: vendor-wrapped/autoload.php
