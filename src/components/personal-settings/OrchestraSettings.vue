@@ -175,6 +175,7 @@ const groups: AdminSettingGroup[] = [
     label: t(appId, info.name),
     type: 'text' as const,
     initialValueKey: key + 'FileName',
+    downloadLinkKey: key + 'DownloadLink',
   }))),
   group(3, t(appId, 'Executive board and club members'), [
     field('memberProject', t(appId, 'Club members project')),

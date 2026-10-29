@@ -110,7 +110,16 @@
               {{ t(appId, 'Test Link') }}
             </NcButton>
             <span v-if="field.prefix" class="admin-setting-affix">{{ affix(field.prefix) }}</span>
-            <NcTextField :id="field.key"
+            <a v-if="field.downloadLinkKey && values[field.key] && values[field.downloadLinkKey]"
+               class="admin-setting-download-link"
+               :href="String(values[field.downloadLinkKey])"
+               :download="String(values[field.key])"
+               :title="field.label"
+            >
+              {{ values[field.key] }}
+            </a>
+            <NcTextField v-else
+                         :id="field.key"
                          :label="field.label"
                          :type="field.type === 'number' ? 'number' : 'text'"
                          :modelValue="String(values[field.key] ?? '')"
@@ -158,6 +167,7 @@ export type AdminSettingField = {
   suffix?: Affix
   viewLinkKey?: string
   linkTest?: boolean
+  downloadLinkKey?: string
   initialValue?: unknown
 }
 export type AdminSettingGroup = {
@@ -329,5 +339,14 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
   white-space: nowrap;
   font-family: monospace;
   font-weight: bold;
+}
+
+.admin-setting-download-link {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-primary-element);
+  text-decoration: underline;
 }
 </style>
