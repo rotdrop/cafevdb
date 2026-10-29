@@ -33,7 +33,7 @@
           <hr>
           <h4>{{ field.heading }}</h4>
         </div>
-        <div class="admin-setting" :class="{ 'admin-setting--inline': field.prefix || field.suffix }">
+        <div class="admin-setting" :class="{ 'admin-setting--inline': (field.prefix || field.suffix) && field.type !== 'folder' }">
           <NcCheckboxRadioSwitch v-if="field.type === 'checkbox'"
                                  :modelValue="values[field.key] === true || values[field.key] === 'on'"
                                  :disabled="saving[field.key]"
@@ -42,6 +42,7 @@
             {{ field.label }}
           </NcCheckboxRadioSwitch>
           <template v-else-if="field.type === 'folder' || field.type === 'owner'">
+            <span v-if="field.prefix" class="admin-setting-affix">{{ affix(field.prefix) }}</span>
             <NcTextField :id="field.key"
                          :label="field.label"
                          :modelValue="String(values[field.key] ?? '')"
@@ -55,6 +56,14 @@
                       @click="save(field, values[field.key], true)"
             >
               {{ t(appId, field.type === 'folder' || field.type === 'owner' ? 'Check' : 'Set') }}
+            </NcButton>
+            <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
+            <NcButton v-if="field.viewLinkKey && values[field.viewLinkKey]"
+                      :href="String(values[field.viewLinkKey])"
+                      target="_blank"
+                      rel="noopener noreferrer"
+            >
+              {{ t(appId, 'Open folder') }}
             </NcButton>
           </template>
           <NcSelect v-else-if="field.type === 'select'"
@@ -100,7 +109,7 @@
             >
               {{ t(appId, 'Test Link') }}
             </NcButton>
-            <span v-if="field.prefix" class="admin-setting-affix">{{ field.prefix }}</span>
+            <span v-if="field.prefix" class="admin-setting-affix">{{ affix(field.prefix) }}</span>
             <NcTextField :id="field.key"
                          :label="field.label"
                          :type="field.type === 'number' ? 'number' : 'text'"
@@ -109,7 +118,7 @@
                          @update:modelValue="values[field.key] = $event"
                          @blur="save(field, values[field.key])"
             />
-            <span v-if="field.suffix" class="admin-setting-affix">{{ field.suffix }}</span>
+            <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
           </template>
         </div>
       </template>
@@ -132,6 +141,7 @@ import { handleSettingError, showSettingFeedback } from '../../services/setting-
 import getInitialState from '../../toolkit/util/initial-state.ts'
 
 export type AdminSettingOption = { value: string|number|boolean, label: string }
+export type Affix = string|((saved: Record<string, unknown>) => string)
 export type AdminSettingField = {
   key: string
   label: string
@@ -139,8 +149,9 @@ export type AdminSettingField = {
   options?: AdminSettingOption[]
   initialValueKey?: string
   heading?: string
-  prefix?: string
-  suffix?: string
+  prefix?: Affix
+  suffix?: Affix
+  viewLinkKey?: string
   linkTest?: boolean
   initialValue?: unknown
 }
@@ -168,6 +179,7 @@ for (const field of props.groups.flatMap(({ fields }) => fields)) {
 }
 const values = reactive<Record<string, unknown>>(initialValues)
 const saved = reactive<Record<string, unknown>>({ ...initialValues })
+const affix = (value: Affix) => typeof value === 'function' ? value(saved) : value
 const saving = reactive<Record<string, boolean>>({})
 const force = reactive<Record<string, boolean>>({})
 
@@ -233,6 +245,9 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
       saved[field.key] = values[field.key]
     }
     force[field.key] = false
+    if (field.viewLinkKey && 'folderLink' in response.data) {
+      values[field.viewLinkKey] = response.data.folderLink || ''
+    }
     syncRelatedFields(field, response.data)
     showSettingFeedback(response.data, field.label)
     emit('saved', field.key, values[field.key])

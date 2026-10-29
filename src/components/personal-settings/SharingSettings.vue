@@ -125,6 +125,35 @@ const displayName = (key: string) => key
   .replace(/([a-z])([A-Z])/g, '$1 $2')
   .replace(/^./, (letter) => letter.toUpperCase())
 
+const folderPart = (saved: Record<string, unknown>, key: string) => String(saved[key] ?? '')
+const sharedPrefix = (saved: Record<string, unknown>) => `.../${folderPart(saved, SHARED_FOLDER)}/`
+const projectPath = (saved: Record<string, unknown>) =>
+  `${sharedPrefix(saved)}${folderPart(saved, PROJECTS_FOLDER)}/${t(appId, 'YEAR')}/${t(appId, 'PROJECT')}/`
+const financePrefix = (saved: Record<string, unknown>) =>
+  `${sharedPrefix(saved)}${folderPart(saved, FINANCE_FOLDER)}/`
+const folderAffixes = (key: string): Partial<AdminSettingField> => {
+  switch (key) {
+    case SHARED_FOLDER:
+      return { viewLinkKey: 'sharedFolderLink' }
+    case PROJECTS_FOLDER:
+      return { prefix: sharedPrefix, suffix: `/${t(appId, 'YEAR')}/${t(appId, 'PROJECT')}/` }
+    case PROJECT_PARTICIPANTS_FOLDER:
+      return { prefix: projectPath, suffix: `/${t(appId, 'john.doe')}/` }
+    case PROJECT_POSTERS_FOLDER:
+    case PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+      return { prefix: projectPath }
+    case TRANSACTIONS_FOLDER:
+      return { prefix: financePrefix }
+    case BALANCES_FOLDER:
+      return {
+        prefix: financePrefix,
+        suffix: (saved) => `/${folderPart(saved, PROJECTS_FOLDER)}/${t(appId, 'YEAR')}/${t(appId, 'PROJECT')}/`,
+      }
+    default:
+      return { prefix: sharedPrefix }
+  }
+}
+
 const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Share owner'), [
     field(SHARE_OWNER_KEY, t(appId, 'Share owner user ID'), 'owner'),
@@ -134,7 +163,10 @@ const groups: AdminSettingGroup[] = [
     field(GENERAL_ADDRESS_BOOK_KEY, t(appId, 'General address book')),
     field(MUSICIANS_ADDRESS_BOOK_KEY, t(appId, 'Musicians address book')),
   ]),
-  group(3, t(appId, 'Shared folder'), folderKeys.map((key) => field(key, displayName(key), 'folder'))),
+  group(3, t(appId, 'Shared folder'), folderKeys.map((key) => ({
+    ...field(key, displayName(key), 'folder'),
+    ...folderAffixes(key),
+  }))),
   group(4, t(appId, 'Members as Cloud-Users'), [
     field('importClubMembersAsCloudUsers', t(appId, 'Import club members as cloud users'), 'checkbox'),
     field('cloudUserViewsDatabase', t(appId, 'Dedicated views database')),
