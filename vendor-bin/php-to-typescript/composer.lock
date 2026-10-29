@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5bea8d878a5941ebd65e208e02785d8",
+    "content-hash": "e9eabcf1391a3d43af7545d503000265",
     "packages": [],
     "packages-dev": [
         {
@@ -327,6 +327,70 @@
                 "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
             "time": "2021-11-05T16:47:00+00:00"
+        },
+        {
+            "name": "rotdrop/nextcloud-app-toolkit",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rotdrop/nextcloud-app-toolkit.git",
+                "reference": "eecf850b6c14c5906ae418af7edab22f915f95d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rotdrop/nextcloud-app-toolkit/zipball/eecf850b6c14c5906ae418af7edab22f915f95d1",
+                "reference": "eecf850b6c14c5906ae418af7edab22f915f95d1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.8",
+                "doctrine/dbal": "^4.0",
+                "markrogoyski/math-php": "^2.0",
+                "nesbot/carbon": "^3.0",
+                "nextcloud/ocp": "dev-master"
+            },
+            "default-branch": true,
+            "bin": [
+                "tools/extract-l10n.php"
+            ],
+            "type": "library",
+            "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "vendor-bin"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OCA\\RotDrop\\Toolkit\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "OCA\\RotDrop\\Toolkit\\Tests\\": "tests/",
+                    "OCA\\RotDrop\\Tests\\": "tests/lib/",
+                    "OCP\\": "vendor/nextcloud/ocp/OCP/",
+                    "NCU\\": "vendor/nextcloud/ocp/NCU/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "description": "Reusable PHP toolkit for Nextcloud apps",
+            "support": {
+                "source": "https://github.com/rotdrop/nextcloud-app-toolkit/tree/main",
+                "issues": "https://github.com/rotdrop/nextcloud-app-toolkit/issues"
+            },
+            "time": "2026-10-29T19:44:05+00:00"
         },
         {
             "name": "rotdrop/php-to-typescript",
@@ -1270,6 +1334,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "rotdrop/nextcloud-app-toolkit": 20,
         "rotdrop/php-to-typescript": 20
     },
     "prefer-stable": false,
