@@ -110,23 +110,31 @@
               {{ t(appId, 'Test Link') }}
             </NcButton>
             <span v-if="field.prefix" class="admin-setting-affix">{{ affix(field.prefix) }}</span>
-            <a v-if="field.downloadLinkKey && values[field.key] && values[field.downloadLinkKey]"
-               class="admin-setting-download-link"
-               :href="String(values[field.downloadLinkKey])"
-               :download="String(values[field.key])"
-               :title="field.label"
+            <slot :name="`control-${field.key}`"
+                  :field="field"
+                  :value="values[field.key]"
+                  :downloadLink="field.downloadLinkKey ? values[field.downloadLinkKey] : undefined"
+                  :settings="saved"
+                  :setValue="(value: unknown, downloadLink?: string) => setFieldValue(field, value, downloadLink)"
             >
-              {{ values[field.key] }}
-            </a>
-            <NcTextField v-else
-                         :id="field.key"
-                         :label="field.label"
-                         :type="field.type === 'number' ? 'number' : 'text'"
-                         :modelValue="String(values[field.key] ?? '')"
-                         :disabled="saving[field.key]"
-                         @update:modelValue="values[field.key] = $event"
-                         @blur="save(field, values[field.key])"
-            />
+              <a v-if="field.downloadLinkKey && values[field.key] && values[field.downloadLinkKey]"
+                 class="admin-setting-download-link"
+                 :href="String(values[field.downloadLinkKey])"
+                 :download="String(values[field.key])"
+                 :title="field.label"
+              >
+                {{ values[field.key] }}
+              </a>
+              <NcTextField v-else
+                           :id="field.key"
+                           :label="field.label"
+                           :type="field.type === 'number' ? 'number' : 'text'"
+                           :modelValue="String(values[field.key] ?? '')"
+                           :disabled="saving[field.key]"
+                           @update:modelValue="values[field.key] = $event"
+                           @blur="save(field, values[field.key])"
+              />
+            </slot>
             <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
             <slot :name="`field-${field.key}`"
                   :field="field"

@@ -1,15 +1,19 @@
 <template>
   <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
-    <template v-for="template in documentTemplates" :key="template" #[`field-${template}`]="{ value, setValue, settings }">
-      <NcButton v-tooltip="hints[`templates:upload:cloud:${template}`]"
-                :aria-label="t(appId, 'Choose a template file from the cloud storage.')"
-                :disabled="!!busy[template] || !templateFolder(template, settings)"
-                @click="chooseCloudTemplate(template, settings, setValue)"
-      >
-        <template #icon>
-          <CloudIcon :size="20" />
-        </template>
-      </NcButton>
+    <template v-for="template in documentTemplates" :key="template" #[`control-${template}`]="{ field: templateField, value, downloadLink, setValue, settings }">
+      <DocumentTemplateFile :label="templateField.label"
+                            :fileName="String(value ?? '')"
+                            :downloadLink="String(downloadLink ?? '')"
+                            :cloudTooltip="hints[`templates:upload:cloud:${template}`]"
+                            :uploadTooltip="hints[`templates:upload:client:${template}`]"
+                            :disabled="!!busy[template] || !templateFolder(template, settings)"
+                            :progress="uploadProgress[template]"
+                            @chooseCloud="chooseCloudTemplate(template, settings, setValue)"
+                            @upload="uploadTemplate(template, $event, settings, setValue)"
+                            @error="emit('error', $event)"
+      />
+    </template>
+    <template v-for="template in documentTemplates" :key="template" #[`field-${template}`]="{ value, setValue }">
       <NcButton v-if="DOCUMENT_TEMPLATES[template].type === DOCUMENT_TYPE_TEMPLATE"
                 v-tooltip="hints['templates:auto-fill-test']"
                 :aria-label="t(appId, 'Auto-fill test')"
@@ -63,15 +67,16 @@ import { FilePickerClosed, getFilePickerBuilder } from '@nextcloud/dialogs'
 import { emit as emitFileEvent } from '@nextcloud/event-bus'
 import { FileType } from '@nextcloud/files'
 import { defaultRootPath, getClient, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
+import { UploadCancelledError, Uploader, UploadFailedError, UploadStatus } from '@nextcloud/files/upload'
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
-import { reactive } from 'vue'
-import CloudIcon from 'vue-material-design-icons/Cloud.vue'
+import { onBeforeUnmount, reactive } from 'vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import FilePdfIcon from 'vue-material-design-icons/FilePdfBox.vue'
 import AdminSettingsTab from './AdminSettingsTab.vue'
+import DocumentTemplateFile from './DocumentTemplateFile.vue'
 import { EnumSettingsGetApp } from '../../../build/ts-types/php-modules/Controller.ts'
 import {
   BANK_ACCOUNT_BANK_HOLIDAYS,
@@ -133,6 +138,7 @@ tooltipsProvider.provideTooltips([
   'templates:auto-fill-test:pdf',
   'templates:auto-fill-test:data',
   ...documentTemplates.map((template) => `templates:upload:cloud:${template}`),
+  ...documentTemplates.map((template) => `templates:upload:client:${template}`),
 ])
 const hints = tooltipsProvider.tooltipsData
 
@@ -149,6 +155,73 @@ const templateFolder = (template: DocumentTemplate, settings: Record<string, unk
 }
 
 const busy = reactive<Record<string, boolean>>({})
+const uploadProgress = reactive<Partial<Record<DocumentTemplate, number>>>({})
+const uploads = new Set<AbortController>()
+onBeforeUnmount(() => {
+  for (const controller of uploads) {
+    controller.abort()
+  }
+})
+
+const saveTemplate = async (template: DocumentTemplate, path: string, setValue: SetTemplateValue) => {
+  const result = await getClient().stat(path, { data: getDefaultPropfind() })
+  const node = resultToNode('data' in result ? result.data : result)
+  const response = await setAdminSetting(template, node.basename)
+  setValue(node.basename, node.source)
+  showSettingFeedback(response.data, t(appId, DOCUMENT_TEMPLATES[template].name))
+  return node
+}
+
+const uploadTemplate = async (
+  template: DocumentTemplate,
+  file: File,
+  settings: Record<string, unknown>,
+  setValue: SetTemplateValue,
+) => {
+  const folder = templateFolder(template, settings)
+  if (!folder || busy[template]) {
+    return
+  }
+  const controller = new AbortController()
+  uploads.add(controller)
+  busy[template] = true
+  uploadProgress[template] = 0
+  try {
+    const uploader = new Uploader()
+    uploader.addEventListener('uploadProgress', ({ detail }) => {
+      uploadProgress[template] = detail.totalBytes
+        ? Math.round(100 * detail.uploadedBytes / detail.totalBytes)
+        : 0
+    })
+    // upload() schedules work; uploadFinished also waits for chunk assembly.
+    await new Promise<void>((resolve, reject) => {
+      uploader.addEventListener('uploadFinished', ({ detail }) => {
+        if (detail.status === UploadStatus.FINISHED) {
+          resolve()
+        } else if (detail.status === UploadStatus.CANCELLED) {
+          reject(new UploadCancelledError())
+        } else {
+          reject(new UploadFailedError())
+        }
+      }, { once: true })
+      uploader.upload(folder + file.name, file, { signal: controller.signal }).catch(reject)
+    })
+    if (controller.signal.aborted) {
+      return
+    }
+    const node = await saveTemplate(template, `${defaultRootPath}${folder}${file.name}`, setValue)
+    emitFileEvent('files:node:created', node)
+  } catch (error) {
+    if (!(error instanceof UploadCancelledError && controller.signal.aborted)) {
+      handleSettingError(error, (forwarded) => emit('error', forwarded))
+    }
+  } finally {
+    uploads.delete(controller)
+    busy[template] = false
+    delete uploadProgress[template]
+  }
+}
+
 const chooseCloudTemplate = async (
   template: DocumentTemplate,
   settings: Record<string, unknown>,
@@ -190,14 +263,10 @@ const chooseCloudTemplate = async (
         await client.copyFile(sourcePath, destinationPath)
       }
     }
-    const result = await client.stat(destinationPath, { data: getDefaultPropfind() })
-    const newNode = resultToNode('data' in result ? result.data : result)
+    const newNode = await saveTemplate(template, destinationPath, setValue)
     if (sourcePath !== destinationPath) {
       emitFileEvent(move ? 'files:node:updated' : 'files:node:created', newNode)
     }
-    const response = await setAdminSetting(template, newNode.basename)
-    setValue(newNode.basename, newNode.source)
-    showSettingFeedback(response.data, t(appId, DOCUMENT_TEMPLATES[template].name))
   } catch (error) {
     if (!(error instanceof FilePickerClosed)) {
       handleSettingError(error, (forwarded) => emit('error', forwarded))
