@@ -119,7 +119,11 @@
                          @blur="save(field, values[field.key])"
             />
             <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
-            <slot :name="`field-${field.key}`" :field="field" :value="values[field.key]" />
+            <slot :name="`field-${field.key}`"
+                  :field="field"
+                  :value="values[field.key]"
+                  :setValue="(value: unknown) => { values[field.key] = value; saved[field.key] = value }"
+            />
           </template>
         </div>
       </template>

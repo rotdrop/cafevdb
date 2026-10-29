@@ -1,6 +1,15 @@
 <template>
   <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
-    <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value }">
+    <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value, setValue }">
+      <NcButton v-tooltip="hints['templates:delete']"
+                :aria-label="t(appId, 'Delete')"
+                :disabled="!value || !!busy[template]"
+                @click="remove(template, setValue)"
+      >
+        <template #icon>
+          <DeleteIcon :size="20" />
+        </template>
+      </NcButton>
       <NcButton v-tooltip="hints['templates:auto-fill-test']"
                 :aria-label="t(appId, 'Auto-fill test')"
                 :disabled="!value || !!busy[template]"
@@ -39,6 +48,7 @@ import type { TabEntry } from './settings-tree.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
 import { reactive } from 'vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import FilePdfIcon from 'vue-material-design-icons/FilePdfBox.vue'
@@ -65,7 +75,8 @@ import {
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { getAppUrl } from '../../app/settings-urls.ts'
 import { appName as appId } from '../../config.ts'
-import { handleSettingError } from '../../services/setting-feedback.ts'
+import { setAdminSetting } from '../../services/admin-settings.ts'
+import { handleSettingError, showSettingFeedback } from '../../services/setting-feedback.ts'
 import useTooltipsStore from '../../stores/tooltips.ts'
 import axiosFileDownload from '../../toolkit/util/axios-file-download.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
@@ -93,6 +104,7 @@ const options = (values: Array<{ value: string|number, name: string }>|Record<st
 
 const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips([
+  'templates:delete',
   'templates:auto-fill-test',
   'templates:auto-fill-test:pdf',
   'templates:auto-fill-test:data',
@@ -112,6 +124,19 @@ const download = async (
   busy[template] = true
   try {
     await axiosFileDownload(getAppUrl(endpoint), { documentTemplate: template, ...extra })
+  } catch (error) {
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
+  } finally {
+    busy[template] = false
+  }
+}
+
+const remove = async (template: string, setValue: (value: unknown) => void) => {
+  busy[template] = true
+  try {
+    const response = await setAdminSetting(`${template}Delete`, '')
+    setValue('')
+    showSettingFeedback(response.data, template)
   } catch (error) {
     handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
