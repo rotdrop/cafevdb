@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.53% </span>
+                <span class="strong">55.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>84/146</span>
+                <span class='fraction'>86/155</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.6% </span>
+                <span class="strong">35.87% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>47/125</span>
+                <span class='fraction'>47/131</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">31.91% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>15/45</span>
+                <span class='fraction'>15/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.3% </span>
+                <span class="strong">58.27% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>79/131</span>
+                <span class='fraction'>81/139</span>
             </div>
         
             
@@ -636,7 +636,22 @@
 <a name='L571'></a><a href='#L571'>571</a>
 <a name='L572'></a><a href='#L572'>572</a>
 <a name='L573'></a><a href='#L573'>573</a>
-<a name='L574'></a><a href='#L574'>574</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L574'></a><a href='#L574'>574</a>
+<a name='L575'></a><a href='#L575'>575</a>
+<a name='L576'></a><a href='#L576'>576</a>
+<a name='L577'></a><a href='#L577'>577</a>
+<a name='L578'></a><a href='#L578'>578</a>
+<a name='L579'></a><a href='#L579'>579</a>
+<a name='L580'></a><a href='#L580'>580</a>
+<a name='L581'></a><a href='#L581'>581</a>
+<a name='L582'></a><a href='#L582'>582</a>
+<a name='L583'></a><a href='#L583'>583</a>
+<a name='L584'></a><a href='#L584'>584</a>
+<a name='L585'></a><a href='#L585'>585</a>
+<a name='L586'></a><a href='#L586'>586</a>
+<a name='L587'></a><a href='#L587'>587</a>
+<a name='L588'></a><a href='#L588'>588</a>
+<a name='L589'></a><a href='#L589'>589</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -994,6 +1009,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -1022,9 +1039,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1121,6 +1148,9 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1561,7 +1591,9 @@ watch(() =&gt; props.error, () =&gt; {
   showProblemReport.value = false
 })
 &nbsp;
-type StackedErrorObject = Omit&lt;ErrorLike, 'stack'&gt; &amp; { stack?: string | string[] }
+type StackedErrorObject = Omit&lt;ErrorLike, 'stack'&gt; &amp; {
+  stack?: string | string[]
+}
 &nbsp;
 // Remove the stack but for the first level. Actually, passing level
 // with a positive integer will also remove the stack from the
@@ -1594,10 +1626,20 @@ logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
 const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
 &nbsp;
 const stackTrace = ref&lt;null|StackFrame[]&gt;(null)
+const causeStackTrace = ref&lt;null|StackFrame[]&gt;(null)
+&nbsp;
 watch(<span class="fstat-no" title="function not covered" >stackTrace, (v</span>alue) =&gt; {
 <span class="cstat-no" title="statement not covered" >  if (Array.isArray(value)) {</span>
 <span class="cstat-no" title="statement not covered" >    serializedError.stack = value.<span class="fstat-no" title="function not covered" >map((a</span>rg) =&gt; <span class="cstat-no" title="statement not covered" >arg.toString())</span></span>
 <span class="cstat-no" title="statement not covered" >    systemErrorString.value = JSON.stringify(serializedError, undefined, 2)</span>
+  }
+})
+watch(<span class="fstat-no" title="function not covered" >causeStackTrace, (v</span>alue) =&gt; {
+<span class="cstat-no" title="statement not covered" >  if (isErrorLike(props.error.cause)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (Array.isArray(value)) {</span>
+<span class="cstat-no" title="statement not covered" >      (serializedError.cause as StackedErrorObject).stack = value.<span class="fstat-no" title="function not covered" >map((a</span>rg) =&gt; <span class="cstat-no" title="statement not covered" >arg.toString())</span></span>
+<span class="cstat-no" title="statement not covered" >      systemErrorString.value = JSON.stringify(serializedError, undefined, 2)</span>
+    }
   }
 })
 &nbsp;
@@ -1694,6 +1736,9 @@ const reportError = <span class="fstat-no" title="function not covered" >async (
 const parseStackTrace = async () =&gt; {
   try {
     stackTrace.value = await StackTrace.fromError(props.error, stackTraceOptions)
+<span class="cstat-no" title="statement not covered" >    if (isErrorLike(props.error.cause)) {</span>
+<span class="cstat-no" title="statement not covered" >      causeStackTrace.value = await StackTrace.fromError(props.error.cause, stackTraceOptions)</span>
+    }
   } catch (error) {
     logger.error('Unable to parse stack trace', error)
     stackTrace.value = null
@@ -1789,7 +1834,7 @@ onMounted(() =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-28T11:00:21.692Z
+                at 2026-10-29T13:28:39.526Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
