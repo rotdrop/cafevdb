@@ -214,10 +214,11 @@ onBeforeUnmount(() => {
 }
 
 .personal-settings-navigation-toggle.button-vue {
-  // Mirror the toggle of Nextcloud's left navigation: same inset from the
-  // top of the content area (below the header) and from the edge.
+  // Mirror the toggle of Nextcloud's left navigation. The containing block is
+  // #content-vue (it has a transform/transition), which already starts below
+  // the header, so the header height must not be added here.
   position: fixed;
-  top: calc(var(--header-height, 50px) + var(--default-grid-baseline, 4px) * 2);
+  top: calc(var(--default-grid-baseline, 4px) * 2);
   inset-inline-end: calc(var(--default-grid-baseline, 4px) * 2);
   z-index: 1501;
 }
