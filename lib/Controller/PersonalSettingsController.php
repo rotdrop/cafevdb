@@ -1538,10 +1538,9 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-        return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
-          'messages' => $hints,
-          'hints' => $hints,
-        ]);
+        $hints = empty($hints) ? [] : (array)$hints;
+        $messages = $hints;
+        return $this->setSimpleConfigValue($parameter, $stringValue, messages: $messages, hints: $hints);
 
       case 'userSqlBackendRecreateViews':
         $hints = '';
