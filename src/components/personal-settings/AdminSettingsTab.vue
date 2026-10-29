@@ -49,6 +49,7 @@
                          :disabled="saving[field.key] || (!!saved[field.key] && !force[field.key])"
                          @update:modelValue="values[field.key] = $event"
             />
+            <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
             <NcCheckboxRadioSwitch v-model="force[field.key]">
               {{ t(appId, 'Force') }}
             </NcCheckboxRadioSwitch>
@@ -57,7 +58,6 @@
             >
               {{ t(appId, field.type === 'folder' || field.type === 'owner' ? 'Check' : 'Set') }}
             </NcButton>
-            <span v-if="field.suffix" class="admin-setting-affix">{{ affix(field.suffix) }}</span>
             <NcButton v-if="field.viewLinkKey && values[field.viewLinkKey]"
                       :href="String(values[field.viewLinkKey])"
                       target="_blank"
