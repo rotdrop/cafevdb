@@ -172,7 +172,7 @@ import { appName as appId } from '../../config.ts'
 import allDebugOptions, { DEBUG_QUERY } from '../../debug-modes.ts'
 import type { PersonalSettingKey } from '../../services/personal-settings.ts'
 import { setEncryptionKey, setPersonalSetting } from '../../services/personal-settings.ts'
-import { showSettingFeedback } from '../../services/setting-feedback.ts'
+import { handleSettingError, showSettingFeedback } from '../../services/setting-feedback.ts'
 import useTooltipsStore from '../../stores/tooltips.ts'
 import { showInfo, showSuccess } from '../../toolkit/util/toasts.ts'
 
@@ -236,7 +236,7 @@ const emit = defineEmits<{
   error: [error: Error],
 }>()
 
-const emitError = (error: unknown) => emit('error', error instanceof Error ? error : new Error(String(error)))
+const emitError = (error: unknown) => handleSettingError(error, (forwarded) => emit('error', forwarded))
 
 const saveSetting = async (key: CheckboxKey, checked: boolean|string[]) => {
   const previousValue = settings[key]

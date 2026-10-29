@@ -7,6 +7,7 @@
 import { translate as t } from '@nextcloud/l10n';
 import { appName as appId } from '../config.ts';
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts';
+import { isNextcloudExceptionResponse } from '../types/ajax/php-exception-response.ts';
 
 type FeedbackData = { messages?: Array<string|null>|string|null; message?: string|string[]|null };
 
@@ -59,4 +60,20 @@ export const showSettingError = (error: unknown): boolean => {
   }
   showError(text, { timeout: TOAST_PERMANENT_TIMEOUT });
   return true;
+};
+
+/**
+ * Common error handling of the settings components: a 400 response with
+ * explanations is shown as permanent toast; everything else, and in addition
+ * exception log entries, is forwarded to the top-level error modal.
+ *
+ * @param error The error thrown by the request.
+ *
+ * @param forward Callback emitting the error to the top-level component.
+ */
+export const handleSettingError = (error: unknown, forward: (error: Error) => void) => {
+  const reported = showSettingError(error);
+  if (!reported || isNextcloudExceptionResponse(error)) {
+    forward(error instanceof Error ? error : new Error(String(error)));
+  }
 };

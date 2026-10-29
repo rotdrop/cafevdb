@@ -54,6 +54,7 @@ import {
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
 import { setAdminSetting } from '../../services/admin-settings.ts'
+import { handleSettingError } from '../../services/setting-feedback.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 import { showSuccess } from '../../toolkit/util/toasts.ts'
 
@@ -170,7 +171,7 @@ const runAction = async (endpoint: string) => {
       actionError.value = true
       actionMessage.value = t(appId, 'Unable to configure the mailing list.')
     }
-    emit('error', error instanceof Error ? error : new Error(String(error)))
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
     runningAction.value = false
   }

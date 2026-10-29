@@ -128,9 +128,8 @@ import { reactive } from 'vue'
 import WysiwygField from './WysiwygField.vue'
 import { appName as appId } from '../../config.ts'
 import { setAdminSetting } from '../../services/admin-settings.ts'
-import { showSettingError, showSettingFeedback } from '../../services/setting-feedback.ts'
+import { handleSettingError, showSettingFeedback } from '../../services/setting-feedback.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
-import { isNextcloudExceptionResponse } from '../../types/ajax/php-exception-response.ts'
 
 export type AdminSettingOption = { value: string|number|boolean, label: string }
 export type AdminSettingField = {
@@ -239,12 +238,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
     emit('saved', field.key, values[field.key])
   } catch (error) {
     values[field.key] = previous
-    // Exception log entries (e.g. EnduserNotificationException) get a toast
-    // and in addition the top-level error modal.
-    const reported = showSettingError(error)
-    if (!reported || isNextcloudExceptionResponse(error)) {
-      emit('error', error instanceof Error ? error : new Error(String(error)))
-    }
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
     saving[field.key] = false
   }

@@ -66,6 +66,7 @@ import {
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
 import { getAdminSetting, setAdminSetting } from '../../services/admin-settings.ts'
+import { handleSettingError } from '../../services/setting-feedback.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 import { showSuccess } from '../../toolkit/util/toasts.ts'
 
@@ -159,7 +160,7 @@ const generateShareOwnerPassword = async () => {
   } catch (error) {
     passwordError.value = true
     passwordMessage.value = t(appId, 'Unable to generate a password.')
-    emit('error', error instanceof Error ? error : new Error(String(error)))
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
     runningPasswordAction.value = false
   }
@@ -180,7 +181,7 @@ const changeShareOwnerPassword = async () => {
   } catch (error) {
     passwordError.value = true
     passwordMessage.value = t(appId, 'Unable to change the share-owner password.')
-    emit('error', error instanceof Error ? error : new Error(String(error)))
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
     runningPasswordAction.value = false
   }
@@ -199,7 +200,7 @@ const runAction = async (endpoint: string) => {
   } catch (error) {
     actionError.value = true
     actionMessage.value = t(appId, 'Unable to update cloud-user views.')
-    emit('error', error instanceof Error ? error : new Error(String(error)))
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   } finally {
     runningAction.value = false
   }

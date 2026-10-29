@@ -63,6 +63,7 @@ import {
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { appName as appId } from '../../config.ts'
 import { getAdminSetting, getLocaleInfo, setAdminSetting } from '../../services/admin-settings.ts'
+import { handleSettingError } from '../../services/setting-feedback.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 import { showSuccess } from '../../toolkit/util/toasts.ts'
 
@@ -88,7 +89,7 @@ const onSaved = async (key: string) => {
   try {
     Object.assign(localeInfo, (await getLocaleInfo('app')).data)
   } catch (error) {
-    emit('error', error instanceof Error ? error : new Error(String(error)))
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
   }
 }
 const localeOptions = (state?.localeOptions ?? []).map(({ value, name }) => ({ value, label: name }))
@@ -137,7 +138,7 @@ const databaseMessage = ref('')
 const keyError = ref(false)
 const databaseError = ref(false)
 
-const reportError = (error: unknown) => emit('error', error instanceof Error ? error : new Error(String(error)))
+const reportError = (error: unknown) => handleSettingError(error, (forwarded) => emit('error', forwarded))
 const responseMessage = (data: { message?: string|string[], messages?: string[] }) => {
   const message = data.messages ?? data.message ?? ''
   return Array.isArray(message) ? message.join(' ') : message
