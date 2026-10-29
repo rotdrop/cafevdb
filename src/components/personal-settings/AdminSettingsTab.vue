@@ -294,5 +294,7 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
 
 .admin-setting-affix {
   white-space: nowrap;
+  font-family: monospace;
+  font-weight: bold;
 }
 </style>
