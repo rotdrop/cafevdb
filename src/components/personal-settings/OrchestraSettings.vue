@@ -1,5 +1,35 @@
 <template>
-  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)" />
+  <AdminSettingsTab :entry="entry" :groups="groups" @error="emit('error', $event)">
+    <template v-for="template in autoFillTemplates" :key="template" #[`field-${template}`]="{ value }">
+      <NcButton v-tooltip="hints['templates:auto-fill-test']"
+                :disabled="!value || !!busy[template]"
+                @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'native' })"
+      >
+        <template #icon>
+          <FileDocumentIcon :size="20" />
+        </template>
+        {{ t(appId, 'Auto-fill test') }}
+      </NcButton>
+      <NcButton v-tooltip="hints['templates:auto-fill-test:pdf']"
+                :disabled="!value || !!busy[template]"
+                @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST, { format: 'pdf' })"
+      >
+        <template #icon>
+          <FilePdfIcon :size="20" />
+        </template>
+        {{ t(appId, 'Auto-fill test (PDF)') }}
+      </NcButton>
+      <NcButton v-tooltip="hints['templates:auto-fill-test:data']"
+                :disabled="!!busy[template]"
+                @click="download(template, EnumSettingsGetApp.AUTO_FILL_TEST_DATA)"
+      >
+        <template #icon>
+          <DownloadIcon :size="20" />
+        </template>
+        {{ t(appId, 'Test data') }}
+      </NcButton>
+    </template>
+  </AdminSettingsTab>
 </template>
 
 <script setup lang="ts">
@@ -7,7 +37,13 @@ import type { AdminSettingField, AdminSettingGroup } from './AdminSettingsTab.vu
 import type { TabEntry } from './settings-tree.ts'
 
 import { translate as t } from '@nextcloud/l10n'
+import { NcButton } from '@nextcloud/vue'
+import { reactive } from 'vue'
+import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import FilePdfIcon from 'vue-material-design-icons/FilePdfBox.vue'
 import AdminSettingsTab from './AdminSettingsTab.vue'
+import { EnumSettingsGetApp } from '../../../build/ts-types/php-modules/Controller.ts'
 import {
   BANK_ACCOUNT_BANK_HOLIDAYS,
   BANK_ACCOUNT_BANK_NAME,
@@ -17,6 +53,7 @@ import {
   BANK_ACCOUNT_IBAN,
   BANK_ACCOUNT_OWNER,
   DOCUMENT_TEMPLATES,
+  DOCUMENT_TYPE_TEMPLATE,
   EVENT_DURATION_KEY,
   STREET_ADDRESS_CITY,
   STREET_ADDRESS_COUNTRY,
@@ -26,7 +63,11 @@ import {
   STREET_ADDRESS_STREET,
   STREET_ADDRESS_ZIP,
 } from '../../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
+import { getAppUrl } from '../../app/settings-urls.ts'
 import { appName as appId } from '../../config.ts'
+import { handleSettingError } from '../../services/setting-feedback.ts'
+import useTooltipsStore from '../../stores/tooltips.ts'
+import axiosFileDownload from '../../toolkit/util/axios-file-download.ts'
 import getInitialState from '../../toolkit/util/initial-state.ts'
 
 const props = defineProps<{ entry: TabEntry }>()
@@ -49,6 +90,34 @@ const group = (index: number, fallback: string, fields: AdminSettingField[]): Ad
 })
 const options = (values: Array<{ value: string|number, name: string }>|Record<string, { value: string|number, name: string }> = []) =>
   Object.values(values).map(({ value, name }) => ({ value, label: name }))
+
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips([
+  'templates:auto-fill-test',
+  'templates:auto-fill-test:pdf',
+  'templates:auto-fill-test:data',
+])
+const hints = tooltipsProvider.tooltipsData
+
+const autoFillTemplates = Object.entries(DOCUMENT_TEMPLATES)
+  .filter(([, info]) => info.type === DOCUMENT_TYPE_TEMPLATE)
+  .map(([key]) => key)
+
+const busy = reactive<Record<string, boolean>>({})
+const download = async (
+  template: string,
+  endpoint: EnumSettingsGetApp,
+  extra: Record<string, string> = {},
+) => {
+  busy[template] = true
+  try {
+    await axiosFileDownload(getAppUrl(endpoint), { documentTemplate: template, ...extra })
+  } catch (error) {
+    handleSettingError(error, (forwarded) => emit('error', forwarded))
+  } finally {
+    busy[template] = false
+  }
+}
 
 const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Street Address'), [
