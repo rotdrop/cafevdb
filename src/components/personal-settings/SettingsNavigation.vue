@@ -23,6 +23,7 @@
 <template>
   <NcButton v-if="!navigationShown"
             class="personal-settings-navigation-toggle"
+            :class="{ 'narrow-screen': narrowScreen }"
             variant="primary"
             :aria-label="t(appId, 'Show settings navigation')"
             :aria-expanded="false"
@@ -214,9 +215,18 @@ onBeforeUnmount(() => {
 }
 
 .personal-settings-navigation-toggle {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
+  // Same mechanism as the navigation itself, which is known not to scroll away.
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  flex: 0 0 auto;
   z-index: 1501;
+
+  &.narrow-screen {
+    position: fixed;
+    top: auto;
+    right: 1rem;
+    bottom: 1rem;
+  }
 }
 </style>
