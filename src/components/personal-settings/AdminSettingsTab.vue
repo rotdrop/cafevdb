@@ -306,11 +306,11 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
 }
 
 .admin-setting--folder {
-  // Leave room for the trailing button (about 7.2rem) so that it does not
+  // Leave room for the trailing button (about 7.67rem) so that it does not
   // wrap in the 900px wide settings section.
   :deep(.input-field) {
-    flex-basis: 10.8rem;
-    min-width: 4.8rem;
+    flex-basis: 10.33rem;
+    min-width: 4.33rem;
   }
 }
 
