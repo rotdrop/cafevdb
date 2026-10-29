@@ -29,7 +29,7 @@
            :hasPrevious="false"
            :hasNext="false"
            :name="t(appName, 'An Error Occurred')"
-           container="#body-user"
+           :container="modalContainer()"
            @update:show="emit('update:open', false)"
   >
     <template #actions>
@@ -79,6 +79,7 @@ import {
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import { appName } from '../config.ts'
+import modalContainer from '../toolkit/util/modal-container.ts'
 
 // import Console from '../util/console.ts'
 

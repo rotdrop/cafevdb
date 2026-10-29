@@ -28,7 +28,7 @@
            :hasPrevious="false"
            :labelId="errorPageHeadingId"
            size="large"
-           :container="container"
+           :container="modalContainer()"
            v-bind="$attrs"
   >
     <template #default>
@@ -59,6 +59,7 @@ import {
 } from 'vue'
 import ErrorPage from './ErrorPage.vue'
 import { appName } from '../config.ts'
+import modalContainer from '../toolkit/util/modal-container.ts'
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'ErrorPageModal'
@@ -79,8 +80,6 @@ withDefaults(defineProps<{
 
 const errorPageHeadingId = ref<string>(uuidv4())
 const modal = ref<null|typeof NcModal>(null)
-// The settings pages of Nextcloud have a different body id than the user pages.
-const container = document.querySelector('#body-user') ? '#body-user' : 'body'
 
 </script>
 
