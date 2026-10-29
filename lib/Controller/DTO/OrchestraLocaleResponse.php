@@ -34,8 +34,6 @@ class OrchestraLocaleResponse extends MessagesResponse
     string $message,
     /** Acutal locale value */
     public readonly string $value,
-    /** HTML snippet */
-    public readonly string $localeInfo,
   ) {
     parent::__construct([ $message ]);
   }
@@ -54,6 +52,6 @@ class OrchestraLocaleResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self($messsage, $value, $localeInfo);
+    return new self($messsage, $value);
   }
 }

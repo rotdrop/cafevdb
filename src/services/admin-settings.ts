@@ -11,7 +11,6 @@ import { getUrl, setAppUrl } from '../app/settings-urls.ts';
 
 export type AdminSettingResponse = PersonalSettingResponse & {
   message?: string|string[];
-  localeInfo?: string;
   number?: string;
 };
 
