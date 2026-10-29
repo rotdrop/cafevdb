@@ -30,7 +30,6 @@
  * Collect some jQuery tweaks in this file.
  */
 
-import * as CAFEVDB from './cafevdb.ts';
 import { appPrefix } from './config.ts';
 import $ from './jquery.ts';
 
@@ -98,9 +97,6 @@ $.fn.extend({
       // dialogClass is gone ...
       if (parameters.dialogClass) {
         parameters.classes['ui-dialog'] += ' ' + parameters.dialogClass;
-      }
-      if ($('#appsettings_popup').length === 0) {
-        CAFEVDB.snapperClose();
       }
       console.debug('will open dialog');
       // @ts-expect-error 2554 TS confusion, too many overloads?

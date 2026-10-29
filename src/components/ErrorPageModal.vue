@@ -28,7 +28,7 @@
            :hasPrevious="false"
            :labelId="errorPageHeadingId"
            size="large"
-           container="#body-user"
+           :container="modalContainer()"
            v-bind="$attrs"
   >
     <template #default>
@@ -59,6 +59,7 @@ import {
 } from 'vue'
 import ErrorPage from './ErrorPage.vue'
 import { appName } from '../config.ts'
+import modalContainer from '../toolkit/util/modal-container.ts'
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'ErrorPageModal'

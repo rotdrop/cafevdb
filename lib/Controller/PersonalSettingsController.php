@@ -66,7 +66,6 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
@@ -101,7 +100,6 @@ class PersonalSettingsController extends Controller
   public const END_POINT_APP_GET = 'app/get';
   public const END_POINT_APP_SET = 'app/set';
   public const END_POINT_PERSONAL_SET = 'personal/set';
-  public const END_POINT_PERSONAL_FORM = 'personal/form';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -112,7 +110,6 @@ class PersonalSettingsController extends Controller
     private EmailAddressService $emailAddressService,
     private FinanceService $financeService,
     private FuzzyInputService $fuzzyInputService,
-    private Personal $personalSettings,
     private PhoneNumberService $phoneNumberService,
     private ProjectService $projectService,
     private TranslationService $translationService,
@@ -126,19 +123,6 @@ class PersonalSettingsController extends Controller
     $this->l = $this->l10N();
   }
   // phpcs:enable
-
-  /**
-   * @return Http\Response Return settings form.
-   */
-  #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(
-    verb: 'GET',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_PERSONAL_FORM,
-  )]
-  public function form(): Http\Response
-  {
-    return $this->personalSettings->getForm();
-  }
 
   /**
    * Store user settings.
@@ -338,7 +322,6 @@ class PersonalSettingsController extends Controller
         return (new OrchestraLocaleResponse(
           value: $realValue,
           message: $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
-          localeInfo: $this->generateLocaleInfo('app'),
         ))->response();
 
       case ConfigConstants::ORCHESTRA_NAME_KEY:
@@ -1538,10 +1521,9 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-        return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
-          'messages' => $hints,
-          'hints' => $hints,
-        ]);
+        $hints = empty($hints) ? [] : (array)$hints;
+        $messages = $hints;
+        return $this->setSimpleConfigValue($parameter, $stringValue, messages: $messages, hints: $hints);
 
       case 'userSqlBackendRecreateViews':
         $hints = '';
@@ -2052,9 +2034,13 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
+        $scope = $this->request->getParam('scope');
+        $localeSymbol = ($scope ?? 'personal') == 'personal' ? $this->getLocale() : $this->appLocale();
         return self::dataResponse([
-          'contents' => $localeInfo,
+          'localeSymbol' => $localeSymbol,
+          'currencyCode' => $this->currencyCode($localeSymbol),
+          'currencySymbol' => $this->currencySymbol($localeSymbol),
+          'dateTimeZone' => $this->getDateTimeZone()->getName(),
         ]);
       case 'passwordgenerate':
       case 'generatepassword':
@@ -2078,31 +2064,6 @@ class PersonalSettingsController extends Controller
   }
 
   /**
-   * @param null|string $scope
-   *
-   * @return string HTML fragment.
-   */
-  private function generateLocaleInfo(?string $scope = null):string
-  {
-    $scope = $scope ?? 'personal';
-    $localeSymbol = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
-    $templateParameters = [
-      'dateTimeZone' => $this->getDateTimeZone(),
-      'localeSymbol' => $localeSymbol,
-      'currencyCode' => $this->currencyCode($localeSymbol),
-      'currencySymbol' => $this->currencySymbol($localeSymbol),
-      'l10n' => $scope == 'personal' ? $this->l : $this->appL10n(),
-      'dateTimeFormatter' => $this->dateTimeFormatter(),
-    ];
-
-    $tmpl = $this->templateResponse(
-      'settings/part.locale-info',
-      $templateParameters,
-    );
-    return $tmpl->render();
-  }
-
-  /**
    * Get app settings.
    *
    * @param string|EnumSettingsGetApp $parameter
@@ -2122,12 +2083,6 @@ class PersonalSettingsController extends Controller
     $parameter = EnumSettingsGetApp::get($parameter);
 
     switch ($parameter) {
-      case EnumSettingsGetApp::LOCALE_INFO:
-        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
-        return new Http\DataResponse([
-          'contents' => $localeInfo,
-        ]);
-
       case EnumSettingsGetApp::TRANSLATION_TEMPLATES:
         $pot = $this->translationService->generateCatalogueTemplates();
 

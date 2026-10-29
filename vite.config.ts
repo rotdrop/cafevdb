@@ -220,7 +220,7 @@ const appConfig = createAppConfig(
     app: path.resolve(path.join('src', 'app.ts')),
     'vue-app': path.resolve(path.join('src', 'vue-app.ts')),
     'admin-settings': path.resolve(path.join('src', 'admin-settings.ts')),
-    settings: path.resolve(path.join('src', 'settings.ts')),
+    'personal-settings': path.resolve(path.join('src', 'personal-settings.ts')),
     'background-jobs': path.resolve(path.join('src', 'background-jobs.ts')),
     'files-hooks': path.resolve(path.join('src', 'files-hooks.ts')),
     'files-sidebar-hooks': path.resolve(path.join('src', 'files-sidebar-hooks.ts')),

@@ -40,7 +40,6 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
-use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Service\WikiRPC;
@@ -60,7 +59,6 @@ class PersonalSettingsControllerTest extends TestCase
 
   private const CONTROLLER_CLASS = Controller\PersonalSettingsController::class;
   private const EXPECTED_ROUTES = [
-    'form',
     'get',
     'getapp',
     'set',
@@ -100,7 +98,6 @@ class PersonalSettingsControllerTest extends TestCase
       emailAddressService: $this->createStub(EmailAddressService::class),
       financeService: $this->createStub(FinanceService::class),
       fuzzyInputService: $this->createStub(FuzzyInputService::class),
-      personalSettings: $this->createStub(Personal::class),
       phoneNumberService: $this->createStub(PhoneNumberService::class),
       projectService: $this->createStub(ProjectService::class),
       translationService: $this->createStub(TranslationService::class),

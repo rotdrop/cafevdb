@@ -8,7 +8,7 @@
            :hasPrevious="false"
            :hasNext="false"
            :name="name"
-           container="#body-user"
+           :container="modalContainer()"
            @update:show="$emit('update:open', false)"
   >
     <template #actions>
@@ -107,6 +107,7 @@ import IconContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import LogException from './exception/LogException.vue'
 import { appName } from '../../config.ts'
+import modalContainer from '../../toolkit/util/modal-container.ts'
 import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 // @ts-expect-error 2882 I do not care.

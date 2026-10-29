@@ -27,7 +27,7 @@
            :hasPrevious="false"
            :labelId="queryLogEntryHeadingId"
            size="large"
-           container="#body-user"
+           :container="modalContainer()"
            v-bind="$attrs"
   >
     <template #default>
@@ -83,6 +83,7 @@ import {
 import IconClipBoard from 'vue-material-design-icons/Clippy.vue'
 import { appName } from '../config.ts'
 import { LEGACY_QUERY_LOG as COMPONENT_NAME } from '../mountable-component-names.ts'
+import modalContainer from '../toolkit/util/modal-container.ts'
 import { showError, showInfo } from '../toolkit/util/toasts.ts'
 import Console from '../util/console.ts'
 const props = defineProps<{ queryLogEntry: LegacySqlQueryLogEntry }>()

@@ -25,19 +25,22 @@
  * @module
  */
 
-import { runReadyCallbacks } from './app/cafevdb.ts';
-import { attachDialogHandlers } from './app/dialogs.js';
-import personalSettings from './app/personal-settings.js';
-import appSettings from './app/settings.js';
-import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+import PersonalSettings from './components/PersonalSettings.vue';
+import { appName } from './config.ts';
+import { mixin as globalMixin } from './mixins/global-mixin.ts';
 
-import './app/jquery-extensions.ts';
+import 'core-js/actual';
 
-require('personal-settings.scss');
+const pinia = createPinia();
 
-onDocumentLoaded(() => {
-  attachDialogHandlers();
-  appSettings();
-  personalSettings();
-  runReadyCallbacks();
-});
+const app = createApp(PersonalSettings);
+app.config.performance = !!(import.meta?.env?.DEV);
+app.directive('tooltip', Tooltip);
+app.provide('appId', appName);
+app.mixin(globalMixin);
+app.use(pinia);
+
+app.mount('#personal-settings-vue');
