@@ -64,16 +64,15 @@ export const showSettingError = (error: unknown): boolean => {
 
 /**
  * Common error handling of the settings components: a 400 response with
- * explanations is shown as permanent toast; everything else, and in addition
- * exception log entries, is forwarded to the top-level error modal.
+ * explanations is shown as permanent toast; everything else, including
+ * exception log entries, is forwarded to the top-level error modal only.
  *
  * @param error The error thrown by the request.
  *
  * @param forward Callback emitting the error to the top-level component.
  */
 export const handleSettingError = (error: unknown, forward: (error: Error) => void) => {
-  const reported = showSettingError(error);
-  if (!reported || isNextcloudExceptionResponse(error)) {
+  if (isNextcloudExceptionResponse(error) || !showSettingError(error)) {
     forward(error instanceof Error ? error : new Error(String(error)));
   }
 };
