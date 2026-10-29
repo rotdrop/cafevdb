@@ -101,7 +101,11 @@ const groups = [
         : state?.[EMAIL_FROM_ADDRESS_KEY],
     },
     field(EMAIL_FROM_DOMAIN_KEY, t(appId, 'Sender email domain')),
-    field(BULK_EMAIL_SUBJECT_TAG, t(appId, 'Bulk email subject tag')),
+    {
+      ...field(BULK_EMAIL_SUBJECT_TAG, t(appId, 'Bulk email subject tag')),
+      prefix: '[',
+      suffix: '-' + t(appId, 'ProjectNameYYYY') + '] ' + t(appId, 'Example Subject'),
+    },
     field(ATTACHMENT_LINK_SIZE_LIMIT, t(appId, 'Attachment link size limit')),
     field(ATTACHMENT_LINK_EXPIRATION_LIMIT, t(appId, 'Attachment link expiration limit')),
     field(PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, t(appId, 'Verify external-link SSL certificates'), 'checkbox'),

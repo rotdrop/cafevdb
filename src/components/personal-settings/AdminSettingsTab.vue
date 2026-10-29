@@ -33,7 +33,7 @@
           <hr>
           <h4>{{ field.heading }}</h4>
         </div>
-        <div class="admin-setting">
+        <div class="admin-setting" :class="{ 'admin-setting--inline': field.prefix || field.suffix }">
           <NcCheckboxRadioSwitch v-if="field.type === 'checkbox'"
                                  :modelValue="values[field.key] === true || values[field.key] === 'on'"
                                  :disabled="saving[field.key]"
@@ -100,6 +100,7 @@
             >
               {{ t(appId, 'Test Link') }}
             </NcButton>
+            <span v-if="field.prefix" class="admin-setting-affix">{{ field.prefix }}</span>
             <NcTextField :id="field.key"
                          :label="field.label"
                          :type="field.type === 'number' ? 'number' : 'text'"
@@ -108,6 +109,7 @@
                          @update:modelValue="values[field.key] = $event"
                          @blur="save(field, values[field.key])"
             />
+            <span v-if="field.suffix" class="admin-setting-affix">{{ field.suffix }}</span>
           </template>
         </div>
       </template>
@@ -137,6 +139,8 @@ export type AdminSettingField = {
   options?: AdminSettingOption[]
   initialValueKey?: string
   heading?: string
+  prefix?: string
+  suffix?: string
   linkTest?: boolean
   initialValue?: unknown
 }
@@ -260,6 +264,19 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
     margin-block: calc(var(--default-grid-baseline) * 2) 0;
     font-weight: bold;
   }
+}
+
+.admin-setting--inline {
+  flex-wrap: nowrap;
+
+  :deep(.input-field) {
+    flex: 0 1 12rem;
+    min-width: 6rem;
+  }
+}
+
+.admin-setting-affix {
+  white-space: nowrap;
 }
 
 .admin-setting {
