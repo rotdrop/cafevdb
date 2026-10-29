@@ -188,9 +188,11 @@ onBeforeUnmount(() => {
     position: fixed;
     top: 5rem;
     right: 1rem;
-    bottom: 5rem;
     z-index: 1500;
-    max-height: none;
+    // Not "bottom": the containing block (#content-vue) may be taller than the
+    // viewport, which would prevent the list from overflowing and scrolling.
+    max-height: calc(100vh - 10rem);
+    overflow-y: auto;
     width: min(18rem, 100vw - 2rem);
     padding: 1rem;
     border: 1px solid var(--color-border);
