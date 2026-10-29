@@ -33,7 +33,7 @@
           <hr>
           <h4>{{ field.heading }}</h4>
         </div>
-        <div class="admin-setting" :class="{ 'admin-setting--inline': (field.prefix || field.suffix) && field.type !== 'folder' }">
+        <div class="admin-setting" :class="{ 'admin-setting--inline': (field.prefix || field.suffix) && field.type !== 'folder', 'admin-setting--folder': field.type === 'folder' }">
           <NcCheckboxRadioSwitch v-if="field.type === 'checkbox'"
                                  :modelValue="values[field.key] === true || values[field.key] === 'on'"
                                  :disabled="saving[field.key]"
@@ -302,6 +302,15 @@ const save = async (field: AdminSettingField, value: unknown, forceSubmit = fals
   :deep(.input-field) {
     flex: 0 1 12rem;
     min-width: 6rem;
+  }
+}
+
+.admin-setting--folder {
+  // Leave room for the trailing button (about 115px) so that it does not
+  // wrap in the 900px wide settings section.
+  :deep(.input-field) {
+    flex-basis: calc(18rem - 115px);
+    min-width: calc(12rem - 115px);
   }
 }
 
