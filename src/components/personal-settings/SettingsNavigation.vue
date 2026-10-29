@@ -23,7 +23,6 @@
 <template>
   <NcButton v-if="!navigationShown"
             class="personal-settings-navigation-toggle"
-            :class="{ 'narrow-screen': narrowScreen }"
             variant="primary"
             :aria-label="t(appId, 'Show settings navigation')"
             :aria-expanded="false"
@@ -215,18 +214,11 @@ onBeforeUnmount(() => {
 }
 
 .personal-settings-navigation-toggle.button-vue {
-  // Same mechanism as the navigation itself, which is known not to scroll away.
-  position: sticky;
-  top: 1rem;
-  align-self: flex-start;
-  flex: 0 0 auto;
+  // Mirror the toggle of Nextcloud's left navigation: same inset from the
+  // top of the content area (below the header) and from the edge.
+  position: fixed;
+  top: calc(var(--header-height, 50px) + var(--default-grid-baseline, 4px) * 2);
+  inset-inline-end: calc(var(--default-grid-baseline, 4px) * 2);
   z-index: 1501;
-
-  &.narrow-screen {
-    position: fixed;
-    // Same vertical position as the toggle of the left navigation of Nextcloud.
-    top: calc(var(--header-height, 50px) + var(--default-grid-baseline));
-    right: 1rem;
-  }
 }
 </style>
