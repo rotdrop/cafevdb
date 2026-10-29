@@ -52,4 +52,6 @@ export interface PmeSelectProps {
 
 export interface PmeSelectComponentProps extends PmeSelectProps {
   onChange?: (value: PmeSelectValue) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 }

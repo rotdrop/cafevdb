@@ -39,6 +39,8 @@ export interface SelectizeAdapterOptions {
   lockOptgroupOrder?: boolean;
   delimiter?: string;
   onChange?: (value: PmeSelectValue) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 type ExposedSelect = {
@@ -217,8 +219,8 @@ export class SelectizeService {
 
       placeholder: this.select.dataset.placeholder || this.select.getAttribute('placeholder') || '',
       multiple: this.select.multiple,
-      disabled: this.originalDisabled,
-      readonly: this.select.hasAttribute('readonly'),
+      disabled: false,
+      readonly: false,
       required: this.originalRequired,
       notEmpty: this.select.classList.contains('not-empty'),
       sortable: plugins.some((plugin) => (typeof plugin === 'string' ? plugin : plugin.name) === 'drag_drop'),
@@ -226,6 +228,8 @@ export class SelectizeService {
       createOnBlur: config.createOnBlur ?? false,
       persist: config.persist ?? false,
       onChange: this.handleComponentChange,
+      onOpen: config.onOpen,
+      onClose: config.onClose,
     };
   }
 
@@ -254,6 +258,7 @@ export class SelectizeService {
     this.select.removeAttribute('name');
 
     this.component.mount(this.mountPoint);
+    this.syncControlState();
     this.writeNativeValues(this.previousValue, false);
   }
 
@@ -325,7 +330,26 @@ export class SelectizeService {
   refresh() {
     const { options, groups } = this.optionData();
     this.component?.setOptions(this.selectizeOptions.options ?? options, groups);
-    this.applyValue(this.readNativeValues(), true, true);
+    const nativeValues = this.readNativeValues();
+    const previousValues = this.normalizeValues(this.previousValue);
+    const selectionUnchanged = nativeValues.length === previousValues.length
+      && nativeValues.every((value) => previousValues.includes(value));
+    this.applyValue(selectionUnchanged ? previousValues : nativeValues, true, true);
+    this.syncControlState();
+    this.writeFormValues(this.previousValue);
+  }
+
+  private syncControlState() {
+    if (this.select.disabled) {
+      this.component?.disable();
+    } else {
+      this.component?.enable();
+    }
+    if (this.select.hasAttribute('readonly') || this.select.classList.contains('readonly')) {
+      this.component?.lock();
+    } else {
+      this.component?.unlock();
+    }
   }
 
   focus() {
@@ -388,6 +412,8 @@ export class SelectizeService {
     this.component = undefined;
   }
 }
+
+export const getMountedSelectize = (select: HTMLSelectElement) => adapterBySelect.get(select);
 
 const parseSelectizeOptions = (select: HTMLSelectElement): SelectizeAdapterOptions => {
   const raw = select.dataset.selectizeOptions;

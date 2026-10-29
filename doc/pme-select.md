@@ -3,8 +3,10 @@
 `src/components/PmeSelect.vue` is a Vue replacement for the Selectize features
 used by PME fields. It uses the existing Nextcloud select component, not
 Selectize or jQuery. The `mountSelectize` service adapts native selects to this
-SFC through the mountable-component event bus; the legacy PME initializer and
-`select-utils.ts` integration remain unchanged for now.
+SFC through the mountable-component event bus. PME's initializer now mounts
+`.selectize` fields through the service, routes its refresh/clear actions to
+mounted instances, and destroys them when replacing the PME container. Other
+legacy Selectize consumers remain unchanged.
 
 ```ts
 import { mountSelectize } from '../services/mountable-select.ts'
@@ -113,7 +115,6 @@ Disabled fields are omitted from submission; readonly/locked fields retain
 their submitted values. `required` uses native browser validation independently
 of `notEmpty`.
 
-The remaining PME integration work is to route the legacy initializer and
-`select-utils.ts` through this service. Email-composer and SEPA-specific
-features, a fully compatible Selectize instance facade, and arbitrary
-Selectize plugins are outside the current scope.
+Email-composer and SEPA-specific features, a full `select-utils.ts` migration,
+a fully compatible Selectize instance facade, and arbitrary Selectize plugins
+are outside the current scope.

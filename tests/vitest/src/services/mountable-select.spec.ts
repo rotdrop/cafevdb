@@ -78,8 +78,12 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
     moveItem: vi.fn(),
     createItem: vi.fn(),
     focus: vi.fn(),
-    lock: vi.fn(),
-    unlock: vi.fn(),
+    lock: vi.fn(() => {
+      instance.isLocked = true;
+    }),
+    unlock: vi.fn(() => {
+      instance.isLocked = false;
+    }),
     disable: vi.fn(() => {
       instance.isDisabled = true;
     }),
@@ -265,12 +269,27 @@ describe('mountSelectize', () => {
     select.options[0].selected = true;
     select.dispatchEvent(new Event('change', { bubbles: true }));
     expect(mountables[0].getValue()).toBe('a');
+
+    select.disabled = true;
+    select.classList.add('readonly');
+    instance.refresh();
+    expect(instance.isDisabled).toBe(true);
+    expect(instance.isLocked).toBe(true);
+    select.disabled = false;
+    select.classList.remove('readonly');
+    instance.refresh();
+    expect(instance.isDisabled).toBe(false);
+    expect(instance.isLocked).toBe(false);
   });
 
   it('exposes control methods and dispatches native change for programmatic value updates', async () => {
     const container = makeSelect('<select class="selectize" multiple><option value="a">A</option><option value="b">B</option></select>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
+    mountables[0].lock.mockClear();
+    mountables[0].unlock.mockClear();
+    mountables[0].disable.mockClear();
+    mountables[0].enable.mockClear();
     const changes = vi.fn();
     select.addEventListener('change', changes);
     instance.setValue(['b', 'a']);
