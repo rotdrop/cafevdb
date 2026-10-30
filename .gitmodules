@@ -43,3 +43,6 @@
 [submodule "python/compound-word-splitting"]
 	path = python/compound-word-splitting
 	url = git@github.com:rotdrop/python-microservice-german-word-splitting.git
+[submodule "dev-scripts/lib"]
+	path = dev-scripts/lib
+	url = git@github.com:rotdrop/nextcloud-app-build-system.git
