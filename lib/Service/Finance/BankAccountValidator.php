@@ -26,13 +26,13 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use Psr\Container\ContainerInterface;
 
-use OCA\BAV\Service\BAV;
+use rotdrop\bav\BAV;
 
 /**
- * Thin adapter around the German bank account validator of the BAV app. The
+ * Thin adapter around the German bank account validator BAV facade. The
  * BAV class is only referenced via ::class, which does not trigger
  * autoloading, so that this class can be mocked or stubbed without the BAV
- * app being installed.
+ * library being installed.
  */
 class BankAccountValidator
 {
