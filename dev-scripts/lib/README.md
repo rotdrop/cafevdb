@@ -6,9 +6,8 @@ Kind of library of Makefile fragments and such. Intended as git sub-repo.
 The converter is now provided by the Composer library
 `rotdrop/php-to-typescript`. Applications using `makefile/ts-types-files.mk`
 must install it in their own `vendor-bin/php-to-typescript/` environment,
-managed by `bamarni/composer-bin-plugin`. The bundled
-`scripts/php-to-typescript/` sources remain temporarily for consumers that
-have not migrated; the updated Makefile fragment uses the Composer package.
+managed by `bamarni/composer-bin-plugin`. The updated Makefile fragment uses
+the Composer package.
 
 ### Application setup
 
@@ -66,7 +65,7 @@ Nextcloud/toolkit bootstrap. Update the launcher as follows:
 
 The shared `scripts/vendor/autoload.php` bootstrap remains supported: the
 Makefile still installs `scripts/composer.json`, including its Nextcloud OCP
-patch. It no longer deletes that environment or its lock files before
+dependency. It no longer deletes that environment or its lock files before
 every generation.
 
 Once the launcher has migrated, remove the old
