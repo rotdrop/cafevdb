@@ -25,17 +25,18 @@
  * @module
  */
 
-import type { IOptions as SelectizeOptions } from 'selectize';
+import type { SelectizeAdapterOptions } from '../services/mountable-select.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
+import { getMountedSelectize } from '../services/mountable-select.ts';
+import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
+import { selectedOptionData } from '../services/select-options.ts';
 import { toolTipsInit } from './cafevdb.ts';
 import $ from './jquery.ts';
+import { show as notificationShow } from './notification.ts';
 
 import './jquery-extensions.ts';
-import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap.css';
-require('cafevdb-selectize.scss');
 
 interface SelectedOptionDTO {
   value: string;
@@ -51,11 +52,11 @@ interface Options {
   saveTitle: string;
   cancelText: string;
   cancelTitle: string;
-  buttons: JQueryUI.ButtonOptions[]; // additional buttons.
+  buttons: JQueryUI.DialogButtonOptions[]; // additional buttons.
   openCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
   saveCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>, selected: SelectedOptionDTO[]) => void;
   closeCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
-  selectize: Partial<SelectizeOptions>;
+  select: SelectizeAdapterOptions;
 }
 
 /*
@@ -87,9 +88,7 @@ const selectPopup = function(contents: string, userOptions: Partial<Options>) {
     openCallback: undefined,
     saveCallback: undefined,
     closeCallback: undefined,
-    selectize: {
-      plugins: ['remove_button'],
-      openOnFocus: true,
+    select: {
       closeAfterSelect: true,
     },
   };
@@ -101,24 +100,26 @@ const selectPopup = function(contents: string, userOptions: Partial<Options>) {
   const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'select-popup-dialog';
   const dialogHolder = $('<div class="' + cssClass + '"></div>');
   dialogHolder.html(contents);
-  const selectElement = dialogHolder.find('select');
+  const selectElement = dialogHolder.find<HTMLSelectElement>('select');
   $('body').append(dialogHolder);
+  const scope = mountedSelectScope(dialogHolder[0]);
+  let closed = false;
+  let ready = false;
 
-  let buttons: JQueryUI.ButtonOptions[] = [
+  let buttons: JQueryUI.DialogButtonOptions[] = [
     {
       text: options.saveText,
       // icon: { primary: 'ui-icon-check' },
       class: 'save',
       title: options.saveTitle,
       click(this: HTMLElement) {
+        if (!ready) {
+          return false;
+        }
         const selectedOptions: SelectedOptionDTO[] = [];
-        selectElement.find('option:selected').each(function(idx) {
-          const $self = $(this) as JQuery<HTMLOptionElement>;
-          selectedOptions[idx] = {
-            value: $self.val() as string,
-            html: $self.html(),
-            text: $self.text(),
-          };
+        selectElement.each(function() {
+          const value = getMountedSelectize(this)?.getValue();
+          selectedOptions.push(...selectedOptionData(this, Array.isArray(value) ? value : value === null || value === undefined ? [] : [value]));
         });
         // alert('selected: ' + JSON.stringify(selectedOptions));
         if (typeof options.saveCallback === 'function') {
@@ -150,28 +151,42 @@ const selectPopup = function(contents: string, userOptions: Partial<Options>) {
     height: 'auto',
     resizable: false,
     buttons,
-    open() {
-      selectElement.selectize(options.selectize);
+    open(this: HTMLElement) {
       const dialogWidget = dialogHolder.dialog('widget');
-      toolTipsInit(dialogWidget);
-      dialogHolder.find('.selectize-input')
-        .off('dblclick')
-        .on('dblclick', function() {
-          dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
-          return false;
+      const save = dialogWidget.find('.ui-dialog-buttonset .ui-button.save');
+      save.prop('disabled', true);
+      void Promise.all(selectElement.toArray().map((select) => scope.mount(select, options.select)))
+        .then(() => {
+          if (closed) {
+            return;
+          }
+          ready = true;
+          save.prop('disabled', false);
+          toolTipsInit(dialogWidget);
+          dialogHolder.on('dblclick', '.pme-select', function(event) {
+            if ($(event.target).closest('button').length === 0) {
+              save.trigger('click');
+              return false;
+            }
+          });
+          options.openCallback?.call(this, selectElement);
+        })
+        .catch((error: unknown) => {
+          console.error('Unable to mount popup select controls.', error);
+          notificationShow(t(appName, 'Unable to initialize the select controls.'), { timeout: 15 });
+          if (!closed) {
+            dialogHolder.dialog('close');
+          }
         });
-
-      if (typeof options.openCallback === 'function') {
-        options.openCallback.call(this, selectElement);
-      }
     },
-    close() {
+    close(this: HTMLElement) {
+      closed = true;
       if (typeof options.closeCallback === 'function') {
         options.closeCallback.call(this, selectElement);
       }
 
       $.fn.cafevTooltip.remove();
-      dialogHolder.dialog('close');
+      destroyMountedSelects(dialogHolder[0]);
       dialogHolder.dialog('destroy').remove();
     },
   });

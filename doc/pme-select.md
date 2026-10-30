@@ -6,8 +6,9 @@ Selectize or jQuery. The `mountSelectize` service adapts native selects to this
 SFC through the mountable-component event bus. PME's initializer now mounts
 `.selectize` fields through the service and destroys them when replacing the
 PME container. The shared `select-utils.ts` functions dispatch to Vue-backed
-controls as well as native, Chosen, and jQuery Selectize controls. Other
-legacy Selectize consumers remain unchanged.
+controls as well as native, Chosen, and jQuery Selectize controls. The email
+composer, recipient filters, address-book popup, and SEPA mandate selects also
+use this service. Chosen and dual-listbox integrations are unchanged.
 
 ```ts
 import { mountSelectize } from '../services/mountable-select.ts'
@@ -36,7 +37,7 @@ unmounted and the native selects restored on `LEGACY_PAGE_CLEANUP`.
 
 The returned service exposes `getValue()`, `setValue(value, silent?)`,
 `clear(silent?)`, `refresh()`, `refreshProperties()`, `focus()`, `lock()`,
-`unlock()`, `disable()`, `enable()`, `isLocked`, `isDisabled`, the visible host
+`unlock()`, `disable()`, `enable()`, `setRequired(required)`, `isLocked`, `isDisabled`, the visible host
 `element`, and `destroy()`. Single-select values are
 strings or `null`; multi-select values are ordered arrays of strings. Repeated
 calls are idempotent while an instance remains mounted.
@@ -48,6 +49,16 @@ setter / explicit change-event behavior are preserved. Changes to native
 options require `refreshWidget`; changes only to disabled/readonly properties
 can use `refreshWidgetProperties`. The readonly shim leaves form-input
 management to the Vue adapter, avoiding duplicate placeholder inputs.
+Use `setRequired` for dynamic required-state changes, since the hidden native
+select cannot itself participate in browser validation.
+
+`mountedSelectScope(container).mount(select, options)` groups controls owned by
+a legacy panel or dialog. Call `destroyMountedSelects(container)` before
+replacing its contents or closing it; this also handles outstanding mount
+requests. These helpers are in `src/services/mounted-select-scope.ts`.
+`select-options.ts` shares native option/group conversion and ordered selection
+DTOs. `address-book-select.ts` adds validated free-form contacts and the contact
+save payload without exposing widget internals.
 
 `getControlObject` returns the Vue service for Vue-backed selects.
 `vueSelectActive` detects those controls; `getSelectize`, `selectizeActive`, and
@@ -71,7 +82,9 @@ Types are exported from `src/types/pme-select.ts`. Values are strings; `v-model`
 is a string or `null` for single selects and an ordered string array for multiple
 selects. External value and option changes are reactive. Selected values remain
 visible if an option is temporarily absent.
-Searching is case- and diacritic-insensitive and matches all query words.
+Searching is case- and diacritic-insensitive and matches all query words against
+both labels and values. Native option tooltip metadata is presented as plain
+multiline text rather than rendered HTML.
 
 | PME / Selectize configuration | Component API |
 | --- | --- |
@@ -85,6 +98,8 @@ Searching is case- and diacritic-insensitive and matches all query words.
 | `create: { url, post, inputField }` | Same object in `create`; also put `valueField` and `labelField` inside it |
 | `createOnBlur`, `persist` | Corresponding boolean props; both default to `false` |
 | `hideSelected: false` | Selected options remain visible |
+| `restore_on_backspace` | `restoreOnBackspace`, restoring the last removed label to the search input |
+| `closeAfterSelect` | Closes after selecting in a multi-select; single selects always close |
 
 Dropdown opening follows Nextcloud's accessible keyboard/pointer interactions
 rather than forcing Selectize's `openOnFocus` behavior. Use Arrow Down, Enter,
@@ -113,13 +128,19 @@ The search input blocks native form submission while validation is pending or
 an unresolved creation error is present.
 New entries can be selected in the dropdown, committed with a comma, or created
 on blur when `createOnBlur` is enabled.
+For custom response mapping, `create.resolve(input, signal)` may return a
+promise of a typed option, including group membership.
+`createRemoteSelectOption` in `select-option-creation.ts` supplies the shared
+authenticated request and cancellation handling.
 
 `change` and `update:modelValue` report selection changes, including reordering.
+`create` reports a newly created option before selection changes, allowing
+legacy handlers to distinguish new template names from stored templates.
 `open` and `close` are available for legacy dropdown-visibility handling.
 The exposed methods are `getValue()`, `setValue(value, silent = false)`,
 `getOptions()`, `setOptions(options, groups?)`, `clear(silent = false)`,
 `moveItem(index, offset)`, `createItem(input)`,
-`focus()`, `lock()`, `unlock()`, `disable()`, and `enable()`.
+`focus()`, `lock()`, `unlock()`, `disable()`, `enable()`, and `setRequired(required)`.
 `isLocked`, `isDisabled`, and `creating` expose current state.
 Programmatic setters can replace values even while interaction is locked.
 Unlocking/enabling does not override a corresponding prop.
@@ -131,5 +152,6 @@ Disabled fields are omitted from submission; readonly/locked fields retain
 their submitted values. `required` uses native browser validation independently
 of `notEmpty`.
 
-Email-composer and SEPA-specific features, a fully compatible Selectize instance
-facade, and arbitrary Selectize plugins are outside the current scope.
+A fully compatible Selectize instance facade and arbitrary Selectize plugins
+are outside the scope. Legacy compatibility branches in shared utilities and
+the package dependency have not been removed as part of this consumer migration.

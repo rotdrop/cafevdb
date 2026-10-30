@@ -69,6 +69,8 @@ import {
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
+import { getMountedSelectize } from '../services/mountable-select.ts';
+import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 // import * as Email from './email.ts';
 import { showError } from '../toolkit/util/toasts.ts';
@@ -112,12 +114,6 @@ import {
 import * as SelectUtils from './select-utils.ts';
 
 import './lock-input.ts';
-import 'selectize';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('selectize/dist/css/selectize.bootstrap.css');
-
-require('cafevdb-selectize.scss');
-
 import 'jquery-ui/ui/widgets/autocomplete';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
@@ -277,14 +273,16 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       projectSelect
         .prop('disabled', !onlyProject)
         .prop('required', onlyProject);
-      if (projectSelect[0].selectize) {
+      const control = getMountedSelectize(projectSelect[0]);
+      if (control) {
+        control.setRequired(onlyProject);
         if (onlyProject) {
-          projectSelect[0].selectize.unlock();
+          control.unlock();
         } else {
-          projectSelect[0].selectize.clear();
-          projectSelect[0].selectize.lock();
+          control.clear();
+          control.lock();
         }
-        projectSelect.next().find('.selectize-input input').prop('disabled', !onlyProject);
+        control.refreshProperties();
       }
     }
 
@@ -420,7 +418,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     });
   };
 
-  const initializeDialogHandlers = <E>($dlg: JQuery<E>) => {
+  const initializeDialogHandlers = <E extends HTMLElement>($dlg: JQuery<E>) => {
     const $widget = $dlg.dialog('widget');
     const data = $dlg.data();
     const buttons = data.buttons;
@@ -437,21 +435,13 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
     $widget.find('button.close').trigger('focus');
 
-    mandateFieldset.find('select.selectize').each(function() {
-      const $self = $(this);
-      const disabled = $self.prop('disabled');
-      $self
-        .prop('disabled', false)
-        .selectize({
-          plugins: ['remove_button'],
-          openOnFocus: true,
-          closeAfterSelect: true,
-        });
-      if (disabled) {
-        $self.prop('disabled', true);
-        SelectUtils.getSelectize($self)?.lock();
-        $self.next().find('.selectize-input input').prop('disabled', true);
-      }
+    mandateFieldset.find<HTMLSelectElement>('select.selectize').each(function() {
+      void mountedSelectScope($dlg[0]).mount(this, {
+        closeAfterSelect: true,
+      }).catch((error: unknown) => {
+        console.error('Unable to mount mandate select control.', error);
+        Notification.show(t(appName, 'Unable to initialize the select controls.'), { timeout: 15 });
+      });
     });
 
     mandateFieldset.find('select.chosen').each(function() {
@@ -566,7 +556,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
         $input.lockUnlock('disable');
         return {};
       },
-      onSelect(_dateText, _inst) {
+      onSelect(this: HTMLInputElement, _dateText, _inst) {
         const $input = $(this);
         $input.on('blur', function(event) {
           mandateValidate.call(this, event, function(lock) {
@@ -598,7 +588,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     });
   };
 
-  const dialogReload = <E>($dlg: JQuery<E>, onChangeCallback: () => void = () => {}) => {
+  const dialogReload = <E extends HTMLElement>($dlg: JQuery<E>, onChangeCallback: () => void = () => {}) => {
     const data = $dlg.data();
 
     disableButtons();
@@ -612,6 +602,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
         // redefine reload-state with response
         $popup.data('instantvalidation', true);
+        destroyMountedSelects($dlg[0]);
         $dlg.html(data.contents ?? '');
         initializeDialogHandlers($dlg);
         onChangeCallback();
@@ -767,7 +758,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
         },
       },
     ],
-    open() {
+    open(this: HTMLElement) {
       const $dlg = $(this);
       const $widget = $dlg.dialog('widget');
 
@@ -789,8 +780,9 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
       initializeDialogHandlers($dlg);
     },
-    close(_event, _ui) {
+    close(this: HTMLElement, _event, _ui) {
       $.fn.cafevTooltip.remove();
+      destroyMountedSelects(this);
       $(this).dialog('destroy').remove();
       modalizer(false);
     },

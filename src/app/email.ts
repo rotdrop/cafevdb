@@ -25,7 +25,6 @@
  * @module
  */
 
-import type { IOptions as SelectizeOptions } from 'selectize';
 import type { EnumEmailFormComposerOperation as ComposerOperation, EnumEmailFormComposerTopic as ComposerTopic, EnumEmailFormComposerElement } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   // EmailFormComposerResponse,
@@ -39,6 +38,7 @@ import type {
   ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+import type { SelectizeAdapterOptions } from '../services/mountable-select.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { UploadFile } from './file-upload.ts';
 
@@ -84,6 +84,9 @@ import {
   LEGACY_UPDATE_EVENTS_SELECTION,
   PROJECT_EVENTS_LISTING,
 } from '../event-bus-events.ts';
+import { addressBookSelectOptions, selectedFreeFormContacts } from '../services/address-book-select.ts';
+import { getMountedSelectize } from '../services/mountable-select.ts';
+import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import { asKey } from '../toolkit/types/type-traits.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { showSuccess } from '../toolkit/util/toasts.ts';
@@ -91,7 +94,6 @@ import {
   handleError as ajaxHandleError,
   validateResponse as ajaxValidateResponse,
 } from './ajax.ts';
-import * as Ajax from './ajax.ts';
 import pageBusyIcon from './busy-icon.ts';
 import { globalState, toolTipsInit } from './cafevdb.ts';
 import debounce from './debounce.ts';
@@ -114,9 +116,6 @@ import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
 import 'bootstrap4-duallistbox';
-import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap.css';
-import 'cafevdb-selectize.scss';
 import './jquery-readonly.ts';
 import 'emailform.module.scss';
 import {
@@ -153,15 +152,19 @@ const isRecipientsFilterReloadResponse = (arg: EmailFormRecipientsFilterResponse
 const isRecipientsFilterResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterResponse =>
   asKey(<EmailFormRecipientsFilterResponse>arg, 'recipientsOptions') in arg;
 
-const selectizeOpenOnFocus = true;
-
-const selectizeOptions = {
-  plugins: ['remove_button'],
-  delimiter: ',',
+const multiSelectOptions = {
   persist: false,
-  openOnFocus: selectizeOpenOnFocus,
   closeAfterSelect: true,
-  hideSelected: false,
+};
+
+const mountEmailSelect = ($select: JQuery<HTMLSelectElement>, options: SelectizeAdapterOptions = {}) => {
+  for (const select of $select.toArray()) {
+    const container = select.closest<HTMLElement>('#emailformrecipients, #emailformcomposer') ?? select.parentElement!;
+    void mountedSelectScope(container).mount(select, options).catch((error: unknown) => {
+      console.error('Unable to mount email select control.', error);
+      notificationShow(t(appName, 'Unable to initialize the select controls.'), { timeout: 15 });
+    });
+  }
 };
 
 const Email = {
@@ -333,20 +336,20 @@ const emailFormRecipientsSelectControls = ($dialogHolder: JQuery, $fieldset: JQu
 
   if (
     $dialogHolder.tabs('option', 'active') !== 0 // visible?
-      || $fieldset.find('#participation-status-filer.selectized').length > 0 // already initialized
+      || !!getMountedSelectize($fieldset.find<HTMLSelectElement>('#participation-status-filter')[0])
   ) {
     return;
   }
 
-  const $participationStatusFilter = $fieldset.find('#participation-status-filter');
-  $participationStatusFilter.selectize({
-    ...selectizeOptions,
+  const $participationStatusFilter = $fieldset.find<HTMLSelectElement>('#participation-status-filter');
+  mountEmailSelect($participationStatusFilter, {
+    ...multiSelectOptions,
     closeAfterSelect: false,
   });
 
   const $instrumentsFilter = $fieldset.find('#instruments-filter') as JQuery<HTMLSelectElement>;
-  $instrumentsFilter.selectize({
-    ...selectizeOptions,
+  mountEmailSelect($instrumentsFilter, {
+    ...multiSelectOptions,
     closeAfterSelect: false,
   });
 
@@ -496,6 +499,7 @@ const emailFormRecipientsHandlers = (
           }
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
+          destroyMountedSelects($panelHolder[0]);
           $panelHolder.html(data.contents);
           $fieldset = $panelHolder.find<HTMLFieldSetElement>('fieldset.email-recipients.page');
           emailFormRecipientsHandlers($fieldset, $form, $dialogHolder, $panelHolder);
@@ -792,51 +796,30 @@ const emailFormCompositionHandlers = (
 
   WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
-  const messageSelectorSelectizeOptions: Partial<SelectizeOptions> = {
-    onBeforeDropdownOpen(_$dropdown: JQuery) {
-      this.$wrapper.toggleClass(dropdownOpenCssClass, true);
-    },
-    onDropdownClose(_$dropdown: JQuery) {
-      this.$wrapper.toggleClass(dropdownOpenCssClass, false);
-    },
-    onChange(value) {
-      this.$wrapper.toggleClass(loadingCssClass, !!value);
-    },
-    onClear() {
-      this.$wrapper.toggleClass(loadingCssClass, false);
-    },
-    onOptionsRefresh($dropdown) {
-      $dropdown.find('[class*="tooltip-"]').cafevTooltip();
-    },
+  const messageSelectorOptions = ($select: JQuery<HTMLSelectElement>): SelectizeAdapterOptions => ({
+    onOpen: () => { SelectUtils.widget($select).addClass(dropdownOpenCssClass); },
+    onClose: () => { SelectUtils.widget($select).removeClass(dropdownOpenCssClass); },
+    onChange: (value) => { SelectUtils.widget($select).toggleClass(loadingCssClass, !!value); },
     closeAfterSelect: true,
-    openOnFocus: selectizeOpenOnFocus,
-  };
+  });
 
-  $templateEmailsSelector.selectize({
-    ...messageSelectorSelectizeOptions,
-    inputClass: appName + '-email-current-template',
-    plugins: ['clear_button', 'restore_on_backspace'],
+  mountEmailSelect($templateEmailsSelector, {
+    ...messageSelectorOptions($templateEmailsSelector),
+    restoreOnBackspace: true,
     create: true,
     persist: false,
-    render: {
-      option_create(data, escape) {
-        return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
-      },
-    },
-    onOptionAdd(value, _data) {
-      this.$input.data('ignoreChange', value);
-    },
-    onInitialize() {
-      this.$wrapper.toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
+    onCreate(option) {
+      $templateEmailsSelector.data('ignoreChange', option.value);
     },
   });
-  $draftEmailsSelector.selectize(messageSelectorSelectizeOptions);
-  $sentEmailsSelector.selectize(messageSelectorSelectizeOptions);
+  SelectUtils.widget($templateEmailsSelector).toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
+  mountEmailSelect($draftEmailsSelector, messageSelectorOptions($draftEmailsSelector));
+  mountEmailSelect($sentEmailsSelector, messageSelectorOptions($sentEmailsSelector));
 
-  $fileAttachmentsSelector.add($eventAttachmentsSelector).selectize({
-    ...selectizeOptions,
+  mountEmailSelect($fileAttachmentsSelector.add($eventAttachmentsSelector), {
+    ...multiSelectOptions,
     closeAfterSelect: false,
-    onDropdownOpen() {
+    onOpen() {
       $composerPanel.stop().animate({
         scrollTop: $composerPanel.prop('scrollHeight'),
       }, 2000);
@@ -976,6 +959,7 @@ const emailFormCompositionHandlers = (
                 // replace the entire tab.
                 $.fn.cafevTooltip.remove();
                 WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
+                destroyMountedSelects($panelHolder[0]);
                 $panelHolder.html(requestData.elementData! as string);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
@@ -1057,12 +1041,14 @@ const emailFormCompositionHandlers = (
 
                 // replace the entire composer tab
                 WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
+                destroyMountedSelects($panelHolder[0]);
                 $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
 
                 // replace the recipients tab as well ...
                 const rcptPanelHolder = $dialogHolder.find('div#emailformrecipients');
+                destroyMountedSelects(rcptPanelHolder[0]);
                 rcptPanelHolder.html(requestData.recipientsForm!);
                 const $rcptFieldSet = $form.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
@@ -1094,12 +1080,14 @@ const emailFormCompositionHandlers = (
 
                 // replace the entire composer tab
                 WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
+                destroyMountedSelects($panelHolder[0]);
                 $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
 
                 // replace the recipients tab ...
                 const rcptPanelHolder = $dialogHolder.find('div#emailformrecipients');
+                destroyMountedSelects(rcptPanelHolder[0]);
                 rcptPanelHolder.html(requestData.recipientsForm!);
                 const $rcptFieldSet = $form.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
@@ -2272,55 +2260,17 @@ const emailFormCompositionHandlers = (
 
           const freeFormLabel = t(appName, 'Form Input');
 
+          let $addressBookSelect: JQuery<HTMLSelectElement>;
           selectPopup(data.contents, {
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
-            selectize: {
-              openOnFocus: selectizeOpenOnFocus,
-              plugins: ['remove_button', 'drag_drop', 'restore_on_backspace'],
-              createOnBlur: true,
-              persist: true,
-              // compare with pme.ts
-              valueField: 'email',
-              labelField: 'label',
-              searchField: ['email', 'label'],
-              lockOptgroupOrder: true,
-              create(input, setterCallback) {
-                // eslint-disable-next-line @typescript-eslint/no-this-alias
-                const selectize = this;
-                $.post(generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.EMAIL}`), {
-                  failure: 'error',
-                  [pmeData('email')]: input,
-                })
-                  .fail(function(xhr, status, errorThrown) {
-                    Ajax.handleError(xhr, status, errorThrown);
-                    setterCallback(false);
-                  })
-                  .done(function(data) {
-                    if (!data || !data.email) {
-                      setterCallback(false);
-                    }
-                    const optgroup = freeFormLabel;
-                    data.optgroup = optgroup;
-                    if (selectize.optgroups[optgroup] === undefined) {
-                      selectize.registerOptionGroup({
-                        $order: 1,
-                        label: data.optgroup,
-                        value: data.optgroup,
-                        disable: false,
-                      });
-                    }
-                    const email = data.email;
-                    data.label = data.details[email] ? `${data.details[email]} <${email}>` : email;
-                    setterCallback(data);
-                    console.info('EMAIL OPTION DATA', { data, all: selectize.options });
-                    selectize
-                      .$input
-                      .closest('.ui-dialog.address-book-emails')
-                      .find('button.save-contacts').prop('disabled', false);
-                  });
-              },
-            },
+            select: addressBookSelectOptions(
+              `${validationEndPoint}/${EnumMusicianValidationTopic.EMAIL}`,
+              pmeData('email'),
+              freeFormLabel,
+              () => $addressBookSelect.closest('.ui-dialog')
+                .find('button.save-contacts').prop('disabled', false),
+            ),
             buttons: [
               {
                 // "text" is documented, however, this is just the
@@ -2336,21 +2286,13 @@ const emailFormCompositionHandlers = (
                 ),
                 click() {
                   const $dialogHolder = $(this);
-                  const $selectElement = $dialogHolder.find('select');
-                  const selectize = SelectUtils.getSelectize<HTMLSelectElement, string, { email: string; optgroup: string; label: string }>($selectElement)!;
+                  const $selectElement = $dialogHolder.find<HTMLSelectElement>('select');
                   console.info('SELECTED EMAIL OPTIONS', SelectUtils.selectedOptions($selectElement));
                   const selectedValues = SelectUtils.selected($selectElement)!;
-                  const selectedFreeForm = selectize.items
-                    .map((email) => selectize.options[email])
-                    .filter((option) => option.optgroup === freeFormLabel)
-                    .map((option) => {
-                      console.info('EMAIL OPTION', option);
-                      return {
-                        value: option.email,
-                        html: option.label,
-                        text: option.label,
-                      };
-                    });
+                  const selectedFreeForm = selectedFreeFormContacts(
+                    $selectElement[0],
+                    Array.isArray(selectedValues) ? selectedValues : [selectedValues],
+                  );
                   const innerPost = { addressBookCandidates: selectedFreeForm };
                   $.post(generateEmailFormUrl(`${END_POINT_CONTACTS}/${EnumEmailFormContactsOperation.SAVE}`), innerPost)
                     .fail(ajaxHandleError)
@@ -2364,10 +2306,7 @@ const emailFormCompositionHandlers = (
                           const newOptions = data.contents;
                           SelectUtils.replaceOptions($selectElement, newOptions);
                           SelectUtils.selected($selectElement, selectedValues);
-                          selectize!
-                            .$input
-                            .closest('.ui-dialog.address-book-emails')
-                            .find('button.save-contacts').prop('disabled', true);
+                          $dialogHolder.dialog('widget').find('button.save-contacts').prop('disabled', true);
                         });
                     });
                 },
@@ -2380,11 +2319,15 @@ const emailFormCompositionHandlers = (
               of: $self,
             },
             openCallback($selectElement) {
+              $addressBookSelect = $selectElement;
               cleanup();
               if (SelectUtils.children($selectElement).filter('optgroup.free-form').length === 0) {
                 $(this).dialog('widget')
                   .find('button.save-contacts').prop('disabled', true);
               }
+            },
+            closeCallback() {
+              cleanup();
             },
             saveCallback(_$selectElement, selectedOptions) {
               let recipients = '';
@@ -2706,6 +2649,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
 
           $.fn.cafevTooltip.remove();
           WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
+          destroyMountedSelects($dialogHolder[0]);
           // $dialogHolder.dialog('close');
           $dialogHolder.dialog('destroy').remove();
 

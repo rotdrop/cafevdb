@@ -12,6 +12,7 @@ import * as SelectUtils from '~/src/app/select-utils.ts';
 import '~/src/app/jquery-readonly.ts';
 
 interface FakeMountable {
+  setRequired: ReturnType<typeof vi.fn>;
   props: PmeSelectComponentProps;
   element?: HTMLElement;
   parent?: HTMLElement;
@@ -54,6 +55,7 @@ vi.mock('~/src/mountable-component-names.ts', () => ({
 function createMountable(props: PmeSelectComponentProps): FakeMountable {
   let selected = props.modelValue ?? null;
   const instance: FakeMountable = {
+    setRequired: vi.fn(),
     props,
     element: undefined as HTMLElement|undefined,
     parent: undefined as HTMLElement|undefined,
@@ -106,7 +108,8 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
 
 mockBus.__createMountable = createMountable;
 
-import { mountSelectize } from '~/src/services/mountable-select.ts';
+import { getMountedSelectize, mountSelectize } from '~/src/services/mountable-select.ts';
+import { destroyMountedSelects, mountedSelectScope } from '~/src/services/mounted-select-scope.ts';
 
 const makeSelect = (html: string) => {
   const container = document.createElement('div');
@@ -126,6 +129,83 @@ afterEach(() => {
 });
 
 describe('mountSelectize', () => {
+  it('updates callback-visible values before notification and native change handlers', async () => {
+    const container = makeSelect('<form><select name="field" class="selectize"><option value="a">A</option><option value="b">B</option></select></form>');
+    const select = container.querySelector('select')!;
+    const form = container.querySelector('form')!;
+    const events: string[] = [];
+    const [service] = await mountSelectize(select, {
+      onChange(value) {
+        expect(service.getValue()).toBe(value);
+        expect(new FormData(form).get('field')).toBe(value);
+        events.push('callback');
+      },
+    });
+    select.addEventListener('change', () => { events.push('native'); });
+    mountables[0].setValue('b');
+    expect(events).toEqual(['callback', 'native']);
+    service.setValue('a', true);
+    expect(events).toEqual(['callback', 'native']);
+  });
+
+  it('mirrors validated free-form contacts into their native optgroup', async () => {
+    const container = makeSelect('<select class="selectize" multiple></select>');
+    const select = container.querySelector('select')!;
+    const [service] = await mountSelectize(select, {
+      persist: true,
+      groups: [{ value: 'free-form', label: 'Form Input' }],
+    });
+    mountables[0].props.options.push({ value: 'new@example.org', label: 'New', groups: ['free-form'] });
+    mountables[0].setValue(['new@example.org']);
+    const group = select.querySelector('optgroup')!;
+    expect(group.dataset.groupId).toBe('free-form');
+    expect(group.label).toBe('Form Input');
+    expect(group.querySelector('option')!.selected).toBe(true);
+    service.refresh();
+    expect(mountables[0].setOptions).toHaveBeenLastCalledWith(
+      expect.arrayContaining([expect.objectContaining({ value: 'new@example.org', groups: ['free-form'] })]),
+      [{ value: 'free-form', label: 'Form Input', disabled: false }],
+    );
+  });
+
+  it('preserves pending and dynamic required overrides', async () => {
+    const container = makeSelect('<select class="selectize" required><option>A</option></select>');
+    const select = container.querySelector('select')!;
+    const scope = mountedSelectScope(container);
+    const pending = scope.mount(select);
+    getMountedSelectize(select)!.setRequired(false);
+    const service = await pending;
+    expect(select.required).toBe(false);
+    expect(mountables[0].setRequired).toHaveBeenLastCalledWith(false);
+    service.setRequired(true);
+    expect(select.required).toBe(false);
+    expect(mountables[0].setRequired).toHaveBeenLastCalledWith(true);
+    destroyMountedSelects(container);
+  });
+
+  it('destroys scoped pending mounts before replacing their container', async () => {
+    const container = makeSelect('<select class="selectize" name="field"><option>A</option></select>');
+    const select = container.querySelector('select')!;
+    const pending = mountedSelectScope(container).mount(select);
+    destroyMountedSelects(container);
+    container.replaceChildren();
+    await pending;
+    expect(container.children).toHaveLength(0);
+    expect(select.hidden).toBe(false);
+    expect(select.name).toBe('field');
+  });
+
+  it('does not dispose a replacement scope when an old scope is destroyed twice', async () => {
+    const container = makeSelect('<select class="selectize"><option>A</option></select>');
+    const old = mountedSelectScope(container);
+    await old.mount(container.querySelector('select')!);
+    old.destroy();
+    const replacement = mountedSelectScope(container);
+    old.destroy();
+    expect(mountedSelectScope(container)).toBe(replacement);
+    replacement.destroy();
+  });
+
   it('mounts a native select through the Vue event bus and preserves form values', async () => {
     const container = makeSelect(`
       <form>

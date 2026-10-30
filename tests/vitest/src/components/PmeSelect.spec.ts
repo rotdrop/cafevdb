@@ -4,7 +4,7 @@
  */
 
 import type { VueWrapper } from '@vue/test-utils';
-import type { PmeSelectProps, PmeSelectValue } from '~/src/types/pme-select.ts';
+import type { PmeSelectComponentProps, PmeSelectOption, PmeSelectValue } from '~/src/types/pme-select.ts';
 
 import axios from '@nextcloud/axios';
 import { flushPromises, mount } from '@vue/test-utils';
@@ -41,7 +41,7 @@ const emailCreation = {
 };
 
 const wrappers: VueWrapper[] = [];
-const render = (props: Partial<PmeSelectProps> & { 'onUpdate:modelValue'?: (value: PmeSelectValue) => void } = {}) => {
+const render = (props: Partial<PmeSelectComponentProps> & { 'onUpdate:modelValue'?: (value: PmeSelectValue) => void } = {}) => {
   const wrapper = mount(PmeSelect, {
     attachTo: document.body,
     props: { options, groups, label: 'Instruments', ...props },
@@ -264,6 +264,74 @@ describe('PmeSelect', () => {
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.checkValidity()).toBe(false);
     await choose(wrapper, 'Violin');
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.checkValidity()).toBe(true);
+  });
+
+  it('updates both native required and custom validity through setRequired', async () => {
+    const wrapper = render({ required: true });
+    const input = wrapper.get<HTMLInputElement>('input[role="combobox"]').element;
+    expect(input.checkValidity()).toBe(false);
+    wrapper.vm.setRequired(false);
+    await wrapper.vm.$nextTick();
+    expect(input.required).toBe(false);
+    expect(input.checkValidity()).toBe(true);
+    wrapper.vm.setRequired(true);
+    await wrapper.vm.$nextTick();
+    expect(input.required).toBe(true);
+    expect(input.checkValidity()).toBe(false);
+  });
+
+  it.each([false, true])('honors closeAfterSelect=%s for multiple selection', async (closeAfterSelect) => {
+    const wrapper = render({ multiple: true, closeAfterSelect });
+    await choose(wrapper, 'Violin');
+    expect(wrapper.get('input[role="combobox"]').attributes('aria-expanded')).toBe(String(!closeAfterSelect));
+  });
+
+  it('searches option values as well as labels and preserves plain metadata titles', async () => {
+    const wrapper = render({
+      options: [{ value: 'person@example.org', label: 'Person', title: 'Subject: Example\nCreated yesterday' }],
+    });
+    await wrapper.get('input[role="combobox"]').setValue('example.org');
+    await open(wrapper);
+    const choice = wrapper.findAll('[role="option"]').find((option) => option.text() === 'Person')!;
+    expect(choice.get('span[title]').attributes('title')).toBe('Subject: Example\nCreated yesterday');
+  });
+
+  it.each([false, true])('restores a removed label to the search when multiple=%s', async (multiple) => {
+    const wrapper = render({ multiple, modelValue: multiple ? ['violin'] : 'violin', restoreOnBackspace: true });
+    const input = wrapper.get<HTMLInputElement>('input[role="combobox"]');
+    await input.trigger('keydown', { key: 'Backspace', keyCode: 8 });
+    expect(wrapper.vm.getValue()).toEqual(multiple ? [] : null);
+    expect(input.element.value).toBe('Violin');
+  });
+
+  it('reports asynchronous creation before selection change and retains optgroup data', async () => {
+    const events: string[] = [];
+    const option = { value: 'new@example.org', label: 'New Person', groups: ['free-form'] };
+    const resolve = vi.fn(async () => option);
+    const wrapper = render({
+      create: { resolve },
+      onCreate: () => { events.push('create'); },
+      onChange: () => { events.push('change'); },
+    });
+    expect(await wrapper.vm.createItem('new')).toBe(true);
+    expect(resolve).toHaveBeenCalledWith('new', expect.any(AbortSignal));
+    expect(wrapper.emitted('create')).toEqual([[option]]);
+    expect(events).toEqual(['create', 'change']);
+    expect(wrapper.vm.getValue()).toBe(option.value);
+    expect(wrapper.vm.getOptions()).toContainEqual(option);
+  });
+
+  it('cancels asynchronous resolvers without applying their stale result', async () => {
+    let finish!: (option: PmeSelectOption) => void;
+    const resolve = vi.fn((_input: string, _signal: AbortSignal) => new Promise<PmeSelectOption>((done) => { finish = done; }));
+    const wrapper = render({ create: { resolve } });
+    const pending = wrapper.vm.createItem('new');
+    wrapper.vm.setValue('violin');
+    expect(resolve.mock.calls[0][1].aborted).toBe(true);
+    finish({ value: 'new', label: 'New' });
+    expect(await pending).toBe(false);
+    expect(wrapper.vm.getValue()).toBe('violin');
+    expect(wrapper.emitted('create')).toBeUndefined();
   });
 
   it('creates local options from the dropdown and removes nonpersistent options after deselection', async () => {

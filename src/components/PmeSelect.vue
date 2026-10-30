@@ -17,7 +17,7 @@
               :clearable="!notEmpty && !multiple"
               :clearSearchOnBlur="() => false"
               :deselectFromDropdown="false"
-              :keepOpen="multiple"
+              :keepOpen="multiple && !closeAfterSelect"
               :filterable="false"
               :selectable="isSelectable"
               :getOptionKey="getChoiceKey"
@@ -37,16 +37,15 @@
                :aria-invalid="errorMessage ? true : undefined"
                :aria-describedby="errorMessage ? `${selectId}-error` : undefined"
                autocomplete="off"
-               v-on="events"
+               v-on="{ ...events, keydown: (event: KeyboardEvent) => onKeydown(event, events) }"
                @beforeinput="creating && $event.preventDefault()"
                @blur="onBlur(events)"
-               @keydown="onKeydown($event, events)"
         >
       </template>
       <template #option="option">
         <strong v-if="option.kind === 'group'" class="pme-select__group">{{ option.label }}</strong>
         <span v-else-if="option.kind === 'create'">{{ t(appName, 'Add "{value}"', { value: option.value }) }}</span>
-        <span v-else>{{ option.label }}</span>
+        <span v-else :title="option.title">{{ option.label }}</span>
       </template>
       <template #selected-option-container="{ option }">
         <span :key="option.value"
@@ -116,7 +115,6 @@ import type {
   PmeSelectValue,
 } from '../types/pme-select.ts'
 
-import axios from '@nextcloud/axios'
 import { translate as t } from '@nextcloud/l10n'
 import {
   computed,
@@ -129,8 +127,8 @@ import {
 } from 'vue'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { appName } from '../config.ts'
+import { createRemoteSelectOption } from '../services/select-option-creation.ts'
 import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts'
-import generateAppUrl from '../toolkit/util/generate-url.ts'
 import Console from '../util/console.ts'
 
 type Choice = {
@@ -139,6 +137,7 @@ type Choice = {
   value: string
   label: string
   disabled: boolean
+  title?: string
 }
 
 const props = withDefaults(defineProps<PmeSelectProps>(), {
@@ -157,6 +156,8 @@ const props = withDefaults(defineProps<PmeSelectProps>(), {
   create: false,
   createOnBlur: false,
   persist: false,
+  closeAfterSelect: false,
+  restoreOnBackspace: false,
 })
 
 const emit = defineEmits<{
@@ -165,9 +166,12 @@ const emit = defineEmits<{
   error: [error: Error]
   open: []
   close: []
+  create: [option: PmeSelectOption]
 }>()
 
 const logger = new Console('PmeSelect')
+const suppliedRequired = ref<boolean>()
+const required = computed(() => suppliedRequired.value ?? props.required)
 const uid = useId()
 const selectId = computed(() => props.inputId || `pme-select-${uid}`)
 const searchInput = useTemplateRef('searchInput')
@@ -206,13 +210,14 @@ const optionChoice = (option: PmeSelectOption, group = ''): Choice => ({
   value: option.value,
   label: option.label,
   disabled: !!option.disabled,
+  title: option.title,
 })
 
 const searchableText = (text: string) => text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase()
 
 const choices = computed(() => {
   const words = searchableText(search.value).trim().split(/\s+/).filter(Boolean)
-  const matching = options.value.filter((option) => words.every((word) => searchableText(option.label).includes(word)))
+  const matching = options.value.filter((option) => words.every((word) => searchableText(`${option.label} ${option.value}`).includes(word)))
   const result: Choice[] = []
   const knownGroups = new Set(groups.value.map((group) => group.value))
   for (const option of matching) {
@@ -355,14 +360,16 @@ const createItem = async (input: string): Promise<boolean> => {
   errorMessage.value = ''
   try {
     let option: PmeSelectOption = { value: input, label: input }
-    if (configuration.url) {
-      const post = new URLSearchParams()
-      for (const [key, value] of Object.entries(configuration.post ?? {})) {
-        post.set(key, String(value))
+    if (configuration.resolve) {
+      option = await configuration.resolve(input, controller.signal)
+      if (!option.value?.trim() || !option.label?.trim()) {
+        throw new Error(t(appName, 'The validation response does not contain a valid option.'))
       }
-      post.set(configuration.inputField ?? 'input', input)
-      const { data } = await axios.post<unknown>(generateAppUrl(configuration.url), post, { signal: controller.signal })
-      option = readCreatedOption(data, configuration)
+    } else if (configuration.url) {
+      option = await createRemoteSelectOption(
+        { ...configuration, url: configuration.url },
+        (data) => readCreatedOption(data, configuration),
+      )(input, controller.signal)
     }
     if (controller.signal.aborted || blocked.value) {
       return false
@@ -373,6 +380,7 @@ const createItem = async (input: string): Promise<boolean> => {
     }
     if (!existing) {
       createdOptions.value.push(option)
+      emit('create', option)
     }
     updateValue(props.multiple ? [...selectedValues.value, option.value] : option.value)
     return true
@@ -410,7 +418,10 @@ const selectChoices = (value: Choice|Choice[]|null) => {
   }
 }
 
-type SearchEvents = { input: (event: { target: { value: string } }) => void }
+type SearchEvents = {
+  input: (event: { target: { value: string } }) => void
+  keydown: (event: KeyboardEvent) => void
+}
 
 const commitSearch = async (events: SearchEvents) => {
   if (await createItem(search.value)) {
@@ -426,14 +437,28 @@ const onBlur = (events: SearchEvents) => {
 
 const onKeydown = (event: KeyboardEvent, events: SearchEvents) => {
   if (event.isComposing || event.ctrlKey || event.metaKey) {
+    events.keydown(event)
     return
   }
   if (event.key === ',' && props.create) {
     event.preventDefault()
     void commitSearch(events)
-  } else if (event.key === 'Backspace' && props.multiple && !search.value && selectedValues.value.length > 0) {
+  } else if (event.key === 'Backspace' && !search.value && selectedValues.value.length > 0
+    && (props.multiple || props.restoreOnBackspace)) {
     event.preventDefault()
-    removeItem(selectedValues.value.at(-1)!)
+    const value = selectedValues.value.at(-1)!
+    if (props.restoreOnBackspace) {
+      if (!blocked.value && !creating.value && !(props.notEmpty && selectedValues.value.length === 1)) {
+        const label = options.value.find((option) => option.value === value)?.label ?? value
+        setValue(selectedValues.value.slice(0, -1))
+        events.input({ target: { value: label } })
+      }
+    } else {
+      removeItem(value)
+    }
+  }
+  if (!event.defaultPrevented) {
+    events.keydown(event)
   }
 }
 
@@ -455,12 +480,13 @@ watch(search, () => {
 watchEffect(() => {
   const validityMessage = creating.value
     ? t(appName, 'Please wait for validation to finish.')
-    : errorMessage.value || (props.required && selectedValues.value.length === 0 ? t(appName, 'Please select an item.') : '')
+    : errorMessage.value || (required.value && selectedValues.value.length === 0 ? t(appName, 'Please select an item.') : '')
   searchInput.value?.setCustomValidity(validityMessage)
 })
 onBeforeUnmount(cancelCreation)
 
 defineExpose({
+  setRequired: (value: boolean) => { suppliedRequired.value = value },
   getValue,
   getOptions: () => options.value,
   setValue,
@@ -480,6 +506,11 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
+:global(.pme-vue-select-control) {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .pme-select {
   min-width: 180px;
 

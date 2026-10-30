@@ -24,6 +24,7 @@ import {
   LEGACY_PAGE_CLEANUP,
 } from '../event-bus-events.ts';
 import { PME_SELECT } from '../mountable-component-names.ts';
+import { appendSelectOption, readSelectOptions } from './select-options.ts';
 
 export interface SelectizeAdapterOptions {
   options?: PmeSelectOption[];
@@ -41,9 +42,14 @@ export interface SelectizeAdapterOptions {
   onChange?: (value: PmeSelectValue) => void;
   onOpen?: () => void;
   onClose?: () => void;
+  onCreate?: (option: PmeSelectOption) => void;
+  groups?: PmeSelectGroup[];
+  closeAfterSelect?: boolean;
+  restoreOnBackspace?: boolean;
 }
 
 type ExposedSelect = {
+  setRequired(value: boolean): void;
   getValue(): PmeSelectValue;
   getOptions(): PmeSelectOption[];
   setValue(value: PmeSelectValue, silent?: boolean): void;
@@ -73,6 +79,7 @@ const adapterBySelect = new WeakMap<HTMLSelectElement, SelectizeService>();
 export class SelectizeService {
   private readonly originalName: string|null;
   private readonly originalRequired: boolean;
+  private required: boolean;
   private readonly originalHidden: string|null;
   private readonly originalAriaHidden: string|null;
   private readonly mountHost: HTMLElement;
@@ -95,6 +102,7 @@ export class SelectizeService {
     this.selectizeOptions = options;
     this.originalName = select.getAttribute('name');
     this.originalRequired = select.required;
+    this.required = select.required;
     this.originalHidden = select.getAttribute('hidden');
     this.originalAriaHidden = select.getAttribute('aria-hidden');
     this.previousValue = this.readInitialValues(options);
@@ -161,27 +169,12 @@ export class SelectizeService {
   }
 
   private optionData() {
-    const groups: PmeSelectGroup[] = [];
-    const groupIds = new Map<HTMLOptGroupElement, string>();
-    for (const [index, group] of Array.from(this.select.querySelectorAll<HTMLOptGroupElement>(':scope > optgroup')).entries()) {
-      const value = group.dataset.groupId || String(index);
-      groupIds.set(group, value);
-      groups.push({
-        value,
-        label: group.label,
-        disabled: group.disabled,
-      });
+    const { options, groups } = readSelectOptions(this.select);
+    for (const group of this.selectizeOptions.groups ?? []) {
+      if (!groups.some((existing) => existing.value === group.value)) {
+        groups.push(group);
+      }
     }
-    const options = Array.from(this.select.options, (option) => {
-      const group = option.parentElement instanceof HTMLOptGroupElement ? option.parentElement : undefined;
-      const groupValue = group && groupIds.get(group);
-      return {
-        value: option.value,
-        label: option.label || option.textContent || option.value,
-        groups: groupValue === undefined ? [] : [groupValue],
-        disabled: option.disabled,
-      };
-    });
     return { options, groups };
   }
 
@@ -223,12 +216,15 @@ export class SelectizeService {
       multiple: this.select.multiple,
       disabled: false,
       readonly: false,
-      required: this.originalRequired,
+      required: this.required,
       notEmpty: this.select.classList.contains('not-empty'),
       sortable: plugins.some((plugin) => (typeof plugin === 'string' ? plugin : plugin.name) === 'drag_drop'),
       create: this.getCreateOptions(),
       createOnBlur: config.createOnBlur ?? false,
       persist: config.persist ?? false,
+      closeAfterSelect: config.closeAfterSelect ?? false,
+      restoreOnBackspace: config.restoreOnBackspace ?? false,
+      onCreate: config.onCreate,
       onChange: this.handleComponentChange,
       onOpen: config.onOpen,
       onClose: config.onClose,
@@ -239,15 +235,13 @@ export class SelectizeService {
     const values = value === null ? [] : Array.isArray(value) ? value : [value];
     for (const option of this.component?.getOptions() ?? []) {
       if (values.includes(option.value) && !this.findOption(option.value)) {
-        const nativeOption = new Option(option.label, option.value);
-        this.select.add(nativeOption);
+        const nativeOption = appendSelectOption(this.select, option, this.optionData().groups);
         if (!this.selectizeOptions.persist && !this.selectizeOptions.options?.some((configured) => configured.value === option.value)) {
           this.transientOptions.add(nativeOption);
         }
       }
     }
     this.applyValue(value, false, false);
-    this.selectizeOptions.onChange?.(value);
   };
 
   private async mountComponent() {
@@ -320,6 +314,7 @@ export class SelectizeService {
       }
       this.writeFormValues(normalized);
       if (dispatchChange && changed) {
+        this.selectizeOptions.onChange?.(this.getValue());
         this.select.dispatchEvent(new Event('change', { bubbles: true }));
       }
     } finally {
@@ -389,6 +384,11 @@ export class SelectizeService {
 
   /** Synchronize interaction state without replacing options or selection. */
   refreshProperties() {
+    if (this.select.required) {
+      this.required = true;
+      this.select.required = false;
+    }
+    this.component?.setRequired(this.required);
     if (this.select.disabled) {
       this.component?.disable();
     } else {
@@ -410,6 +410,12 @@ export class SelectizeService {
 
   focus() {
     this.component?.focus();
+  }
+
+  setRequired(required: boolean) {
+    this.required = required;
+    this.select.required = false;
+    this.component?.setRequired(required);
   }
 
   lock() {

@@ -10,6 +10,7 @@ export interface PmeSelectOption {
   label: string;
   groups?: string[];
   disabled?: boolean;
+  title?: string;
 }
 
 export interface PmeSelectGroup {
@@ -25,6 +26,7 @@ export interface PmeSelectCreateOptions {
   inputField?: string;
   valueField?: string;
   labelField?: string;
+  resolve?: (input: string, signal: AbortSignal) => Promise<PmeSelectOption>;
 }
 
 export interface PmeSelectProps {
@@ -48,10 +50,13 @@ export interface PmeSelectProps {
   create?: boolean|PmeSelectCreateOptions;
   createOnBlur?: boolean;
   persist?: boolean;
+  closeAfterSelect?: boolean;
+  restoreOnBackspace?: boolean;
 }
 
 export interface PmeSelectComponentProps extends PmeSelectProps {
   onChange?: (value: PmeSelectValue) => void;
   onOpen?: () => void;
   onClose?: () => void;
+  onCreate?: (option: PmeSelectOption) => void;
 }

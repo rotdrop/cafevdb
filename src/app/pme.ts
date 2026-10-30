@@ -106,14 +106,10 @@ import {
 import { templateFromRenderer } from './template-renderer.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-import 'selectize/dist/css/selectize.bootstrap.css';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import { loadingCssClass } from 'variables.module.scss';
-
-require('cafevdb-selectize.scss');
-
 import 'pme-table.scss';
+import { loadingCssClass } from 'variables.module.scss';
 
 export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
   callback(
