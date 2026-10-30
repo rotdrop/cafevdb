@@ -63,6 +63,28 @@ $scopedNamespaces = [
   \Ramsey\Uuid::class,
 ];
 
+// Bootstrap the entity manager in the current process, mimicking what
+// orm-cmd.php does.
+$createEntityManager = function() use ($appDir): object {
+  $cafevDbUser = getenv('CAFEVDB_USER');
+  if ($cafevDbUser === false) {
+    $cafevDbUser = posix_getpwuid(posix_getuid())['name'];
+  }
+  $cafevDbPassword = @file_get_contents($appDir . '/.clipassword');
+  if (empty($cafevDbPassword)) {
+    throw new UnexpectedValueException('Unable to obtain database credentials from ' . $appDir . '/.clipassword');
+  }
+
+  $user = \OC::$server->get(\OCP\IUserManager::class)->get($cafevDbUser);
+  \OC::$server->get(\OCP\IUserSession::class)->setUser($user);
+  \OC::$server->get(\OCA\CAFEVDB\Service\EncryptionService::class)->bind($cafevDbUser, $cafevDbPassword);
+
+  $entityManager = \OCP\Server::get(\OCA\CAFEVDB\Database\EntityManager::class);
+  $entityManager->decorateClassMetadata(false);
+
+  return $entityManager;
+};
+
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   collectors: [
     DTOCollector::class,
@@ -70,6 +92,7 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
     DatabaseEntityCollector::class,
   ],
   metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
+  entityManagerFactory: $createEntityManager,
   devScriptsFolder: __DIR__,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
