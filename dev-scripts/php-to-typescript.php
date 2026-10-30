@@ -31,11 +31,10 @@ $appDir = realpath(__DIR__) . '/..';
 define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
 
 try {
-  $autoloader = require_once(__DIR__ . '/lib/scripts/vendor/autoload.php');
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once($appDir . '/vendor/autoload.php');
   require_once($appDir . '/vendor-wrapped/autoload.php');
-  require_once($appDir . '/vendor-bin/php-to-typescript/vendor/autoload.php');
+  $autoloader = require_once($appDir . '/vendor-bin/php-to-typescript/vendor/autoload.php');
 } catch (\Throwable $t) {
   fwrite(STDERR, 'Composer autoloads not set up: ' . $t->getMessage() . PHP_EOL);
   exit(1);
@@ -48,23 +47,7 @@ use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
-use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector as BaseDTOCollector;
-
-// The upstream DTO collector expects the toolkit at OCA\<App>\Toolkit, however
-// the toolkit lives in the scoped namespace OCA\<App>\Wrapped\OCA\RotDrop\Toolkit.
-class WrappedToolkitDTOCollector extends BaseDTOCollector
-{
-  protected function shouldCollect(ClassTypeReflector $reflector): bool
-  {
-    $transformers = array_map('get_class', $this->config->getTransformers());
-    $hasTransformer = array_filter(
-      $transformers,
-      fn(string $transformer) => $transformer === DtoTransformer::class || is_subclass_of($transformer, DtoTransformer::class),
-    ) !== [];
-
-    return $hasTransformer && $reflector->getReflectionClass()->isSubclassOf(AbstractDTO::class);
-  }
-}
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector;
 
 // store output of different transformers in different files
 
@@ -82,7 +65,7 @@ $scopedNamespaces = [
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   collectors: [
-    WrappedToolkitDTOCollector::class,
+    DTOCollector::class,
     EnumCollector::class,
     DatabaseEntityCollector::class,
   ],

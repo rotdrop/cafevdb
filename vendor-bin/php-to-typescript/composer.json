@@ -6,7 +6,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/rotdrop/php-to-typescript-"
+      "url": "https://github.com/rotdrop/php-to-typescript"
     },
     {
       "type": "vcs",
