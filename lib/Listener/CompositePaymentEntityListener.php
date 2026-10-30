@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment as Entity;
  */
 class CompositePaymentEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /**

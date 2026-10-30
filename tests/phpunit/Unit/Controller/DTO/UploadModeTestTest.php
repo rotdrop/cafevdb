@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Controller\DTO\UploadModeTest as TestedDTO;
 
 /** Test consistency of the enum with constants from ConfigConstants. */
 #[Attributes\CoversClass(TestedDTO::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class UploadModeTestTest extends TestCase
 {
   use TestResponseDTOTrait;

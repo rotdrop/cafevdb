@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician as MusicianEntity;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Toolkit\Service\RequestService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\RequestService;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms;
 
@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms;
  */
 class CloudUserConnectorService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const REQUIREMENTS_OK = true;
   const REQUIREMENTS_MISSING = false;

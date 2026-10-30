@@ -55,7 +55,7 @@ use OCA\CAFEVDB\Exceptions;
 class SanitizeFilenames
 {
   use AuthenticatedCommandTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\SanitizeFilenameTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

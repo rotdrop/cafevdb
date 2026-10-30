@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Controller\DTO\UploadFileData as TestedDTO;
 /** Consistency test for ValidatePhoneResponse DTO. */
 #[Attributes\CoversClass(TestedDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\UploadFileMetaData::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class UploadFileDataResponseDTOTest extends TestCase
 {
   use TestResponseDTOTrait;

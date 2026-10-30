@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 class SentEmailEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

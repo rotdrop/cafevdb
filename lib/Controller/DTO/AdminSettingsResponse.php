@@ -29,7 +29,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 /**
  * Reponse emitted by the AdminSettingsController.
  */
-class AdminSettingsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class AdminSettingsResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   public readonly ?PermanentTransientMessages $messages;
 

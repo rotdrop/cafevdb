@@ -35,14 +35,14 @@ use OCP\IL10N;
 use OCP\Cache\CappedMemoryCache;
 use OCP\Files\IRootFolder;
 
-use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppStorageDisclosure;
 
 /**
  * Some services for icons/images.
  */
 class FilesCacheService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const NODE_KEY = 'node';
   private const ENTRIES_KEY = 'entries';

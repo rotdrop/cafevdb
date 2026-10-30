@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Constants;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ConfigCheck extends AbstractPageRenderer
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /**
    * @var string

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer\Export;
 /** Enum for the supported export formats. */
 enum ExportFormat: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case EXCEL = 'excel';
   case ODS = 'ods';

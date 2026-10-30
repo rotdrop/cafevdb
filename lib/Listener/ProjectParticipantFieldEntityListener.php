@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
  */
 class ProjectParticipantFieldEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var EventsService */
   protected $eventsService;

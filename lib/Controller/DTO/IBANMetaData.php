@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO for IBAN meta-data.
  */
-class IBANMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class IBANMetaData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Controller\EnumRecryptionStatus;
 /**
  * Reponse emitted by the AdminSettingsController.
  */
-class UserRecryptionResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class UserRecryptionResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
     /** {@inheritdoc} */
   public function __construct(

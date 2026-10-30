@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Utility routines for the SealCryptor. */
 class SealService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var SymmetricCryptorInterface */
   private $dataCryptor;

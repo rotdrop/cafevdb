@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class GroupMembershipListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class, BeforeUserAddedEvent::class ];
 

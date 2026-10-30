@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  */
 enum EnumVCalendarType: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case VEVENT = 'VEVENT';
   case VTODO = 'VTODO';

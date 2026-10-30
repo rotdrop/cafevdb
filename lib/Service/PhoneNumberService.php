@@ -35,7 +35,7 @@ use libphonenumber\PhoneNumberFormat;
 class PhoneNumberService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   /** @var \libphonenumber\PhoneNumberUtil */
   private $backend = false;

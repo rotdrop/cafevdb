@@ -40,14 +40,14 @@ use OCP\Http\Client\IClientService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
 #[PhpToTypeScript\Attributes\TypeScript]
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   const ROLE = 'role';
 

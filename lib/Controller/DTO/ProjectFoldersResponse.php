@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO for fetching the project folders from the ProjectsController.
  */
-class ProjectFoldersResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ProjectFoldersResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

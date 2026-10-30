@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
  */
 class MusicianEmailAddressEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /**

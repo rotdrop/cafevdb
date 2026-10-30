@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 /**
  * DTO for an options description for a project selection.
  */
-class ProjectOption extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ProjectOption extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

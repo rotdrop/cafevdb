@@ -79,7 +79,7 @@ class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   public const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   public const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;

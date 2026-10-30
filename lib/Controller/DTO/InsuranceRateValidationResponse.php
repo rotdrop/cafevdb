@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
  */
 class InsuranceRateValidationResponse extends MessagesResponse
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   public readonly ?CarbonImmutable $date;
 

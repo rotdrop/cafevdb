@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO for the orchestra locale.
  */
-class ConfigCheckResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ConfigCheckResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

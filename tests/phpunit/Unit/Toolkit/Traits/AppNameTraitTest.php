@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Traits\AppNameTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\AppNameTrait;
 
 /**
  * Just used in order to instantiate a trait for a test. Note that in this
@@ -45,8 +45,8 @@ class TestAppNameTraitClass
 
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversTrait(AppNameTrait::class)]
-#[Attributes\CoversMethod(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::class, 'getAppInfoAppName')]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::class)]
+#[Attributes\CoversMethod(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppInfoService::class, 'getAppInfoAppName')]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppInfoService::class)]
 class AppNameTraitTest extends TestCase
 {
   /** @return void */

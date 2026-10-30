@@ -298,7 +298,7 @@ describe('Document-template file controls', () => {
 
   it('opens the native file chooser from the upload button and from the empty field', async () => {
     const wrapper = renderFile();
-    const click = vi.spyOn(wrapper.get('input[type="file"]').element, 'click');
+    const click = vi.spyOn(wrapper.get<HTMLInputElement>('input[type="file"]').element, 'click');
     await wrapper.get('button[aria-label="Upload a document template from your computer or mobile."]').trigger('click');
     await wrapper.get('input:not([type="file"])').trigger('click');
     await wrapper.get('input:not([type="file"])').trigger('keydown', { key: 'Enter' });

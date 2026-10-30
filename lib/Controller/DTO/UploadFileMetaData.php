@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
 /**
  * DTO document storage file uploads meta data.
  */
-class UploadFileMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class UploadFileMetaData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

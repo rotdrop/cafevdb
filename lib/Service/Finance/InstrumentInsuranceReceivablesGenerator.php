@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage;
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
  */
 class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BracedPlaceholderTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BracedPlaceholderTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 

@@ -38,7 +38,7 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
 /** Example enum for testing. */
 enum TranslatableEnumExample: string

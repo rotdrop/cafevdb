@@ -28,7 +28,7 @@ use \OCA\CAFEVDB\Common\Uuid;
 use \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /** Default-value helper DTO fro ParticipantFieldPropertyGetResponse. */
-class ParticipantFieldPropertyGetDefaultValue extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class ParticipantFieldPropertyGetDefaultValue extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -53,8 +53,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 #[PhpToTypeScript\Attributes\TypeScript]
 class UploadsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   public const END_POINT_MOVE = 'upload/move';
   public const END_POINT_STASH = 'upload/stash';

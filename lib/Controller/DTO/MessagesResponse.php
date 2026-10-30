@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * Base DTO containing messages.
  */
-class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class MessagesResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

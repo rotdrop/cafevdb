@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic as Topic;
   'Operation extends ' . Operation::class . ' = ' . Operation::class,
   'Topic extends ' . Topic::class . ' = ' . Topic::class,
 ])]
-class EmailFormComposerResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class EmailFormComposerResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

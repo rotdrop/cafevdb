@@ -43,7 +43,7 @@ use PHPUnit\Framework\TestCase;
 use OCP\AppFramework\Utility\ITimeFactory;
 
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon as WrappedCarbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as WrappedCarbonImmutable;
 
@@ -62,7 +62,7 @@ class TestClass
 #[Attributes\CoversTrait(DateTimeTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication::class)]
 class DateTimeTraitTest extends TestCase
 {
   private const DATE_TIME_CLASSES = [

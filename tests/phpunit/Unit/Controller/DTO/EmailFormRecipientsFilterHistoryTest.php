@@ -41,7 +41,7 @@ use OCA\CAFEVDB\EmailForm\ComposerInputNames;
 
 /** Test consistency. */
 #[Attributes\CoversClass(TestedDTO::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class EmailFormRecipientsFilterHistoryTest extends TestCase
 {
   use TestDTOTrait;

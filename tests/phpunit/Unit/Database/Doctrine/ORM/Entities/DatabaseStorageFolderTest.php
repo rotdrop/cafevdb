@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Toolkit;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit;
 
 /** Test aspects of the DatabaseStorageFolder entity. */
 #[Attributes\CoversClass(Entities\DatabaseStorageDirEntry::class)]

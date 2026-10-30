@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Common\Uuid;
 /**
  * DTO for the event matrix events.
  */
-class EventMatrixEvent extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class EventMatrixEvent extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   public readonly ?CarbonImmutable $deleted;
   public readonly CarbonImmutable $seriesStart;

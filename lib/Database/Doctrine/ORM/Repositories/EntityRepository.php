@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 /** Base class for all of our repositories. */
-class EntityRepository extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntityRepository
+class EntityRepository extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntityRepository
 {
   /** {@inheritdoc} */
   public function __construct(

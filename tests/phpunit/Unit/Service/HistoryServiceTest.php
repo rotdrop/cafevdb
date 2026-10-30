@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\CoversClass(HistoryService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication::class)]
 class HistoryServiceTest extends TestCase
 {
   private HistoryService $service;

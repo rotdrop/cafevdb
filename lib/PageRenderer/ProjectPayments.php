@@ -61,7 +61,7 @@ class ProjectPayments extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\QueryFieldTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
   public const TEMPLATE = EnumTemplate::PROJECT_PAYMENTS->value;

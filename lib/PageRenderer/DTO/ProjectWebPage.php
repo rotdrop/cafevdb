@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\PageRenderer\DTO;
  *
  * @todo This should inherit from the Redaxo app.
  */
-class ProjectWebPage extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class ProjectWebPage extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

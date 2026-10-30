@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 use \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 
 /** DTO modelling the return-value of GnuCashConnectorService::generateAccountsAutocompleteData(). */
-class GnuCashAccountsAutocompleteData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class GnuCashAccountsAutocompleteData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

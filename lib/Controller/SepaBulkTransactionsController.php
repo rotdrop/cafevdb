@@ -55,7 +55,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class SepaBulkTransactionsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 

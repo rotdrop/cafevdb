@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO document storage file uploads meta data.
  */
-class BlogResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class BlogResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

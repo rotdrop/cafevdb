@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\Direction;
 #[TypeScript(options: ['nativeEnums' => true])]
 enum EnumMigrationDirection: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case UP = Direction::UP;
   case DOWN = Direction::DOWN;

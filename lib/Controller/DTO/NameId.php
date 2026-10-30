@@ -30,7 +30,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  * DTO for lazy decryption endpoint.
  */
 #[TSAttributes\InlineTypeScriptType]
-class NameId extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class NameId extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

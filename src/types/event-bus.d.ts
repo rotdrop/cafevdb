@@ -27,7 +27,7 @@
 
 // import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { jqXHR } from '@types/jquery/misc.d.ts';
-import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { EntityMap } from '../../build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type { GlobalState } from '../app/globalstate.ts';
 import type { messages } from '../app/notification.ts';
 import type {

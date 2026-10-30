@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Controller\EnumLegacyHistoryAction;
 /**
  * DTO for the legacy page loader response.
  */
-class LegacyPageLoaderResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class LegacyPageLoaderResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

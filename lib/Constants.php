@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
-use OCA\CAFEVDB\Toolkit\Constants as ToolkitConstants;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Constants as ToolkitConstants;
 
 /** General constants for the app. */
 #[PhpToTypeScript\Attributes\TypeScript]

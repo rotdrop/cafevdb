@@ -42,12 +42,12 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 /** Test some aspects of the enums. */
 #[Attributes\CoversClass(Types\EnumAttachmentOrigin::class)]
 #[Attributes\CoversClass(Types\EnumVCalendarType::class)]
-#[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
-#[Attributes\CoversTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
+#[Attributes\CoversTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\CoversTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 class EnumTest extends TestCase
 {
   private IL10N $l;

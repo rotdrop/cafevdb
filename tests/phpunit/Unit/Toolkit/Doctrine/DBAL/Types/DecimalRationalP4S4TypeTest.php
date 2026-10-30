@@ -29,14 +29,14 @@ namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\DBAL\Types;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as NumberType;
-use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as DatabaseType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4 as NumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as DatabaseType;
 
 /** Test some aspects of quasi-fixed-point numbers. */
 #[Attributes\CoversClass(DatabaseType::class)]
 #[Attributes\CoversClass(AbstractDecimalRational::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber::class)]
 class DecimalRationalP4S4TypeTest extends TestCase
 {
   use TestDecimalRationalTypeTrait;

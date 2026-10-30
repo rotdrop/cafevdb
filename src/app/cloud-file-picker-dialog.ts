@@ -81,7 +81,7 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
 
   filePickerDialog({
     title: parameters.filePickerCaption,
-    callback(paths) {
+    callback(paths: string[]) {
       parameters.setup();
       if (!paths) {
         alertDialog(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
@@ -201,7 +201,7 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
 
         });
     },
-    multiple: parameters.multiple, // multiselect
+    multiple: parameters.multiple ? true : undefined, // multiselect
     modal: parameters.modal, // modal
     startPath: parameters.initialCloudFolder,
     allowDirectories: parameters.allowDirectories,

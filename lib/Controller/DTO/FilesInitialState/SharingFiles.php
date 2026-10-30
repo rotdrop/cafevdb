@@ -32,7 +32,7 @@ namespace OCA\CAFEVDB\Controller\DTO\FilesInitialState;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO;
 
 #[TSAttributes\InlineTypeScriptType]
 class SharingFiles extends AbstractDTO

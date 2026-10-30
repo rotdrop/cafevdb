@@ -58,7 +58,7 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
  */
 class EncryptionService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\AppConfigTrait;
   use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 

@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectRepository;
  */
 class RepositoryFactory implements RepositoryFactoryInterface
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * The list of EntityRepository instances.

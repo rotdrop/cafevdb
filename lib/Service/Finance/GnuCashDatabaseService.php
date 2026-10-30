@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
  */
 class GnuCashDatabaseService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const GNU_CASH_TABLES = [
     'accounts',

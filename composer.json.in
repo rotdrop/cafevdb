@@ -69,11 +69,6 @@
     "symfony/finder": "*",
     "vildanbina/composer-upgrader": "^1.0"
   },
-  "autoload-dev": {
-    "psr-4": {
-      "OCA\\RotDrop\\Toolkit\\": "php-toolkit"
-    }
-  },
   "autoload": {
     "files": ["lib/Common/Functions.php"]
   },

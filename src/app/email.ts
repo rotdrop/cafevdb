@@ -2160,7 +2160,6 @@ const emailFormCompositionHandlers = (
             title: t(appName, 'Select Attachment'),
             callback(paths) {
               cloudAttachment(paths, updateFileAttachments);
-              return false;
             },
             modal: true,
             multiple: true,

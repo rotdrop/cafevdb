@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Controller\EnumFileUploadMode;
  *
  * @SuppressWarnings(PHPMD.CamelCaseParameterName)
  */
-class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class UploadFileData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

@@ -38,14 +38,14 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IConfig as CloudConfig;
 use OCP\Files\Folder;
 
-use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Constants;
 
 /** Office font-file locator, in particular for PhpOffice. */
 #[PhpToTypeScript\Attributes\TypeScript]
 class FontService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const OFFICE_FONTS_FOLDER_CONFIG = 'officeFontsFolder';
 

@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSharedCalendarUri: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case CONCERTS = ConfigConstants::CONCERTS_CALENDAR_URI;
   case REHEARSALS = ConfigConstants::REHEARSALS_CALENDAR_URI;

@@ -34,7 +34,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ConfigConstants
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   public const DEBUG_GENERAL   = (1 << 0);
   public const DEBUG_QUERY     = (1 << 1);
