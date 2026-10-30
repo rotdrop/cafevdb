@@ -133,7 +133,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    */
   public function getInvoice():?Invoice
   {
-    return $this->invoice;
+    return $this->invoice ?? null;
   }
 
   /**

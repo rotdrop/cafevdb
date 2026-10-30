@@ -755,6 +755,8 @@ const emailFormCompositionHandlers = (
   const $projectId = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`);
   const $projectName = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`);
   const $bulkTransactionId = $formData.find(`input[name="${ComposerCgiKeys.BULK_TRANSACTION_ID}"]`);
+  const $donationReceiptId = $formData.find(`input[name="${ComposerCgiKeys.DONATION_RECEIPT_ID}"]`);
+  const $invoiceId = $formData.find(`input[name="${ComposerCgiKeys.INVOICE_ID}"]`);
   const $debugOutput = $form.find('#emailformdebug');
   const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector') as JQuery<HTMLSelectElement>;
   const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector') as JQuery<HTMLSelectElement>;
@@ -1057,6 +1059,8 @@ const emailFormCompositionHandlers = (
                 projectId(requestData.projectId);
                 projectName(requestData.projectName);
                 bulkTransactionId(requestData.bulkTransactionId);
+                $donationReceiptId.val(requestData.donationReceiptId ?? 0);
+                $invoiceId.val(requestData.invoiceId ?? 0);
 
                 // Make the debug output less verbose
                 delete requestData.composerForm;
