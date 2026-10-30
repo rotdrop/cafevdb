@@ -1,9 +1,3 @@
-[submodule "3rdparty/php-openssl-cryptor"]
-	path = 3rdparty/php-openssl-cryptor
-	url = https://github.com/ioncube/php-openssl-cryptor.git
-[submodule "3rdparty/timepicker"]
-	path = 3rdparty/timepicker
-	url = https://github.com/fgelinas/timepicker.git
 [submodule "dev-scripts/MakeHelp"]
 	path = dev-scripts/MakeHelp
 	url = https://github.com/mrdor44/MakeHelp.git
@@ -24,9 +18,6 @@
 [submodule "3rdparty/doctrine-orm"]
 	path = 3rdparty/doctrine-orm
 	url = git@github.com:rotdrop/orm.git
-[submodule "3rdparty/pear/mail"]
-	path = 3rdparty/pear/mail
-	url = git@github.com:rotdrop/Mail.git
 [submodule "3rdparty/selectize"]
 	path = 3rdparty/selectize
 	url = git@github.com:rotdrop/selectize.js.git
