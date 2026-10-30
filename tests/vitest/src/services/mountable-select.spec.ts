@@ -37,12 +37,18 @@ interface FakeMountable {
 }
 
 const mountables: FakeMountable[] = [];
-type MockBus = typeof globalThis & {
-  __mountableSubscriptions: Map<string, () => void>;
-  __createMountable: (props: PmeSelectComponentProps) => FakeMountable;
-};
-const mockBus = globalThis as MockBus;
-const subscriptions = mockBus.__mountableSubscriptions;
+const { subscriptions, createComponent } = vi.hoisted(() => ({
+  subscriptions: new Map<string, () => void>(),
+  createComponent: vi.fn<(props: PmeSelectComponentProps) => FakeMountable>(),
+}));
+
+vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
+  subscribe: (event: string, callback: () => void) => {
+    subscriptions.set(event, callback);
+  },
+  awaitEmit: async (_event: string, payload: { propsData: PmeSelectComponentProps }) =>
+    createComponent(payload.propsData),
+}));
 
 vi.mock('~/src/event-bus-events.ts', () => ({
   GET_VUE_COMPONENT: 'get-vue-component',
@@ -106,7 +112,7 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
   return instance;
 }
 
-mockBus.__createMountable = createMountable;
+createComponent.mockImplementation(createMountable);
 
 import { getMountedSelectize, mountSelectize } from '~/src/services/mountable-select.ts';
 import { destroyMountedSelects, mountedSelectScope } from '~/src/services/mounted-select-scope.ts';
