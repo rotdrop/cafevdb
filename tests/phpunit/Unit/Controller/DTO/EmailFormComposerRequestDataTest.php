@@ -62,4 +62,19 @@ class EmailFormComposerRequestDataTest extends TestCase
       Controller\EnumEmailFormComposerTopic::UNSPECIFIC,
     );
   }
+
+  /** @return void */
+  public function testDocumentContextRoundTrip(): void
+  {
+    $dto = TestedDTO::fromArray([
+      'operation' => Controller\EnumEmailFormComposerOperation::LOAD,
+      'topic' => Controller\EnumEmailFormComposerTopic::DRAFT,
+      'invoiceId' => 45,
+      'donationReceiptId' => 0,
+      'formStatus' => null,
+    ]);
+    $this->assertSame(45, $dto->invoiceId);
+    $this->assertSame(0, $dto->donationReceiptId);
+    $this->assertSame(45, $dto->toArray()['invoiceId']);
+  }
 }
