@@ -32,8 +32,10 @@ use Psr\Container\ContainerInterface;
 use rotdrop\bav\BAV;
 
 use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
+use OCA\CAFEVDB\Service\Finance\BankAgency;
 
 #[Attributes\CoversClass(BankAccountValidator::class)]
+#[Attributes\UsesClass(BankAgency::class)]
 class BankAccountValidatorTest extends TestCase
 {
   public function testIsValidBankUsesBavFacade(): void
