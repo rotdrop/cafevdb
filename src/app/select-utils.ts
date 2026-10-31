@@ -122,17 +122,19 @@ const getControlObject = function($select: JQuerySelect) {
  */
 const getChildren = function($select: JQuery<HTMLSelectElement>) {
   const selectize = getSelectize($select);
-  const $children = selectize ? selectize.revertSettings.$children : $select.children();
   if (selectize) {
+    const $children = selectize.revertSettings.$children.add($select.children());
     const values = selectize.items;
     $children.each(function() {
       const $child = $(this);
       if ($child.is('option')) {
-        $child.prop('selected', values.indexOf($child.attr('value')!));
+        $child.prop('selected', values.indexOf($child.attr('value')!) >= 0);
       }
     });
+    return $children;
+  } else {
+    return $select.children();
   }
-  return $children;
 };
 
 /**
