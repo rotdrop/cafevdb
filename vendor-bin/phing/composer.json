@@ -15,10 +15,10 @@
   "extra": {
     "patches": {
       "phing/phing": {
-        "Make it work with junit log of recent PHPUnit releases": "../../composer-patches/phing/phing/fix-junit-log-dom-parsing.patch",
-        "Do not use underscores in file-names, xslt does not like it": "../../composer-patches/phing/phing/replace-backslash-by-underscore-for-recent-xslt-compatibility.patch",
-        "XSLT really does not like backslashes in file-names": "../../composer-patches/phing/phing/replace-backslash-by-slash-in-package-names.patch",
-        "Fix PHP deprectations": "../../composer-patches/phing/phing/fix-php-deprectations.patch"
+        "Make it work with junit log of recent PHPUnit releases": "../../dev-scripts/lib/patches/phing/phing/fix-junit-log-dom-parsing.patch",
+        "Do not use underscores in file-names, xslt does not like it": "../../dev-scripts/lib/patches/phing/phing/replace-backslash-by-underscore-for-recent-xslt-compatibility.patch",
+        "XSLT really does not like backslashes in file-names": "../../dev-scripts/lib/patches/phing/phing/replace-backslash-by-slash-in-package-names.patch",
+        "Fix PHP deprectations": "../../dev-scripts/lib/patches/phing/phing/fix-php-deprectations.patch"
       }
     }
   }

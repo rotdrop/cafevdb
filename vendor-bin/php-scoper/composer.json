@@ -11,7 +11,7 @@
   "extra": {
     "patches": {
       "humbug/php-scoper": {
-        "Use classmap autoloading for ALL Horde packages": "../../composer-patches/humbug/php-scoper/horde-classmap.patch"
+        "Use classmap autoloading for ALL Horde packages": "../../dev-scripts/lib/patches/humbug/php-scoper/horde-classmap.patch"
       }
     }
   }

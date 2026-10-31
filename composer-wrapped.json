@@ -92,23 +92,23 @@
   "extra": {
     "patches": {
       "bytestream/horde-socket-client": {
-        "Add an optional progress callback to the Horde Socket Client": "../composer-patches/bytestream/horde-socket-client/progress-callback.patch"
+        "Add an optional progress callback to the Horde Socket Client": "../dev-scripts/lib/patches/bytestream/horde-socket-client/progress-callback.patch"
       },
       "bytestream/horde-imap-client": {
-        "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
+        "Add an optional progress callback to the Horde IMAP Client": "../dev-scripts/lib/patches/bytestream/horde-imap-client/write-progress-callback.patch"
       },
       "doctrine/dbal": {
-        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch"
+        "Fix Index::spansColumns() to also check the number of columns": "../dev-scripts/lib/patches/doctrine/dbal/fix-index-spans-columns.patch"
       },
       "doctrine/migrations": {
-        "Make the DependencyFactory extendable": "../composer-patches/doctrine/migrations/extendable-dependency-factory.patch",
-        "Handle micro-second resolution in executedAt": "../composer-patches/doctrine/migrations/handle-micro-second-resolution.patch"
+        "Make the DependencyFactory extendable": "../dev-scripts/lib/patches/doctrine/migrations/extendable-dependency-factory.patch",
+        "Handle micro-second resolution in executedAt": "../dev-scripts/lib/patches/doctrine/migrations/handle-micro-second-resolution.patch"
       },
       "nesbot/carbon": {
-        "Fix setAccessible() deprecation": "../composer-patches/nesbot/carbon/fix-set-accessible-deprecation.php"
+        "Fix setAccessible() deprecation": "../dev-scripts/lib/patches/nesbot/carbon/fix-set-accessible-deprecation.php"
       },
       "symfony/string": {
-        "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"
+        "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../dev-scripts/lib/patches/symfony/string/enhance-ascii-slugger.patch"
       }
     }
   }
