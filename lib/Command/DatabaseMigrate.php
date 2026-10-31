@@ -123,7 +123,7 @@ class DatabaseMigrate extends Command
    *
    * @return int
    */
-  protected function authenticate($input, $output): int
+  protected function authenticate(InputInterface $input, OutputInterface $output): int
   {
     $userId = $input->getOption('user');
     $passwordFile = $input->getOption('password-file');
@@ -134,6 +134,9 @@ class DatabaseMigrate extends Command
     $password = is_readable($passwordFile) ? file_get_contents($passwordFile) : false;
     $user = $this->userManager->get($userId);
     if ($password === false || $password === '' || $user === null) {
+      // TRANSLATORS: Error message being unable to validate the given userId
+      // TRANSLATORS: or get the password for that person. The userId is
+      // TRANSLATORS: sustutued for %s.
       $output->writeln('<error>' . $this->l->t('Unable to obtain the credentials for "%s".', $userId) . '</error>');
       return self::ERROR;
     }
@@ -184,6 +187,8 @@ class DatabaseMigrate extends Command
           $output->writeln($this->l->t('Would apply migration %1$s: %2$s', [ $version, $description ]));
           continue;
         }
+        // TRANSLATORS: %1$s is version number for a database migration, %2$
+        // TRANSLATORS: its description.
         $output->writeln($this->l->t('Applying migration %1$s: %2$s', [ $version, $description ]));
         $migrationsService->apply($version);
       }

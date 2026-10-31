@@ -43,8 +43,7 @@
       <a :target="appId + '-source'" :href="about.homePage">{{ about.homePage }}</a>
     </div>
     <div class="product licence">
-      {{ t(appId, 'Licenced under the') }}
-      <a target="_wikipedia" :href="wikipedia(about.licenceName)">{{ about.licence }}</a>
+      <a target="_wikipedia" :href="wikipedia(about.licenceName)">{{ t(appId, 'Licenced under the {licence}', { licence: about.licence }) }}</a>
     </div>
     <div class="product credits">
       <div class="product credits intro">

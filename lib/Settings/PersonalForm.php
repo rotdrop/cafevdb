@@ -146,7 +146,7 @@ class PersonalForm
           'name' => $aboutInfo['name'] ?? $this->appName(),
           'version' => $aboutInfo['version'] ?? '',
           'codeName' => trim($aboutInfo['codename'] ?? ''),
-          'description' => $this->l->t($aboutInfo['description'] ?? ''),
+          'description' => $aboutInfo['description'] ? $this->l->t($aboutInfo['description']) : '',
           'lifetime' => $aboutInfo['lifetime'] ?? '',
           'licence' => $licence,
           'licenceName' => $longLicence[0] ?? $licence,

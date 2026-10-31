@@ -12,3 +12,5 @@ statistics/
 dev-scripts/
 tests/
 vite.config.ts
+.vite/
+python/
