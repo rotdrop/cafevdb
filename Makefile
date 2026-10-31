@@ -6,23 +6,8 @@
 #
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
-#
-# try to parse the info.xml if we can, only then fall-back to the directory name
-#
-APP_INFO = $(SRCDIR)/appinfo/info.xml
-XPATH = $(shell which xpath 2> /dev/null)
-ifneq ($(XPATH),)
-APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
-APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
-APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
-WRAPPER_NAMESPACE_POSTFIX = $(shell $(XPATH) -q -e '/info/scopednamespace/text()' $(APP_INFO))
-else
-$(error The xpath binary could not be found, install it, e.g. libxml-xpath-perl)
-endif
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
-BUILDDIR = ./build
-ABSBUILDDIR = $(CURDIR)/build
-BUILD_TOOLS_DIR = $(BUILDDIR)/tools
+include $(DEV_LIB_DIR)/makefile/setup.mk
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
 SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
 SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
@@ -32,8 +17,6 @@ BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
-TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
-TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
 TS_PHP_SOURCE_DIRS = lib vendor-wrapped/rotdrop/nextcloud-app-toolkit/src
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)

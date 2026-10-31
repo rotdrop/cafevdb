@@ -85,16 +85,18 @@ $createEntityManager = function() use ($appDir): object {
   return $entityManager;
 };
 
+$collectors = [
+  DTOCollector::class,
+  EnumCollector::class,
+  DatabaseEntityCollector::class,
+];
+
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
-  collectors: [
-    DTOCollector::class,
-    EnumCollector::class,
-    DatabaseEntityCollector::class,
-  ],
-  metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
-  entityManagerFactory: $createEntityManager,
+  collectors: $collectors,
   devScriptsFolder: __DIR__,
+  entityManagerFactory: $createEntityManager,
   excludes: $excludes,
+  metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
   scopedNamespaces: $scopedNamespaces,
 );
 
