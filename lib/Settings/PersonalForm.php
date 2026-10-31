@@ -29,6 +29,8 @@ use OCP\App\IAppManager;
 use OCP\IInitialStateService;
 use OCP\Util as CoreUtil;
 
+use Cmixin\BusinessDay;
+
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -37,12 +39,14 @@ use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ErrorService;
+use OCA\CAFEVDB\Service\GeoCodingService;
 use Composer\Spdx\SpdxLicenses;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\WikiRPC;
 use OCA\CAFEVDB\Service\WebPagesRPC;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
@@ -74,6 +78,7 @@ class PersonalForm
     private UserStorage $userStorage,
     private CloudUserConnectorService $cloudUserService,
     private OrganizationalRolesService $roles,
+    private GeoCodingService $geoCodingService,
   ) {
     $this->l = $this->l10N();
   }
@@ -357,6 +362,13 @@ class PersonalForm
       foreach (ConfigConstants::BANK_ACCOUNT_CONFIG_KEYS as $configKey) {
         $this->parameterFromConfig($templateParameters, $configKey);
       }
+      $templateParameters['bankHolidayOptions'] = $this->bankHolidayOptions($templateParameters['appLocale']);
+      if (empty($templateParameters[ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS])) {
+        $nationalTag = locale_get_region($templateParameters['appLocale']) . '-NATIONAL';
+        if (($templateParameters['bankHolidayOptions'][0]['value'] ?? null) === $nationalTag) {
+          $templateParameters[ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS] = $nationalTag;
+        }
+      }
 
       // document templates
       if (!empty($documentTemplatesFolder) && !empty($sharedFolder)) {
@@ -511,6 +523,43 @@ class PersonalForm
     } catch (\Exception $e) {
       return $this->errorService->exceptionTemplate($e);
     }
+  }
+
+  /**
+   * @param string $locale Orchestra locale.
+   *
+   * @return array Locale-specific bank holiday regions, national holidays first.
+   */
+  private function bankHolidayOptions(string $locale):array
+  {
+    $country = locale_get_region($locale);
+    if (empty($country)) {
+      return [];
+    }
+    BusinessDay::enable(CarbonImmutable::class);
+    $regions = array_values(array_filter(
+      array_map('strtoupper', CarbonImmutable::getHolidaysAvailableRegions()),
+      fn(string $region) => str_starts_with($region, $country . '-'),
+    ));
+    $nationalTag = $country . '-NATIONAL';
+    $nationalKey = array_search($nationalTag, $regions);
+    if ($nationalKey !== false) {
+      unset($regions[$nationalKey]);
+      array_unshift($regions, $nationalTag);
+    }
+    $regionNames = [];
+    try {
+      $regionNames = $this->geoCodingService->getRegionNames($country) ?? [];
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+    return array_values(array_map(function(string $region) use ($nationalTag, $regionNames) {
+      [, $regionIso] = explode('-', $region, 2);
+      return [
+        'value' => $region,
+        'name' => $region === $nationalTag ? $this->l->t('national holidays') : ($regionNames[$regionIso] ?? $region),
+      ];
+    }, $regions));
   }
 
   /**

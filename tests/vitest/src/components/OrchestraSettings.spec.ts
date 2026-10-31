@@ -1,8 +1,11 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { h } from 'vue';
+import AdminSettingsTab from '../../../../src/components/personal-settings/AdminSettingsTab.vue';
 import DocumentTemplateFile from '../../../../src/components/personal-settings/DocumentTemplateFile.vue';
 import OrchestraSettings from '../../../../src/components/personal-settings/OrchestraSettings.vue';
+import SharingSettings from '../../../../src/components/personal-settings/SharingSettings.vue';
+import { CALENDAR_KEY_POSTFIX, CALENDARS, EVENT_DURATION_KEY } from '../../../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
 const mocks = vi.hoisted(() => ({
   settings: {} as Record<string, unknown>,
@@ -74,13 +77,22 @@ vi.mock('@nextcloud/vue', () => ({
   NcTextField: { template: '<input :value="$attrs.modelValue" />' },
   NcCheckboxRadioSwitch: {},
   NcPasswordField: {},
-  NcSelect: {},
+  NcSelect: {
+    props: ['modelValue', 'options', 'inputId'],
+    emits: ['update:modelValue'],
+    template: `<select :id="inputId" :value="modelValue?.value"
+                      @change="$emit('update:modelValue', options.find(option => option.value === $event.target.value))">
+                 <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
+               </select>`,
+  },
   NcTextArea: {},
+  NcNoteCard: {},
 }));
 vi.mock('../../../../src/components/personal-settings/WysiwygField.vue', () => ({ default: {} }));
 vi.mock('../../../../src/config.ts', () => ({ appName: 'cafevdb' }));
 vi.mock('../../../../src/app/settings-urls.ts', () => ({ getAppUrl: vi.fn() }));
-vi.mock('../../../../src/services/admin-settings.ts', () => ({ setAdminSetting: mocks.setAdminSetting }));
+vi.mock('../../../../src/services/admin-settings.ts', () => ({ getAdminSetting: vi.fn(), setAdminSetting: mocks.setAdminSetting }));
+vi.mock('../../../../src/toolkit/util/toasts.ts', () => ({ showSuccess: vi.fn() }));
 vi.mock('../../../../src/services/setting-feedback.ts', () => ({
   showSettingFeedback: mocks.showSettingFeedback,
   handleSettingError: mocks.handleSettingError,
@@ -94,6 +106,7 @@ vi.mock('../../../../src/components/personal-settings/AdminSettingsTab.vue', asy
   const { defineComponent, h } = await import('vue');
   return {
     default: defineComponent({
+      props: ['entry', 'groups'],
       setup: (_props, { slots }) => () => h('div', ['standardLetter', 'logo', 'invoice'].map((key) =>
         h('div', { 'data-template': key }, [
           slots[`control-${key}`]?.({
@@ -119,6 +132,59 @@ const render = () => mount(OrchestraSettings, {
 });
 const cloudButton = (wrapper: ReturnType<typeof render>, template = 'standardLetter') =>
   wrapper.get(`[data-template="${template}"] button[aria-label="Choose a template file from the cloud storage."]`);
+
+describe('Orchestra and sharing settings fields', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+    mocks.settings = {
+      bankAccountBankHolidays: 'DE-BW',
+      bankHolidayOptions: [
+        { value: 'DE-NATIONAL', name: 'national holidays' },
+        { value: 'DE-BW', name: 'Baden-Wuerttemberg' },
+      ],
+      eventDuration: '180',
+    };
+    mocks.setAdminSetting.mockResolvedValue({ data: { value: 'DE-NATIONAL' } });
+  });
+
+  it('renders the configured bank holiday region as a select and saves region codes', async () => {
+    const groups = render().getComponent(AdminSettingsTab).props('groups');
+    const { default: ActualAdminSettingsTab } = await vi.importActual<typeof AdminSettingsTabModule>(
+      '../../../../src/components/personal-settings/AdminSettingsTab.vue',
+    );
+    const wrapper = mount(ActualAdminSettingsTab, {
+      props: {
+        entry: { id: 'orchestra', key: 'orchestra', name: 'Orchestra', adminOnly: true, children: [] },
+        groups,
+      },
+    });
+    const select = wrapper.get<HTMLSelectElement>('#bankAccountBankHolidays');
+    expect(select.element.tagName).toBe('SELECT');
+    expect(select.element.value).toBe('DE-BW');
+    expect(select.findAll('option').map((option) => option.text())).toEqual(['national holidays', 'Baden-Wuerttemberg']);
+    await select.setValue('DE-NATIONAL');
+    await flushPromises();
+    expect(mocks.setAdminSetting).toHaveBeenCalledWith('bankAccountBankHolidays', 'DE-NATIONAL');
+    expect(select.element.value).toBe('DE-NATIONAL');
+    expect(groups.flatMap(({ fields }) => fields).some(({ key }) => key === EVENT_DURATION_KEY)).toBe(false);
+  });
+
+  it('places the numeric default duration immediately after all calendar inputs', () => {
+    const wrapper = mount(SharingSettings, {
+      props: { entry: { id: 'sharing', key: 'sharing', name: 'Sharing', adminOnly: true, children: [] } },
+    });
+    const groups = wrapper.getComponent(AdminSettingsTab).props('groups');
+    expect(groups[1].fields.map(({ key }) => key)).toEqual([
+      ...Object.values(CALENDARS).map(({ uri }) => uri + CALENDAR_KEY_POSTFIX),
+      EVENT_DURATION_KEY,
+    ]);
+    expect(groups[1].fields.at(-1)).toEqual({
+      key: EVENT_DURATION_KEY,
+      label: 'Default event duration (minutes)',
+      type: 'number',
+    });
+  });
+});
 
 describe('Orchestra document-template cloud picker', () => {
   beforeEach(() => {
