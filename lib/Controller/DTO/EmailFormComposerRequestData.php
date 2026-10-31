@@ -85,6 +85,8 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Tool
     public readonly ?string $templateMessagesSelector = null,
     public readonly ?string $draftMessagesSelector = null,
     public readonly ?string $sentMessagesSelector = null,
+    public readonly ?int $donationReceiptId = -1,
+    public readonly ?int $invoiceId = -1,
   ) {
   }
 
@@ -115,6 +117,8 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Tool
       autoSave: $autoSave ?? null,
       fileAttachments: $arachedFiles ?? null,
       bulkTransactionId: $bulkTransactionId ?? -1,
+      donationReceiptId: $donationReceiptId ?? -1,
+      invoiceId: $invoiceId ?? -1,
       composerForm: $composerForm ?? null,
       diagnostics: $diagnostics ?? [],
       draftEmailOptions: $draftEmailOptions ?? null,

@@ -188,6 +188,7 @@ const handleInvoiceEmail = async () => {
     projectId: props.projectId,
     post: {
       ...props,
+      invoiceId: props.entityId,
     },
   })
 }
