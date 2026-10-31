@@ -43,6 +43,7 @@ import 'jquery-ui/ui/unique-id';
 import 'jquery-ui/ui/widget';
 import 'jquery-ui/ui/plugin';
 import 'jquery-ui/ui/scroll-parent';
+import 'jquery-ui/ui/keycode';
 import 'jquery-ui/ui/widgets/button';
 import 'jquery-ui/ui/widgets/mouse';
 import 'jquery-ui/ui/widgets/draggable';
