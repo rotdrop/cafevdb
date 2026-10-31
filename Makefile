@@ -217,6 +217,7 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 # scoper does not rewrite the composer autoload maps, regenerate them
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+	$(call apply-scoped-autoload-patch,vendor-wrapped)
 
 vendor-wrapped/autoload.php: vendor-wrapped
 
