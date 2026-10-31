@@ -437,7 +437,18 @@
 <a name='L372'></a><a href='#L372'>372</a>
 <a name='L373'></a><a href='#L373'>373</a>
 <a name='L374'></a><a href='#L374'>374</a>
-<a name='L375'></a><a href='#L375'>375</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a>
+<a name='L380'></a><a href='#L380'>380</a>
+<a name='L381'></a><a href='#L381'>381</a>
+<a name='L382'></a><a href='#L382'>382</a>
+<a name='L383'></a><a href='#L383'>383</a>
+<a name='L384'></a><a href='#L384'>384</a>
+<a name='L385'></a><a href='#L385'>385</a>
+<a name='L386'></a><a href='#L386'>386</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">129x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -753,6 +764,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -791,7 +809,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1119,13 +1141,20 @@ const remove = <span class="fstat-no" title="function not covered" >async (t</sp
 &nbsp;
 const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Street Address'), [
+    // TRANSLATORS: STREET_ADDRESS_NAME_01
     field(STREET_ADDRESS_NAME_01, t(appId, 'Name')),
+    // TRANSLATORS: STREET_ADDRESS_NAME_02
     field(STREET_ADDRESS_NAME_02, t(appId, 'Additional name')),
+    // TRANSLATORS: STREET_ADDRESS_STREET
     field(STREET_ADDRESS_STREET, t(appId, 'Street')),
+    // TRANSLATORS: STREET_ADDRESS_HOUSE_NUMBER
     field(STREET_ADDRESS_HOUSE_NUMBER, t(appId, 'House number')),
+    // TRANSLATORS: STREET_ADDRESS_ZIP
     field(STREET_ADDRESS_ZIP, t(appId, 'ZIP')),
+    // TRANSLATORS: STREET_ADDRESS_CITY
     field(STREET_ADDRESS_CITY, t(appId, 'City')),
     {
+      // TRANSLATORS: STREET_ADDRESS_COUNTRY
       ...field(STREET_ADDRESS_COUNTRY, t(appId, 'Country'), 'select'),
       options: Object.entries(state?.localeCountryNames ?? {}).<span class="fstat-no" title="function not covered" >map(([</span>value, label]) =&gt; (<span class="cstat-no" title="statement not covered" >{ value, label }))</span>,
     },
@@ -1159,18 +1188,22 @@ const groups: AdminSettingGroup[] = [
       ['treasurer', t(appId, 'Treasurer')],
     ] as const).flatMap(([role, roleName]) =&gt; [
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}Id`, t(appId, '{role} participant', { role: roleName }), 'select'),
         heading: roleName,
         options: options(state?.executiveBoardMembers),
       },
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}UserId`, t(appId, '{role} cloud user', { role: roleName }), 'select'),
         options: Object.values(state?.userGroupMembers ?? []).<span class="fstat-no" title="function not covered" >map((v</span>alue) =&gt; (<span class="cstat-no" title="statement not covered" >{ value, label: value }))</span>,
       },
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}GroupId`, t(appId, '{role} group', { role: roleName }), 'select'),
         options: options(state?.userGroups),
       },
+      // TRANSLATORS: {role} denotes a management board role like president or treasurer.
       field(`${role}Email`, t(appId, '{role} email', { role: roleName })),
     ]),
   ]),
@@ -1192,7 +1225,7 @@ const groups: AdminSettingGroup[] = [
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-31T15:37:18.090Z
+                at 2026-10-31T19:11:57.587Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
