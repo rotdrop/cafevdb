@@ -70,6 +70,13 @@ describe('Handle selectized select element', () => {
     expect(SelectUtils.options($single).length).toBe(3);
     expect(SelectUtils.options($multiple).length).toBe(3);
   });
+  it('does not duplicate options but includes options added later', () => {
+    const $single = $<HTMLSelectElement>('#single');
+    $single.selectize();
+    $single.append('<option value="four">Four</option>');
+    expect(SelectUtils.children($single).length).toBe(2);
+    expect(SelectUtils.options($single).length).toBe(4);
+  });
   it('can determine the option values', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
