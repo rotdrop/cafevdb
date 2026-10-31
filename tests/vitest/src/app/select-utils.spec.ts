@@ -22,14 +22,15 @@
  */
 
 import Selectize from 'selectize';
-import $ from '~/src/app/jquery.ts';
-import * as SelectUtils from '~/src/app/select-utils.ts';
 import {
   beforeEach,
   describe,
   expect,
   it,
+  vi,
 } from 'vitest';
+import $ from '~/src/app/jquery.ts';
+import * as SelectUtils from '~/src/app/select-utils.ts';
 
 beforeEach(() => {
   document.body.innerHTML = `<select id="single">
@@ -60,6 +61,38 @@ describe('Handle selectized select element', () => {
     expect(SelectUtils.getSelectize($multiple)).toBeUndefined();
     expect(SelectUtils.getControlObject($single) instanceof Selectize).toBeTruthy();
     expect(SelectUtils.getControlObject($multiple)).toBeUndefined();
+  });
+
+  describe('Native and Chosen select utility compatibility', () => {
+    it.each([false, true])('preserves value, refresh, and lookup behavior (chosen=%s)', (chosen) => {
+      const $select = $<HTMLSelectElement>('#multiple');
+      const control = {};
+      if (chosen) {
+        $select.data('chosen', control);
+        $select.after('<div class="chosen-container"></div>');
+      }
+      const changes = vi.fn();
+      const updates = vi.fn();
+      $select.on('change', changes).on('chosen:updated', updates);
+      expect(SelectUtils.vueSelectActive($select)).toBe(false);
+      expect(SelectUtils.isVanilla($select)).toBe(!chosen);
+      expect(SelectUtils.getControlObject($select)).toBe(chosen ? control : undefined);
+      expect(SelectUtils.selected($select, ['two'], true)).toEqual([]);
+      expect(SelectUtils.selected($select)).toEqual(['two']);
+      expect(changes).toHaveBeenCalledOnce();
+      expect(updates).toHaveBeenCalledTimes(chosen ? 1 : 0);
+      expect(SelectUtils.selectFromWidget(SelectUtils.widget($select))[0]).toBe($select[0]);
+      SelectUtils.refreshWidget($select);
+      SelectUtils.deselectAll($select);
+      expect(SelectUtils.selected($select)).toEqual([]);
+      SelectUtils.replaceOptions($select, '<option value="new" selected>New</option>');
+      expect(SelectUtils.optionValues($select)).toEqual(['new']);
+      expect(SelectUtils.selected($select)).toEqual(['new']);
+      SelectUtils.locked($select, true);
+      expect(SelectUtils.locked($select)).toBe(true);
+      SelectUtils.locked($select, false);
+      expect(SelectUtils.locked($select)).toBeFalsy();
+    });
   });
   it('finds all children and options', () => {
     const $single = $<HTMLSelectElement>('#single');

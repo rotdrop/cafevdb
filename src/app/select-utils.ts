@@ -27,6 +27,7 @@
 
 import type SelectizeInstance from 'selectize';
 
+import { getMountedSelectize } from '../services/mountable-select.ts';
 import jQuery from './jquery.ts';
 
 import 'select-utils.scss';
@@ -92,13 +93,17 @@ const chosenActive = function($select: JQuerySelect) {
   return $select.data('chosen') !== undefined;
 };
 
+const getVueSelect = ($select: JQuerySelect) => getMountedSelectize($select[0]);
+
+const vueSelectActive = ($select: JQuerySelect) => !!getVueSelect($select);
+
 /**
- * Check whether this $select is controlled by either chosen or selectize.
+ * Check whether this select has no enhanced widget.
  *
  * @param $select Select element.
  */
 const isVanilla = function($select: JQuerySelect) {
-  return !selectizeActive($select) && !chosenActive($select);
+  return !getVueSelect($select) && !selectizeActive($select) && !chosenActive($select);
 };
 
 /**
@@ -107,7 +112,10 @@ const isVanilla = function($select: JQuerySelect) {
  * @param $select TBD.
  */
 const getControlObject = function($select: JQuerySelect) {
-  if (chosenActive($select)) {
+  const vueSelect = getVueSelect($select);
+  if (vueSelect) {
+    return vueSelect;
+  } else if (chosenActive($select)) {
     return $select.data('chosen');
   } else if (isSelectizedJQuery($select)) {
     return getSelectize($select);
@@ -181,7 +189,7 @@ const findOptionByValue = function($select: JQuerySelect, value: string|number) 
 const makePlaceholder = function($select: JQuerySelect) {
   $select.each(function() {
     const $select = $(this);
-    if (!chosenActive($select) && !selectizeActive($select)) {
+    if (isVanilla($select)) {
       // restore the data-placeholder as first option if chosen
       // is not active
       $select.each(function() {
@@ -212,7 +220,10 @@ const makePlaceholder = function($select: JQuerySelect) {
 const deselectAll = function($select: JQuerySelect) {
   $select.each(function() {
     const $select = $(this);
-    if (isSelectizedJQuery($select)) {
+    const vueSelect = getVueSelect($select);
+    if (vueSelect) {
+      vueSelect.clear(true);
+    } else if (isSelectizedJQuery($select)) {
       const selectize = $select[0].selectize;
       selectize.clear(true);
       selectize.refreshItems(true);
@@ -228,7 +239,7 @@ const deselectAll = function($select: JQuerySelect) {
 
 /**
  * Set or return the selected values and update the potentially
- * underlying "selectize" or "chosen" widget. Works for "multiple" as
+ * underlying Vue, Selectize, or Chosen widget. Works for "multiple" as
  * well as single selects.
  *
  * @param  $select collection with a single select.
@@ -245,7 +256,11 @@ const selectedValues = function(
   values?: false|SelectValue|SelectValue[],
   trigger?: boolean,
 ): null|SelectValue|SelectValue[] {
+  const vueSelect = getVueSelect($select);
   if (values === undefined) {
+    if (vueSelect) {
+      return vueSelect.getValue();
+    }
     let result: SelectValue|SelectValue[];
     if (isSelectizedJQuery($select)) {
       result = [...$select[0].selectize.items];
@@ -267,7 +282,9 @@ const selectedValues = function(
     } else if (!Array.isArray(values)) {
       values = [values];
     }
-    if (isSelectizedJQuery($select)) {
+    if (vueSelect) {
+      vueSelect.setValue($select.prop('multiple') ? values : values[0] ?? null, true);
+    } else if (isSelectizedJQuery($select)) {
       const selectize = $select[0].selectize;
       selectize.clear(true);
       selectize.addItems(values, true);
@@ -298,8 +315,7 @@ const selectedOptions = function($select: JQuerySelect) {
 
 /**
  * Update the underlying select widget to reflect changes in the
- * original select element. This currently supports jQuery chosen and
- * selectize.
+ * original select element. Supports Vue, Chosen, and jQuery Selectize.
  *
  * In the case of selectize the children of the original select were
  * removed by selectize. After calling this function the option list
@@ -313,7 +329,10 @@ const refreshSelectWidget = function($select: JQuerySelect) {
     const $select = $(this);
     const isDisabled = $select.prop('disabled');
     const isReadonly = $select.prop('readonly');
-    if (chosenActive($select)) {
+    const vueSelect = getVueSelect($select);
+    if (vueSelect) {
+      vueSelect.refresh();
+    } else if (chosenActive($select)) {
       if (isReadonly && !isDisabled) {
         $select.prop('disabled', true);
       }
@@ -353,7 +372,10 @@ const refreshSelectWidget = function($select: JQuerySelect) {
  * @param $select Select element.
  */
 const getWidget = function($select: JQuery<HTMLSelectElement>) {
-  if (chosenActive($select)) {
+  const vueSelect = getVueSelect($select);
+  if (vueSelect) {
+    return $(vueSelect.element);
+  } else if (chosenActive($select)) {
     return $select.next();
   } else if (isSelectizedJQuery($select)) {
     return getSelectize($select).$wrapper;
@@ -380,6 +402,12 @@ const getSelectFromWidget = function($widget: JQuery) {
  */
 const refreshWidgetProperties = function($select: JQuerySelect) {
   $select.each(function() {
+    const $element = $(this);
+    const vueSelect = getVueSelect($element);
+    if (vueSelect) {
+      vueSelect.refreshProperties();
+      return;
+    }
     const isDisabled = $select.prop('disabled');
     const isReadonly = $select.prop('readonly');
 
@@ -413,6 +441,16 @@ const refreshWidgetProperties = function($select: JQuerySelect) {
  * @param options TBD.
  */
 const replaceSelectOptions = function($select: JQuerySelect, options: JQuery|string) {
+  const vueSelect = getVueSelect($select);
+  if (vueSelect) {
+    if (typeof options === 'string') {
+      $select.html(options);
+    } else {
+      $select.empty().append(options);
+    }
+    vueSelect.refresh();
+    return;
+  }
   const isDisabled = $select.prop('disabled');
   const isReadonly = $select.prop('readonly');
   let setupOptions: Record<string, string>;
@@ -441,6 +479,18 @@ const replaceSelectOptions = function($select: JQuerySelect, options: JQuery|str
 };
 
 const locked = function($select: JQuerySelect, state?: boolean) {
+  const vueSelect = getVueSelect($select);
+  if (vueSelect) {
+    if (state === undefined) {
+      return vueSelect.isLocked || vueSelect.isDisabled;
+    }
+    if (state) {
+      vueSelect.lock();
+    } else {
+      vueSelect.unlock();
+    }
+    return;
+  }
   if (state === undefined) {
     if (isSelectizedJQuery($select)) {
       const selectize = $select[0].selectize;
@@ -483,5 +533,6 @@ export {
   selectedOptions,
   getSelectFromWidget as selectFromWidget,
   selectizeActive,
+  vueSelectActive,
   getWidget as widget,
 };

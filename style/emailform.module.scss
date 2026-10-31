@@ -855,6 +855,9 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
           .stored-messages-choose {
             --drop-down-min-width: 0px;
             --drop-down-margin: 3px;
+            .pme-vue-select-control .pme-select {
+              min-width: 0;
+            }
             .select-container > * {
               margin-right: var(--drop-down-margin);
             }

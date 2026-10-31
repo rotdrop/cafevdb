@@ -246,6 +246,11 @@
 
   /* selectize stuff */
 
+  .pme-vue-select-control .pme-select.mandateProjectId {
+    min-width: 10rem;
+    max-width: 30rem;
+  }
+
   .selectize-control {
     &.mandateProjectId {
       min-width:10rem;

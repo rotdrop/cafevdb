@@ -69,6 +69,9 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
         case MountableComponents.LEGACY_QUERY_LOG:
           vueComponent = (await import('../components/LegacyQueryLog.vue')).default;
           break;
+        case MountableComponents.PME_SELECT:
+          vueComponent = (await import('../components/PmeSelect.vue')).default;
+          break;
         case MountableComponents.PROJECT_ACTIONS_MENU:
           vueComponent = (await import('../components/ProjectActionsMenu.vue')).default;
           break;
