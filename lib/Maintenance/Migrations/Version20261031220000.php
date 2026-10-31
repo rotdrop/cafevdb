@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\EmailTemplateDefaultsService;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
@@ -46,23 +45,15 @@ final class Version20261031220000 extends AbstractTransactionalMigration
   public function preUp(Schema $schema): void
   {
     $templates = $this->defaultTemplates();
-    $oldL10n = $this->entityManager->setTranslatableL10n(null);
+    $connection = $this->entityManager->getConnection();
 
-    try {
-      $repository = $this->entityManager->getRepository(Entities\EmailTemplate::class);
-      foreach ($templates as $tag => $templateData) {
-        if ($repository->findOneBy(['tag' => $tag])) {
-          continue;
-        }
-        $template = (new Entities\EmailTemplate())
-          ->setTag($tag)
-          ->setSubject($templateData['subject'])
-          ->setContents($templateData['contents']);
-        $this->entityManager->persist($template);
-      }
-      $this->entityManager->flush();
-    } finally {
-      $this->entityManager->setTranslatableL10n($oldL10n);
+    foreach ($templates as $tag => $templateData) {
+      $connection->executeStatement(
+        'INSERT INTO EmailTemplates (tag, subject, contents)
+         SELECT ?, ?, ?
+         WHERE NOT EXISTS (SELECT 1 FROM EmailTemplates WHERE tag = ?)',
+        [ $tag, $templateData['subject'], $templateData['contents'], $tag ],
+      );
     }
   }
 
@@ -70,22 +61,12 @@ final class Version20261031220000 extends AbstractTransactionalMigration
   public function postDown(Schema $schema): void
   {
     $templates = $this->defaultTemplates();
-    $oldL10n = $this->entityManager->setTranslatableL10n(null);
 
-    try {
-      $repository = $this->entityManager->getRepository(Entities\EmailTemplate::class);
-      foreach ($templates as $tag => $templateData) {
-        $template = $repository->findOneBy(['tag' => $tag]);
-        if (empty($template)
-            || $template->getSubject() !== $templateData['subject']
-            || $template->getContents() !== $templateData['contents']) {
-          continue;
-        }
-        $this->entityManager->remove($template);
-      }
-      $this->entityManager->flush();
-    } finally {
-      $this->entityManager->setTranslatableL10n($oldL10n);
+    foreach ($templates as $tag => $templateData) {
+      $this->entityManager->getConnection()->executeStatement(
+        'DELETE FROM EmailTemplates WHERE tag = ? AND subject = ? AND contents = ?',
+        [ $tag, $templateData['subject'], $templateData['contents'] ],
+      );
     }
   }
 
