@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 /** Allowed post-params for '/projects/participant-fields/property/get' */
 enum EnumParticipantFieldPropertyGet: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case DEFAULT_VALUE = 'defaultValue';
   case DEFAULT_DEPOSIT = 'defaultDeposit';

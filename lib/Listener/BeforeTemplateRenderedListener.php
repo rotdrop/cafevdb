@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class BeforeTemplateRenderedListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

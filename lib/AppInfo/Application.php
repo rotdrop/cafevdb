@@ -66,8 +66,8 @@ use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
-use OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication;
-use OCA\CAFEVDB\Toolkit\Middleware\ExceptionMiddleware;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Middleware\ExceptionMiddleware;
 use OCP\AppFramework\Http;
 use OC\AppFramework\Utility\QueryNotFoundException;
 
@@ -102,7 +102,10 @@ use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 use OCA\CAFeVDBMembers;
 
 // phpcs:disable PSR1.Files.SideEffects
-include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
+// The app-toolkit lives in the wrapped vendor tree and must be autoloadable
+// before the base class can be resolved.
+include_once __DIR__ . '/../../vendor/autoload.php';
+include_once __DIR__ . '/../../vendor-wrapped/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 /** {@inheritdoc} */

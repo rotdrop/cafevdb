@@ -30,7 +30,7 @@ namespace OCA\CAFEVDB\Service\AuthorizationService;
  */
 enum EnumAppPermissions: int
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case NONE = 0;
   case FRONTEND = (1 << 0);

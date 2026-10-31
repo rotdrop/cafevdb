@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class ProjectEventEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
   protected IL10N $l;

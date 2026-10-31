@@ -48,14 +48,14 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /** Finance and bank related stuff. */
 class FinanceService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;

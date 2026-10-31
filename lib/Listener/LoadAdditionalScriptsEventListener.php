@@ -40,8 +40,8 @@ use OCA\CAFEVDB\Service\AssetService;
 /** Load additional scripts while running interactively. */
 class LoadAdditionalScriptsEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ApiRequestTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ApiRequestTrait;
 
   const EVENT = HandledEvent::class;
 

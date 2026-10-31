@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface as ILogger;
 /** Use the encryption service provided by the ambient cloud software. */
 class SealCryptor implements ICryptor
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var array */
   private $sealCryptors = [];

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Service\DTO;
 /**
  * DTO for the orchestra locale.
  */
-class HumanDateTime extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class HumanDateTime extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(

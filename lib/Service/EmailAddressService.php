@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class EmailAddressService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * @param ILogger $logger

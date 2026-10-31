@@ -1015,7 +1015,6 @@ WARN_LOGFILE           =
 
 INPUT                  = ../../lib \
                          ../../tests \
-                         ../../php-toolkit \
                          ../../src \
                          ../../style \
                          ../../appinfo

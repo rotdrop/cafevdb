@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /** Response to an autocomplete place requests, asserted by the MusicianValidationController. */
-class AutocompletePlaceResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class AutocompletePlaceResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

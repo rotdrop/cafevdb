@@ -30,7 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Crypto;
@@ -91,7 +91,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\WordSplitterServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait;

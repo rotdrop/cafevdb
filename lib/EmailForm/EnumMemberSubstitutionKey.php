@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\EmailForm;
 /** Valid keys for ${GLOBAL::KEY} substitutions. */
 enum EnumMemberSubstitutionKey: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case FIRST_NAME = 'FIRST_NAME';
   case SUR_NAME = 'SUR_NAME';

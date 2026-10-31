@@ -30,7 +30,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumSettingsGetApp: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case AUTO_FILL_TEST = 'auto-fill-test';
   case AUTO_FILL_TEST_DATA = 'auto-fill-test-data';

@@ -31,7 +31,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  */
 enum EnumTaxType: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case CORPORATE_INCOME = 'corporate income tax';
   case SALES = 'sales tax';

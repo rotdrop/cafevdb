@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[PhpToTypeScript\Attributes\TypeScript]
 class MigrationsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const BASE_PATH = 'maintenance/migrations';

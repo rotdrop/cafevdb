@@ -10,6 +10,8 @@ return [
   'exclude-classes' => [
     'OC',
     'SortDirection',
+    // aliased as a namespace, e.g. "use Symfony\\Component\\Console;"
+    'Symfony\\Component\\Console',
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
@@ -17,6 +19,14 @@ return [
     'Psr\\Clock',
     'Psr\\Log',
     'Symfony\\Component\\Console',
+    '/^Symfony\\\\Component\\\\(Console|Process)(\\\\|$)/',
+    '/^Psr\\\\Container(\\\\|$)/',
+    '/^GuzzleHttp(\\\\|$)/',
+    // Needed by the nextcloud-app-toolkit, provided by the cloud or the app itself
+    '/^(OC|OCP|NCU)(\\\\|$)/',
+    '/^OCA\\\\(GroupFolders|RotDrop\\\\DevScripts)(\\\\|$)/',
+    '/^MathPHP(\\\\|$)/',
+    '/^Spatie\\\\TypeScriptTransformer(\\\\|$)/',
     // 'OC',
     //'OCA',
     //'OCP',

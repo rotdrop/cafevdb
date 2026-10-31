@@ -30,7 +30,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipantFieldRequestSubTopic: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   /**
    * @var string Resolve a receivables generator with the given user input.

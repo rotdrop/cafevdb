@@ -64,7 +64,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 #[PhpToTypeScript\Attributes\TypeScript]
 class EmailFormController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const BASE_PATH = 'communication/email/outgoing';

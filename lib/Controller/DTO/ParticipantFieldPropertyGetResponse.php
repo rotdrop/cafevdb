@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Controller\DTO\ParticipantFieldPropertyGetDefaultValue as DefaultValue;
 use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet as EnumPropertyGet;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM;
 
 /**
  * Response by the ProjectParticipantFieldsController to a "property/get"

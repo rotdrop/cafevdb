@@ -32,7 +32,7 @@ use DateTimeInterface;
  * @see \OCA\CAFEVDB\Service\VCalendarService::createVCalendarFromRequest
  * @see \OCA\CAFEVDB\Service\EventsService::update
  */
-class EventDataDTO extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class EventDataDTO extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   public readonly DateTimeInterface $end;
 

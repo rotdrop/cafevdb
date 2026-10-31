@@ -44,8 +44,8 @@ use OCP\IAddressBook;
 #[PhpToTypeScript\Attributes\TypeScript]
 class ContactsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
 
   public const BASE_PATH = 'contacts';

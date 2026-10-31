@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Service\Registration;
  */
 class InvoiceNumberHandler implements SlugHandlerInterface
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UtilTrait;
 
   /**
    * @var GedmoSluggableListener

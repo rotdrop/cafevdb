@@ -52,9 +52,9 @@ use OCA\CAFEVDB\Exceptions;
 class WebBrowserHistoryController extends Controller
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   public const BASE_PATH = 'a/browser/history';
 

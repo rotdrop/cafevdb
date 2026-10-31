@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 trait MailingListsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /** @var bool */
   protected $expertMode;

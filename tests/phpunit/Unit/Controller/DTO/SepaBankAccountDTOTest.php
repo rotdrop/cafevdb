@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Controller\DTO\SepaBankAccount as TestedDTO;
 
 /** Consistency test for SepaBankAccount DTO. */
 #[Attributes\CoversClass(TestedDTO::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
 class SepaBankAccountDTOTest extends TestCase
 {
   use TestResponseDTOTrait;

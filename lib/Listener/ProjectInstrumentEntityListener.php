@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 class ProjectInstrumentEntityListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

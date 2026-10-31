@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 #[PhpToTypeScript\Attributes\TypeScript]
 class DocumentStorageUploadController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;

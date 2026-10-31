@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 /** Allowed post-params for '/projects/participant-fields/property/get' */
 enum EnumMailingListOperation: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case INVITE = 'invite';
   case SUBSCRIBE = 'subscribe';

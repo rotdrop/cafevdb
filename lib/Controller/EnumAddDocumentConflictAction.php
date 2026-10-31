@@ -32,7 +32,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumAddDocumentConflictAction: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case FAIL = 'fail';
   case REPLACE = 'replace';

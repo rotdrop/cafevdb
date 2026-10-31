@@ -31,7 +31,7 @@ use OCP\App\IAppManager;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 

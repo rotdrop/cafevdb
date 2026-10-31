@@ -30,7 +30,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumMusicianValidationSubTopic: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case AUTOCOMPLETE_STREET = 'street';
   case AUTOCOMPLETE_PLACE = 'place';

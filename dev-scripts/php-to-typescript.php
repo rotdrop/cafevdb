@@ -31,36 +31,30 @@ $appDir = realpath(__DIR__) . '/..';
 define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
 
 try {
-  $autoloader = require_once(__DIR__ . '/lib/scripts/vendor/autoload.php');
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once($appDir . '/vendor/autoload.php');
   require_once($appDir . '/vendor-wrapped/autoload.php');
-  require_once($appDir . '/vendor-bin/typescript-transformer/vendor/autoload.php');
+  $autoloader = require_once($appDir . '/vendor-bin/php-to-typescript/vendor/autoload.php');
 } catch (\Throwable $t) {
   fwrite(STDERR, 'Composer autoloads not set up: ' . $t->getMessage() . PHP_EOL);
   exit(1);
 }
 
-$autoloader->addPsr4(
-  \OCA\RotDrop\DevScripts\PhpToTypeScript::class . '\\',
-  __DIR__ . '/lib/scripts/php-to-typescript',
-  true,
-);
-$autoloader->addPsr4(
-  \OCA\RotDrop\Toolkit::class . '\\',
-  $appDir . '/php-toolkit/',
-  true,
-);
-
-use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Console\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO;
+use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector;
 
 // store output of different transformers in different files
 
 $excludes = [
-  'lib/Toolkit/Service/ArchiveService.php',
-  'lib/Toolkit/Backend/ArchiveBackend.php',
-  'lib/Toolkit/Backend/ArchiveFormats.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Service/ArchiveService.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Backend/ArchiveBackend.php',
+  'vendor-wrapped/rotdrop/nextcloud-app-toolkit/src/Backend/ArchiveFormats.php',
 ];
 
 $scopedNamespaces = [
@@ -69,13 +63,42 @@ $scopedNamespaces = [
   \Ramsey\Uuid::class,
 ];
 
+// Bootstrap the entity manager in the current process, mimicking what
+// orm-cmd.php does.
+$createEntityManager = function() use ($appDir): object {
+  $cafevDbUser = getenv('CAFEVDB_USER');
+  if ($cafevDbUser === false) {
+    $cafevDbUser = posix_getpwuid(posix_getuid())['name'];
+  }
+  $cafevDbPassword = @file_get_contents($appDir . '/.clipassword');
+  if (empty($cafevDbPassword)) {
+    throw new UnexpectedValueException('Unable to obtain database credentials from ' . $appDir . '/.clipassword');
+  }
+
+  $user = \OC::$server->get(\OCP\IUserManager::class)->get($cafevDbUser);
+  \OC::$server->get(\OCP\IUserSession::class)->setUser($user);
+  \OC::$server->get(\OCA\CAFEVDB\Service\EncryptionService::class)->bind($cafevDbUser, $cafevDbPassword);
+
+  $entityManager = \OCP\Server::get(\OCA\CAFEVDB\Database\EntityManager::class);
+  $entityManager->decorateClassMetadata(false);
+
+  return $entityManager;
+};
+
+$collectors = [
+  DTOCollector::class,
+  EnumCollector::class,
+  DatabaseEntityCollector::class,
+];
+
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
+  collectors: $collectors,
   devScriptsFolder: __DIR__,
+  entityManagerFactory: $createEntityManager,
   excludes: $excludes,
+  metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
   scopedNamespaces: $scopedNamespaces,
 );
-
-require_once __DIR__ . '/../lib/Toolkit/Console/ConsoleOutput.php';
 
 try {
   $phpToTypeScript->run(

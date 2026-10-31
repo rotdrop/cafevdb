@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Service\FontService;
 class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
   use \OCA\CAFEVDB\Traits\SloppyTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   protected const MUSICIAN_KEY = 'musician';
   protected const OBJECT_KEY = 'object';

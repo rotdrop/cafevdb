@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * DTO for lazy decryption endpoint.
  */
-class UnsealedData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class UnsealedData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

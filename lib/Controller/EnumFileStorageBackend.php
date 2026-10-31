@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumFileStorageBackend: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case DB = 'db';
   case CLOUD = 'cloud';

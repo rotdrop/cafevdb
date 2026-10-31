@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
  */
 class DoctrineMigrationsService implements MigrationsServiceInterface
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private ?array $appliedMigrations = null;
 

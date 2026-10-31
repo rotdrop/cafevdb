@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumSepaDebitMandateValidationParam: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case MANDATE_PROJECT_ID = 'mandateProjectId';
   case MUSICIAN_ID = 'musicianId';

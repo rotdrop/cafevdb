@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Constants as AppConstants;
  * collation
  */
 #[PhpToTypeScript\Attributes\TypeScript]
-class Constants extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\Constants
+class Constants extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\Constants
 {
   public const CHARACTER_SET = 'utf8mb4';
   public const SHORT_COLLATION = 'uca1400_ai_ci';

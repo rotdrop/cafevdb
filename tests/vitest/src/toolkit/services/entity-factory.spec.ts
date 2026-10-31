@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EntityMap } from '~/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { EntityMap } from '~/build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
 
 import { beforeAll, describe, expect, it, vi } from 'vitest';

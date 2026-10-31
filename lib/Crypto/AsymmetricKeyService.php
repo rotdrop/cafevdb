@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Traits\UserPreferencesTrait;
  */
 class AsymmetricKeyService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use UserPreferencesTrait {
     UserPreferencesTrait::setUserValue as protected;
     UserPreferencesTrait::getUserValue as protected;

@@ -35,7 +35,7 @@ use Psr\Container\ContainerInterface;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
 
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Html2Text;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Toolkit\Service\AnyToPdf;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\AnyToPdf;
 
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller

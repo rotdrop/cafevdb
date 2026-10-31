@@ -58,8 +58,8 @@ use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
  */
 class UserStorage
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\UserRootFolderTrait;
 
   const PATH_SEP = Constants::PATH_SEP;
 

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 /** History action for the LegacyPageController. */
 enum EnumLegacyHistoryAction: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case PUSH = 'push';
   case REPLACE = 'replace';

@@ -33,8 +33,8 @@ use OCP\IL10N;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -60,7 +60,7 @@ class ProjectParticipantFieldsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\SanitizeFilenameTrait
   {
     sanitizeFilename as private systemSanitizeFilename;
   }

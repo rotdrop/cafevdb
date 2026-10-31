@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 #[PhpToTypeScript\Attributes\TypeScript]
 class AccountingController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const END_POINT = 'accounting/autocomplete/gnucash-accounts';
 

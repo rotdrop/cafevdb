@@ -45,7 +45,7 @@ use function OCA\CAFEVDB\Common\Functions\sprintf; // accept backed enums
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -80,8 +80,8 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Toolkit\Response\HttpStatus;
-use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Response\HttpStatus;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Service\IProjectGroupService;
 
@@ -95,7 +95,7 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
  */
 class Composer
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;

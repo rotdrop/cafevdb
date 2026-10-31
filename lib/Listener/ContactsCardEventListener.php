@@ -58,7 +58,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 class ContactsCardEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [
     CardCreatedEvent::class,

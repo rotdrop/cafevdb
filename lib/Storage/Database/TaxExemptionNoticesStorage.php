@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class TaxExemptionNoticesStorage extends Storage
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use DatabaseStorageNodeNameTrait;
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository */

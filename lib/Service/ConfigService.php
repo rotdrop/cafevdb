@@ -47,8 +47,8 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -67,7 +67,7 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
  */
 class ConfigService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\AppConfigTrait;
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;

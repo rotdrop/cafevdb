@@ -72,7 +72,7 @@ use OCA\CAFEVDB\Database\EntityManager;use OCA\CAFEVDB\Settings\ConfigConstants;
  */
 class CloudAccountsService
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 

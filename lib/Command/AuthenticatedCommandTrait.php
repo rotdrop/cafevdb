@@ -29,7 +29,7 @@ use OCP\Console\IInput;
 use OCP\Console\IOutput;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Toolkit\Traits\AuthenticatedCommandTrait as ToolkitTrait;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\AuthenticatedCommandTrait as ToolkitTrait;
 
 /** Trait in order to handle authentication with the cloud */
 trait AuthenticatedCommandTrait

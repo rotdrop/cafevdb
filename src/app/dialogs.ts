@@ -323,6 +323,7 @@ export interface LegacyFilePickerParameters<Multiple extends true|undefined = un
     : (path: string, node: INode, type: PickerType extends FilePickerType.Choose ? FilePickerType.Choose : FilePickerType.Copy|FilePickerType.Move) => void|Promise<void>;
   multiple?: Multiple;
   allowDirectories?: boolean;
+  modal?: boolean; // legacy, ignored by the Vue file picker
   target?: string;
   startPath?: string;
   type?: PickerType;

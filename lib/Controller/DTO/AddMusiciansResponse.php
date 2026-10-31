@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /** Success response of the "add-musicians" AJAX end-point. */
-class AddMusiciansResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class AddMusiciansResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

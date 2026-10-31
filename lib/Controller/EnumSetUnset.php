@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
  */
 enum EnumSetUnset: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait;
 
   case SET = 'set';
   case UNSET = 'unset';

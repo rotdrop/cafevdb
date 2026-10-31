@@ -28,7 +28,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 /**
  * Response DTO of EmailFormController::webForm()
  */
-class EmailWebFormResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class EmailWebFormResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(

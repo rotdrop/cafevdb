@@ -34,7 +34,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Sharing;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Personal;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Contacts;
-use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
+use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO;
 
 /**
  * Intial state emitted for key "files". Consistency between class members

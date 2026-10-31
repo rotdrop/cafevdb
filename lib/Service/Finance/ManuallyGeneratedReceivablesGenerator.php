@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

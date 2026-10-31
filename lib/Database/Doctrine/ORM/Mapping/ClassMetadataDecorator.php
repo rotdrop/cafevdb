@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetad
 /** Counter part to the decorated entity manager. */
 class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var array */
   private $columnAssociationsCache = [];
