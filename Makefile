@@ -326,7 +326,7 @@ distclean: clean
 .PHONY: distclean
 
 #@@ Really delete everything but the bare source files
-realclean: distclean dev-scripts-real-clean
+realclean: distclean
 	rm -f composer*.lock
 	rm -f vendor-bin/*/composer.lock
 	rm -f composer.json
