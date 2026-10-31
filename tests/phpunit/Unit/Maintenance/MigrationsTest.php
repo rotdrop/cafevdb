@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819094422::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819105948::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20261009150233::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20261031220000::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
@@ -63,6 +64,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
+#[Attributes\UsesClass(Entities\EmailTemplate::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
@@ -84,6 +86,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailTemplateDefaultsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
@@ -299,6 +302,55 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion20261009150233')]
+  public function testVersion20261031220000(): void
+  {
+    $migration = substr(__METHOD__, -14);
+    $this->applyMigrations($migration);
+
+    $templates = [
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::BANK_TRANSFER_ANNOUNCEMENT => [
+        '${MEMBER::SALUTATION:FORMAL}',
+        '${MEMBER::BANK_TRANSACTION_AMOUNT}',
+        '${GLOBAL::BANK_TRANSACTION_DUE_DATE}',
+        '${GLOBAL::SENDER}',
+      ],
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::DEBIT_NOTE_ANNOUNCEMENT => [
+        '${MEMBER::SALUTATION:FORMAL}',
+        '${MEMBER::BANK_TRANSACTION_PURPOSE}',
+        '${GLOBAL::BANK_TRANSACTION_SUBMIT_DATE}',
+        '${GLOBAL::SENDER}',
+      ],
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::DONATION_RECEIPT_NOTIFICATION => [
+        '${MEMBER::SALUTATION:FORMAL}',
+        '${MEMBER::DONATION_AMOUNT}',
+        '${MEMBER::DONATION_RECEIPT_DATE}',
+        '${GLOBAL::SENDER}',
+      ],
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::INVOICE_NOTIFICATION => [
+        '${MEMBER::SALUTATION:FORMAL}',
+        '${MEMBER::INVOICE_NUMBER}',
+        '${MEMBER::INVOICE_ITEMS}',
+        '${GLOBAL::SENDER}',
+      ],
+    ];
+
+    $repository = $this->getEntityManager()->getRepository(Entities\EmailTemplate::class);
+    foreach ($templates as $tag => $substitutions) {
+      $template = $repository->findOneBy(['tag' => $tag]);
+      $this->assertInstanceOf(Entities\EmailTemplate::class, $template);
+      $this->assertStringStartsWith('<p><strong>', $template->getContents());
+      $this->assertStringContainsString(
+        'not a ready-to-send email',
+        $template->getContents(),
+      );
+      foreach ($substitutions as $substitution) {
+        $this->assertStringContainsString($substitution, $template->getContents());
+      }
+    }
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testVersion20261031220000')]
   public function testUpToLatest(): void
   {
     $this->applyMigrations('latest');
