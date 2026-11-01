@@ -433,7 +433,7 @@ function ajaxFailData<T = object>(
           { code: xhr.status, text: xhr.statusText },
         ),
       ];
-      data.info = $(xhr.responseText).find('main').html();
+      data.info = $(xhr.responseText).find('div.guest-box').html();
       data.html = data.info;
       data.parsed = true;
     } else {
