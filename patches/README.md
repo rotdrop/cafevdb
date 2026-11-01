@@ -12,9 +12,23 @@ make fabricate-app-calendar-patch
 
 The script applies the changes below to the installed package and invokes
 the local `patch-package` executable to write its versioned patch in `patches/`.
-It can be run again on an already transformed package. Review the generated
-patch before committing; after a package version change, remove the obsolete
-version's patch once the replacement has been verified.
+Only files under the package's `src/` directory are included; test directories
+(`test`, `tests`, `__tests__`) and `*.test.*` / `*.spec.*` files are excluded,
+including any pre-existing test modifications in the installed package.
+Alias replacements resolve directly against `src/`: for example,
+`src/appointments/main-booking.js` imports `../views/Appointments/Booking.vue`,
+and files directly under `src/` use `./`. This avoids an unnecessary climb to
+the package root and back through `src/`; existing correct paths through
+`../src/` are equivalent and can remain unchanged.
+It can be run again on an already transformed package. The script invokes
+`patch-package` with an empty temporary `--patch-dir` under `build/`, using
+a relative path as required by `patch-package`, so existing patches
+cannot be applied to the clean package used for comparison. After successful
+generation, the new patch is moved into `patches/` and obsolete
+`@nextcloud+app-calendar+*.patch` files are removed. If generation fails or
+does not produce exactly one Calendar patch, existing patches remain unchanged.
+Patches for other packages are left untouched. Review the generated patch
+before committing.
 
 Already a patched version with some add-ons. In order to make it fit
 for reusal in this app (we want to have the editor components) one has to
