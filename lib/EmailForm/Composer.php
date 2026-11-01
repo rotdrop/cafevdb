@@ -93,6 +93,8 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
  *
  * @bug This is a mixture between a controller and service class and
  * needs to be cleaned up.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Composer
 {

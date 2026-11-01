@@ -94,6 +94,8 @@ use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
  *
  * @todo Some of the methods should rather go to a meta-data
  * decorator.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class EntityManager extends AbstractEntityManager
 {

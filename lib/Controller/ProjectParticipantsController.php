@@ -55,7 +55,11 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-/** AJAX end-points for project participants */
+/**
+ * AJAX end-points for project participants.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 #[PhpToTypeScript\Attributes\TypeScript]
 class ProjectParticipantsController extends Controller
 {

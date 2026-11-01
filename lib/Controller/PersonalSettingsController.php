@@ -73,7 +73,11 @@ use OCA\CAFEVDB\Service\WikiRPC;
 use OCA\CAFEVDB\Service\WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
-/** AJAX end-points for personal settings. */
+/**
+ * AJAX end-points for personal settings.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 #[PhpToTypeScript\Attributes\TypeScript]
 class PersonalSettingsController extends Controller
 {

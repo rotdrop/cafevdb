@@ -59,7 +59,11 @@ use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
-/** AJAX endpoints for debit mandates */
+/**
+ * AJAX endpoints for debit mandates.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 #[PhpToTypeScript\Attributes\TypeScript]
 class SepaDebitMandatesController extends Controller
 {

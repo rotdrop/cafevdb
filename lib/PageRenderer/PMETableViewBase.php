@@ -49,7 +49,11 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
-/** Base for phpMyEdit based table-views. */
+/**
+ * Base for phpMyEdit based table-views.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class PMETableViewBase extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
