@@ -36,18 +36,25 @@ use OCA\CAFEVDB\EmailForm\EnumSubstitutionNamespace;
 /** Generate localized starter templates for payment-related email flows. */
 class EmailTemplateDefaultsService
 {
+  /** Template name for bank transfer announcements. */
   public const BANK_TRANSFER_ANNOUNCEMENT = 'BankTransferAnnouncement';
+
+  /** Template name for debit note announcements. */
   public const DEBIT_NOTE_ANNOUNCEMENT = 'DebitNoteAnnouncement';
-  public const DONATION_RECEIPT_NOTIFICATION = 'donation-receipt-notification';
-  public const INVOICE_NOTIFICATION = 'invoice-notification';
+
+  /** Template name for donation receipt notifications. */
+  public const DONATION_RECEIPT_NOTIFICATION = 'DonationReceiptNotification';
 
   public const SUBSTITUTIONS_REFERENCE_ENGLISH = 'AllVariables';
   public const SUBSTITUTIONS_REFERENCE_GERMAN = 'AlleVariablen';
 
-  private const APP_ID = 'cafevdb';
+  /** Template name for invoice notifications. */
+  public const INVOICE_NOTIFICATION = 'InvoiceNotification';
 
+  /** Warning shown at the start of each template. */
   private const WARNING = 'This is a starting point only, not a ready-to-send email. Please refine it before use.';
 
+  /** Substitution placeholders shared by all payment templates. */
   private const PAYMENT_SUBSTITUTIONS = [
     '${MEMBER::BANK_TRANSACTION_AMOUNT}',
     '${MEMBER::BANK_TRANSACTION_PURPOSE}',
@@ -60,6 +67,7 @@ class EmailTemplateDefaultsService
     '${MEMBER::BANK_ACCOUNT_OWNER}',
   ];
 
+  /** Additional substitution placeholders for bulk transactions. */
   private const BULK_TRANSACTION_SUBSTITUTIONS = [
     '${GLOBAL::BANK_TRANSACTION_DUE_DATE}',
     '${GLOBAL::BANK_TRANSACTION_DUE_DAYS}',
@@ -67,12 +75,20 @@ class EmailTemplateDefaultsService
     '${GLOBAL::BANK_TRANSACTION_SUBMIT_DAYS}',
   ];
 
+  /**
+   * @param string $appName The application name used for translations.
+   *
+   * @param IL10NFactory $l10nFactory The localization factory.
+   */
   public function __construct(
+    private string $appName,
     private IL10NFactory $l10nFactory,
   ) {
   }
 
   /**
+   * Generate localized email subjects and starter contents keyed by template name.
+   *
    * @param null|string $locale The requested locale, or the current default.
    *
    * @return array<string, array{subject: string, contents: string}>
@@ -88,16 +104,19 @@ class EmailTemplateDefaultsService
 
     return [
       self::BANK_TRANSFER_ANNOUNCEMENT => $this->template(
+        // TRANSLATORS: This string will be used as an email subject.
         $l->t('Bank transfer announcement template'),
         $l,
         $bulkSubstitutions,
       ),
       self::DEBIT_NOTE_ANNOUNCEMENT => $this->template(
+        // TRANSLATORS: This string will be used as an email subject.
         $l->t('Debit note announcement template'),
         $l,
         $bulkSubstitutions,
       ),
       self::DONATION_RECEIPT_NOTIFICATION => $this->template(
+        // TRANSLATORS: This string will be used as an email subject.
         $l->t('Donation receipt notification template'),
         $l,
         array_merge(self::PAYMENT_SUBSTITUTIONS, [
@@ -109,6 +128,7 @@ class EmailTemplateDefaultsService
         ]),
       ),
       self::INVOICE_NOTIFICATION => $this->template(
+        // TRANSLATORS: This string will be used as an email subject.
         $l->t('Invoice notification template'),
         $l,
         array_merge(self::PAYMENT_SUBSTITUTIONS, [
@@ -309,16 +329,20 @@ class EmailTemplateDefaultsService
   private function getL10N(?string $locale): IL10N
   {
     if ($locale === null) {
-      return $this->l10nFactory->get(self::APP_ID);
+      return $this->l10nFactory->get($this->appName);
     }
     $language = locale_get_primary_language($locale) ?: $locale;
-    return $this->l10nFactory->get(self::APP_ID, $language, $locale);
+    return $this->l10nFactory->get($this->appName, $language, $locale);
   }
 
   /**
-   * @param string $subject
-   * @param IL10N $l
-   * @param list<string> $substitutions
+   * Build starter contents from the supplied substitution placeholders.
+   *
+   * @param string $subject The localized email subject.
+   *
+   * @param \OCP\IL10N $l The translator for the requested locale.
+   *
+   * @param string[] $substitutions The substitution placeholders to include.
    *
    * @return array{subject: string, contents: string}
    */
