@@ -89,7 +89,8 @@ for (const [filename, contents] of changes) {
 NODE
 
 shopt -s nullglob
-patchDirectory="$(mktemp -d)"
+mkdir -p -- build
+patchDirectory="$(mktemp -d build/calendar-patches.XXXXXX)"
 
 cleanup() {
     local status=$?

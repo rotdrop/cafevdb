@@ -21,7 +21,8 @@ and files directly under `src/` use `./`. This avoids an unnecessary climb to
 the package root and back through `src/`; existing correct paths through
 `../src/` are equivalent and can remain unchanged.
 It can be run again on an already transformed package. The script invokes
-`patch-package` with an empty temporary `--patch-dir` so existing patches
+`patch-package` with an empty temporary `--patch-dir` under `build/`, using
+a relative path as required by `patch-package`, so existing patches
 cannot be applied to the clean package used for comparison. After successful
 generation, the new patch is moved into `patches/` and obsolete
 `@nextcloud+app-calendar+*.patch` files are removed. If generation fails or
