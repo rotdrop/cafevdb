@@ -21,8 +21,58 @@ done
   as we do use the `raw` resource query in order to flag direct
   unmodified inclusion. Those btoa's have just to be removed.
 
+``` diff
+diff --git a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
+index 8a8301b..f2a237f 100644
+--- a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
++++ b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
+@@ -3,14 +3,14 @@
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  */
+ 
+-import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg'
++import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg?raw'
+ import { getRequestToken } from '@nextcloud/auth'
+ import { translate as t } from '@nextcloud/l10n'
+ import { linkTo } from '@nextcloud/router'
+ import { registerContactsMenuAction } from '@nextcloud/vue/functions/contactsMenu'
+ 
+ import 'core-js/stable/index.js'
+-import '@/styles/calendar.scss'
++import '../src/styles/calendar.scss'
+ 
+ // CSP config for webpack dynamic chunk loading
+ 
+```
+
 - the EditFull component needs an outer &lt;div&gt;...&lt;/div&gt;
   wrapper because of the v-if in the outer-most NcModal
   component. Other there will be rendering error when Vue does not
   find and parent for the comment node which replaces the NcModal if
   v-if evaluates to false.
+
+``` diff
+diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
+index 192cfda..639c413 100644
+--- a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
++++ b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
+@@ -3,7 +3,7 @@
+   - SPDX-License-Identifier: AGPL-3.0-or-later
+ -->
+ 
+-<template>
++<template><div>
+ 	<NcModal
+ 		v-if="calendarObjectInstance"
+ 		v-model="showFullModal"
+@@ -352,7 +352,7 @@
+ 			:buttons="cancelButtons"
+ 			@update:open="showCancelDialog = $event" />
+ 	</NcModal>
+-</template>
++</div></template>
+ 
+ <script>
+ import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
+
+```
