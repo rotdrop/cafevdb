@@ -41,6 +41,14 @@ resolves global substitutions but keeps the per-member placeholders.
 Use `$$` to escape a literal dollar sign. Stored templates and drafts retain
 their placeholders.
 
+German bank validation data is stored through Doctrine/ORM in the Nextcloud
+database, not in the orchestra database or a vendor bank-list file. It uses
+the same unprefixed `bav_bank`, `bav_agency`, and `bav_meta` tables as the
+optional BAV Nextcloud app, so existing bank data is shared even though each
+app has its own namespace-wrapped library. The BAV app is not required.
+Missing bank tables are installed and populated automatically; downloads
+for installation and explicit updates use temporary files.
+
 PHP code quality
 ----------------
 

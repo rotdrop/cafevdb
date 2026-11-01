@@ -29,15 +29,64 @@ use PHPUnit\Framework\TestCase;
 
 use Psr\Container\ContainerInterface;
 
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+
 use OCA\CAFEVDB\Wrapped\rotdrop\bav\BAV;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\Configuration\ConfigurationRegistry;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\DataBackend\DataBackend;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\DataBackend\DataBackendContainer;
 
 use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 use OCA\CAFEVDB\Service\Finance\BankAgency;
+use OCA\CAFEVDB\Service\Finance\BAVConfiguration;
+use OCA\CAFEVDB\Service\Registration;
 
 #[Attributes\CoversClass(BankAccountValidator::class)]
+#[Attributes\CoversClass(Registration::class)]
 #[Attributes\UsesClass(BankAgency::class)]
 class BankAccountValidatorTest extends TestCase
 {
+  public function testRegisteredBavUsesDatabaseConfiguration(): void
+  {
+    $factory = null;
+    $context = $this->createMock(IRegistrationContext::class);
+    $context->expects(self::atLeastOnce())
+      ->method('registerService')
+      ->willReturnCallback(function(string $name, callable $serviceFactory) use (&$factory): void {
+        if ($name === BAV::class) {
+          $factory = $serviceFactory;
+        }
+      });
+
+    Registration::register($context);
+    self::assertIsCallable($factory);
+
+    $backend = $this->createStub(DataBackend::class);
+    $backendContainer = $this->createMock(DataBackendContainer::class);
+    $backendContainer->expects(self::once())
+      ->method('getDataBackend')
+      ->willReturn($backend);
+    $configuration = $this->createMock(BAVConfiguration::class);
+    $configuration->expects(self::once())
+      ->method('getDataBackendContainer')
+      ->willReturn($backendContainer);
+    $previousConfiguration = ConfigurationRegistry::getConfiguration();
+
+    try {
+      $container = $this->createMock(ContainerInterface::class);
+      $container->expects(self::once())
+        ->method('get')
+        ->with(BAVConfiguration::class)
+        ->willReturn($configuration);
+      $bav = $factory($container);
+      self::assertInstanceOf(BAV::class, $bav);
+      self::assertSame($backend, $bav->getDataBackend());
+      self::assertSame($configuration, ConfigurationRegistry::getConfiguration());
+    } finally {
+      ConfigurationRegistry::setConfiguration($previousConfiguration);
+    }
+  }
+
   public function testIsValidBankUsesBavFacade(): void
   {
     $bav = new class {
