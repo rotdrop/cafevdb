@@ -52,5 +52,10 @@ make phpmd
 PHPMD runs with one thread because its patched entry point cannot dispatch
 worker subcommands.
 
+The app's Doctrine dependencies are namespace-wrapped with PHP-Scoper. Its
+configuration rewrites dynamic class-constant lookups in Doctrine's attribute
+driver and DQL lexer, and CI verifies attribute metadata, SQLite schema
+creation, and DQL execution against the wrapped ORM.
+
 --
 cH
