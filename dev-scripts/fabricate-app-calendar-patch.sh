@@ -38,8 +38,8 @@ function transformDirectory(directory) {
                 continue
             }
             const original = buffer.toString('utf8')
-            const prefix = path.relative(path.dirname(filename), source).split(path.sep).join('/') || '.'
-            const updated = original.replace(/(['"])@\//g, `$1${prefix}/`)
+            const prefix = path.relative(path.dirname(filename), packageRoot).split(path.sep).join('/')
+            const updated = original.replace(/(['"])(?:@\/|(?:\.\.\/)+src\/)/g, `$1${prefix}/src/`)
             if (updated !== original) {
                 changes.set(filename, updated)
             }
@@ -121,3 +121,12 @@ for patch in patches/@nextcloud+app-calendar+*.patch; do
         rm -- "$patch"
     fi
 done
+
+calendarPatchPathspec=':(glob)patches/@nextcloud+app-calendar+*.patch'
+git add -A -- "$calendarPatchPathspec"
+if ! git diff --cached --quiet -- "$calendarPatchPathspec"; then
+    git commit -n --only \
+        -m "build: regenerate $generatedPatch" \
+        -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+        -- "$calendarPatchPathspec"
+fi
