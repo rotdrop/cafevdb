@@ -22,14 +22,14 @@
  -
  -->
 <template>
-  <NcModal ref="modal"
-           :closeOnClickOutside="false"
+  <NcModal :closeOnClickOutside="false"
            :hasNext="false"
            :hasPrevious="false"
            :labelId="errorPageHeadingId"
            size="large"
            :container="modalContainer()"
            v-bind="$attrs"
+           @update:show="emit('update:show', $event)"
   >
     <template #default>
       <h2 :id="errorPageHeadingId" class="error-page-heading">
@@ -39,7 +39,7 @@
                  :initialView="initialView"
                  :noSummary="noSummary"
                  :closeDetailsLabel="closeDetailsLabel"
-                 @close="modal && modal.close()"
+                 @close="emit('update:show', false)"
       />
     </template>
   </NcModal>
@@ -78,8 +78,11 @@ withDefaults(defineProps<{
   closeDetailsLabel: t(appName, 'close details view'),
 })
 
+const emit = defineEmits<{
+  'update:show': [show: boolean]
+}>()
+
 const errorPageHeadingId = ref<string>(uuidv4())
-const modal = ref<null|typeof NcModal>(null)
 
 </script>
 

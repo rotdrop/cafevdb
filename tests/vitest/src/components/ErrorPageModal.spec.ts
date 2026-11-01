@@ -36,11 +36,13 @@ import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { setActivePinia } from 'pinia';
 import { createTestingPinia } from '@pinia/testing';
 import { mount } from '@vue/test-utils';
+import { NcModal } from '@nextcloud/vue';
 import { AxiosError } from 'axios';
 import fs from 'fs';
 import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 import path from 'path';
 import VueComponent from '~/src/components/ErrorPageModal.vue';
+import ErrorPage from '~/src/components/ErrorPage.vue';
 import { isJqNextcloudLogEntryXHR } from '~/src/types/ajax/jqxhr-error.ts';
 import { isNextcloudExceptionResponse } from '~/src/types/ajax/php-exception-response.ts';
 
@@ -129,7 +131,7 @@ beforeAll(() => {
   exceptionLogEntry = JSON.parse(exceptionLogEntryJSON.toString()) as NextcloudLogEntry;
 });
 
-describe('HtmlErrorModal component', () => {
+describe('ErrorPageModal component', () => {
 
   const pinia = createTestingPinia({ stubActions: [] });
 
@@ -159,6 +161,37 @@ describe('HtmlErrorModal component', () => {
 
     const wrapper = mount(VueComponent, mountOptions);
     expect(wrapper.vm).toBeTruthy();
+  });
+
+  it('should request closing when the error page emits close', async () => {
+    const onUpdateShow = vi.fn();
+    const wrapper = mount(VueComponent, {
+      ...mountOptions,
+      props: { ...props, show: true, 'onUpdate:show': onUpdateShow },
+    });
+
+    wrapper.getComponent(ErrorPage).vm.$emit('close');
+
+    expect(wrapper.emitted('update:show')).toEqual([[false]]);
+    expect(onUpdateShow).toHaveBeenCalledExactlyOnceWith(false);
+
+    await wrapper.setProps({ show: false });
+    expect(wrapper.getComponent(NcModal).props('show')).toBe(false);
+    wrapper.unmount();
+  });
+
+  it('should forward modal visibility updates once', () => {
+    const onUpdateShow = vi.fn();
+    const wrapper = mount(VueComponent, {
+      ...mountOptions,
+      props: { ...props, show: true, 'onUpdate:show': onUpdateShow },
+    });
+
+    wrapper.getComponent(NcModal).vm.$emit('update:show', false);
+
+    expect(wrapper.emitted('update:show')).toEqual([[false]]);
+    expect(onUpdateShow).toHaveBeenCalledExactlyOnceWith(false);
+    wrapper.unmount();
   });
 
   it('should handle a Nextcloud exception response', () => {
