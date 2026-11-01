@@ -32,13 +32,13 @@ use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 use OCA\CAFEVDB\Wrapped\rotdrop\bav\BAV;
-use OCA\CAFEVDB\Wrapped\rotdrop\bav\Configuration\Configuration;
 use OCA\CAFEVDB\Wrapped\rotdrop\bav\Configuration\ConfigurationRegistry;
 use OCA\CAFEVDB\Wrapped\rotdrop\bav\DataBackend\DataBackend;
 use OCA\CAFEVDB\Wrapped\rotdrop\bav\DataBackend\DataBackendContainer;
 
 use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 use OCA\CAFEVDB\Service\Finance\BankAgency;
+use OCA\CAFEVDB\Service\Finance\BAVConfiguration;
 use OCA\CAFEVDB\Service\Registration;
 
 #[Attributes\CoversClass(BankAccountValidator::class)]
@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\Registration;
 #[Attributes\UsesClass(BankAgency::class)]
 class BankAccountValidatorTest extends TestCase
 {
-  public function testRegisteredBavUsesRegistryConfiguration(): void
+  public function testRegisteredBavUsesDatabaseConfiguration(): void
   {
     $factory = null;
     $context = $this->createMock(IRegistrationContext::class);
@@ -66,17 +66,22 @@ class BankAccountValidatorTest extends TestCase
     $backendContainer->expects(self::once())
       ->method('getDataBackend')
       ->willReturn($backend);
-    $configuration = new Configuration();
-    $configuration->setDataBackendContainer($backendContainer);
+    $configuration = $this->createMock(BAVConfiguration::class);
+    $configuration->expects(self::once())
+      ->method('getDataBackendContainer')
+      ->willReturn($backendContainer);
     $previousConfiguration = ConfigurationRegistry::getConfiguration();
-    ConfigurationRegistry::setConfiguration($configuration);
 
     try {
       $container = $this->createMock(ContainerInterface::class);
-      $container->expects(self::never())->method('get');
+      $container->expects(self::once())
+        ->method('get')
+        ->with(BAVConfiguration::class)
+        ->willReturn($configuration);
       $bav = $factory($container);
       self::assertInstanceOf(BAV::class, $bav);
       self::assertSame($backend, $bav->getDataBackend());
+      self::assertSame($configuration, ConfigurationRegistry::getConfiguration());
     } finally {
       ConfigurationRegistry::setConfiguration($previousConfiguration);
     }
