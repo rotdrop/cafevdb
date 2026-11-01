@@ -24,13 +24,13 @@
 
 namespace OCA\CAFEVDB\Common;
 
-
 use OCP\IDBConnection;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper;
-use OCA\CAFEVDB\Database\Cloud\Entities;use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Database\Cloud\Entities;
+use OCA\CAFEVDB\Exceptions;
 
 /** Progress-status via database table. */
 class DatabaseProgressStatus extends AbstractProgressStatus

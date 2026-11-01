@@ -41,6 +41,7 @@ class GnuCashAccountsAutocompleteData extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\T
   /**
    * Initialize from the given array.
    *P
+   *
    * @param array $data
    *
    * @return self

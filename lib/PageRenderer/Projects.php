@@ -1176,7 +1176,7 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param null|array $oldVals Self-explanatory.
+   * @param null|array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *

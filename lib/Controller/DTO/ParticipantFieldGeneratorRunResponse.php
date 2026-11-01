@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 
 /**

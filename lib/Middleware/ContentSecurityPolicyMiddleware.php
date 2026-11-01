@@ -44,6 +44,8 @@ class ContentSecurityPolicyMiddleware extends Middleware
 
   /**
    * @param IControllerMethodReflector $reflector
+   *
+   * @param LoggerInterface $logger
    */
   public function __construct(
     protected IControllerMethodReflector $reflector,

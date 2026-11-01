@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
@@ -38,7 +37,6 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Exceptions;
-
 
 /**
  * An entity listener for Entities\ProjectEvent. The task is to remove the

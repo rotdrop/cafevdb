@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-
 /**
  * Response DTO of EmailFormController::webForm()
  */

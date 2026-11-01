@@ -65,6 +65,10 @@ interface IPageRenderer extends IRenderer
   /**
    * Return the navigation item for this renderer.
    *
+   * @param null|int $projectId
+   *
+   * @param null|string $projectName
+   *
    * @return SidebarNavigationItem
    */
   public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem;

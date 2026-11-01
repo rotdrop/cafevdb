@@ -598,7 +598,7 @@ GROUP BY b.short_name',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'],  DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'rate', [
+      $opts['fdd'], DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'rate', [
         'name' => $this->l->t('Tax Rate'),
         'input' => 'N',
         'tab' => [ 'id' => 'finance' ],

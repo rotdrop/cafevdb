@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Common;
 
-
-
 /** Dummy implementation doing nothing. */
 class DoNothingProgressStatus extends AbstractProgressStatus
 {

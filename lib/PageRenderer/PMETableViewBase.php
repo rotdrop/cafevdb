@@ -2550,7 +2550,7 @@ UNION
    *
    * @param array $joinInfo Join desciption, see PMETableViewBase::defineJoinStructure().
    *
-   * @param array $fields FIELDNAME => ENUM_CLASS array
+   * @param array $fields FIELDNAME => ENUM_CLASS array.
    *
    * @return string SQL fragment.
    */

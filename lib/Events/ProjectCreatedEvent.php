@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
-
 /** Event fired after project creation. */
 class ProjectCreatedEvent extends ProjectEvent
 {

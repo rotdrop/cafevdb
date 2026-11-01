@@ -28,7 +28,6 @@ use Closure;
 
 use OCP\Files\FileInfo;
 
-
 /**
  * Remove the given node, which must be a regular file.
  */

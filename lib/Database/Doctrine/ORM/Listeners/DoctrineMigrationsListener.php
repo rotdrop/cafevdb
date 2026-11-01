@@ -38,7 +38,7 @@ class DoctrineMigrationsListener implements EventSubscriber
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
-   * @param LoggerInterface $logger
+   * @param ConsoleLogger $logger
    *
    * @param bool $isCLI
    */

@@ -33,7 +33,7 @@ trait LogTrait
   /**
    * @param string $message
    *
-   * @param mixed $level
+   * @param int $level
    *
    * @param int $shift
    *

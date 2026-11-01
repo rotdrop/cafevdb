@@ -46,7 +46,7 @@ class BlogResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\Abstract
   /**
    * Create from FinanceService::getIbanInfo().
    *
-   * @param array $date
+   * @param array $data
    *
    * @return self
    *
