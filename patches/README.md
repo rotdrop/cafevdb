@@ -2,6 +2,20 @@
 
 ## @nextcloud/app-calendar
 
+After installing the npm dependencies, regenerate the patch manually with:
+
+``` shell
+make fabricate-app-calendar-patch
+# Or, from any working directory:
+/path/to/cafevdb/dev-scripts/fabricate-app-calendar-patch.sh
+```
+
+The script applies the changes below to the installed package and invokes
+the local `patch-package` executable to write its versioned patch in `patches/`.
+It can be run again on an already transformed package. Review the generated
+patch before committing; after a package version change, remove the obsolete
+version's patch once the replacement has been verified.
+
 Already a patched version with some add-ons. In order to make it fit
 for reusal in this app (we want to have the editor components) one has to
 change some things:
@@ -19,7 +33,8 @@ done
   does not use the query string but just include a base64 inline uri
   and then tries to convert it back to svg with `atob()`. This fails
   as we do use the `raw` resource query in order to flag direct
-  unmodified inclusion. Those btoa's have just to be removed.
+  unmodified inclusion. Remove the SVG's `atob()` decoding and use the raw
+  import directly; retain unrelated `btoa()` calls such as the CSP nonce.
 
 ``` diff
 diff --git a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js

@@ -312,6 +312,11 @@ WEBPACK_DEPS =\
 
 include $(DEV_LIB_DIR)/makefile/npm.mk
 
+#@@ Regenerates the app-calendar patch from the installed npm package.
+fabricate-app-calendar-patch:
+	$(BASH) $(ABSSRCDIR)/dev-scripts/fabricate-app-calendar-patch.sh
+.PHONY: fabricate-app-calendar-patch
+
 #@@ Removes build files
 clean: ## Tidy up local environment
 	rm -rf $(BUILDDIR)
