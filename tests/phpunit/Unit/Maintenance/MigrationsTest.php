@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(MigrationsNamespace\Version20260819105948::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20261009150233::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20261031220000::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20261101120000::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
@@ -107,11 +108,13 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait::class)]
 class MigrationsTest extends TestCase
 {
   use SetupMigrationTrait;
@@ -351,6 +354,42 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion20261031220000')]
+  public function testVersion20261101120000(): void
+  {
+    $migration = substr(__METHOD__, -14);
+    $this->applyMigrations($migration);
+
+    $templates = [
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::SUBSTITUTIONS_REFERENCE_ENGLISH => [
+        'MEMBER' => \OCA\CAFEVDB\EmailForm\EnumMemberSubstitutionKey::values(),
+        'GLOBAL' => \OCA\CAFEVDB\EmailForm\EnumGlobalSubstitutionKey::values(),
+      ],
+      \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::SUBSTITUTIONS_REFERENCE_GERMAN => [
+        'MITGLIED' => [ 'VORNAME', 'SPENDENBETRAG', 'RECHNUNGSNUMMER', 'SEPA_MANDAT_REFERENZ' ],
+        'GLOBAL' => [ 'ABSENDER', 'BANK_AUFTRAG_FÄLLIGKEIT_DATUM' ],
+      ],
+    ];
+
+    $repository = $this->getEntityManager()->getRepository(Entities\EmailTemplate::class);
+    foreach ($templates as $tag => $substitutions) {
+      $template = $repository->findOneBy(['tag' => $tag]);
+      $this->assertInstanceOf(Entities\EmailTemplate::class, $template);
+      $contents = $template->getContents();
+      $this->assertStringContainsString('<h2>', $contents);
+      $this->assertStringContainsString('<h3>', $contents);
+      foreach ($substitutions as $nameSpace => $keys) {
+        foreach ($keys as $key) {
+          $this->assertMatchesRegularExpression(
+            '/^<p>\$\{' . $nameSpace . '::' . preg_quote($key, '/') . '(:[^}]*)?\}<\/p>$/mu',
+            $contents,
+          );
+        }
+      }
+    }
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testVersion20261101120000')]
   public function testUpToLatest(): void
   {
     $this->applyMigrations('latest');

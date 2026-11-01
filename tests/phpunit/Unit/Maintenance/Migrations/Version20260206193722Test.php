@@ -55,6 +55,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(MigrationsNamespace\Version20260207000624::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20261009150233::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20261031220000::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20261101120000::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]

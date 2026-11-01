@@ -962,7 +962,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $gender = EnumGender::tryFrom(reset($guesses));
         }
       }
-      switch (strtolower($keyArg[1] ?? '')) {
+      switch (mb_strtolower($keyArg[1] ?? '')) {
         case 'formal':
         case $this->l->t('formal'):
         case $this->transliterate($this->l->t('formal')):
@@ -1838,16 +1838,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
+    $nameSpaceKey = $nameSpace->value; // handlers are registered with the untranslated namespace
     return preg_replace_callback(
       $regexp,
-      function($matches) use ($data, &$failures) {
+      function($matches) use ($data, &$failures, $nameSpaceKey) {
         $prefix = $matches[1]; // in order not to substitute $$
         $nameSpace = html_entity_decode($matches[2], ENT_HTML5, 'UTF-8');
         $separator = $matches[3];
         $variable  = array_map(function($value) {
           return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
-        $handler = $this->substitutions[$nameSpace][$variable[0]] ?? null;
+        $handler = $this->substitutions[$nameSpaceKey][$variable[0]] ?? null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
             throw new Exceptions\SubstitutionException(
