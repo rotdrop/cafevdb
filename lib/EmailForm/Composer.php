@@ -4384,7 +4384,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] =
               $this->l->t('Unknown substitution "%s".', $failure['namespace'] . '::' . implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
           }
         }
       }
