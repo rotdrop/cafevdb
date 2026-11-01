@@ -30,10 +30,12 @@ use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 /** Abstract page-renderer base class. */
 abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
 {
+  // phpcs:disable Squiz.Commenting.FunctionComment.ScalarTypeHintMissing -- Preserve the existing untyped constructor signature.
   /** @param string $appName */
   public function __construct(protected $appName)
   {
   }
+  // phpcs:enable Squiz.Commenting.FunctionComment.ScalarTypeHintMissing
 
   /** @return string */
   protected function appName(): string
