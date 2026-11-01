@@ -38,7 +38,7 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
-PHPCS = $(ABSSRCDIR)/vendor/bin/phpcs
+PHPCS = $(ABSSRCDIR)/vendor-bin/phpcs/vendor/bin/phpcs
 #
 EMACS = $(shell which emacs 2> /dev/null)
 
@@ -542,18 +542,20 @@ $(TSDOC_HTML)/index.html: doc/typedoc/typedoc.mjs $(APP_BUILD_HASH) $(WEBPACK_DE
 #
 ###############################################################################
 
-$(PHPCS): composer.lock
-	if ! [ -x $@ ]; then $(COMPOSER) bin phpcs install; else touch $@; fi
+$(PHPCS): vendor-bin/phpcs/composer.json
+	$(COMPOSER) install --working-dir=vendor-bin/phpcs --no-interaction --no-progress
 
-PHPCS_IGNORE=lib/Database/Doctrine/ORM/Proxies/,templates/legacy/
+PHP_LINT_EXCLUDES=lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*
+PHPCS_IGNORE=$(PHP_LINT_EXCLUDES)
+PHPCS_OPTIONS=--standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='$(PHPCS_IGNORE)'
 
 .PHONY: phpcs
 phpcs: $(PHPCS)
-	$(PHPCS) --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
+	$(PHPCS) $(PHPCS_OPTIONS) lib/
 
 .PHONY: phpcs-errors
 phpcs-errors: $(PHPCS)
-	$(PHPCS) --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
+	$(PHPCS) $(PHPCS_OPTIONS) -n lib/|grep FILE:|awk '{ print $$2; }'
 
 # Builds the source package
 .PHONY: source
