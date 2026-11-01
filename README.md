@@ -39,15 +39,14 @@ in `lib/Legacy/PhpMyEdit/`, and generated Doctrine ORM proxies in
 `lib/Database/Doctrine/ORM/Proxies/`.
 PHPCS reports warnings but only fails CI on errors.
 
-To run the same checks locally, initialize the build-system submodule and
-install the tools:
+To run the same checks locally, initialize the Makefile submodules and ensure
+the `xpath` binary is installed (`libxml-xpath-perl` on Debian/Ubuntu). The
+targets install their isolated Composer tools when needed:
 
 ```sh
-git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib
-composer install --working-dir=vendor-bin/phpcs --no-interaction --no-progress
-composer install --working-dir=vendor-bin/phpmd --no-interaction --no-progress
-vendor-bin/phpcs/vendor/bin/phpcs --standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*' lib/
-vendor-bin/phpmd/vendor/bin/phpmd lib/ --format text --ruleset .phpmd.xml --suffixes php --exclude '*/lib/Service/IMAP/*' --exclude '*/lib/Legacy/PhpMyEdit/*' --exclude '*/lib/Database/Doctrine/ORM/Proxies/*' --threads 1 --no-cache
+git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib dev-scripts/MakeHelp 3rdparty/selectize
+make phpcs
+make phpmd
 ```
 
 PHPMD runs with one thread because its patched entry point cannot dispatch
