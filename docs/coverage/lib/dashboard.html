@@ -199,7 +199,7 @@
  <a href="PageRenderer/Export/AbstractSpreadsheetExporter.php.html#36"><circle cx="60.0" cy="348.0" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\PageRenderer\Export\AbstractSpreadsheetExporter — Coverage: 0.0% | Lines: 87 | Complexity: 12</title></circle></a>
  <a href="Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php.html#54"><circle cx="386.5" cy="341.1" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDataOption — Coverage: 45.3% | Lines: 86 | Complexity: 54</title></circle></a>
  <a href="Common/Html2Text.php.html#46"><circle cx="763.1" cy="345.7" r="4.0" class="bubble-success"><title>OCA\CAFEVDB\Common\Html2Text — Coverage: 97.6% | Lines: 85 | Complexity: 26</title></circle></a>
- <a href="Service/Registration.php.html#41"><circle cx="60.0" cy="348.2" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\Registration — Coverage: 0.0% | Lines: 84 | Complexity: 11</title></circle></a>
+ <a href="Service/Registration.php.html#42"><circle cx="441.2" cy="348.2" r="4.0" class="bubble-warning"><title>OCA\CAFEVDB\Service\Registration — Coverage: 52.9% | Lines: 85 | Complexity: 11</title></circle></a>
  <a href="Storage/Database/DatabaseStorageNodeNameTrait.php.html#42"><circle cx="154.3" cy="345.2" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait — Coverage: 13.1% | Lines: 84 | Complexity: 29</title></circle></a>
  <a href="AddressBook/MusicianCardBackend.php.html#45"><circle cx="60.0" cy="345.1" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\AddressBook\MusicianCardBackend — Coverage: 0.0% | Lines: 83 | Complexity: 30</title></circle></a>
  <a href="Storage/Database/DonationReceiptsStorage.php.html#43"><circle cx="60.0" cy="345.1" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Storage\Database\DonationReceiptsStorage — Coverage: 0.0% | Lines: 83 | Complexity: 30</title></circle></a>
@@ -884,7 +884,6 @@
        <tr><td><a href="Database/Doctrine/ORM/Entities/ProjectApplication.php.html#38">OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectApplication</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Listener/MusicianEmailPersistanceListener.php.html#38">OCA\CAFEVDB\Listener\MusicianEmailPersistanceListener</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Listener/ProjectInstrumentEntityListener.php.html#43">OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
-       <tr><td><a href="Service/Registration.php.html#41">OCA\CAFEVDB\Service\Registration</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/WikiRPC.php.html#36">OCA\CAFEVDB\Service\WikiRPC</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/WordSplitterNotificationService.php.html#41">OCA\CAFEVDB\Service\WordSplitterNotificationService</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Storage/Database/EmptyDirectoryNode.php.html#37">OCA\CAFEVDB\Storage\Database\EmptyDirectoryNode</a></td><td class="number">132</td><td class="number">0.0%</td></tr>
@@ -1021,6 +1020,7 @@
        <tr><td><a href="Service/DoctrineMigrationsService.php.html#54">OCA\CAFEVDB\Service\DoctrineMigrationsService</a></td><td class="number">24.95</td><td class="number">81.7%</td></tr>
        <tr><td><a href="PageRenderer/FieldTraits/ProjectEntityTrait.php.html#36">OCA\CAFEVDB\PageRenderer\FieldTraits\ProjectEntityTrait</a></td><td class="number">24.86</td><td class="number">28.6%</td></tr>
        <tr><td><a href="Service/DomainNameService.php.html#37">OCA\CAFEVDB\Service\DomainNameService</a></td><td class="number">24.71</td><td class="number">51.6%</td></tr>
+       <tr><td><a href="Service/Registration.php.html#42">OCA\CAFEVDB\Service\Registration</a></td><td class="number">23.61</td><td class="number">52.9%</td></tr>
        <tr><td><a href="Controller/CspViolationController.php.html#39">OCA\CAFEVDB\Controller\CspViolationController</a></td><td class="number">23.23</td><td class="number">10.0%</td></tr>
        <tr><td><a href="PageRenderer/FieldTraits/SepaAccountsTrait.php.html#36">OCA\CAFEVDB\PageRenderer\FieldTraits\SepaAccountsTrait</a></td><td class="number">23.08</td><td class="number">94.8%</td></tr>
        <tr><td><a href="Traits/EnsureEntityTrait.php.html#32">OCA\CAFEVDB\Traits\EnsureEntityTrait</a></td><td class="number">21.82</td><td class="number">40.0%</td></tr>
@@ -1634,8 +1634,8 @@
  <a href="Service/Finance/FinanceService.php.html#620"><circle cx="60.0" cy="336.0" r="4.7" class="bubble-danger"><title>OCA\CAFEVDB\Service\Finance\FinanceService::preFilledDebitMandateForm — Coverage: 0.0% | Lines: 80 | Complexity: 17</title></circle></a>
  <a href="PageRenderer/FieldTraits/ParticipantFieldsTrait.php.html#2244"><circle cx="582.0" cy="339.3" r="4.7" class="bubble-warning"><title>OCA\CAFEVDB\PageRenderer\FieldTraits\ParticipantFieldsTrait::recurringChangeRowHtml — Coverage: 72.5% | Lines: 80 | Complexity: 13</title></circle></a>
  <a href="Traits/InitialStateTrait.php.html#80"><circle cx="60.0" cy="347.5" r="4.7" class="bubble-danger"><title>OCA\CAFEVDB\Traits\InitialStateTrait::publishInitialStateForUser — Coverage: 0.0% | Lines: 80 | Complexity: 3</title></circle></a>
+ <a href="Service/Registration.php.html#79"><circle cx="470.1" cy="344.2" r="4.7" class="bubble-warning"><title>OCA\CAFEVDB\Service\Registration::register — Coverage: 57.0% | Lines: 79 | Complexity: 7</title></circle></a>
  <a href="Migration/Version060000Date20201001210735.php.html#47"><circle cx="60.0" cy="347.5" r="4.6" class="bubble-danger"><title>OCA\CAFEVDB\Migration\Version060000Date20201001210735::changeSchema — Coverage: 0.0% | Lines: 78 | Complexity: 3</title></circle></a>
- <a href="Service/Registration.php.html#78"><circle cx="60.0" cy="344.2" r="4.6" class="bubble-danger"><title>OCA\CAFEVDB\Service\Registration::register — Coverage: 0.0% | Lines: 78 | Complexity: 7</title></circle></a>
  <a href="EmailForm/Composer.php.html#791"><circle cx="770.6" cy="340.1" r="4.6" class="bubble-success"><title>OCA\CAFEVDB\EmailForm\Composer::generateTransactionPartsTable — Coverage: 98.7% | Lines: 77 | Complexity: 12</title></circle></a>
  <a href="Legacy/PhpMyEdit/PhpMyEdit.php.html#5884"><circle cx="60.0" cy="325.2" r="4.6" class="bubble-danger"><title>OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::do_add_record — Coverage: 0.0% | Lines: 77 | Complexity: 30</title></circle></a>
  <a href="PageRenderer/ProjectPayments.php.html#1738"><circle cx="60.0" cy="332.7" r="4.6" class="bubble-danger"><title>OCA\CAFEVDB\PageRenderer\ProjectPayments::beforeUpdateSanitizeFields — Coverage: 0.0% | Lines: 77 | Complexity: 21</title></circle></a>
@@ -3042,7 +3042,7 @@
  <a href="Service/MailingListsService.php.html#1353"><circle cx="60.0" cy="347.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\MailingListsService::ensureListId — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
  <a href="Service/OrganizationalRolesService.php.html#197"><circle cx="60.0" cy="346.7" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\OrganizationalRolesService::dedicatedBoardMemberParticipant — Coverage: 0.0% | Lines: 6 | Complexity: 4</title></circle></a>
  <a href="Service/ProjectParticipantFieldsService.php.html#501"><circle cx="660.0" cy="348.4" r="4.0" class="bubble-warning"><title>OCA\CAFEVDB\Service\ProjectParticipantFieldsService::sanitizeFileName — Coverage: 83.3% | Lines: 6 | Complexity: 2</title></circle></a>
- <a href="Service/Registration.php.html#60"><circle cx="60.0" cy="346.7" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\Registration::oldConfigKey — Coverage: 0.0% | Lines: 6 | Complexity: 4</title></circle></a>
+ <a href="Service/Registration.php.html#61"><circle cx="60.0" cy="346.7" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Service\Registration::oldConfigKey — Coverage: 0.0% | Lines: 6 | Complexity: 4</title></circle></a>
  <a href="Service/WordSplitterService.php.html#146"><circle cx="660.0" cy="346.7" r="4.0" class="bubble-warning"><title>OCA\CAFEVDB\Service\WordSplitterService::appDataDir — Coverage: 83.3% | Lines: 6 | Complexity: 4</title></circle></a>
  <a href="Storage/AppStorage.php.html#212"><circle cx="60.0" cy="347.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Storage\AppStorage::fileExistsInFolder — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
  <a href="Storage/Database/AbstractReadMeFactory.php.html#100"><circle cx="60.0" cy="347.5" r="4.0" class="bubble-danger"><title>OCA\CAFEVDB\Storage\Database\AbstractReadMeFactory::isReadMe — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
@@ -6439,7 +6439,6 @@
        <tr><td><a href="Service/OrganizationalRolesService.php.html#323">OCA\CAFEVDB\Service\OrganizationalRolesService::isDedicatedBoardMember</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/PhoneNumberService.php.html#209">OCA\CAFEVDB\Service\PhoneNumberService::validate</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/ProjectService.php.html#1113">OCA\CAFEVDB\Service\ProjectService::getParticipantFieldFolderPath</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
-       <tr><td><a href="Service/Registration.php.html#78">OCA\CAFEVDB\Service\Registration::register</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Storage/Database/ProjectParticipantsStorage.php.html#308">OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage::addCompositePayment</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Storage/Database/TaxExemptionNoticesStorage.php.html#226">OCA\CAFEVDB\Storage\Database\TaxExemptionNoticesStorage::unlink</a></td><td class="number">56</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Controller/ProjectsController.php.html#96">OCA\CAFEVDB\Controller\ProjectsController::validate</a></td><td class="number">55.81</td><td class="number">63.3%</td></tr>
@@ -6795,7 +6794,7 @@
        <tr><td><a href="Service/ProblemReportService.php.html#94">OCA\CAFEVDB\Service\ProblemReportService::submit</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/ProjectParticipantFieldsService.php.html#814">OCA\CAFEVDB\Service\ProjectParticipantFieldsService::implodeDataOptions</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/ProjectParticipantFieldsService.php.html#868">OCA\CAFEVDB\Service\ProjectParticipantFieldsService::findGroupMembers</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
-       <tr><td><a href="Service/Registration.php.html#60">OCA\CAFEVDB\Service\Registration::oldConfigKey</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
+       <tr><td><a href="Service/Registration.php.html#61">OCA\CAFEVDB\Service\Registration::oldConfigKey</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/VCalendarService.php.html#322">OCA\CAFEVDB\Service\VCalendarService::updateVCalendarFromRequest</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/WordSplitterNotificationService.php.html#74">OCA\CAFEVDB\Service\WordSplitterNotificationService::notifyLocaleProblems</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
        <tr><td><a href="Service/WordSplitterNotificationService.php.html#124">OCA\CAFEVDB\Service\WordSplitterNotificationService::recipients</a></td><td class="number">20</td><td class="number">0.0%</td></tr>
@@ -7065,6 +7064,7 @@
        <tr><td><a href="Legacy/PhpMyEdit/PhpMyEdit.php.html#7127">OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::normalizeFilters</a></td><td class="number">11</td><td class="number">96.7%</td></tr>
        <tr><td><a href="PageRenderer/Instruments.php.html#146">OCA\CAFEVDB\PageRenderer\Instruments::render</a></td><td class="number">11</td><td class="number">96.2%</td></tr>
        <tr><td><a href="Service/CloudUserConnectorService.php.html#666">OCA\CAFEVDB\Service\CloudUserConnectorService::generateMusicianPersonalizedViewsStatements</a></td><td class="number">11</td><td class="number">97.5%</td></tr>
+       <tr><td><a href="Service/Registration.php.html#79">OCA\CAFEVDB\Service\Registration::register</a></td><td class="number">10.91</td><td class="number">57.0%</td></tr>
        <tr><td><a href="Service/Finance/GnuCashConnectorService.php.html#290">OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::exportCompositePaymentBalancingEntries</a></td><td class="number">10.53</td><td class="number">82.5%</td></tr>
        <tr><td><a href="Service/VCalendarService.php.html#844">OCA\CAFEVDB\Service\VCalendarService::createVAlarmFromSeconds</a></td><td class="number">10.53</td><td class="number">82.6%</td></tr>
        <tr><td><a href="Service/EventsService.php.html#464">OCA\CAFEVDB\Service\EventsService::getVEventSiblings</a></td><td class="number">10.51</td><td class="number">82.8%</td></tr>
@@ -10756,7 +10756,7 @@
    </section>
   </main>
   <footer>
-   <p class="credits">Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.5.0</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.12</a> and <a href="https://phpunit.de/">PHPUnit 13.4.5</a> at Sun Nov 1 21:19:05 UTC 2026.</p>
+   <p class="credits">Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.5.0</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.12</a> and <a href="https://phpunit.de/">PHPUnit 13.4.5</a> at Sun Nov 1 22:12:55 UTC 2026.</p>
   </footer>
  </body>
 </html>
