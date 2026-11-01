@@ -121,3 +121,12 @@ for patch in patches/@nextcloud+app-calendar+*.patch; do
         rm -- "$patch"
     fi
 done
+
+calendarPatchPathspec=':(glob)patches/@nextcloud+app-calendar+*.patch'
+git add -A -- "$calendarPatchPathspec"
+if ! git diff --cached --quiet -- "$calendarPatchPathspec"; then
+    git commit --only \
+        -m "build: regenerate $generatedPatch" \
+        -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+        -- "$calendarPatchPathspec"
+fi

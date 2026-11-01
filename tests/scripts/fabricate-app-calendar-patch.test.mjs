@@ -2,13 +2,15 @@
 
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 
 const repository = path.resolve(import.meta.dirname, '../..')
-const patch = readFileSync(path.join(repository, 'patches/@nextcloud+app-calendar+6.6.2.patch'), 'utf8')
+const patchFilename = readdirSync(path.join(repository, 'patches')).find((name) => /^@nextcloud\+app-calendar\+.*\.patch$/.test(name))
+assert.ok(patchFilename, 'A Calendar reference patch must exist')
+const patch = readFileSync(path.join(repository, 'patches', patchFilename), 'utf8')
 const imports = new Map()
 let filename
 let removed
@@ -32,6 +34,12 @@ function write(root, filename, contents, mode) {
     const destination = path.join(root, filename)
     mkdirSync(path.dirname(destination), { recursive: true })
     writeFileSync(destination, contents, { mode })
+}
+
+function git(root, ...args) {
+    const result = spawnSync('git', args, { cwd: root, encoding: 'utf8' })
+    assert.equal(result.status, 0, result.stderr)
+    return result.stdout.trim()
 }
 
 function fixture(t, state) {
@@ -77,6 +85,13 @@ if (process.env.CALENDAR_PATCH_TEST_FAIL === '1') process.exit(1)
 const directory = args[args.indexOf('--patch-dir') + 1]
 fs.writeFileSync(directory + '/@nextcloud+app-calendar+6.6.4.patch', 'generated patch')
 `, 0o755)
+    git(root, 'init', '--quiet')
+    git(root, 'config', 'user.name', 'Calendar patch test')
+    git(root, 'config', 'user.email', 'calendar-patch-test@example.invalid')
+    git(root, 'add', 'patches')
+    git(root, 'commit', '--quiet', '-m', 'Initial patches')
+    write(root, 'patches/unrelated.patch', 'staged unrelated patch')
+    git(root, 'add', 'patches/unrelated.patch')
     return root
 }
 
@@ -117,7 +132,13 @@ function verify(root) {
         assert.equal(readFileSync(path.join(source, excluded), 'utf8'), "import logger from '@/utils/logger.js'\n")
     }
     assert.equal(readFileSync(path.join(source, 'binary.dat')).includes(0), true)
-    assert.equal(readFileSync(path.join(root, 'patches/unrelated.patch'), 'utf8'), 'unrelated patch')
+    assert.equal(readFileSync(path.join(root, 'patches/unrelated.patch'), 'utf8'), 'staged unrelated patch')
+    assert.equal(git(root, 'show', 'HEAD:patches/unrelated.patch'), 'unrelated patch')
+    assert.equal(git(root, 'diff', '--cached', '--name-only'), 'patches/unrelated.patch')
+    assert.equal(git(root, 'show', '--format=', '--name-status', 'HEAD'), [
+        'D\tpatches/@nextcloud+app-calendar+6.6.2.patch',
+        'A\tpatches/@nextcloud+app-calendar+6.6.4.patch',
+    ].join('\n'))
     assert.equal(existsSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.2.patch')), false)
     assert.equal(readFileSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.4.patch'), 'utf8'), 'generated patch')
 }
@@ -128,15 +149,30 @@ for (const state of ['original', 'wrong', 'correct']) {
         let result = run(root)
         assert.equal(result.status, 0, result.stderr)
         verify(root)
+        const commit = git(root, 'rev-parse', 'HEAD')
         result = run(root)
         assert.equal(result.status, 0, result.stderr)
         verify(root)
+        assert.equal(git(root, 'rev-parse', 'HEAD'), commit, 'No empty commit on rerun')
     })
 }
 
 test('Keep existing patches when patch-package fails', (t) => {
     const root = fixture(t, 'original')
+    const commit = git(root, 'rev-parse', 'HEAD')
     assert.notEqual(run(root, true).status, 0)
+    assert.equal(git(root, 'rev-parse', 'HEAD'), commit)
     assert.equal(readFileSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.2.patch'), 'utf8'), 'old patch')
     assert.equal(existsSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.4.patch')), false)
+})
+
+test('Report commit failures and retain the generated patch', (t) => {
+    const root = fixture(t, 'original')
+    const commit = git(root, 'rev-parse', 'HEAD')
+    write(root, '.git/hooks/pre-commit', '#!/bin/sh\necho "Commit rejected" >&2\nexit 1\n', 0o755)
+    const result = run(root)
+    assert.notEqual(result.status, 0)
+    assert.ok(result.stderr.includes('Commit rejected'))
+    assert.equal(git(root, 'rev-parse', 'HEAD'), commit)
+    assert.equal(readFileSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.4.patch'), 'utf8'), 'generated patch')
 })
