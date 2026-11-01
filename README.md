@@ -30,5 +30,28 @@ Features include
 The orchestra data-base is held separate from the cloud database and
 is based on Doctrine/ORM.
 
+PHP code quality
+----------------
+
+The PHPCS and PHPMD workflows check PHP files in `lib/` using `.phpcs.xml`
+and `.phpmd.xml`. They omit `templates/`, `lib/Service/IMAP/`, legacy PhpMyEdit
+in `lib/Legacy/PhpMyEdit/`, and generated Doctrine ORM proxies in
+`lib/Database/Doctrine/ORM/Proxies/`.
+PHPCS reports warnings but only fails CI on errors.
+
+To run the same checks locally, initialize the build-system submodule and
+install the tools:
+
+```sh
+git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib
+composer install --working-dir=vendor-bin/phpcs --no-interaction --no-progress
+composer install --working-dir=vendor-bin/phpmd --no-interaction --no-progress
+vendor-bin/phpcs/vendor/bin/phpcs --standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*' lib/
+vendor-bin/phpmd/vendor/bin/phpmd lib/ --format text --ruleset .phpmd.xml --suffixes php --exclude '*/lib/Service/IMAP/*' --exclude '*/lib/Legacy/PhpMyEdit/*' --exclude '*/lib/Database/Doctrine/ORM/Proxies/*' --threads 1 --no-cache
+```
+
+PHPMD runs with one thread because its patched entry point cannot dispatch
+worker subcommands.
+
 --
 cH
