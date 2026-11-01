@@ -39,6 +39,7 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
 PHPCS = $(ABSSRCDIR)/vendor-bin/phpcs/vendor/bin/phpcs
+PHPMD = $(ABSSRCDIR)/vendor-bin/phpmd/vendor/bin/phpmd
 #
 EMACS = $(shell which emacs 2> /dev/null)
 
@@ -556,6 +557,16 @@ phpcs: $(PHPCS)
 .PHONY: phpcs-errors
 phpcs-errors: $(PHPCS)
 	$(PHPCS) $(PHPCS_OPTIONS) -n lib/|grep FILE:|awk '{ print $$2; }'
+
+$(PHPMD): vendor-bin/phpmd/composer.json
+	$(COMPOSER) install --working-dir=vendor-bin/phpmd --no-interaction --no-progress
+
+PHP_LINT_COMMA := ,
+PHPMD_EXCLUDES=$(foreach path,$(subst $(PHP_LINT_COMMA), ,$(PHP_LINT_EXCLUDES)),--exclude '*/$(path)')
+
+.PHONY: phpmd
+phpmd: $(PHPMD)
+	$(PHPMD) lib/ --format text --ruleset .phpmd.xml --suffixes php $(PHPMD_EXCLUDES) --threads 1 --no-cache
 
 # Builds the source package
 .PHONY: source
