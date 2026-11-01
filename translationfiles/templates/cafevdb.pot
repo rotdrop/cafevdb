@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2026-10-31 18:28+0100\n"
+"POT-Creation-Date: 2026-11-01 17:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1554,7 +1554,7 @@ msgid "Unknown request: `%s'."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1090
-#: src/app/email.ts:2276
+#: src/app/email.ts:2281
 msgid "Form Input"
 msgstr ""
 
@@ -2549,7 +2549,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1878
-#: lib/Settings/PersonalForm.php:434
+#: lib/Settings/PersonalForm.php:446
 #, php-format
 msgid "%d days"
 msgstr ""
@@ -4154,114 +4154,116 @@ msgstr ""
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:569
+#: lib/EmailForm/Composer.php:570
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:597
+#: lib/EmailForm/Composer.php:598
 #: lib/EmailForm/RecipientsFilter.php:279
 #, php-format
 msgid "Unable to find the invoice with id %d."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:670
+#: lib/EmailForm/Composer.php:680
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:685
-#: src/app/email.ts:1688
+#: lib/EmailForm/Composer.php:699
+#: src/app/email.ts:1693
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:791
-#: lib/EmailForm/Composer.php:846
-#: lib/EmailForm/Composer.php:1274
-#: lib/EmailForm/Composer.php:1296
+#: lib/EmailForm/Composer.php:805
+#: lib/EmailForm/Composer.php:860
+#: lib/EmailForm/Composer.php:1288
+#: lib/EmailForm/Composer.php:1310
 #: lib/PageRenderer/Invoices.php:783
 #: lib/PageRenderer/ProjectPayments.php:664
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:844
+#: lib/EmailForm/Composer.php:858
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:845
+#: lib/EmailForm/Composer.php:859
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:847
-#: lib/EmailForm/Composer.php:1275
+#: lib/EmailForm/Composer.php:861
+#: lib/EmailForm/Composer.php:1289
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:848
-#: lib/EmailForm/Composer.php:1276
+#: lib/EmailForm/Composer.php:862
+#: lib/EmailForm/Composer.php:1290
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:953
-#: lib/EmailForm/Composer.php:954
+#: lib/EmailForm/Composer.php:967
+#: lib/EmailForm/Composer.php:968
+#: lib/Service/EmailTemplateDefaultsService.php:227
 msgid "formal"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:958
-#: lib/EmailForm/Composer.php:959
+#: lib/EmailForm/Composer.php:972
+#: lib/EmailForm/Composer.php:973
+#: lib/Service/EmailTemplateDefaultsService.php:228
 msgid "informal"
 msgstr ""
 
 #. TRANSLATORS: Formal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:971
+#: lib/EmailForm/Composer.php:985
 #, php-format
 msgid "DIVERSE_SALUTATION_FORMAL: Dear %1$s %2$s"
 msgstr ""
 
 #. TRANSLATORS: Formal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:974
+#: lib/EmailForm/Composer.php:988
 #, php-format
 msgid "FEMALE_SALUTATION_FORMAL: Dear Mrs. %2$s"
 msgstr ""
 
 #. TRANSLATORS: Formal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:977
+#: lib/EmailForm/Composer.php:991
 #, php-format
 msgid "MALE_SALUTATION_FORMAL: Dear Mr. %2$s"
 msgstr ""
 
 #. TRANSLATORS: Formal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:980
+#: lib/EmailForm/Composer.php:994
 msgid "UNKNOWN_SALUTATION_FORMAL: Dear %1$s %2$"
 msgstr ""
 
 #. TRANSLATORS: Informal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:986
+#: lib/EmailForm/Composer.php:1000
 #, php-format
 msgid "DIVERSE_SALUTATION_INFORMAL: Dear %1$s"
 msgstr ""
 
 #. TRANSLATORS: Informal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:989
+#: lib/EmailForm/Composer.php:1003
 #, php-format
 msgid "FEMALE_SALUTATION_INFORMAL: Dear %1$s"
 msgstr ""
 
 #. TRANSLATORS: Informal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:992
+#: lib/EmailForm/Composer.php:1006
 #, php-format
 msgid "MALE_SALUTATION_INFORMAL: Dear %1$s"
 msgstr ""
 
 #. TRANSLATORS: Informal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
-#: lib/EmailForm/Composer.php:995
+#: lib/EmailForm/Composer.php:1009
 #, php-format
 msgid "UNKNOWN_SALUTATION_INFORMAL: Dear %1$s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1273
+#: lib/EmailForm/Composer.php:1287
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1274
+#: lib/EmailForm/Composer.php:1288
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:592
 #: lib/PageRenderer/ProjectParticipantFields.php:666
 #: lib/PageRenderer/ProjectParticipantFields.php:1763
@@ -4269,7 +4271,7 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1277
+#: lib/EmailForm/Composer.php:1291
 #: lib/PageRenderer/InstrumentInsurances.php:633
 #: lib/PageRenderer/Invoices.php:908
 #: lib/PageRenderer/Invoices.php:919
@@ -4277,225 +4279,226 @@ msgstr ""
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1416
+#: lib/EmailForm/Composer.php:1430
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1552
+#: lib/EmailForm/Composer.php:1566
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:145
 #: lib/PageRenderer/ProjectParticipantFields.php:902
 #: lib/PageRenderer/ProjectParticipantFields.php:908
 msgid "yes"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1553
+#: lib/EmailForm/Composer.php:1567
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:149
 #: lib/PageRenderer/ProjectParticipantFields.php:902
 msgid "no"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1840
+#: lib/EmailForm/Composer.php:1855
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1924
+#: lib/EmailForm/Composer.php:1939
 msgid ""
 "Unable to lock the email-sending action, Redis ist not available. This is an "
 "internal error, please report this to the system administrator."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1948
+#: lib/EmailForm/Composer.php:1963
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1959
+#: lib/EmailForm/Composer.php:1974
 msgid "Someone is already sending email, please try again later."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2088
-#: lib/EmailForm/Composer.php:3903
+#: lib/EmailForm/Composer.php:2103
+#: lib/EmailForm/Composer.php:3918
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3012
-#: lib/EmailForm/Composer.php:3521
+#: lib/EmailForm/Composer.php:3027
+#: lib/EmailForm/Composer.php:3536
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3722
+#: lib/EmailForm/Composer.php:3737
 msgid "*** empty content ***"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3776
+#: lib/EmailForm/Composer.php:3791
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3778
+#: lib/EmailForm/Composer.php:3793
 msgid "Prewiew generation detected errors!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3851
+#: lib/EmailForm/Composer.php:3866
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3854
+#: lib/EmailForm/Composer.php:3869
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3857
+#: lib/EmailForm/Composer.php:3872
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4233
+#: lib/EmailForm/Composer.php:4248
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:4270
+#: lib/EmailForm/Composer.php:4285
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4355
-#: lib/EmailForm/Composer.php:4371
+#: lib/EmailForm/Composer.php:4370
+#: lib/EmailForm/Composer.php:4386
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4478
-#: lib/EmailForm/Composer.php:4658
-#: lib/EmailForm/Composer.php:4668
+#: lib/EmailForm/Composer.php:4493
+#: lib/EmailForm/Composer.php:4673
+#: lib/EmailForm/Composer.php:4683
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4501
+#: lib/EmailForm/Composer.php:4516
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4505
+#: lib/EmailForm/Composer.php:4520
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4511
+#: lib/EmailForm/Composer.php:4526
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4527
+#: lib/EmailForm/Composer.php:4542
 #, php-format
 msgid "your orchestra organizers (%s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4532
+#: lib/EmailForm/Composer.php:4547
 msgid "UNKNOWN"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4548
+#: lib/EmailForm/Composer.php:4563
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4590
+#: lib/EmailForm/Composer.php:4605
+#: lib/Service/EmailTemplateDefaultsService.php:229
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4607
+#: lib/EmailForm/Composer.php:4622
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4788
+#: lib/EmailForm/Composer.php:4803
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5141
+#: lib/EmailForm/Composer.php:5156
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5153
+#: lib/EmailForm/Composer.php:5168
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5179
+#: lib/EmailForm/Composer.php:5194
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5213
+#: lib/EmailForm/Composer.php:5228
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5271
-#: lib/EmailForm/Composer.php:5398
+#: lib/EmailForm/Composer.php:5286
+#: lib/EmailForm/Composer.php:5413
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5307
+#: lib/EmailForm/Composer.php:5322
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5332
+#: lib/EmailForm/Composer.php:5347
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5772
+#: lib/EmailForm/Composer.php:5787
 #, php-format
 msgid ""
 "The link \"%1$s\" refers to a file or folder \"%2$s\" inside the music "
 "sheets download folder \"%3$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5773
+#: lib/EmailForm/Composer.php:5788
 #, php-format
 msgid ""
 "The link \"%1$s\" is a manually generated reference to the music sheets "
 "download folder \"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5791
+#: lib/EmailForm/Composer.php:5806
 #, php-format
 msgid ""
 "The link \"%1$s\" refers to a file or folder \"%2$s\" inside the post-"
 "project media folder \"%3$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5792
+#: lib/EmailForm/Composer.php:5807
 #, php-format
 msgid ""
 "The link \"%1$s\" is a manually generated reference to the post-project "
 "media folder \"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5817
+#: lib/EmailForm/Composer.php:5832
 msgid ""
 "Web-references in emails are required to use \"https\", i.e. only SSL-"
 "encrypted web-sites may be referred to."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5821
+#: lib/EmailForm/Composer.php:5836
 #, php-format
 msgid "The link \"%1$s\" has been replaced by \"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5822
+#: lib/EmailForm/Composer.php:5837
 #, php-format
 msgid "Suggestion: replace \"%1$s\" by \"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5872
+#: lib/EmailForm/Composer.php:5887
 #, php-format
 msgid ""
 "The link has been replaced by \"%1$s\" in order to guarantee proper link "
@@ -4503,7 +4506,7 @@ msgid ""
 "should leave the executive board."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5876
+#: lib/EmailForm/Composer.php:5891
 #, php-format
 msgid ""
 "Please use the substitution \"%1$s\" instead. Otherwise proper link "
@@ -4512,35 +4515,35 @@ msgid ""
 "board."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5900
+#: lib/EmailForm/Composer.php:5915
 msgid "SSL validation failed. The external site is misconfigured."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5913
+#: lib/EmailForm/Composer.php:5928
 msgid "The link could not be opened."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6248
+#: lib/EmailForm/Composer.php:6263
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6249
+#: lib/EmailForm/Composer.php:6264
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6252
+#: lib/EmailForm/Composer.php:6267
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6255
+#: lib/EmailForm/Composer.php:6270
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6258
+#: lib/EmailForm/Composer.php:6273
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6384
+#: lib/EmailForm/Composer.php:6399
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -4928,6 +4931,18 @@ msgid ""
 "reasons, no real change)."
 msgstr ""
 
+#: lib/Maintenance/Migrations/Version20261031220000.php:40
+msgid ""
+"Create default email templates for bank transfers, debit notes, donation "
+"receipts, and invoices."
+msgstr ""
+
+#: lib/Maintenance/Migrations/Version20261101120000.php:40
+msgid ""
+"Create email templates listing all available substitutions with English and "
+"German variable names."
+msgstr ""
+
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:138
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:147
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:158
@@ -4957,7 +4972,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:111
-#: src/app/email.ts:2280
+#: src/app/email.ts:2285
 msgid "Accept"
 msgstr ""
 
@@ -5120,7 +5135,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:350
 #: lib/PageRenderer/ProjectPayments.php:586
 #: lib/PageRenderer/SepaBulkTransactions.php:371
-#: specialVueFakeDummyForL10nScript.js:8914
+#: specialVueFakeDummyForL10nScript.js:8920
 msgid "Project"
 msgstr ""
 
@@ -5263,8 +5278,8 @@ msgstr ""
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:95
 #: lib/Service/CloudUserConnectorService.php:452
 #: specialVueFakeDummyForL10nScript.js:1682
-#: specialVueFakeDummyForL10nScript.js:8898
-#: specialVueFakeDummyForL10nScript.js:8910
+#: specialVueFakeDummyForL10nScript.js:8904
+#: specialVueFakeDummyForL10nScript.js:8916
 msgid "Musicians"
 msgstr ""
 
@@ -5340,6 +5355,8 @@ msgid "false"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/AllProjectsTrait.php:95
+#: lib/Service/EmailTemplateDefaultsService.php:246
+#: lib/Service/EmailTemplateDefaultsService.php:285
 msgid "Projects"
 msgstr ""
 
@@ -6210,7 +6227,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:932
 #: lib/PageRenderer/ProjectAssociates.php:1086
 #: lib/PageRenderer/ProjectParticipants.php:1355
-#: src/app/email.ts:2279
+#: src/app/email.ts:2284
 #: templates/emailform/part.emailform.composer.php:231
 #: templates/emailform/part.emailform.composer.php:251
 msgid "Address Book"
@@ -7121,7 +7138,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:612
-#: specialVueFakeDummyForL10nScript.js:8902
+#: specialVueFakeDummyForL10nScript.js:8908
 #: templates/emailform/form.php:39
 #: templates/emailform/part.emailform.composer.php:183
 msgid "Recipients"
@@ -7345,6 +7362,73 @@ msgstr ""
 #: lib/Service/EmailAddressService.php:96
 #, php-format
 msgid "Validation failed for: \"%s\"."
+msgstr ""
+
+#. TRANSLATORS: This string will be used as an email subject.
+#: lib/Service/EmailTemplateDefaultsService.php:108
+msgid "Bank transfer announcement template"
+msgstr ""
+
+#. TRANSLATORS: This string will be used as an email subject.
+#: lib/Service/EmailTemplateDefaultsService.php:114
+msgid "Debit note announcement template"
+msgstr ""
+
+#. TRANSLATORS: This string will be used as an email subject.
+#: lib/Service/EmailTemplateDefaultsService.php:120
+msgid "Donation receipt notification template"
+msgstr ""
+
+#. TRANSLATORS: This string will be used as an email subject.
+#: lib/Service/EmailTemplateDefaultsService.php:132
+msgid "Invoice notification template"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:171
+msgid ""
+"This template lists all available substitutions. It is meant as a reference, "
+"not as a ready-to-send email."
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:175
+#, php-format
+msgid "%s substitutions"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:185
+msgid "Substitutions reference"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:233
+#: lib/Service/EmailTemplateDefaultsService.php:264
+#: src/components/personal-settings/settings-tree.ts:61
+msgid "General"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:254
+msgid "Debit notes, bank transfers and invoices"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:258
+msgid "Debit notes and bank transfers"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:291
+msgid "Debit notes, bank transfers, donation receipts and invoices"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:300
+msgid "Debit notes"
+msgstr ""
+
+#: lib/Service/EmailTemplateDefaultsService.php:304
+msgid "Donation receipts"
+msgstr ""
+
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
+#: lib/Service/EmailTemplateDefaultsService.php:311
+#: specialVueFakeDummyForL10nScript.js:4256
+msgid "Invoices"
 msgstr ""
 
 #: lib/Service/EncryptionService.php:381
@@ -7633,9 +7717,9 @@ msgstr ""
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:108
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:266
-#: specialVueFakeDummyForL10nScript.js:8110
-#: specialVueFakeDummyForL10nScript.js:8118
-#: specialVueFakeDummyForL10nScript.js:8129
+#: specialVueFakeDummyForL10nScript.js:8113
+#: specialVueFakeDummyForL10nScript.js:8121
+#: specialVueFakeDummyForL10nScript.js:8132
 msgid "YEAR"
 msgstr ""
 
@@ -7912,7 +7996,7 @@ msgid "John"
 msgstr ""
 
 #: lib/Service/InstrumentationService.php:105
-#: specialVueFakeDummyForL10nScript.js:8120
+#: specialVueFakeDummyForL10nScript.js:8123
 msgid "john.doe"
 msgstr ""
 
@@ -8336,7 +8420,7 @@ msgstr ""
 #: lib/Service/ProjectService.php:1910
 #: lib/Service/ProjectService.php:1955
 #: lib/Service/ProjectService.php:2015
-#: lib/Settings/PersonalForm.php:327
+#: lib/Settings/PersonalForm.php:332
 msgid "Rehearsals"
 msgstr ""
 
@@ -11670,34 +11754,38 @@ msgstr ""
 msgid "Default Event Notification"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:221
+#: lib/Settings/PersonalForm.php:226
 msgid "ClubMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:223
+#: lib/Settings/PersonalForm.php:228
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:326
+#: lib/Settings/PersonalForm.php:331
 msgid "Concerts"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:328
+#: lib/Settings/PersonalForm.php:333
 msgid "Other"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:329
+#: lib/Settings/PersonalForm.php:334
 msgid "Management"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:273
-#: lib/Settings/PersonalForm.php:330
+#: lib/Settings/PersonalForm.php:335
 #: specialVueFakeDummyForL10nScript.js:1704
 msgid "Finance"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:333
+#: lib/Settings/PersonalForm.php:338
 msgid "Miscellaneous"
+msgstr ""
+
+#: lib/Settings/PersonalForm.php:560
+msgid "national holidays"
 msgstr ""
 
 #: lib/Storage/AppStorage.php:131
@@ -12054,7 +12142,7 @@ msgstr ""
 #. TRANSLATORS src/CAFeVDB.vue:70
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:34
 #: specialVueFakeDummyForL10nScript.js:578
-#: specialVueFakeDummyForL10nScript.js:8426
+#: specialVueFakeDummyForL10nScript.js:8432
 msgid "Tool-Tips"
 msgstr ""
 
@@ -12066,7 +12154,7 @@ msgstr ""
 #. TRANSLATORS src/CAFeVDB.vue:79
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:42
 #: specialVueFakeDummyForL10nScript.js:582
-#: specialVueFakeDummyForL10nScript.js:8428
+#: specialVueFakeDummyForL10nScript.js:8434
 msgid "Restore Last View"
 msgstr ""
 
@@ -12083,77 +12171,77 @@ msgstr ""
 #. TRANSLATORS src/CAFeVDB.vue:104
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:50
 #: specialVueFakeDummyForL10nScript.js:588
-#: specialVueFakeDummyForL10nScript.js:8430
+#: specialVueFakeDummyForL10nScript.js:8436
 msgid "Filter-Controls"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:109
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:58
 #: specialVueFakeDummyForL10nScript.js:590
-#: specialVueFakeDummyForL10nScript.js:8432
+#: specialVueFakeDummyForL10nScript.js:8438
 msgid "Quick Change-Dialog"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:114
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:66
 #: specialVueFakeDummyForL10nScript.js:592
-#: specialVueFakeDummyForL10nScript.js:8434
+#: specialVueFakeDummyForL10nScript.js:8440
 msgid "Deselect Invisible"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:118
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:72
 #: specialVueFakeDummyForL10nScript.js:594
-#: specialVueFakeDummyForL10nScript.js:8436
+#: specialVueFakeDummyForL10nScript.js:8442
 msgid "#Rows/Page in Tables"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:139
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:95
 #: specialVueFakeDummyForL10nScript.js:596
-#: specialVueFakeDummyForL10nScript.js:8440
+#: specialVueFakeDummyForL10nScript.js:8446
 msgid "Finance-Mode"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:144
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:103
 #: specialVueFakeDummyForL10nScript.js:598
-#: specialVueFakeDummyForL10nScript.js:8442
+#: specialVueFakeDummyForL10nScript.js:8448
 msgid "Expert-Mode"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:150
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:112
 #: specialVueFakeDummyForL10nScript.js:600
-#: specialVueFakeDummyForL10nScript.js:8444
+#: specialVueFakeDummyForL10nScript.js:8450
 msgid "Show Disabled Data-Sets"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:155
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:118
 #: specialVueFakeDummyForL10nScript.js:602
-#: specialVueFakeDummyForL10nScript.js:8446
+#: specialVueFakeDummyForL10nScript.js:8452
 msgid "Debug"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:167
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:126
 #: specialVueFakeDummyForL10nScript.js:604
-#: specialVueFakeDummyForL10nScript.js:8448
+#: specialVueFakeDummyForL10nScript.js:8454
 msgid "SQL Filter"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:168
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:127
 #: specialVueFakeDummyForL10nScript.js:606
-#: specialVueFakeDummyForL10nScript.js:8450
+#: specialVueFakeDummyForL10nScript.js:8456
 msgid "SQL filter regexp"
 msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:169
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:128
 #: specialVueFakeDummyForL10nScript.js:608
-#: specialVueFakeDummyForL10nScript.js:8452
+#: specialVueFakeDummyForL10nScript.js:8458
 msgid "A regular expression which selects matching SQL queries for logging."
 msgstr ""
 
@@ -12176,8 +12264,8 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:152
 #: specialVueFakeDummyForL10nScript.js:734
-#: specialVueFakeDummyForL10nScript.js:8141
-#: specialVueFakeDummyForL10nScript.js:8918
+#: specialVueFakeDummyForL10nScript.js:8147
+#: specialVueFakeDummyForL10nScript.js:8924
 #: src/components/personal-settings/settings-tree.ts:89
 msgid "Contacts"
 msgstr ""
@@ -12185,14 +12273,14 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:153
 #: specialVueFakeDummyForL10nScript.js:736
-#: specialVueFakeDummyForL10nScript.js:8920
+#: specialVueFakeDummyForL10nScript.js:8926
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:165
 #: specialVueFakeDummyForL10nScript.js:738
-#: specialVueFakeDummyForL10nScript.js:8922
+#: specialVueFakeDummyForL10nScript.js:8928
 msgid "Address-Books"
 msgstr ""
 
@@ -12215,7 +12303,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:1443
 #: specialVueFakeDummyForL10nScript.js:1514
 #: specialVueFakeDummyForL10nScript.js:1567
-#: specialVueFakeDummyForL10nScript.js:8853
+#: specialVueFakeDummyForL10nScript.js:8859
 #: src/toolkit/util/settings-sync.ts:69
 #: src/toolkit/util/settings-sync.ts:110
 #: src/toolkit/util/settings-sync.ts:192
@@ -12429,7 +12517,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:210
 #. TRANSLATORS src/views/FilesTab.vue:131
 #: specialVueFakeDummyForL10nScript.js:1684
-#: specialVueFakeDummyForL10nScript.js:8912
+#: specialVueFakeDummyForL10nScript.js:8918
 msgid "e.g. Jane Doe"
 msgstr ""
 
@@ -12441,7 +12529,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:222
 #. TRANSLATORS src/views/FilesTab.vue:142
 #: specialVueFakeDummyForL10nScript.js:1688
-#: specialVueFakeDummyForL10nScript.js:8916
+#: specialVueFakeDummyForL10nScript.js:8922
 msgid "e.g. Auvergne2019"
 msgstr ""
 
@@ -12628,7 +12716,7 @@ msgstr ""
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:108
 #. TRANSLATORS src/components/personal-settings/OrchestraSettings.vue:49
 #: specialVueFakeDummyForL10nScript.js:1942
-#: specialVueFakeDummyForL10nScript.js:7929
+#: specialVueFakeDummyForL10nScript.js:7931
 #: src/app/sepa-debit-mandate.ts:723
 #: templates/blog/blogthreads.php:100
 msgid "Delete"
@@ -13050,11 +13138,6 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:133
 #: specialVueFakeDummyForL10nScript.js:4254
 msgid "Payments"
-msgstr ""
-
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
-#: specialVueFakeDummyForL10nScript.js:4256
-msgid "Invoices"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:152
@@ -13649,7 +13732,7 @@ msgstr ""
 #. TRANSLATORS src/components/personal-settings/GeneralSettings.vue:20
 #. TRANSLATORS src/components/personal-settings/SharingSettings.vue:11
 #: specialVueFakeDummyForL10nScript.js:7551
-#: specialVueFakeDummyForL10nScript.js:8223
+#: specialVueFakeDummyForL10nScript.js:8229
 msgid "Generate"
 msgstr ""
 
@@ -13740,293 +13823,293 @@ msgstr ""
 msgid "Creditor identifier"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7882
+#: specialVueFakeDummyForL10nScript.js:7883
 msgid "Bank holiday region"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7883
-msgid "Default event duration (minutes)"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:7885
+#: specialVueFakeDummyForL10nScript.js:7887
 #: src/components/personal-settings/settings-tree.ts:77
 msgid "Document templates"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7892
+#: specialVueFakeDummyForL10nScript.js:7894
 #: src/components/personal-settings/settings-tree.ts:78
 msgid "Executive board and club members"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7893
+#: specialVueFakeDummyForL10nScript.js:7895
 msgid "Club members project"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7894
+#: specialVueFakeDummyForL10nScript.js:7896
 msgid "Executive board project"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7896
+#: specialVueFakeDummyForL10nScript.js:7898
 #: templates/settings/orchestra-settings.php:200
 #, php-format
 msgid "President"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7897
+#: specialVueFakeDummyForL10nScript.js:7899
 #: templates/settings/orchestra-settings.php:201
 #, php-format
 msgid "Secretary"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7898
+#: specialVueFakeDummyForL10nScript.js:7900
 msgid "Treasurer"
 msgstr ""
 
 #. TRANSLATORS: {role} denotes a management board role like president or treasurer.
-#: specialVueFakeDummyForL10nScript.js:7902
+#: specialVueFakeDummyForL10nScript.js:7904
 msgid "{role} participant"
 msgstr ""
 
 #. TRANSLATORS: {role} denotes a management board role like president or treasurer.
-#: specialVueFakeDummyForL10nScript.js:7908
+#: specialVueFakeDummyForL10nScript.js:7910
 msgid "{role} cloud user"
 msgstr ""
 
 #. TRANSLATORS: {role} denotes a management board role like president or treasurer.
-#: specialVueFakeDummyForL10nScript.js:7913
+#: specialVueFakeDummyForL10nScript.js:7915
 msgid "{role} group"
 msgstr ""
 
 #. TRANSLATORS: {role} denotes a management board role like president or treasurer.
-#: specialVueFakeDummyForL10nScript.js:7917
+#: specialVueFakeDummyForL10nScript.js:7919
 msgid "{role} email"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/OrchestraSettings.vue:19
-#: specialVueFakeDummyForL10nScript.js:7923
+#: specialVueFakeDummyForL10nScript.js:7925
 msgid "Auto-fill test"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/OrchestraSettings.vue:29
-#: specialVueFakeDummyForL10nScript.js:7925
+#: specialVueFakeDummyForL10nScript.js:7927
 msgid "Auto-fill test (PDF)"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/OrchestraSettings.vue:39
-#: specialVueFakeDummyForL10nScript.js:7927
+#: specialVueFakeDummyForL10nScript.js:7929
 msgid "Test data"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SettingsNavigation.vue:27
-#: specialVueFakeDummyForL10nScript.js:8016
+#: specialVueFakeDummyForL10nScript.js:8018
 msgid "Hide settings navigation"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8016
+#: specialVueFakeDummyForL10nScript.js:8018
 msgid "Show settings navigation"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SettingsNavigation.vue:40
-#: specialVueFakeDummyForL10nScript.js:8018
+#: specialVueFakeDummyForL10nScript.js:8020
 msgid "Settings navigation"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
-#: specialVueFakeDummyForL10nScript.js:8110
-#: specialVueFakeDummyForL10nScript.js:8118
-#: specialVueFakeDummyForL10nScript.js:8129
+#: specialVueFakeDummyForL10nScript.js:8113
+#: specialVueFakeDummyForL10nScript.js:8121
+#: specialVueFakeDummyForL10nScript.js:8132
 #: lib/Service/Finance/GnuCashConnectorService.php:129
 #, php-format
 msgid "PROJECT"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8137
+#: specialVueFakeDummyForL10nScript.js:8140
 #: src/components/personal-settings/settings-tree.ts:87
 msgid "Share owner"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8138
+#: specialVueFakeDummyForL10nScript.js:8141
 msgid "Share owner user ID"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8140
+#: specialVueFakeDummyForL10nScript.js:8143
 #: src/components/personal-settings/settings-tree.ts:88
 msgid "Calendars"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8142
+#: specialVueFakeDummyForL10nScript.js:8145
+msgid "Default event duration (minutes)"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:8148
 msgid "General address book"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8143
+#: specialVueFakeDummyForL10nScript.js:8149
 msgid "Musicians address book"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8145
+#: specialVueFakeDummyForL10nScript.js:8151
 #: src/components/personal-settings/settings-tree.ts:90
 msgid "Shared folder"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8149
+#: specialVueFakeDummyForL10nScript.js:8155
 #: src/components/personal-settings/settings-tree.ts:91
 msgid "Members as Cloud-Users"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8150
+#: specialVueFakeDummyForL10nScript.js:8156
 msgid "Import club members as cloud users"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8151
+#: specialVueFakeDummyForL10nScript.js:8157
 msgid "Dedicated views database"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8152
+#: specialVueFakeDummyForL10nScript.js:8158
 msgid "Musician personalized views"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8173
+#: specialVueFakeDummyForL10nScript.js:8179
 msgid "Unable to generate a password."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8194
+#: specialVueFakeDummyForL10nScript.js:8200
 msgid "Unable to change the share-owner password."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8213
+#: specialVueFakeDummyForL10nScript.js:8219
 msgid "Unable to update cloud-user views."
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SharingSettings.vue:9
-#: specialVueFakeDummyForL10nScript.js:8221
+#: specialVueFakeDummyForL10nScript.js:8227
 msgid "Share-owner password"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SharingSettings.vue:14
-#: specialVueFakeDummyForL10nScript.js:8225
+#: specialVueFakeDummyForL10nScript.js:8231
 msgid "Change"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SharingSettings.vue:27
-#: specialVueFakeDummyForL10nScript.js:8227
+#: specialVueFakeDummyForL10nScript.js:8233
 msgid "Recreate cloud-user views"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/SharingSettings.vue:30
-#: specialVueFakeDummyForL10nScript.js:8229
+#: specialVueFakeDummyForL10nScript.js:8235
 msgid "Recreate personalized views"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8393
+#: specialVueFakeDummyForL10nScript.js:8399
 msgid "You must type in your login password."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8403
+#: specialVueFakeDummyForL10nScript.js:8409
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8405
+#: specialVueFakeDummyForL10nScript.js:8411
 msgid "Encryption key changed, reloading settings form."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8415
+#: specialVueFakeDummyForL10nScript.js:8421
 msgid "Unable to set the encryption key."
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:82
-#: specialVueFakeDummyForL10nScript.js:8438
+#: specialVueFakeDummyForL10nScript.js:8444
 msgid "WYSIWYG Text-Editor"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:140
-#: specialVueFakeDummyForL10nScript.js:8454
+#: specialVueFakeDummyForL10nScript.js:8460
 msgid "Own Password"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:147
-#: specialVueFakeDummyForL10nScript.js:8456
+#: specialVueFakeDummyForL10nScript.js:8462
 msgid "DB Encryption Key"
 msgstr ""
 
 #. TRANSLATORS src/components/personal-settings/UserSettings.vue:155
-#: specialVueFakeDummyForL10nScript.js:8458
+#: specialVueFakeDummyForL10nScript.js:8464
 msgid "Set Encryption Key"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8680
+#: specialVueFakeDummyForL10nScript.js:8686
 msgid "Required."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8835
+#: specialVueFakeDummyForL10nScript.js:8841
 msgid "File download failed for {fileName}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8871
+#: specialVueFakeDummyForL10nScript.js:8877
 msgid "no response received from {ajaxUrl}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8875
+#: specialVueFakeDummyForL10nScript.js:8881
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:8882
+#: specialVueFakeDummyForL10nScript.js:8888
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:8884
+#: specialVueFakeDummyForL10nScript.js:8890
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:8886
+#: specialVueFakeDummyForL10nScript.js:8892
 msgid "download locally"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:8888
+#: specialVueFakeDummyForL10nScript.js:8894
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:8890
+#: specialVueFakeDummyForL10nScript.js:8896
 msgid "save to cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:8892
+#: specialVueFakeDummyForL10nScript.js:8898
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:8894
+#: specialVueFakeDummyForL10nScript.js:8900
 msgid "download data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:8896
+#: specialVueFakeDummyForL10nScript.js:8902
 #: templates/emailform/part.emailform.composer.php:146
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:8900
+#: specialVueFakeDummyForL10nScript.js:8906
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:105
-#: specialVueFakeDummyForL10nScript.js:8904
+#: specialVueFakeDummyForL10nScript.js:8910
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:113
-#: specialVueFakeDummyForL10nScript.js:8906
+#: specialVueFakeDummyForL10nScript.js:8912
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:123
-#: specialVueFakeDummyForL10nScript.js:8908
+#: specialVueFakeDummyForL10nScript.js:8914
 msgid "Enter Address"
 msgstr ""
 
@@ -14055,8 +14138,8 @@ msgstr ""
 #: src/app/cloud-file-picker-dialog.ts:87
 #: src/app/cloud-file-picker-dialog.ts:115
 #: src/app/email.ts:203
-#: src/app/email.ts:1028
-#: src/app/email.ts:1161
+#: src/app/email.ts:1031
+#: src/app/email.ts:1165
 msgid "Error"
 msgstr ""
 
@@ -14359,51 +14442,51 @@ msgstr ""
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.ts:825
+#: src/app/email.ts:826
 msgid "Add"
 msgstr ""
 
-#: src/app/email.ts:1027
+#: src/app/email.ts:1030
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.ts:1075
-#: src/app/email.ts:2515
+#: src/app/email.ts:1078
+#: src/app/email.ts:2520
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.ts:1077
-#: src/app/email.ts:2517
+#: src/app/email.ts:1080
+#: src/app/email.ts:2522
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.ts:1160
+#: src/app/email.ts:1164
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.ts:1227
+#: src/app/email.ts:1231
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.ts:1228
+#: src/app/email.ts:1232
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.ts:1256
+#: src/app/email.ts:1260
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.ts:1295
+#: src/app/email.ts:1299
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.ts:1370
+#: src/app/email.ts:1374
 msgid "Proceed to the email preview"
 msgstr ""
 
-#: src/app/email.ts:1525
+#: src/app/email.ts:1529
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -14411,121 +14494,121 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.ts:1529
+#: src/app/email.ts:1533
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.ts:1594
+#: src/app/email.ts:1598
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.ts:1595
+#: src/app/email.ts:1599
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.ts:1627
+#: src/app/email.ts:1632
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.ts:1629
+#: src/app/email.ts:1634
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.ts:1671
+#: src/app/email.ts:1676
 msgid ""
 "Do you really want to delete the template with the name "
 "\"`{emailTemplateName}\"?"
 msgstr ""
 
-#: src/app/email.ts:1672
+#: src/app/email.ts:1677
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.ts:1687
+#: src/app/email.ts:1692
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.ts:1703
+#: src/app/email.ts:1708
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.ts:1705
+#: src/app/email.ts:1710
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.ts:1732
+#: src/app/email.ts:1737
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.ts:1733
+#: src/app/email.ts:1738
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.ts:1841
+#: src/app/email.ts:1846
 msgid ""
 "Click \"Yes\" to use the selected personal sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1842
+#: src/app/email.ts:1847
 msgid ""
 "Click \"Yes\" to use the selected \"global\" sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1845
+#: src/app/email.ts:1850
 msgid "Remember the sender choice?"
 msgstr ""
 
-#: src/app/email.ts:1861
+#: src/app/email.ts:1866
 msgid "Preference \"{configKey}\" set to \"{senderTag}\"."
 msgstr ""
 
-#: src/app/email.ts:1883
+#: src/app/email.ts:1888
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.ts:1885
+#: src/app/email.ts:1890
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.ts:2066
+#: src/app/email.ts:2071
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.ts:2067
-#: src/app/email.ts:2219
+#: src/app/email.ts:2072
+#: src/app/email.ts:2224
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.ts:2176
+#: src/app/email.ts:2181
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.ts:2218
+#: src/app/email.ts:2223
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.ts:2334
+#: src/app/email.ts:2339
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.ts:2338
+#: src/app/email.ts:2343
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: src/app/email.ts:2557
+#: src/app/email.ts:2562
 msgid "You will be transferred back to the \"edit-message\" view"
 msgstr ""
 
-#: src/app/email.ts:2558
+#: src/app/email.ts:2563
 msgid ""
 "You have clicked on the \"close\"-button while visiting the \"preview\" tab "
 "which normally just would close the email widget. It has been reported that "
@@ -14989,10 +15072,6 @@ msgstr ""
 
 #: src/components/personal-settings/settings-tree.ts:55
 msgid "Encryption key"
-msgstr ""
-
-#: src/components/personal-settings/settings-tree.ts:61
-msgid "General"
 msgstr ""
 
 #: src/components/personal-settings/settings-tree.ts:72
@@ -16905,7 +16984,7 @@ msgstr ""
 #. TRANSLATORS:   </body>
 #. TRANSLATORS: </html>';
 #. TRANSLATORS:
-#: lib/EmailForm/Composer.php:2786
+#: lib/EmailForm/Composer.php:2801
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -16938,6 +17017,15 @@ msgstr ""
 #: lib/Service/ContactsService.php:733
 #, php-format
 msgid "contacts"
+msgstr ""
+
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Service\EmailTemplateDefaultsService::WARNING = 'This is a starting point only, not a ready-to-send email. Please refine it before use.';
+#: lib/Service/EmailTemplateDefaultsService.php:352
+#, php-format
+msgid ""
+"This is a starting point only, not a ready-to-send email. Please refine it "
+"before use."
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
