@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 
 use Psr\Container\ContainerInterface;
 
-use rotdrop\bav\BAV;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\BAV;
 
 use OCA\CAFEVDB\Service\Finance\BankAccountValidator;
 use OCA\CAFEVDB\Service\Finance\BankAgency;

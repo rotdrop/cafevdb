@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use Psr\Container\ContainerInterface;
 
-use rotdrop\bav\BAV;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\BAV;
 
 /**
  * Thin adapter around the German bank account validator BAV facade. The
