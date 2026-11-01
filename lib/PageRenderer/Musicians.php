@@ -280,7 +280,7 @@ abstract class Musicians extends PMETableViewBase
     ];
 
     $instrumentInfo = $this->getInstrumentInfo();
-    $instrumentsFilter = array_keys($this->getNonInstruments());
+    $this->getNonInstruments();
 
     /*
      *

@@ -1459,7 +1459,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $missingKeys = [];
-    foreach ($pme->key as $key => $type) {
+    foreach (array_keys($pme->key) as $key) {
       if (!isset($newValues[$key])) {
         $missingKeys[] = $key;
       }
@@ -1515,7 +1515,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
-        foreach ($this->pme->key as $key => $type) {
+        foreach (array_keys($this->pme->key) as $key) {
           $joinInfo['identifier'][$key] = $key;
         }
       }

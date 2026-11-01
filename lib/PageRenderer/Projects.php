@@ -356,7 +356,7 @@ class Projects extends PMETableViewBase
       'column' => 'id',
     ], 'name');
 
-    list($index, $name) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
       [
         'name'        => $this->l->t('Instrumentation'),
@@ -438,7 +438,7 @@ class Projects extends PMETableViewBase
       }
     }
 
-    list($index, $name) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
       [
         'name|CAP'  => $this->l->t('Voices'),

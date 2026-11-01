@@ -192,7 +192,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $nowDate = new DateTimeImmutable;
 
     $dueDate = null;
-    $periodEnd = null;
     $lastDueDate = null;
     $utc = new DateTimeZone('UTC');
 
@@ -232,7 +231,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $rates,
         $nowDate,
         &$dueDate,
-        &$periodEnd,
         &$lastDueDate,
         $utc,
       ) {
@@ -257,7 +255,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
 
           $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
-          $periodEnd = $dueDate->modify('- 1 day'); // ending date of insurance period
           $lastDueDate = $dueDate->modify('-1 year'); // starting date of insurance period
 
           $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
@@ -302,7 +299,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $brokerScope = $newScope;
 
             $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
-            $periodEnd = $dueDate->modify('- 1 day'); // ending date of insurance period
             $lastDueDate = $dueDate->modify('-1 year'); // starting date of insurance period
 
             $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
