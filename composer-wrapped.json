@@ -29,7 +29,9 @@
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^2.0",
+    "rotdrop/bav": "dev-master@dev",
     "rotdrop/nextcloud-app-toolkit": "dev-main",
+    "rotdrop/php-index": "dev-master@dev",
     "symfony/cache": "^6",
     "symfony/string": "*"
   },
@@ -41,6 +43,14 @@
     "symfony/polyfill-php86": "*"
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/bav"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/php-index"
+    },
     {
       "type": "vcs",
       "url": "https://github.com/rotdrop/nextcloud-app-toolkit"
