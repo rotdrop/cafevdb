@@ -41,7 +41,6 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * advisable to store file-system data in a data-base, we do so
  * nevertheless for selected small files.
  *
- *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 #[ORM\Table(name: DatabaseTables::FILES_TABLE)]

@@ -356,7 +356,7 @@ class Projects extends PMETableViewBase
       'column' => 'id',
     ], 'name');
 
-    list($index, $name) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
       [
         'name'        => $this->l->t('Instrumentation'),
@@ -438,7 +438,7 @@ class Projects extends PMETableViewBase
       }
     }
 
-    list($index, $name) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
       [
         'name|CAP'  => $this->l->t('Voices'),
@@ -1176,7 +1176,7 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param null|array $oldVals Self-explanatory.
+   * @param null|array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *

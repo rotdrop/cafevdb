@@ -78,10 +78,6 @@ class UploadsController extends Controller
    *
    * @param string $destinationPath DOCME.
    *
-   * @param string|EnumFileStorageBackend $storage
-   *
-   * @param string|EnumFileUploadMode $uploadMode
-   *
    * @return JsonResponse
    */
   #[CoreAttributes\NoAdminRequired]

@@ -33,7 +33,11 @@ use OCA\CAFEVDB\Database\EntityManager as EntityManagerDecorator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
-/** Base class for all of our repositories. */
+/**
+ * Base class for all of our repositories.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 class EntityRepository extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntityRepository
 {
   /** {@inheritdoc} */

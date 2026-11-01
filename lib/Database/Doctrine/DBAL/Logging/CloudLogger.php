@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 
+use Exception;
+
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -163,7 +165,7 @@ class CloudLogger implements QueryLogger
     $this->currentQuery['executionMS'] = microtime(true) - $this->start;
 
     $msg = print_r($this->currentQuery, true);
-    $this->logInfo($msg, [ 'exception' => new \Exception($msg) ], 0, true);
+    $this->logInfo($msg, [ 'exception' => new Exception($msg) ], 0, true);
 
     $this->currentQuery = null;
     $this->start = null;

@@ -396,6 +396,8 @@ class NumberFormatter
   /**
    * @param mixed $value
    *
+   * @param int $scale
+   *
    * @return float
    */
   private static function ensureFloat(mixed $value, int $scale = 2):float

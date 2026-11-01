@@ -91,7 +91,7 @@ class ProjectEntityListener
   public function postRemove(Entities\Project $project, ORMEvent\PostRemoveEventArgs $eventArgs)
   {
     $this->registerPreCommitAction($project);
- }
+  }
 
   /**
    * Update related data after persist, update or remove actions.

@@ -30,7 +30,6 @@ use DateTimeZone;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-
 /**
  * @method Entities\SepaBulkTransaction find($id)
  */
@@ -73,7 +72,7 @@ class SepaBulkTransactionsRepository extends EntityRepository
    * Test whether the given obrject URI is tied to a SepaBulkTransaction
    * entity.
    *
-   * @param string $localObejctUri Base-name of the calendar object URI.
+   * @param string $localObjectUri Base-name of the calendar object URI.
    *
    * @return bool
    */

@@ -52,7 +52,7 @@ class InMemoryFileNode
     protected string $mimeType,
     protected DateTimeInterface $updated,
   ) {
-    if ($parent->getUpdated() < $updated)  {
+    if ($parent->getUpdated() < $updated) {
       $parent->setUpdated($updated);
     }
   }

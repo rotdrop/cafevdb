@@ -82,6 +82,8 @@ class EventMatrixEvent extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\Abst
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public static function fromArray(array $data): self
   {

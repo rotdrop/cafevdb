@@ -36,7 +36,6 @@ use OCA\CAFEVDB\Exceptions;
 /**
  * File-node entry for a database-backed file.
  *
- *
  * @method File setSize(int $size)
  * @method int getSize()
  * @method mixed getData()

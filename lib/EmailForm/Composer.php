@@ -93,6 +93,8 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
  *
  * @bug This is a mixture between a controller and service class and
  * needs to be cleaned up.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Composer
 {
@@ -829,18 +831,22 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $receivedIsZero = false;
       }
 
-      $remaining = $totals->sub($received);
-
-      $purpose = $payment->getSubject();
+      $values = [
+        'purpose' => $payment->getSubject(),
+        'invoiced' => $invoiced,
+        'totals' => $totals,
+        'received' => $received,
+        'remaining' => $totals->sub($received),
+      ];
 
       $replacements = [];
       foreach ($replacementKeys as $key) {
         if ($key == 'purpose') {
-          $replacements[$key] = ${$key};
+          $replacements[$key] = $values[$key];
           continue;
         }
-        $totalSum[$key]->addEq(${$key});
-        $replacements[$key] = $this->moneyValue(${$key});
+        $totalSum[$key]->addEq($values[$key]);
+        $replacements[$key] = $this->moneyValue($values[$key]);
       }
 
       $row = $rowTemplate;

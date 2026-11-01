@@ -1262,7 +1262,7 @@ class ConfigCheckService
   public function noUnappliedMigrations():bool
   {
     $unappliedMigrations = $this->migrationsService->getUnapplied();
-    if (count($unappliedMigrations) > 0)  {
+    if (count($unappliedMigrations) > 0) {
       throw new RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $unappliedMigrations)));
     }
     return true;

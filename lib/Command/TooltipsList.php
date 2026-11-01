@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Command;
 
-
 use OCP\IL10N;
 
 use Symfony\Component\Console\Command\Command;

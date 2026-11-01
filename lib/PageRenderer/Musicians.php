@@ -280,7 +280,7 @@ abstract class Musicians extends PMETableViewBase
     ];
 
     $instrumentInfo = $this->getInstrumentInfo();
-    $instrumentsFilter = array_keys($this->getNonInstruments());
+    $this->getNonInstruments();
 
     /*
      *
@@ -406,8 +406,7 @@ GROUP BY t.id';
           $this->logInfo('NICKNAME DISPLAY '
                          . ' | ' . $op
                          . ' | ' . $k
-                         . ' | ' . print_r($row, true),
-          );
+                         . ' | ' . print_r($row, true),);
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
           $firstName = $row[$this->queryField('first_name')];
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;

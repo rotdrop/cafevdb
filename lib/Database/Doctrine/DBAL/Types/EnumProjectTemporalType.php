@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Type of projects.
- *
  */
 enum EnumProjectTemporalType: string
 {

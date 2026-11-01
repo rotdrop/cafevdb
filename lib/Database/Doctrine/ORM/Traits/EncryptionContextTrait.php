@@ -89,5 +89,4 @@ trait EncryptionContextTrait
       $this->encryptionContext[] = $userIdSlug;
     }
   }
-
 }

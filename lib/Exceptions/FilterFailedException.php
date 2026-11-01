@@ -50,7 +50,7 @@ class FilterFailedException extends RuntimeException
   }
 
   /**
-   * @param array argv
+   * @param array $argv
    *
    * @return void
    */

@@ -1484,7 +1484,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if (empty($this->organization)) {
       return $publicName;
     }
-    $result = $this->organization;
     if (!empty($this->jobTitle)) {
       $publicName = $this->jobTitle . ', ';
     }

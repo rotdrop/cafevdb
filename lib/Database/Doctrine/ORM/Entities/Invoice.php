@@ -747,9 +747,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @param TaxationStatutorySource $TaxationStatutorySource
+   * @param TaxationStatutorySource $taxationStatutorySource
    *
-   * @return TaxExemptionNotice
+   * @return Invoice
    */
   public function setTaxationStatutorySource(TaxationStatutorySource $taxationStatutorySource): Invoice
   {

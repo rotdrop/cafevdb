@@ -758,7 +758,7 @@ class ConfigService
    * used.
    *
    * @param bool $addEncoding Whether to add '.UTF-8' if not already presend
-   * in $lang
+   * in $lang.
    *
    * @return string
    */

@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 

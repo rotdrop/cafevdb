@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-
 /** Augment with our FindLikeTrait */
 class SentEmailsRepository extends EntityRepository
 {

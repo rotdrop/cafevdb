@@ -30,7 +30,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Sharing;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Personal;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Contacts;

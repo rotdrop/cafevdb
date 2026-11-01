@@ -338,12 +338,11 @@ class ContactsCardEventListener implements IEventListener
                   if (empty($project)) {
                     continue;
                   }
-                  $status = $projectService->addMusicians(
+                  $projectService->addMusicians(
                     [ $musician->getId() ],
                     $project,
                     $organization ? ParticipationContext::ASSOCIATES : ParticipationContext::PARTICIPANTS,
                   );
-                  // $this->logInfo('Add Musician Status ' . print_r($status, true));
                 }
               }
               $mergeBack = true;
@@ -396,12 +395,11 @@ class ContactsCardEventListener implements IEventListener
                   if (empty($project)) {
                     continue;
                   }
-                  $status = $projectService->addMusicians(
+                  $projectService->addMusicians(
                     [ $musician->getId() ],
                     $project,
                     $organization ? ParticipationContext::ASSOCIATES : ParticipationContext::PARTICIPANTS,
                   );
-                  // $this->logInfo('Add Musician Status ' . print_r($status, true));
                 }
               }
 

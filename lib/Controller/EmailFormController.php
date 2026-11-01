@@ -60,7 +60,11 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-/** Controller class for the mass-email form */
+/**
+ * Controller class for the mass-email form.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 #[PhpToTypeScript\Attributes\TypeScript]
 class EmailFormController extends Controller
 {

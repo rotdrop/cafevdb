@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-
 /** Repository for extra fields data. */
 class ProjectParticipantFieldDataRepository extends EntityRepository
 {
