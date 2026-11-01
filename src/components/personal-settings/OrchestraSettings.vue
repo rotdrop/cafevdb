@@ -89,7 +89,6 @@ import {
   DOCUMENT_TEMPLATES,
   DOCUMENT_TEMPLATES_FOLDER,
   DOCUMENT_TYPE_TEMPLATE,
-  EVENT_DURATION_KEY,
   SHARED_FOLDER,
   STREET_ADDRESS_CITY,
   STREET_ADDRESS_COUNTRY,
@@ -110,6 +109,7 @@ import getInitialState from '../../toolkit/util/initial-state.ts'
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
+  bankHolidayOptions?: Array<{ value: string, name: string }>
   executiveBoardMembers?: Array<{ value: string|number, name: string }>
   localeCountryNames?: Record<string, string>
   userGroupMembers?: string[]|Record<string, string>
@@ -334,8 +334,10 @@ const groups: AdminSettingGroup[] = [
     field(BANK_ACCOUNT_BIC, t(appId, 'BIC')),
     field(BANK_ACCOUNT_BANK_NAME, t(appId, 'Bank name')),
     field(BANK_ACCOUNT_CREDITOR_IDENTIFIER, t(appId, 'Creditor identifier')),
-    field(BANK_ACCOUNT_BANK_HOLIDAYS, t(appId, 'Bank holiday region')),
-    field(EVENT_DURATION_KEY, t(appId, 'Default event duration (minutes)'), 'number'),
+    {
+      ...field(BANK_ACCOUNT_BANK_HOLIDAYS, t(appId, 'Bank holiday region'), 'select'),
+      options: options(state?.bankHolidayOptions),
+    },
   ]),
   group(2, t(appId, 'Document templates'), Object.entries(DOCUMENT_TEMPLATES).map(([key, info]) => ({
     key,
