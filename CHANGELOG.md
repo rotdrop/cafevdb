@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   The invoice PDF is attached from the stored document, or generated from the
   configured invoice template when no document is stored. Invoice items support
   the existing bank-transaction substitutions, and drafts retain the invoice context.
+- Email templates "AllVariables" and "AlleVariablen" listing all available
+  substitutions with English and German variable names, grouped by namespace
+  and purpose.
+
+### Fixed
+
+- Substitutions using the translated namespace, e.g. `${MITGLIED::VORNAME}`,
+  are now resolved.
 
 ## [10.1.0] - 2026-02-13
 
