@@ -59,7 +59,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * the notification template may be used to inform the donator about a
    * forthcoming snail-mail letter.
    */
-  public const NOTIFICATION_EMAIL_TEMPLATE = 'donation-receipt-notification';
+  public const NOTIFICATION_EMAIL_TEMPLATE = 'DonationReceiptNotification';
 
   /**
    * The associated payment.
