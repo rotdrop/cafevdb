@@ -22,10 +22,14 @@ import path from 'node:path'
 const packageRoot = path.resolve('node_modules/@nextcloud/app-calendar')
 const source = path.join(packageRoot, 'src')
 const changes = new Map()
+const testPath = /(^|\/)(tests?|__tests__)(\/|$)|\.(spec|test)\.[^/]+$/
 
 function transformDirectory(directory) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
         const filename = path.join(directory, entry.name)
+        if (testPath.test(path.relative(source, filename).split(path.sep).join('/'))) {
+            continue
+        }
         if (entry.isDirectory()) {
             transformDirectory(filename)
         } else if (entry.isFile()) {
@@ -34,8 +38,8 @@ function transformDirectory(directory) {
                 continue
             }
             const original = buffer.toString('utf8')
-            const prefix = path.relative(path.dirname(filename), packageRoot).split(path.sep).join('/')
-            const updated = original.replace(/(['"])@\//g, `$1${prefix}/src/`)
+            const prefix = path.relative(path.dirname(filename), source).split(path.sep).join('/') || '.'
+            const updated = original.replace(/(['"])@\//g, `$1${prefix}/`)
             if (updated !== original) {
                 changes.set(filename, updated)
             }
@@ -84,4 +88,35 @@ for (const [filename, contents] of changes) {
 }
 NODE
 
-exec node_modules/.bin/patch-package @nextcloud/app-calendar --use-npm
+shopt -s nullglob
+patchDirectory="$(mktemp -d)"
+
+cleanup() {
+    local status=$?
+    local temporaryPatches=("$patchDirectory"/@nextcloud+app-calendar+*.patch)
+    if [[ ${#temporaryPatches[@]} -gt 0 ]]; then
+        rm -- "${temporaryPatches[@]}"
+    fi
+    rmdir -- "$patchDirectory"
+    exit "$status"
+}
+trap cleanup EXIT
+
+node_modules/.bin/patch-package @nextcloud/app-calendar --use-npm \
+    --patch-dir "$patchDirectory" \
+    --include '^src/' --exclude '(^|/)(tests?|__tests__)(/|$)|\.(spec|test)\.[^/]+$'
+
+generatedPatches=("$patchDirectory"/@nextcloud+app-calendar+*.patch)
+if [[ ${#generatedPatches[@]} -ne 1 ]]; then
+    echo "Expected exactly one generated Calendar patch; existing patches have not been changed." >&2
+    exit 1
+fi
+
+mkdir -p -- patches
+generatedPatch="${generatedPatches[0]##*/}"
+mv -- "${generatedPatches[0]}" "patches/$generatedPatch"
+for patch in patches/@nextcloud+app-calendar+*.patch; do
+    if [[ ${patch##*/} != "$generatedPatch" ]]; then
+        rm -- "$patch"
+    fi
+done
