@@ -1070,6 +1070,117 @@ class EmailFormControllerTest extends TestCase
     // echo $requestData->previewData . PHP_EOL;
   }
 
+  /** @return array<string, array{string, bool}> */
+  public static function subjectSubstitutionProvider(): array
+  {
+    return [
+      'plain subject' => ['Plain subject', false],
+      'global subject' => ['Project ${GLOBAL::PROJECT}', false],
+      'personal subject only' => ['Hello ${MEMBER::FIRST_NAME}', true],
+      'global and personal subject' => ['${GLOBAL::PROJECT} for ${MEMBER::FIRST_NAME}', true],
+      'escaped substitutions' => ['$${GLOBAL::PROJECT} for $${MEMBER::FIRST_NAME}', false],
+    ];
+  }
+
+  /** @return void */
+  #[Attributes\DataProvider('subjectSubstitutionProvider')]
+  public function testComposerSubjectSubstitutions(string $subject, bool $personal): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::SUBJECT] = $subject;
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertTrue($composer->validateTemplate());
+
+    $secondMusician = clone $this->musician;
+    $secondMusician->setFirstName('SubjectSecondRecipient');
+    $recipients = array_map(
+      fn(Entities\Musician $musician) => [
+        'email' => $musician->getEmail(),
+        'name' => $musician->getPublicName(true),
+        'dbdata' => $musician,
+        'userBase' => 0,
+      ],
+      [$this->musician, $secondMusician],
+    );
+    $messages = new ReflectionMethod($composer, 'exportMessages')->invoke($composer, $recipients);
+    $this->assertTrue($composer->executionStatus());
+    $this->assertCount($personal ? 3 : 1, $messages);
+
+    $subjectTemplate = $personal || !str_contains($subject, '$$')
+      ? str_replace('${GLOBAL::PROJECT}', $this->project->getName(), $subject)
+      : str_replace('$$', '$', $subject);
+    foreach ($messages as $index => $message) {
+      $expectedSubject = $personal && $index < count($recipients)
+        ? str_replace('${MEMBER::FIRST_NAME}', $recipients[$index]['dbdata']->getFirstName(), $subjectTemplate)
+        : $subjectTemplate;
+      $headers = preg_replace('/\r?\n[ \t]+/', ' ', $message['headers']);
+      $this->assertStringContainsString(
+        'Subject: ' . $composer->subjectTag() . ' ' . $expectedSubject,
+        mb_decode_mimeheader($headers),
+      );
+      $this->assertStringContainsString('<p>Plain body</p>', $message['body']);
+    }
+    $this->assertSame($subject, $composer->subject());
+  }
+
+  /** @return array<string, array{string, string}> */
+  public static function invalidSubjectSubstitutionProvider(): array
+  {
+    return [
+      'unknown global' => ['${GLOBAL::SOMETHING_NOT_EXISTING}', EmailForm\Composer::TEMPLATE_VALIDATION_GLOBAL_ERRORS],
+      'unknown member' => ['${MEMBER::SOMETHING_NOT_EXISTING}', EmailForm\Composer::TEMPLATE_VALIDATION_MEMBER_ERRORS],
+      'unknown namespace' => ['${FAULTYNAMESPACE::SOMETHING}', EmailForm\Composer::TEMPLATE_VALIDATION_SPURIOUS_ERRORS],
+      'malformed substitution' => ['${MEMBER::FIRST_NAME', EmailForm\Composer::TEMPLATE_VALIDATION_SPURIOUS_ERRORS],
+    ];
+  }
+
+  /** @return void */
+  #[Attributes\DataProvider('invalidSubjectSubstitutionProvider')]
+  public function testComposerInvalidSubjectSubstitution(string $subject, string $errorKey): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::SUBJECT] = $subject;
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertFalse($composer->validateTemplate());
+    $this->assertFalse($composer->executionStatus());
+    $this->assertNotEmpty($composer->statusDiagnostics()[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION][$errorKey]);
+  }
+
+  /** @return void */
+  public function testComposerEmptySubjectSubstitutionDoesNotUseBody(): void
+  {
+    $this->composerPreviewSetup();
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertSame('', new ReflectionMethod($composer, 'replaceFormVariables')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::GLOBAL,
+      null,
+      '',
+    ));
+    $this->assertSame('', new ReflectionMethod($composer, 'finalizeSubstitutions')->invoke($composer, ''));
+    $this->assertSame(0, new ReflectionMethod($composer, 'hasSubstitutionNamespace')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::MEMBER,
+      '',
+    ));
+    new ReflectionProperty($composer, 'substitutions')->setValue($composer, [
+      EmailForm\EnumSubstitutionNamespace::GLOBAL->value => ['EMPTY' => fn(array $key, mixed $data) => ''],
+    ]);
+    $emptySubject = new ReflectionMethod($composer, 'replaceFormVariables')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::GLOBAL,
+      null,
+      '${GLOBAL::EMPTY}',
+    );
+    $this->assertSame('', $emptySubject);
+    $this->assertSame('', new ReflectionMethod($composer, 'finalizeSubstitutions')->invoke($composer, $emptySubject));
+  }
+
 
   /**
    * Test whether an empty downloads folder ist properly reported if the
@@ -1275,7 +1386,8 @@ class EmailFormControllerTest extends TestCase
    *
    * @return void
    */
-  public function testComposerPreviewCatchSubstitutionPreconditionError(): void
+  #[Attributes\DataProvider('substitutionLocationProvider')]
+  public function testComposerPreviewCatchSubstitutionPreconditionError(string $location): void
   {
     $this->composerPreviewSetup();
     $this->postData = Util::arrayMergeRecursive(
@@ -1287,12 +1399,13 @@ class EmailFormControllerTest extends TestCase
         ],
       ],
     );
-    $messageText = '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::SOMETHING}
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $messageText = '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::FIRST_NAME}
 ';
     $this->postData[
       EmailForm\EnumPostTag::COMPOSER->value
     ][
-      EmailForm\ComposerCgiKeys::MESSAGE_TEXT
+      $location
     ] = $messageText;
     $response = $this->testedController->composer(
       operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
@@ -1321,6 +1434,15 @@ class EmailFormControllerTest extends TestCase
     $this->assertIsArray($diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION]);
     $templateValidation = $diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
     $this->assertArrayHasKey(EmailForm\Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS, $templateValidation);
+  }
+
+  /** @return array<string, array{string}> */
+  public static function substitutionLocationProvider(): array
+  {
+    return [
+      'body' => [EmailForm\ComposerCgiKeys::MESSAGE_TEXT],
+      'subject' => [EmailForm\ComposerCgiKeys::SUBJECT],
+    ];
   }
 
   /** @return void */

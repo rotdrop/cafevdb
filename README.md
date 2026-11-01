@@ -30,6 +30,17 @@ Features include
 The orchestra data-base is held separate from the cloud database and
 is based on Doctrine/ORM.
 
+Email template substitutions
+----------------------------
+
+Email templates support substitutions in both the subject and the body,
+for example `${GLOBAL::PROJECT}` and `${MEMBER::FIRST_NAME}`. Per-member
+substitutions in either field generate a separate email for each recipient
+and cannot be used for mailing-list posts. The Cc/Bcc and catch-all copy
+resolves global substitutions but keeps the per-member placeholders.
+Use `$$` to escape a literal dollar sign. Stored templates and drafts retain
+their placeholders.
+
 PHP code quality
 ----------------
 
