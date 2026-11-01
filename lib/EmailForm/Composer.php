@@ -63,6 +63,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\EmailTemplateDefaultsService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
@@ -666,13 +667,26 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $initialTemplate = $this->cgiValue(ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR);
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
+        $bulkTransactionFallback = false;
+        if (empty($template)
+            && !empty($this->bulkTransaction)) {
+          $defaultBulkTransactionTemplate = $this->bulkTransaction instanceof Entities\SepaDebitNote
+            ? EmailTemplateDefaultsService::DEBIT_NOTE_ANNOUNCEMENT
+            : EmailTemplateDefaultsService::BANK_TRANSFER_ANNOUNCEMENT;
+          $template = $this->fetchTemplate($defaultBulkTransactionTemplate, exact: false);
+          $bulkTransactionFallback = !empty($template);
+        }
         if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
         $loadedTag = $template->getTag();
-        if ((empty($this->bulkTransaction) && empty($this->donationReceipt) && empty($this->invoice)) || str_ends_with($loadedTag, $initialTemplate)
-            || (!empty($this->invoice) && $loadedTag === Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE)
-            || (!empty($this->donationReceipt) && $loadedTag === Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE)) {
+        $templateMatchesContext =
+          (empty($this->bulkTransaction) && empty($this->donationReceipt) && empty($this->invoice))
+          || str_ends_with($loadedTag, $initialTemplate)
+          || $bulkTransactionFallback
+          || (!empty($this->invoice) && $loadedTag === Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE)
+          || (!empty($this->donationReceipt) && $loadedTag === Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE);
+        if ($templateMatchesContext) {
           $initialTemplate = $template->getTag();
           $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $initialTemplate;
           $this->templateName = $initialTemplate;
