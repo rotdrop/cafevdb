@@ -19,7 +19,8 @@ node --input-type=module <<'NODE'
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
-const source = path.resolve('node_modules/@nextcloud/app-calendar/src')
+const packageRoot = path.resolve('node_modules/@nextcloud/app-calendar')
+const source = path.join(packageRoot, 'src')
 const changes = new Map()
 
 function transformDirectory(directory) {
@@ -33,8 +34,8 @@ function transformDirectory(directory) {
                 continue
             }
             const original = buffer.toString('utf8')
-            const prefix = path.relative(path.dirname(filename), source).split(path.sep).join('/') || '.'
-            const updated = original.replace(/(['"])@\//g, `$1${prefix}/`)
+            const prefix = path.relative(path.dirname(filename), packageRoot).split(path.sep).join('/')
+            const updated = original.replace(/(['"])@\//g, `$1${prefix}/src/`)
             if (updated !== original) {
                 changes.set(filename, updated)
             }
