@@ -38,8 +38,8 @@ function transformDirectory(directory) {
                 continue
             }
             const original = buffer.toString('utf8')
-            const prefix = path.relative(path.dirname(filename), source).split(path.sep).join('/') || '.'
-            const updated = original.replace(/(['"])@\//g, `$1${prefix}/`)
+            const prefix = path.relative(path.dirname(filename), packageRoot).split(path.sep).join('/')
+            const updated = original.replace(/(['"])(?:@\/|(?:\.\.\/)+src\/)/g, `$1${prefix}/src/`)
             if (updated !== original) {
                 changes.set(filename, updated)
             }
