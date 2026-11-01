@@ -34,6 +34,8 @@ does not produce exactly one Calendar patch, existing patches remain unchanged.
 Patches for other packages are left untouched. The script creates a local Git
 commit containing only the generated Calendar patch and obsolete Calendar
 patch deletions, leaving unrelated staged changes out of that commit.
+The commit uses `-n` to bypass hooks because patch context intentionally
+contains trailing whitespace.
 An unchanged patch does not create another commit. Git commit failures are
 reported; the generated patch remains available for inspection and retry.
 Review the generated commit before pushing.

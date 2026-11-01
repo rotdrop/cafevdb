@@ -166,13 +166,23 @@ test('Keep existing patches when patch-package fails', (t) => {
     assert.equal(existsSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.4.patch')), false)
 })
 
+test('Bypass commit hooks for intentional patch whitespace', (t) => {
+    const root = fixture(t, 'original')
+    write(root, '.git/hooks/pre-commit', '#!/bin/sh\necho "Commit rejected" >&2\nexit 1\n', 0o755)
+    const result = run(root)
+    assert.equal(result.status, 0, result.stderr)
+    assert.ok(!result.stderr.includes('Commit rejected'))
+    verify(root)
+})
+
 test('Report commit failures and retain the generated patch', (t) => {
     const root = fixture(t, 'original')
     const commit = git(root, 'rev-parse', 'HEAD')
-    write(root, '.git/hooks/pre-commit', '#!/bin/sh\necho "Commit rejected" >&2\nexit 1\n', 0o755)
+    git(root, 'config', 'commit.gpgsign', 'true')
+    git(root, 'config', 'gpg.program', '/bin/false')
     const result = run(root)
     assert.notEqual(result.status, 0)
-    assert.ok(result.stderr.includes('Commit rejected'))
+    assert.ok(result.stderr.includes('failed to sign'))
     assert.equal(git(root, 'rev-parse', 'HEAD'), commit)
     assert.equal(readFileSync(path.join(root, 'patches/@nextcloud+app-calendar+6.6.4.patch'), 'utf8'), 'generated patch')
 })
