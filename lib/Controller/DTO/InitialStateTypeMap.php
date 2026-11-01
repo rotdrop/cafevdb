@@ -32,7 +32,13 @@ namespace OCA\CAFEVDB\Controller\DTO;
  */
 class InitialStateTypeMap extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * The promoted property names match the JavaScript initial-state keys.
+   *
+   * @SuppressWarnings(PHPMD.CamelCaseParameterName)
+   */
   public function __construct(
     public readonly CAFEVDBInitialState $CAFEVDB,
     public readonly PMEInitialState $PHPMyEdit,
