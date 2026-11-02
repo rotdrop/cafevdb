@@ -168,6 +168,7 @@ const handleDonationReceiptEmail = () => {
     projectName: props.projectName,
     post: {
       donationReceiptId: props.entityId,
+      singleRecipient: true,
     },
   })
 }
