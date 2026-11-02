@@ -80,13 +80,14 @@ describe('InvoiceActionsMenu', () => {
     vi.clearAllMocks();
   });
 
-  it('passes the invoice id to the email form', async () => {
+  it('passes the invoice id to the email form in single recipient mode', async () => {
     const wrapper = mountComponent();
     const button = wrapper.findAll('button').find((candidate) => candidate.text() === 'Email Standard Invoice');
     expect(button).toBeDefined();
     await button!.trigger('click');
     expect(asyncEmit).toHaveBeenCalledWith(BusEvents.EMAIL_POPUP, {
       projectId: props.projectId,
+      singleRecipient: true,
       post: expect.objectContaining({
         invoiceId: props.entityId,
         projectId: props.projectId,

@@ -96,7 +96,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     // mapping of 'event name' => { arg: 'event type', res: result type }
     [ADD_CONTACTS_TO_PROJECT]: { projectName: string };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [EMAIL_POPUP]: { projectId?: number; projectName?: string; reopen?: boolean; post?: Record<string, any> };
+    [EMAIL_POPUP]: { projectId?: number; projectName?: string; reopen?: boolean; singleRecipient?: boolean; post?: Record<string, any> };
     [GET_VUE_COMPONENT]: {
       name: keyof ComponentProps;
       propsData: PropsData<keyof ComponentProps>;
