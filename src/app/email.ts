@@ -1121,7 +1121,6 @@ const emailFormCompositionHandlers = (
               case 'template': {
                 SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
                 const persistedValue = requestData.templateMessagesSelector!;
-                console.info('SELECT DATA', { data: $templateEmailsSelector.data(), persistedValue });
                 $templateEmailsSelector.data('unpersisted')[persistedValue] = false;
                 break;
               }
@@ -1616,15 +1615,6 @@ const emailFormCompositionHandlers = (
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = SelectUtils.selected($templateEmailsSelector);
-        console.info('UNPERSISTED TEST', {
-          current,
-          data: $templateEmailsSelector.data(),
-          currentString: String(current),
-          otherCurrentString: '' + current,
-          isUnpersisted: $templateEmailsSelector.data('unpersisted')[String(current)],
-          allOptions: SelectUtils.options($templateEmailsSelector),
-          filtered: SelectUtils.options($templateEmailsSelector).filter(function() { console.info('THIS OPTION', { val: $(this).val(), html: $(this).html() }); return $(this).html() === current; }),
-        });
         if (!$templateEmailsSelector.data('unpersisted')[String(current)]
             && SelectUtils.options($templateEmailsSelector).filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
