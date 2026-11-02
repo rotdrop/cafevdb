@@ -135,6 +135,12 @@ afterEach(() => {
 });
 
 describe('mountSelectize', () => {
+  it.each([true, false, 'focus'] as const)('passes showMoveButtons=%s independently of sorting', async (showMoveButtons) => {
+    const container = makeSelect('<select class="selectize" multiple><option value="a">A</option></select>');
+    await mountSelectize(container, { plugins: ['drag_drop'], showMoveButtons });
+    expect(mountables[0].props).toMatchObject({ sortable: true, showMoveButtons });
+  });
+
   it('updates callback-visible values before notification and native change handlers', async () => {
     const container = makeSelect('<form><select name="field" class="selectize"><option value="a">A</option><option value="b">B</option></select></form>');
     const select = container.querySelector('select')!;

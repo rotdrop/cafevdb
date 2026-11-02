@@ -91,6 +91,7 @@ multiline text rather than rendered HTML.
 | HTML options and optgroups | `options: { value, label, groups?, disabled? }[]` and `groups: { value, label, disabled? }[]` |
 | Initial-values data attribute | `modelValue` / `v-model`, preserving selection order |
 | `drag_drop` | `sortable`, with drag-and-drop and keyboard-accessible move buttons |
+| `showMoveButtons` | `'focus'` (default) shows move buttons on keyboard focus within a selected item; `true` always shows them; `false` removes them without disabling drag-and-drop |
 | `remove_button`, `clear_button` | Multiple-selection remove buttons; single-selection clear button |
 | `not-empty` class | `notEmpty`, preventing removal of the final selection |
 | `lockOptgroupOrder: true` | Groups always retain their declared order |
@@ -104,6 +105,12 @@ multiline text rather than rendered HTML.
 Dropdown opening follows Nextcloud's accessible keyboard/pointer interactions
 rather than forcing Selectize's `openOnFocus` behavior. Use Arrow Down, Enter,
 or a pointer click to open it.
+In focus-only mode the move buttons remain in the tab order; tabbing to a button
+reveals both move buttons for that item. `showMoveButtons` is also accepted by
+the mount adapter and in `data-selectize-options`.
+Selected dropdown options use the light primary background, hovered/highlighted
+options use the hover background, and bold group headings retain the normal
+dropdown background.
 
 For the validated email fields, for example:
 

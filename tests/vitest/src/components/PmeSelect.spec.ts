@@ -170,6 +170,15 @@ describe('PmeSelect', () => {
     expect(wrapper.vm.getValue()).toEqual(['violin', 'viola']);
   });
 
+  it('marks selected dropdown options separately from group headings and disabled options', async () => {
+    const wrapper = render({ multiple: true, modelValue: ['violin'] });
+    await open(wrapper);
+    expect(wrapper.findAll('.pme-select__option--selected').map((option) => option.text())).toEqual(['Violin']);
+    expect(wrapper.findAll('.pme-select__group').map((group) => group.text())).toEqual(['Strings', 'Winds']);
+    await choose(wrapper, 'Viola');
+    expect(wrapper.findAll('.pme-select__option--selected').map((option) => option.text())).toEqual(['Violin', 'Viola']);
+  });
+
   it('removes individual selections and prevents emptying not-empty fields', async () => {
     const wrapper = render({ multiple: true, notEmpty: true, modelValue: ['violin', 'viola'] });
     await wrapper.get('button[aria-label="Remove Violin"]').trigger('click');
@@ -211,6 +220,28 @@ describe('PmeSelect', () => {
     await wrapper.get('[data-value="violin"]').trigger('drop');
     expect(wrapper.vm.getValue()).toEqual(['flute', 'violin', 'viola']);
     expect(dataTransfer.setData).toHaveBeenCalledWith('text/plain', 'flute');
+  });
+
+  it('shows move buttons on keyboard focus by default and allows always-visible buttons', async () => {
+    const wrapper = render({ multiple: true, sortable: true, modelValue: ['violin', 'viola'] });
+    expect(wrapper.findAll('.pme-select__selected--move-on-focus')).toHaveLength(2);
+    const button = wrapper.get<HTMLButtonElement>('button[aria-label="Move Violin later"]');
+    expect(button.element.tabIndex).toBe(0);
+    button.element.focus();
+    expect(document.activeElement).toBe(button.element);
+    await wrapper.setProps({ showMoveButtons: true });
+    expect(wrapper.find('.pme-select__selected--move-on-focus').exists()).toBe(false);
+    expect(wrapper.findAll('.pme-select__move')).toHaveLength(4);
+  });
+
+  it('can remove move buttons without disabling drag and drop or remove buttons', async () => {
+    const wrapper = render({ multiple: true, sortable: true, showMoveButtons: false, modelValue: ['violin', 'viola'] });
+    expect(wrapper.find('.pme-select__move').exists()).toBe(false);
+    expect(wrapper.findAll('button[aria-label^="Remove "]')).toHaveLength(2);
+    expect(wrapper.get('[data-value="viola"]').attributes('draggable')).toBe('true');
+    await wrapper.get('[data-value="viola"]').trigger('dragstart', { dataTransfer: { setData: vi.fn() } });
+    await wrapper.get('[data-value="violin"]').trigger('drop');
+    expect(wrapper.vm.getValue()).toEqual(['viola', 'violin']);
   });
 
   it('does not reorder when sorting is disabled or indices are out of range', () => {

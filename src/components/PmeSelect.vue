@@ -45,12 +45,15 @@
       <template #option="option">
         <strong v-if="option.kind === 'group'" class="pme-select__group">{{ option.label }}</strong>
         <span v-else-if="option.kind === 'create'">{{ t(appName, 'Add "{value}"', { value: option.value }) }}</span>
-        <span v-else :title="option.title">{{ option.label }}</span>
+        <span v-else
+              :class="{ 'pme-select__option--selected': selectedValues.includes(option.value) }"
+              :title="option.title"
+        >{{ option.label }}</span>
       </template>
       <template #selected-option-container="{ option }">
         <span :key="option.value"
               class="pme-select__selected"
-              :class="{ vs__selected: multiple }"
+              :class="{ vs__selected: multiple, 'pme-select__selected--move-on-focus': showMoveButtons === 'focus' }"
               :data-value="option.value"
               :draggable="sortable && multiple && !blocked && !creating"
               @mousedown.stop
@@ -60,8 +63,9 @@
               @dragend="draggedValue = undefined"
         >
           <span>{{ option.label }}</span>
-          <template v-if="sortable && multiple">
+          <template v-if="sortable && multiple && showMoveButtons">
             <button type="button"
+                    class="pme-select__move"
                     :disabled="blocked || creating || selectedValues[0] === option.value"
                     :aria-label="t(appName, 'Move {label} earlier', { label: option.label })"
                     @click.stop="moveItem(selectedValues.indexOf(option.value), -1)"
@@ -69,6 +73,7 @@
               <span aria-hidden="true">&lt;</span>
             </button>
             <button type="button"
+                    class="pme-select__move"
                     :disabled="blocked || creating || selectedValues.at(-1) === option.value"
                     :aria-label="t(appName, 'Move {label} later', { label: option.label })"
                     @click.stop="moveItem(selectedValues.indexOf(option.value), 1)"
@@ -150,6 +155,7 @@ const props = withDefaults(defineProps<PmeSelectProps>(), {
   required: false,
   notEmpty: false,
   sortable: false,
+  showMoveButtons: 'focus',
   placeholder: '',
   inputId: undefined,
   name: undefined,
@@ -514,6 +520,33 @@ defineExpose({
 .pme-select {
   min-width: 180px;
 
+  :deep(.nc-select.v-select.select .vs__dropdown-toggle) {
+    padding-block-start: 0;
+  }
+
+  :deep(.nc-select.v-select.select .pme-select__selected.vs__selected) {
+    border-radius: var(--border-radius-large) !important;
+  }
+
+  :deep(.vs__dropdown-option) {
+    &:has(.pme-select__option--selected) {
+      background-color: var(--color-primary-element-light);
+      color: var(--color-main-text);
+    }
+
+    &:hover,
+    &.vs__dropdown-option--highlight {
+      background-color: var(--color-background-hover);
+      color: var(--color-main-text);
+    }
+
+    &:has(.pme-select__group) {
+      background-color: var(--color-main-background);
+      color: var(--color-main-text);
+      cursor: default;
+    }
+  }
+
   &__label {
     position: absolute;
     width: 1px;
@@ -527,6 +560,18 @@ defineExpose({
     display: inline-flex;
     align-items: center;
     gap: 4px;
+
+    &--move-on-focus {
+      .pme-select__move {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      &:has(:focus-visible) .pme-select__move {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
 
     &[draggable="true"] {
       cursor: grab;
