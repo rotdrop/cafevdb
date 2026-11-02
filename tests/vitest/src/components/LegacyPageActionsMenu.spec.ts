@@ -86,7 +86,7 @@ describe('LegacyPageActionsMenu', () => {
     expect(wrapper.vm.isOpen()).toBe(true);
     expect(reference.style.position).toBe('fixed');
     expect(reference.style.left).toBe('30px');
-    expect(reference.style.top).toBe('40px');
+    expect(reference.style.top).toBe('calc(40px - var(--header-height))');
   });
 
   it('clears the context-menu position when the menu stays closed', async () => {
