@@ -194,14 +194,17 @@ const closeMenu = async () => {
     await nextFrame()
     await nextTick()
   }
-  setPosition()
+  if (!open.value) {
+    setPosition()
+  }
   logger.debug('<- closeMenu()')
 }
 
 const handleClosedEvent = () => {
   if (ignoreClosedEvent) {
     ignoreClosedEvent = false
-  } else {
+  } else if (!open.value) {
+    // A previous hide transition may finish only after the menu has reopened.
     closeMenu()
   }
 }
