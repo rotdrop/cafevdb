@@ -78,6 +78,7 @@ use OCP\IDateTimeZone;
 
 // phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 
+// phpcs:disable Squiz.Classes.ValidClassName.NotPascalCase -- Preserve the legacy calendar API class name.
 /**
  * This class manages our calendar objects
  *
@@ -88,6 +89,7 @@ use OCP\IDateTimeZone;
  */
 class OC_Calendar_Object
 {
+  // phpcs:enable Squiz.Classes.ValidClassName.NotPascalCase
   use \OCA\CAFEVDB\Traits\GetUserTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

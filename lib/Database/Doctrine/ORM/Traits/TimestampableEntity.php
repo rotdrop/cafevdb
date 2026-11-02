@@ -33,7 +33,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-
 /** Union of CreatedAtEntity and UpdatedAtEntry traits. */
 trait TimestampableEntity
 {

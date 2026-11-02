@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Events;

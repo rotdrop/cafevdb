@@ -34,8 +34,11 @@ import { appName } from './config.ts';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
 import router from './router/app-router.ts';
 import { provideMountableComponents } from './services/mountable-components.ts';
+import { options as floatingVueOptions } from 'floating-vue';
 
 import 'core-js/actual';
+
+floatingVueOptions.disposeTimeout = 1000;
 
 const pinia = createPinia();
 

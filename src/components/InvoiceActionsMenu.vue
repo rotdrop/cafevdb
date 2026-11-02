@@ -186,8 +186,10 @@ const handleInvoiceDownload = async (operation: MailMergeOperation = MailMergeDo
 const handleInvoiceEmail = async () => {
   asyncEmit(BusEvents.EMAIL_POPUP, {
     projectId: props.projectId,
+    singleRecipient: true,
     post: {
       ...props,
+      invoiceId: props.entityId,
     },
   })
 }

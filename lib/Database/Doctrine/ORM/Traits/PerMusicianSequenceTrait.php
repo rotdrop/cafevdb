@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
-
 /**
  * A special trait for a repository for entities with per-musician
  * sequence which together with the musician form a composite key.

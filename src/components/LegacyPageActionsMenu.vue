@@ -166,8 +166,8 @@ const nextFrame = () => {
 const setPosition = (x?: number, y?: number) => {
   if (x !== undefined && y !== undefined) {
     referenceElement.value!.style.position = 'fixed'
-    referenceElement.value!.style.left = x + 'px'
-    referenceElement.value!.style.top = y + 'px'
+    referenceElement.value!.style.left = `${x}px`
+    referenceElement.value!.style.top = `calc(${y}px - var(--header-height))`
 
     positioned.value = true
   } else if (positioned.value) {
@@ -194,14 +194,17 @@ const closeMenu = async () => {
     await nextFrame()
     await nextTick()
   }
-  setPosition()
+  if (!open.value) {
+    setPosition()
+  }
   logger.debug('<- closeMenu()')
 }
 
 const handleClosedEvent = () => {
   if (ignoreClosedEvent) {
     ignoreClosedEvent = false
-  } else {
+  } else if (!open.value) {
+    // A previous hide transition may finish only after the menu has reopened.
     closeMenu()
   }
 }

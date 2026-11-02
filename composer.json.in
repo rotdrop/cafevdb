@@ -93,7 +93,7 @@
     },
     "patches": {
       "malkusch/lock": {
-        "Allow a timeout of 0 in order to fail immediately when the lock is not available.": "composer-patches/malkusch/lock/loop-timeout-zero.patch"
+        "Allow a timeout of 0 in order to fail immediately when the lock is not available.": "dev-scripts/lib/patches/malkusch/lock/loop-timeout-zero.patch"
       }
     }
   }

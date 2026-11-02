@@ -73,7 +73,11 @@ use OCA\CAFEVDB\Service\WikiRPC;
 use OCA\CAFEVDB\Service\WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
-/** AJAX end-points for personal settings. */
+/**
+ * AJAX end-points for personal settings.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 #[PhpToTypeScript\Attributes\TypeScript]
 class PersonalSettingsController extends Controller
 {
@@ -137,7 +141,7 @@ class PersonalSettingsController extends Controller
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
     url: '/' . self::BASE_PATH . '/' . self::END_POINT_PERSONAL_SET . '/{parameter}',
-)]
+  )]
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
@@ -2028,7 +2032,6 @@ class PersonalSettingsController extends Controller
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
     url: '/' . self::BASE_PATH . '/' . self::END_POINT_GET . '/{parameter}',
-
   )]
   public function get(string $parameter):Http\Response
   {

@@ -72,10 +72,6 @@ class MigrationsController extends Controller
   }
 
   /**
-   * @param string $topic
-   *
-   * @param string $subTopic
-   *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]

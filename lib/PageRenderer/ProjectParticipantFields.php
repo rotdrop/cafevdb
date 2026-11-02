@@ -1824,7 +1824,7 @@ __EOT__;
                     $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
                     $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
                     error_reporting($reporting);
-                    } catch (\Throwable $t) {
+                  } catch (\Throwable $t) {
                     error_reporting($reporting);
                     $this->logInfo('IGNORE DATE PARSE ERROR');
                     // ignore

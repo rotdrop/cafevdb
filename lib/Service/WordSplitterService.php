@@ -157,6 +157,8 @@ class WordSplitterService
   /**
    * Check whether the service accepts connections on its socket.
    *
+   * @param string $socket Unix socket path.
+   *
    * @return bool True if a connection could be established.
    *
    * @SuppressWarnings(PHPMD.ErrorControlOperator)

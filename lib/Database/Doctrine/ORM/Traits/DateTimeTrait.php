@@ -56,7 +56,7 @@ trait DateTimeTrait
       return $dateTime;
     } else {
       $dateTime = self::convertToDateTimeImmutable($dateTime);
-      if ($dateTime === null)  {
+      if ($dateTime === null) {
         return $dateTime;
       }
       return CarbonImmutable::instance($dateTime);

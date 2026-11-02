@@ -29,6 +29,7 @@ import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 import type { PmeSelectComponentProps } from './types/pme-select.ts';
 
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
+export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
 export const PME_SELECT = 'PmeSelect';
@@ -46,6 +47,15 @@ export interface ComponentProps {
     onIframeResize?: (event: ResizeObserverEntry) => void;
     onUpdateLoading?: (loading: boolean) => void;
     onError?: () => void;
+  };
+  [DONATION_RECEIPTS_ACTION_MENU]: {
+    enableOverviewItem?: boolean;
+    entityId: number;
+    paymentId: number;
+    menuCaption?: string;
+    projectId: number;
+    projectName: string;
+    template: string;
   };
   [INVOICE_ACTIONS_MENU]: {
     amount?: number;

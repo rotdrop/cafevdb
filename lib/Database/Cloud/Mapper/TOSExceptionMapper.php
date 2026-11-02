@@ -70,7 +70,7 @@ class TOSExceptionMapper extends Mapper
    *
    * @param string $shareToken
    *
-   * @param array|string $ipRange
+   * @param array|string $ipRanges
    *
    * @param bool $replace Replace any existing ip-ranges with the given ones.
    *

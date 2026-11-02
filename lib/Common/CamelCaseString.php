@@ -40,7 +40,8 @@ class CamelCaseString
    */
   public function __construct(
     private WordSplitterService $wordSplitterService,
-  ) {}
+  ) {
+  }
 
   /**
    * Shorten the given string by iteratively reducing the size of its

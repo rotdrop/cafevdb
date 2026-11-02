@@ -50,7 +50,8 @@ use OCP\UserInterface;
 use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Add some cloud account service related actions which are needed by the
@@ -492,7 +493,6 @@ class CloudAccountsService
         $this->subAdminManager->createSubAdmin($user, $group);
       }
     }
-
   }
 
   /**

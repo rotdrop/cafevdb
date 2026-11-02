@@ -40,6 +40,7 @@ class ParticipantFieldPropertyGetDefaultValue extends \OCA\CAFEVDB\Wrapped\OCA\R
   /**
    * Initialize from the given array.
    *P
+   *
    * @param array $data
    *
    * @return self

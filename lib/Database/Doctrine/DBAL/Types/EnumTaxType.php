@@ -25,7 +25,9 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
- * Tax types. FIXME: the difference between VAT and "Sales Tax" is not clean
+ * Tax types.
+ *
+ * @todo the difference between VAT and "Sales Tax" is not clean
  * and IMHO in Germany there is no difference; there is "Sales Tax" ==
  * "Umsatzsteuer" and this is it.
  */

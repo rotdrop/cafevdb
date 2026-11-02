@@ -282,7 +282,7 @@ trait ParticipantFileFieldsTrait
         'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
     )->render();
-}
+  }
 
   /**
    * Generate a link to the files-app if appropriate. The link is always a

@@ -48,6 +48,8 @@ class ProjectWebPage extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\Abstra
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public static function fromArray(array $data): self
   {

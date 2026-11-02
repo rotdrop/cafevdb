@@ -29,6 +29,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use OCP\IRequest;
 
+use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -45,6 +46,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 #[PhpToTypeScript\Attributes\TypeScript]
 class DonationReceipts extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
@@ -776,6 +778,13 @@ class DonationReceipts extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
+    $this->installActionMenuToggle(
+      $opts,
+      function(array $recordId, array $groupByRecordId, array $row, PHPMyEdit $pme) {
+        return $this->generateActionMenuData($recordId['id'], $row);
+      },
+    );
+
     // $opts[PHPMyEdit::OPT_TRIGGERS]['*'][PHPMyEdit::TRIGGER_DATA][] = function(PHPMyEdit $pme, string $op, string $step, array &$row) {
     //   if (!$row[$this->joinQueryField(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_check'))) {
     //   }
@@ -788,6 +797,33 @@ class DonationReceipts extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * @param int $entityId
+   *
+   * @param array $row Legacy DB data provided by PME.
+   *
+   * @return array
+   */
+  protected function generateActionMenuData(int $entityId, array $row):array
+  {
+    $paymentId = $row[$this->joinQueryField(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'id')];
+    $projectId = $row[$this->joinQueryField(DatabaseTables::PROJECTS_TABLE, 'id')];
+    $projectName = $row[$this->joinQueryField(DatabaseTables::PROJECTS_TABLE, 'name')];
+    $dateOfReceipt = $row[$this->joinQueryField(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
+    $musicianName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'id')];
+    $amount = $row[$this->joinQueryField(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount')];
+    $numberFormatter = new NumberFormatter($this->appLocale());
+    $l10nAmount = $numberFormatter->formatCurrency($amount);
+
+    return [
+      'entityId' => (int)$entityId,
+      'paymentId' => (int)$paymentId,
+      'menuCaption' => $dateOfReceipt . ' - ' . $musicianName . ' - ' . $l10nAmount,
+      'projectId' => (int)$projectId,
+      'projectName' => $projectName,
+    ];
   }
 
   /**

@@ -123,7 +123,7 @@ class Admin implements IDelegatedSettings
               return $backend->getBackendName();
             } catch (Throwable) {
               return null;
-          }
+            }
           },
           $this->userManager()->getBackends(),
         )));

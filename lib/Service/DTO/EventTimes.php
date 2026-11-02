@@ -56,6 +56,8 @@ class EventTimes extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDT
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public static function fromArray(array $data): self
   {

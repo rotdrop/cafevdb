@@ -29,7 +29,6 @@ use Closure;
 use OCP\Files\FileInfo;
 use OCP\Files;
 
-
 /**
  * Remove the given node, which must be a folder.
  */

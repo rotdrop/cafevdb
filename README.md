@@ -30,5 +30,51 @@ Features include
 The orchestra data-base is held separate from the cloud database and
 is based on Doctrine/ORM.
 
+Email template substitutions
+----------------------------
+
+Email templates support substitutions in both the subject and the body,
+for example `${GLOBAL::PROJECT}` and `${MEMBER::FIRST_NAME}`. Per-member
+substitutions in either field generate a separate email for each recipient
+and cannot be used for mailing-list posts. The Cc/Bcc and catch-all copy
+resolves global substitutions but keeps the per-member placeholders.
+Use `$$` to escape a literal dollar sign. Stored templates and drafts retain
+their placeholders.
+
+German bank validation data is stored through Doctrine/ORM in the Nextcloud
+database, not in the orchestra database or a vendor bank-list file. It uses
+the same unprefixed `bav_bank`, `bav_agency`, and `bav_meta` tables as the
+optional BAV Nextcloud app, so existing bank data is shared even though each
+app has its own namespace-wrapped library. The BAV app is not required.
+Missing bank tables are installed and populated automatically; downloads
+for installation and explicit updates use temporary files.
+
+PHP code quality
+----------------
+
+The PHPCS and PHPMD workflows check PHP files in `lib/` using `.phpcs.xml`
+and `.phpmd.xml`. They omit `templates/`, `lib/Service/IMAP/`, legacy PhpMyEdit
+in `lib/Legacy/PhpMyEdit/`, and generated Doctrine ORM proxies in
+`lib/Database/Doctrine/ORM/Proxies/`.
+PHPCS reports warnings but only fails CI on errors.
+
+To run the same checks locally, initialize the Makefile submodules and ensure
+the `xpath` binary is installed (`libxml-xpath-perl` on Debian/Ubuntu). The
+targets install their isolated Composer tools when needed:
+
+```sh
+git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib dev-scripts/MakeHelp 3rdparty/selectize
+make phpcs
+make phpmd
+```
+
+PHPMD runs with one thread because its patched entry point cannot dispatch
+worker subcommands.
+
+The app's Doctrine dependencies are namespace-wrapped with PHP-Scoper. Its
+configuration rewrites dynamic class-constant lookups in Doctrine's attribute
+driver and DQL lexer, and CI verifies attribute metadata, SQLite schema
+creation, and DQL execution against the wrapped ORM.
+
 --
 cH

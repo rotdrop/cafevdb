@@ -242,7 +242,7 @@ class MusiciansRepository extends EntityRepository
     // $this->log('SQL ' . $qb->getQuery()->getSql());
     // $this->log('PARAM ' . print_r($qb->getQuery()->getParameters(), true));
 
-    if ($indexBy === null ) {
+    if ($indexBy === null) {
       return $qb->getQuery()->getOneOrNullResult();
     } else {
       return $qb->getQuery()->getResult();

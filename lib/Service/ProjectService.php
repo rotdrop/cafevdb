@@ -65,6 +65,8 @@ use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 #[PhpToTypeScript\Attributes\TypeScript]
 class ProjectService

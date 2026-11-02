@@ -294,9 +294,9 @@ trait DatabaseStorageNodeNameTrait
    *
    * @param int $paymentId
    *
-   * @param string $projectName
-   *
    * @param string $musicianName
+   *
+   * @param string $projectName
    *
    * @param null|string $extension
    *
@@ -327,9 +327,9 @@ trait DatabaseStorageNodeNameTrait
    *
    * @param null|string $organization
    *
-   * @param string $projectName
-   *
    * @param string $musicianName
+   *
+   * @param string $projectName
    *
    * @return string
    */
@@ -357,9 +357,9 @@ trait DatabaseStorageNodeNameTrait
    *
    * @param null|string $organization
    *
-   * @param string $projectName
-   *
    * @param string $musicianName
+   *
+   * @param string $projectName
    *
    * @param null|string $extension
    *
@@ -406,8 +406,6 @@ trait DatabaseStorageNodeNameTrait
    * Generate the folder-name for the given invoice.
    *
    * @param Entities\Invoice $invoice
-   *
-   * @param null|string $extension
    *
    * @return string
    */

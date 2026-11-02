@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-
 /**
  * Intial state emitted for key PHPMyEdit. Consistency between class members
  * and config / enum keys is ensured by unit testing with the fromArray

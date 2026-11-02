@@ -49,6 +49,8 @@ class FontFileNames extends AbstractDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public static function fromArray(array $data): self
   {

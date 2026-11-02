@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\BAV;
+use OCA\CAFEVDB\Wrapped\rotdrop\bav\Configuration\ConfigurationRegistry;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -79,6 +81,13 @@ class Registration
   {
     $context->registerServiceAlias(ITimeFactory::class, TimeFactory::class);
     $context->registerServiceAlias(ClockInterface::class, TimeFactory::class);
+
+    $context->registerService(BAV::class, function(ContainerInterface $container) {
+      $configuration = $container->get(Finance\BAVConfiguration::class);
+      // Backend installation and update hooks also consult the wrapped registry.
+      ConfigurationRegistry::setConfiguration($configuration);
+      return new BAV($configuration);
+    });
 
     $context->registerService(
       MigrationsServiceInterface::class,

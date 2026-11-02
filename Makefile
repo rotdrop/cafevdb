@@ -38,7 +38,8 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
-PHPCS = $(ABSSRCDIR)/vendor/bin/phpcs
+PHPCS = $(ABSSRCDIR)/vendor-bin/phpcs/vendor/bin/phpcs
+PHPMD = $(ABSSRCDIR)/vendor-bin/phpmd/vendor/bin/phpmd
 #
 EMACS = $(shell which emacs 2> /dev/null)
 
@@ -194,7 +195,7 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	ln -fs ../3rdparty $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
 	rm -rf $(BUILDDIR)/vendor-wrapped
-	ln -sf ../composer-patches $(BUILDDIR)
+	ln -sfn ../dev-scripts/lib/patches $(BUILDDIR)/composer-patches
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
@@ -217,6 +218,7 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 # scoper does not rewrite the composer autoload maps, regenerate them
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+	$(call apply-scoped-autoload-patch,vendor-wrapped)
 
 vendor-wrapped/autoload.php: vendor-wrapped
 
@@ -311,6 +313,11 @@ WEBPACK_DEPS =\
 
 include $(DEV_LIB_DIR)/makefile/npm.mk
 
+#@@ Regenerates the app-calendar patch from the installed npm package.
+fabricate-app-calendar-patch:
+	$(BASH) $(ABSSRCDIR)/dev-scripts/fabricate-app-calendar-patch.sh
+.PHONY: fabricate-app-calendar-patch
+
 #@@ Removes build files
 clean: ## Tidy up local environment
 	rm -rf $(BUILDDIR)
@@ -326,7 +333,7 @@ distclean: clean
 .PHONY: distclean
 
 #@@ Really delete everything but the bare source files
-realclean: distclean dev-scripts-real-clean
+realclean: distclean
 	rm -f composer*.lock
 	rm -f vendor-bin/*/composer.lock
 	rm -f composer.json
@@ -536,18 +543,30 @@ $(TSDOC_HTML)/index.html: doc/typedoc/typedoc.mjs $(APP_BUILD_HASH) $(WEBPACK_DE
 #
 ###############################################################################
 
-$(PHPCS): composer.lock
-	if ! [ -x $@ ]; then $(COMPOSER) bin phpcs install; else touch $@; fi
+$(PHPCS): vendor-bin/phpcs/composer.json
+	$(COMPOSER) install --working-dir=vendor-bin/phpcs --no-interaction --no-progress
 
-PHPCS_IGNORE=lib/Database/Doctrine/ORM/Proxies/,templates/legacy/
+PHP_LINT_EXCLUDES=lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*
+PHPCS_IGNORE=$(PHP_LINT_EXCLUDES)
+PHPCS_OPTIONS=--standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='$(PHPCS_IGNORE)'
 
 .PHONY: phpcs
 phpcs: $(PHPCS)
-	$(PHPCS) --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
+	$(PHPCS) $(PHPCS_OPTIONS) lib/
 
 .PHONY: phpcs-errors
 phpcs-errors: $(PHPCS)
-	$(PHPCS) --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
+	$(PHPCS) $(PHPCS_OPTIONS) -n lib/|grep FILE:|awk '{ print $$2; }'
+
+$(PHPMD): vendor-bin/phpmd/composer.json
+	$(COMPOSER) install --working-dir=vendor-bin/phpmd --no-interaction --no-progress
+
+PHP_LINT_COMMA := ,
+PHPMD_EXCLUDES=$(foreach path,$(subst $(PHP_LINT_COMMA), ,$(PHP_LINT_EXCLUDES)),--exclude '*/$(path)')
+
+.PHONY: phpmd
+phpmd: $(PHPMD)
+	$(PHPMD) lib/ --format text --ruleset .phpmd.xml --suffixes php $(PHPMD_EXCLUDES) --threads 1 --no-cache
 
 # Builds the source package
 .PHONY: source

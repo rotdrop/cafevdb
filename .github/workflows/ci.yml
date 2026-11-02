@@ -92,6 +92,10 @@ jobs:
           # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
           make dev-setup-php
 
+      - name: Verify namespace-wrapped Doctrine
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: php tests/phpunit/verify-scoped-doctrine.php
+
       - name: Enable app
         working-directory: server
         run: php occ app:enable ${{ env.APP_NAME }}

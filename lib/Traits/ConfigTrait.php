@@ -1125,6 +1125,8 @@ trait ConfigTrait
   /**
    * Finally this is a wrapper around time_sleep_until()
    *
+   * @param float $timestamp
+   *
    * @return bool
    */
   protected function sleepUntil(float $timestamp): bool

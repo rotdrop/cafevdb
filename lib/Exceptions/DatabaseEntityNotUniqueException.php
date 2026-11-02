@@ -39,7 +39,7 @@ class DatabaseEntityNotUniqueException extends DatabaseEntityException
    *
    * @param ?string $entityClassName
    *
-   * @param ?array $identifier
+   * @param ?array $criteria
    *
    * {@inheritdoc}
    */

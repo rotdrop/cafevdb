@@ -96,7 +96,18 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\ProjectEventsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailTemplate::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailDraft::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFileData::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InvoiceItem::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
@@ -107,6 +118,7 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
@@ -143,9 +155,11 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Exceptions\EnduserNotificationException::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Listener\BeforeMessageLoggedEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Response\HttpStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -231,6 +245,9 @@ class EmailFormControllerTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
     $repository->method('list')->willReturn([]);
+    $repository->method('find')->willReturnCallback(
+      fn(int $id) => ($this->entities[Entities\EmailDraft::class] ?? null)?->get($id),
+    );
     $this->entityRepositories[Entities\EmailDraft::class] = $repository;
 
     $repository = $this->getMockBuilder(Repositories\ProjectParticipantsRepository::class)
@@ -540,6 +557,265 @@ class EmailFormControllerTest extends TestCase
     ],
   ];
 
+  /**
+   * @param string $class
+   * @param object $entity
+   * @param int $id
+   *
+   * @return void
+   */
+  private function setRepositoryStubFor(string $class, object $entity, int $id): void
+  {
+    $repository = $this->createStub(Repositories\EntityRepository::class);
+    $repository->method('find')->willReturnCallback(fn($searchId) => $searchId == $id ? $entity : null);
+    $this->entityRepositories[$class] = $repository;
+  }
+
+  /** @return Entities\Invoice */
+  private function setupInvoiceEmail(): Entities\Invoice
+  {
+    $invoice = new Entities\Invoice()
+      ->setId(45)
+      ->setDebitor($this->musician)
+      ->setProject($this->project)
+      ->setAmount(90)
+      ->setSubject('Invoice email regression')
+      ->setDueDate('2099-12-31');
+    $repository = $this->createStub(Repositories\EntityRepository::class);
+    $repository->method('find')->willReturnCallback(fn($id) => $id == $invoice->getId() ? $invoice : null);
+    $this->entityRepositories[Entities\Invoice::class] = $repository;
+    $this->generateProjectWebFormParameters([
+      EmailForm\ComposerCgiKeys::INVOICE_ID => $invoice->getId(),
+    ]);
+
+    return $invoice;
+  }
+
+  /** @return void */
+  public function testGenerateFormWithInvoice(): void
+  {
+    $invoice = $this->setupInvoiceEmail();
+    $response = $this->testedController->webForm(
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+      invoiceId: $invoice->getId(),
+    );
+    $this->assertSame(Http::STATUS_OK, $response->getStatus());
+    $this->assertStringContainsString('name="invoiceId"', $response->getData()->contents);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $filter = $composer->getRecipientsFilter();
+    $this->assertTrue($filter->frozenRecipients());
+    $recipients = array_values($filter->selectedRecipients());
+    $this->assertCount(1, $recipients);
+    $this->assertSame($this->musician, $recipients[0]['dbdata']);
+    $this->assertStringEndsWith(Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE, $composer->currentEmailTemplate());
+  }
+
+  /** @return void */
+  public function testInvoiceSubstitutions(): void
+  {
+    $invoice = $this->setupInvoiceEmail();
+    $receivable = $this->createStub(Entities\ProjectParticipantFieldDatum::class);
+    $receivable->method('amountPayable')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(120));
+    $receivable->method('amountPaid')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(30));
+    $invoice->addInvoiceItem(
+      new Entities\InvoiceItem()->setAmount(90)->setSubject('Invoice item')->setReceivable($receivable),
+    );
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    new ReflectionMethod($composer, 'generateSubstitutionHandlers')->invoke($composer);
+    $substitutions = new ReflectionProperty($composer, 'substitutions')->getValue($composer);
+    $member = $substitutions[EmailForm\EnumSubstitutionNamespace::MEMBER->value];
+    $this->assertSame(
+      $invoice->getSubject(),
+      $member[EmailForm\EnumMemberSubstitutionKey::BANK_TRANSACTION_PURPOSE->value](['purpose'], $this->musician),
+    );
+    $money = new ReflectionMethod($composer, 'moneyValue');
+    $parts = $member[EmailForm\EnumMemberSubstitutionKey::BANK_TRANSACTION_PARTS->value](
+      ['parts', '', '[PURPOSE]|[INVOICED]|[TOTALS]|[RECEIVED]|[REMAINING]', ''],
+      $this->musician,
+    );
+    $this->assertSame(
+      implode('|', [
+        'Invoice item',
+        $money->invoke($composer, 90),
+        $money->invoke($composer, 120),
+        $money->invoke($composer, 30),
+        $money->invoke($composer, 90),
+      ]),
+      $parts,
+    );
+    $this->assertNull(
+      new ReflectionMethod($composer, 'getCompositePayment')->invoke($composer, new Entities\Musician()->setId(999)),
+    );
+
+    $invoice->setInvoiceNumber('2099-001')->setPurpose('Invoice purpose')->setInvoiceDate('2099-12-01');
+    $key = fn(EmailForm\EnumMemberSubstitutionKey $key) => $member[$key->value];
+    $this->assertSame('2099-001', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_NUMBER)(['x'], $this->musician));
+    $this->assertSame($invoice->getSubject(), $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_SUBJECT)(['x'], $this->musician));
+    $this->assertSame('Invoice purpose', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_PURPOSE)(['x'], $this->musician));
+    $this->assertSame($money->invoke($composer, 90), $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_AMOUNT)(['x'], $this->musician));
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_DUE_DATE)(['x'], $this->musician));
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_DATE)(['x'], $this->musician));
+    $this->assertSame($parts, $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_ITEMS)(
+      ['parts', '', '[PURPOSE]|[INVOICED]|[TOTALS]|[RECEIVED]|[REMAINING]', ''],
+      $this->musician,
+    ));
+    // other recipients keep the placeholder
+    $other = new Entities\Musician()->setId(999);
+    $this->assertSame('x', $key(EmailForm\EnumMemberSubstitutionKey::INVOICE_NUMBER)(['x'], $other));
+  }
+
+  /** @return void */
+  public function testDonationReceiptSubstitutions(): void
+  {
+    $receivable = $this->createStub(Entities\ProjectParticipantFieldDatum::class);
+    $receivable->method('amountPayable')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(100));
+    $receivable->method('amountPaid')->willReturn(Toolkit\Common\DecimalRationalMonetary::create(100));
+    $donation = new Entities\CompositePayment()
+      ->setId(46)
+      ->setMusician($this->musician)
+      ->setAmount(100)
+      ->setSubject('Donation')
+      ->setDateOfReceipt('2099-01-02');
+    $donation->addProjectPayment(
+      new Entities\ProjectPayment()
+        ->setAmount(60)->setSubject('Donated part')->setIsDonation(true)->setReceivable($receivable),
+    );
+    $donation->addProjectPayment(
+      new Entities\ProjectPayment()
+        ->setAmount(40)->setSubject('Waived part')->setIsDonation(false)->setReceivable($receivable),
+    );
+    $receipt = new Entities\DonationReceipt()->setDonation($donation);
+    $this->setRepositoryStubFor(Entities\DonationReceipt::class, $receipt, 7);
+    $this->generateProjectWebFormParameters([
+      EmailForm\ComposerCgiKeys::DONATION_RECEIPT_ID => 7,
+    ]);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    new ReflectionMethod($composer, 'generateSubstitutionHandlers')->invoke($composer);
+    $member = new ReflectionProperty($composer, 'substitutions')->getValue($composer)[
+      EmailForm\EnumSubstitutionNamespace::MEMBER->value];
+    $money = new ReflectionMethod($composer, 'moneyValue');
+    $key = fn(EmailForm\EnumMemberSubstitutionKey $key) => $member[$key->value];
+    $this->assertSame(
+      $money->invoke($composer, 60),
+      $key(EmailForm\EnumMemberSubstitutionKey::DONATION_AMOUNT)(['x'], $this->musician),
+    );
+    $this->assertSame(
+      $money->invoke($composer, 40),
+      $key(EmailForm\EnumMemberSubstitutionKey::WAIVED_AMOUNT)(['x'], $this->musician),
+    );
+    $this->assertNotSame('x', $key(EmailForm\EnumMemberSubstitutionKey::DONATION_RECEIPT_DATE)(['x'], $this->musician));
+    $parts = $key(EmailForm\EnumMemberSubstitutionKey::DONATION_PARTS)(
+      ['parts', '', '[PURPOSE]|', ''],
+      $this->musician,
+    );
+    $this->assertStringContainsString('Donated part|', $parts);
+    $this->assertStringContainsString('Waived part|', $parts);
+    $this->assertSame('x', $key(EmailForm\EnumMemberSubstitutionKey::DONATION_PARTS)(['x'], new Entities\Musician()->setId(999)));
+  }
+
+  /** @return void */
+  public function testInvoiceAttachmentWithoutPersonalPlaceholders(): void
+  {
+    $invoice = $this->setupInvoiceEmail();
+    $financeService = $this->createMock(Service\Finance\FinanceService::class);
+    $financeService->expects($this->once())->method('invoiceDocument')->with($invoice)
+      ->willReturn(['invoice-pdf', 'application/pdf', 'invoice.pdf']);
+    $this->mockProvider->registerClassInstance(Service\Finance\FinanceService::class, $financeService, global: true);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertGreaterThan(0, new ReflectionMethod($composer, 'activePersonalAttachments')->invoke($composer));
+    $attachments = new ReflectionMethod($composer, 'composePersonalAttachments')->invoke($composer, $this->musician);
+    $this->assertNotEmpty($attachments);
+    $this->assertSame([
+      'data' => 'invoice-pdf',
+      'fileName' => 'invoice.pdf',
+      'encoding' => 'base64',
+      'mimeType' => 'application/pdf',
+    ], $attachments[0]());
+  }
+
+  /** @return void */
+  public function testStoredInvoiceAttachmentIsNotRegenerated(): void
+  {
+    $invoice = $this->setupInvoiceEmail();
+    $file = new Entities\DatabaseStorageFile()
+      ->setName('stored-invoice.pdf')
+      ->setFile(new Entities\EncryptedFile('stored-invoice.pdf', 'stored-pdf', 'application/pdf'));
+    $invoice->setWrittenInvoice($file);
+    $financeService = $this->createMock(Service\Finance\FinanceService::class);
+    $financeService->expects($this->never())->method('invoiceDocument');
+    $this->mockProvider->registerClassInstance(Service\Finance\FinanceService::class, $financeService, global: true);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $attachments = new ReflectionMethod($composer, 'composePersonalAttachments')->invoke($composer, $this->musician);
+    $this->assertSame([
+      'data' => 'stored-pdf',
+      'fileName' => 'stored-invoice.pdf',
+      'encoding' => 'base64',
+      'mimeType' => 'application/pdf',
+    ], $attachments[0]());
+  }
+
+  /** @return void */
+  public function testInvoiceGenerationFailureIsReportedInPreview(): void
+  {
+    $this->composerPreviewSetup();
+    $this->setupInvoiceEmail();
+    $this->postData[EmailForm\Composer::POST_TAG][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = 'Invoice attached.';
+    $financeService = $this->createMock(Service\Finance\FinanceService::class);
+    $financeService->expects($this->once())->method('invoiceDocument')
+      ->willThrowException(new \RuntimeException('Invoice PDF generation failed'));
+    $this->mockProvider->registerClassInstance(Service\Finance\FinanceService::class, $financeService, global: true);
+
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $composer->previewMessages();
+    $this->assertTrue($composer->errorStatus());
+    $this->assertStringContainsString(
+      'Invoice PDF generation failed',
+      json_encode($composer->statusDiagnostics()[EmailForm\Composer::DIAGNOSTICS_MAILER_EXCEPTIONS]),
+    );
+    $this->assertNull(new ReflectionProperty($composer, 'invoice')->getValue($composer)->getNotificationEmail());
+  }
+
+  /** @return void */
+  public function testInvoiceDraftRoundTripAndRebinding(): void
+  {
+    $invoice = $this->setupInvoiceEmail();
+    $this->postData[EmailForm\RecipientsFilter::POST_TAG] = [];
+    $this->postData[EmailForm\Composer::POST_TAG] = [];
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertTrue($composer->storeDraft());
+    $draft = $composer->loadDraft();
+    $this->assertSame($invoice->getId(), $draft[EmailForm\ComposerCgiKeys::INVOICE_ID]);
+
+    $parameters = $this->postData;
+    $parameters[EmailForm\ComposerCgiKeys::INVOICE_ID] = 0;
+    $composer->bind($parameters);
+    $this->assertNull(new ReflectionMethod($composer, 'getCompositePayment')->invoke($composer, $this->musician));
+    $composer->bind($draft);
+    $this->assertSame($invoice, new ReflectionMethod($composer, 'getCompositePayment')->invoke($composer, $this->musician));
+  }
+
+  /** @return void */
+  public function testMissingInvoiceIsReported(): void
+  {
+    $this->setupInvoiceEmail();
+    $this->postData[EmailForm\ComposerCgiKeys::INVOICE_ID] = 999;
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Konnte keine Rechnung mit der Id 999 finden.');
+    $this->appContainer->get(EmailForm\Composer::class)->bind($this->postData);
+  }
+
   private const MAILING_LIST_USER_BASE = [
     EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
       EmailForm\RecipientsFilterCgiKeys::BASIC_RECIPIENTS_SET => [
@@ -794,6 +1070,117 @@ class EmailFormControllerTest extends TestCase
     // echo $requestData->previewData . PHP_EOL;
   }
 
+  /** @return array<string, array{string, bool}> */
+  public static function subjectSubstitutionProvider(): array
+  {
+    return [
+      'plain subject' => ['Plain subject', false],
+      'global subject' => ['Project ${GLOBAL::PROJECT}', false],
+      'personal subject only' => ['Hello ${MEMBER::FIRST_NAME}', true],
+      'global and personal subject' => ['${GLOBAL::PROJECT} for ${MEMBER::FIRST_NAME}', true],
+      'escaped substitutions' => ['$${GLOBAL::PROJECT} for $${MEMBER::FIRST_NAME}', false],
+    ];
+  }
+
+  /** @return void */
+  #[Attributes\DataProvider('subjectSubstitutionProvider')]
+  public function testComposerSubjectSubstitutions(string $subject, bool $personal): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::SUBJECT] = $subject;
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertTrue($composer->validateTemplate());
+
+    $secondMusician = clone $this->musician;
+    $secondMusician->setFirstName('SubjectSecondRecipient');
+    $recipients = array_map(
+      fn(Entities\Musician $musician) => [
+        'email' => $musician->getEmail(),
+        'name' => $musician->getPublicName(true),
+        'dbdata' => $musician,
+        'userBase' => 0,
+      ],
+      [$this->musician, $secondMusician],
+    );
+    $messages = new ReflectionMethod($composer, 'exportMessages')->invoke($composer, $recipients);
+    $this->assertTrue($composer->executionStatus());
+    $this->assertCount($personal ? 3 : 1, $messages);
+
+    $subjectTemplate = $personal || !str_contains($subject, '$$')
+      ? str_replace('${GLOBAL::PROJECT}', $this->project->getName(), $subject)
+      : str_replace('$$', '$', $subject);
+    foreach ($messages as $index => $message) {
+      $expectedSubject = $personal && $index < count($recipients)
+        ? str_replace('${MEMBER::FIRST_NAME}', $recipients[$index]['dbdata']->getFirstName(), $subjectTemplate)
+        : $subjectTemplate;
+      $headers = preg_replace('/\r?\n[ \t]+/', ' ', $message['headers']);
+      $this->assertStringContainsString(
+        'Subject: ' . $composer->subjectTag() . ' ' . $expectedSubject,
+        mb_decode_mimeheader($headers),
+      );
+      $this->assertStringContainsString('<p>Plain body</p>', $message['body']);
+    }
+    $this->assertSame($subject, $composer->subject());
+  }
+
+  /** @return array<string, array{string, string}> */
+  public static function invalidSubjectSubstitutionProvider(): array
+  {
+    return [
+      'unknown global' => ['${GLOBAL::SOMETHING_NOT_EXISTING}', EmailForm\Composer::TEMPLATE_VALIDATION_GLOBAL_ERRORS],
+      'unknown member' => ['${MEMBER::SOMETHING_NOT_EXISTING}', EmailForm\Composer::TEMPLATE_VALIDATION_MEMBER_ERRORS],
+      'unknown namespace' => ['${FAULTYNAMESPACE::SOMETHING}', EmailForm\Composer::TEMPLATE_VALIDATION_SPURIOUS_ERRORS],
+      'malformed substitution' => ['${MEMBER::FIRST_NAME', EmailForm\Composer::TEMPLATE_VALIDATION_SPURIOUS_ERRORS],
+    ];
+  }
+
+  /** @return void */
+  #[Attributes\DataProvider('invalidSubjectSubstitutionProvider')]
+  public function testComposerInvalidSubjectSubstitution(string $subject, string $errorKey): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::SUBJECT] = $subject;
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertFalse($composer->validateTemplate());
+    $this->assertFalse($composer->executionStatus());
+    $this->assertNotEmpty($composer->statusDiagnostics()[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION][$errorKey]);
+  }
+
+  /** @return void */
+  public function testComposerEmptySubjectSubstitutionDoesNotUseBody(): void
+  {
+    $this->composerPreviewSetup();
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    $composer->bind($this->postData);
+    $this->assertSame('', new ReflectionMethod($composer, 'replaceFormVariables')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::GLOBAL,
+      null,
+      '',
+    ));
+    $this->assertSame('', new ReflectionMethod($composer, 'finalizeSubstitutions')->invoke($composer, ''));
+    $this->assertSame(0, new ReflectionMethod($composer, 'hasSubstitutionNamespace')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::MEMBER,
+      '',
+    ));
+    new ReflectionProperty($composer, 'substitutions')->setValue($composer, [
+      EmailForm\EnumSubstitutionNamespace::GLOBAL->value => ['EMPTY' => fn(array $key, mixed $data) => ''],
+    ]);
+    $emptySubject = new ReflectionMethod($composer, 'replaceFormVariables')->invoke(
+      $composer,
+      EmailForm\EnumSubstitutionNamespace::GLOBAL,
+      null,
+      '${GLOBAL::EMPTY}',
+    );
+    $this->assertSame('', $emptySubject);
+    $this->assertSame('', new ReflectionMethod($composer, 'finalizeSubstitutions')->invoke($composer, $emptySubject));
+  }
+
 
   /**
    * Test whether an empty downloads folder ist properly reported if the
@@ -999,7 +1386,8 @@ class EmailFormControllerTest extends TestCase
    *
    * @return void
    */
-  public function testComposerPreviewCatchSubstitutionPreconditionError(): void
+  #[Attributes\DataProvider('substitutionLocationProvider')]
+  public function testComposerPreviewCatchSubstitutionPreconditionError(string $location): void
   {
     $this->composerPreviewSetup();
     $this->postData = Util::arrayMergeRecursive(
@@ -1011,12 +1399,13 @@ class EmailFormControllerTest extends TestCase
         ],
       ],
     );
-    $messageText = '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::SOMETHING}
+    $this->postData[EmailForm\EnumPostTag::COMPOSER->value][EmailForm\ComposerCgiKeys::MESSAGE_TEXT] = '<p>Plain body</p>';
+    $messageText = '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::FIRST_NAME}
 ';
     $this->postData[
       EmailForm\EnumPostTag::COMPOSER->value
     ][
-      EmailForm\ComposerCgiKeys::MESSAGE_TEXT
+      $location
     ] = $messageText;
     $response = $this->testedController->composer(
       operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
@@ -1045,6 +1434,15 @@ class EmailFormControllerTest extends TestCase
     $this->assertIsArray($diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION]);
     $templateValidation = $diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
     $this->assertArrayHasKey(EmailForm\Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS, $templateValidation);
+  }
+
+  /** @return array<string, array{string}> */
+  public static function substitutionLocationProvider(): array
+  {
+    return [
+      'body' => [EmailForm\ComposerCgiKeys::MESSAGE_TEXT],
+      'subject' => [EmailForm\ComposerCgiKeys::SUBJECT],
+    ];
   }
 
   /** @return void */

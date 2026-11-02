@@ -50,6 +50,7 @@ import {
   CALENDAR_KEY_POSTFIX,
   CALENDARS,
   DOCUMENT_TEMPLATES_FOLDER,
+  EVENT_DURATION_KEY,
   FINANCE_FOLDER,
   GENERAL_ADDRESS_BOOK_KEY,
   MUSICIANS_ADDRESS_BOOK_KEY,
@@ -158,7 +159,10 @@ const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Share owner'), [
     field(SHARE_OWNER_KEY, t(appId, 'Share owner user ID'), 'owner'),
   ], 'share-owner-password'),
-  group(1, t(appId, 'Calendars'), calendarKeys.map((key) => field(key, displayName(key)))),
+  group(1, t(appId, 'Calendars'), [
+    ...calendarKeys.map((key) => field(key, displayName(key))),
+    field(EVENT_DURATION_KEY, t(appId, 'Default event duration (minutes)'), 'number'),
+  ]),
   group(2, t(appId, 'Contacts'), [
     field(GENERAL_ADDRESS_BOOK_KEY, t(appId, 'General address book')),
     field(MUSICIANS_ADDRESS_BOOK_KEY, t(appId, 'Musicians address book')),

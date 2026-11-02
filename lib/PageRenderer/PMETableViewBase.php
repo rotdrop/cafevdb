@@ -49,7 +49,11 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
-/** Base for phpMyEdit based table-views. */
+/**
+ * Base for phpMyEdit based table-views.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class PMETableViewBase extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -1459,7 +1463,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $missingKeys = [];
-    foreach ($pme->key as $key => $type) {
+    foreach (array_keys($pme->key) as $key) {
       if (!isset($newValues[$key])) {
         $missingKeys[] = $key;
       }
@@ -1515,7 +1519,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
-        foreach ($this->pme->key as $key => $type) {
+        foreach (array_keys($this->pme->key) as $key) {
           $joinInfo['identifier'][$key] = $key;
         }
       }
@@ -2550,7 +2554,7 @@ UNION
    *
    * @param array $joinInfo Join desciption, see PMETableViewBase::defineJoinStructure().
    *
-   * @param array $fields FIELDNAME => ENUM_CLASS array
+   * @param array $fields FIELDNAME => ENUM_CLASS array.
    *
    * @return string SQL fragment.
    */

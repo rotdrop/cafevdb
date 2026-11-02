@@ -130,17 +130,37 @@ const getControlObject = function($select: JQuerySelect) {
  */
 const getChildren = function($select: JQuery<HTMLSelectElement>) {
   const selectize = getSelectize($select);
-  const $children = selectize ? selectize.revertSettings.$children : $select.children();
   if (selectize) {
+    // Selectize replaces the options of the underlying select by new
+    // elements for the selected items. Those are not identical to the
+    // original ones, so jQuery cannot de-duplicate them. Assume that
+    // the option values are unique and only add missing options.
+    let $children = selectize.revertSettings.$children;
+    const knownValues = new Set<string>();
+    $children.each(function() {
+      const $child = $(this);
+      const $options = $child.is('option') ? $child : $child.find('option');
+      $options.each(function() {
+        knownValues.add($(this).attr('value')!);
+      });
+    });
+    $select.children().each(function() {
+      const $child = $(this);
+      if (!$child.is('option') || !knownValues.has($child.attr('value')!)) {
+        $children = $children.add($child);
+      }
+    });
     const values = selectize.items;
     $children.each(function() {
       const $child = $(this);
       if ($child.is('option')) {
-        $child.prop('selected', values.indexOf($child.attr('value')!));
+        $child.prop('selected', values.indexOf($child.attr('value')!) >= 0);
       }
     });
+    return $children;
+  } else {
+    return $select.children();
   }
-  return $children;
 };
 
 /**

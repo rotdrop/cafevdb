@@ -53,7 +53,7 @@ class UndoableRunQueueException extends RuntimeException
   }
 
   /**
-   * @param UndoableRunQueue $runQUeue
+   * @param UndoableRunQueue $runQueue
    *
    * @return self
    */

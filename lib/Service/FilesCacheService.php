@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-
 use Psr\Log\LoggerInterface;
 
 use OCP\Files\File;

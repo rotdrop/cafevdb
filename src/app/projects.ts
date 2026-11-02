@@ -96,8 +96,10 @@ require('projects.scss');
  *
  * @param reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
+ *
+ * @param singleRecipient Whether to open the form in single recipient mode.
  */
-const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false) {
+const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false, singleRecipient: boolean = false) {
   const $emailDlg = $('#emailformdialog');
   if ($emailDlg.dialog('isOpen') === true) {
     if (reopen === false) {
@@ -107,7 +109,7 @@ const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false) {
     $emailDlg.dialog('close').remove();
   }
   pageBusyIcon(true);
-  return Email.emailFormPopup(post, false, false, () => pageBusyIcon(false));
+  return Email.emailFormPopup(post, false, singleRecipient, () => pageBusyIcon(false));
 };
 
 /**
@@ -1225,7 +1227,7 @@ asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
     projectName: event.projectName,
     ...(event.post || {}),
   };
-  await emailPopup(post, event.reopen);
+  await emailPopup(post, event.reopen, event.singleRecipient);
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 

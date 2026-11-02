@@ -47,6 +47,25 @@ return [
       ->in('vendor-wrapped'),
   ],
   'patchers' => [
+    static function(string $filePath, string $prefix, string $content):string {
+      if (str_ends_with($filePath, '/doctrine/orm/src/Mapping/Driver/AttributeDriver.php')) {
+        return str_replace(
+          "'Doctrine\\ORM\\Mapping\\ClassMetadata::",
+          "ClassMetadata::class . '::",
+          $content,
+        );
+      }
+
+      if (str_ends_with($filePath, '/doctrine/orm/src/Query/Lexer.php')) {
+        return str_replace(
+          "'Doctrine\\ORM\\Query\\TokenType::",
+          "TokenType::class . '::",
+          $content,
+        );
+      }
+
+      return $content;
+    },
     // /** @var array<\Doctrine\ORM\Mapping\JoinColumn> */
     function(string $filePath, string $prefix, string $content): string {
       if (str_contains($filePath, 'doctrine/orm/src')) {

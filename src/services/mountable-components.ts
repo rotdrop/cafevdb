@@ -63,6 +63,9 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
         case MountableComponents.DOKU_WIKI_WRAPPER:
           vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
           break;
+        case MountableComponents.DONATION_RECEIPTS_ACTION_MENU:
+          vueComponent = (await import('../components/DonationReceiptsActionMenu.vue')).default;
+          break;
         case MountableComponents.INVOICE_ACTIONS_MENU:
           vueComponent = (await import('../components/InvoiceActionsMenu.vue')).default;
           break;

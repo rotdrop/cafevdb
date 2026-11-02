@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
 class GedmoLoggableListener extends BaseLoggableListener
 {
   /**
-   * @param null|string $userId string or null.
+   * @param null|string $username string or null.
    *
    * @param null|string $remoteAddress string or null.
    */

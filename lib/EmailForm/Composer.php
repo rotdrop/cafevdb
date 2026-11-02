@@ -63,6 +63,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\EmailTemplateDefaultsService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
@@ -92,6 +93,8 @@ use OCA\CAFEVDB\Service\IProjectGroupService;
  *
  * @bug This is a mixture between a controller and service class and
  * needs to be cleaned up.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Composer
 {
@@ -411,6 +414,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /**@var int */
   private $donationReceiptId;
 
+  private ?Entities\Invoice $invoice = null;
+
+  private int $invoiceId = 0;
+
   /** @var int */
   private int $paymentSign = 1;
 
@@ -524,6 +531,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     ?RecipientsFilter $recipientsFilter = null,
   ):void {
     $this->requestParameters = $requestParameters;
+    $this->project = null;
+    $this->bulkTransaction = null;
+    $this->donationReceipt = null;
+    $this->invoice = null;
+    $this->paymentSign = 1;
+    $this->substitutions = null;
+    $this->personalFileAttachments = null;
 
     if (!empty($recipientsFilter)) {
       $this->recipientsFilter = $recipientsFilter;
@@ -573,6 +587,21 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         ->find($this->donationReceiptId);
       if (empty($template)) {
         $template = Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE;
+        list($template,) = $this->normalizeTemplateName($template);
+      }
+      $this->paymentSign = 1;
+    }
+
+    $this->invoiceId = (int)($this->requestParameters[ComposerCgiKeys::INVOICE_ID] ?? 0);
+    if ($this->invoiceId > 0) {
+      $this->invoice = $this->getDatabaseRepository(Entities\Invoice::class)->find($this->invoiceId);
+      if (empty($this->invoice)) {
+        throw new Exceptions\DatabaseEntityNotFoundException(
+          $this->l->t('Unable to find the invoice with id %d.', [$this->invoiceId])
+        );
+      }
+      if (empty($template)) {
+        $template = Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE;
         list($template,) = $this->normalizeTemplateName($template);
       }
       $this->paymentSign = 1;
@@ -640,11 +669,26 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $initialTemplate = $this->cgiValue(ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR);
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
+        $bulkTransactionFallback = false;
+        if (empty($template)
+            && !empty($this->bulkTransaction)) {
+          $defaultBulkTransactionTemplate = $this->bulkTransaction instanceof Entities\SepaDebitNote
+            ? EmailTemplateDefaultsService::DEBIT_NOTE_ANNOUNCEMENT
+            : EmailTemplateDefaultsService::BANK_TRANSFER_ANNOUNCEMENT;
+          $template = $this->fetchTemplate($defaultBulkTransactionTemplate, exact: false);
+          $bulkTransactionFallback = !empty($template);
+        }
         if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
         $loadedTag = $template->getTag();
-        if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
+        $templateMatchesContext =
+          (empty($this->bulkTransaction) && empty($this->donationReceipt) && empty($this->invoice))
+          || str_ends_with($loadedTag, $initialTemplate)
+          || $bulkTransactionFallback
+          || (!empty($this->invoice) && $loadedTag === Entities\Invoice::NOTIFICATION_EMAIL_TEMPLATE)
+          || (!empty($this->donationReceipt) && $loadedTag === Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE);
+        if ($templateMatchesContext) {
           $initialTemplate = $template->getTag();
           $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $initialTemplate;
           $this->templateName = $initialTemplate;
@@ -700,20 +744,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /**
    * @param null|Entities\Musician $musician
    *
-   * @return null|Entities\CompositePayment
+   * @return null|Entities\CompositePayment|Entities\Invoice
    */
-  private function getCompositePayment(?Entities\Musician $musician):?Entities\CompositePayment
+  private function getCompositePayment(?Entities\Musician $musician): null|Entities\CompositePayment|Entities\Invoice
   {
     if (empty($musician)) {
       return null;
     }
 
-    /** @var Entities\CompositePayment $compositePayment */
+    /** @var null|Entities\CompositePayment|Entities\Invoice $compositePayment */
     $compositePayment = !empty($this->bulkTransaction)
       ? $this->bulkTransaction->getPayments()->get($musician->getId())
-      : $this->donationReceipt->getDonation();
+      : ($this->invoice ?? $this->donationReceipt?->getDonation());
 
-    if ($compositePayment->getMusician()->getId() != $musician->getId()) {
+    $payee = $compositePayment instanceof Entities\Invoice
+      ? $compositePayment->getDebitor()
+      : $compositePayment?->getMusician();
+    if ($payee?->getId() != $musician->getId()) {
       // throw new Exceptions\SubstitutionException(
       //   $this->l->t(
       //     'Inconsistency: given musician "%1$s" is not the payee "%2$s" of the given payment %3$d "%4$s".',
@@ -729,6 +776,124 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     return $compositePayment;
+  }
+
+  /**
+   * Generate the HTML table with the parts (payments or invoice items) of a
+   * composite payment or invoice.
+   *
+   * @param array $keyArg The arguments of the substitution key.
+   *
+   * @param Entities\CompositePayment|Entities\Invoice $compositePayment
+   *
+   * @return string
+   */
+  private function generateTransactionPartsTable(array $keyArg, Entities\CompositePayment|Entities\Invoice $compositePayment):string
+  {
+    $keyArg = array_map(
+      function($value) {
+        return html_entity_decode($value, ENT_HTML5, 'UTF-8');
+      },
+      $keyArg);
+
+    $tableTemplate = [
+      'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+      'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+      'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
+    ];
+
+    $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
+    $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
+    $totalSum['purpose'] = $this->l->t('Total Amount');
+
+    $rowTemplate = $tableTemplate['row'];
+
+    // in order to have the chance to emit a more simple table
+    $receivedIsZero = true;
+
+    $rowHtml = '';
+    $payments = $compositePayment instanceof Entities\Invoice
+      ? $compositePayment->getInvoiceItems()
+      : $compositePayment->getProjectPayments();
+    /** @var Entities\ProjectPayment|Entities\InvoiceItem $payment */
+    foreach ($payments as $payment) {
+      $invoiced = $payment->getAmount()->mul($this->paymentSign);
+
+      $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
+      $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
+
+      if (!($compositePayment instanceof Entities\Invoice)) {
+        // Payments are already included in amountPaid; invoices are not.
+        $received->subEq($invoiced);
+      }
+
+      if (!$received->eq(0)) {
+        $receivedIsZero = false;
+      }
+
+      $values = [
+        'purpose' => $payment->getSubject(),
+        'invoiced' => $invoiced,
+        'totals' => $totals,
+        'received' => $received,
+        'remaining' => $totals->sub($received),
+      ];
+
+      $replacements = [];
+      foreach ($replacementKeys as $key) {
+        if ($key == 'purpose') {
+          $replacements[$key] = $values[$key];
+          continue;
+        }
+        $totalSum[$key]->addEq($values[$key]);
+        $replacements[$key] = $this->moneyValue($values[$key]);
+      }
+
+      $row = $rowTemplate;
+      foreach ($replacementKeys as $key) {
+        $keyVariants = array_map(
+          fn($key) => '['.$key.']',
+          $this->translationVariants($key)
+        );
+        $row = str_ireplace($keyVariants, $replacements[$key], $row);
+      }
+      $rowHtml .= $row;
+    }
+
+    $headerReplacements = [
+      'purpose' => $this->l->t('Purpose'),
+      'invoiced' => $this->l->t('Invoice Amount'),
+      'totals' => $this->l->t('Total Amount'),
+      'received' => $this->l->t('Received'),
+      'remaining' => $this->l->t('Remaining'),
+    ];
+    $headerHtml = $tableTemplate['header'];
+    foreach ($replacementKeys as $key) {
+      $keyVariants = array_map(
+        fn($key) => '['.$key.']',
+        $this->translationVariants($key)
+      );
+      $headerHtml = str_ireplace($keyVariants, $headerReplacements[$key], $headerHtml);
+    }
+    $cssClass = '';
+    if ($receivedIsZero) {
+      $cssClass = ' nothing-received-yet';
+    }
+    $headerHtml = str_replace('[CSSCLASS]', $cssClass, $headerHtml);
+
+    $footerHtml = $tableTemplate['footer'];
+    foreach ($replacementKeys as $key) {
+      if ($key != 'purpose') {
+        $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+      }
+      $keyVariants = array_map(
+        fn($key) => '['.$key.']',
+        $this->translationVariants($key)
+      );
+      $footerHtml = str_ireplace($keyVariants, $totalSum[$key], $footerHtml);
+    }
+
+    return $headerHtml . $rowHtml . $footerHtml;
   }
 
   /**
@@ -803,7 +968,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $gender = EnumGender::tryFrom(reset($guesses));
         }
       }
-      switch (strtolower($keyArg[1] ?? '')) {
+      switch (mb_strtolower($keyArg[1] ?? '')) {
         case 'formal':
         case $this->l->t('formal'):
         case $this->transliterate($this->l->t('formal')):
@@ -1367,7 +1532,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     }
 
-    if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
+    if (!empty($this->bulkTransaction) || !empty($this->donationReceipt) || !empty($this->invoice)) {
 
       if (!empty($this->donationReceipt)) {
         $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
@@ -1408,6 +1573,22 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               : $this->l->t('no');
           }
           return $keyArg[0];
+        };
+
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_RECEIPT_DATE->value] = function(array $keyArg, ?Entities\Musician $musician) {
+          $date = $this->donationReceipt->getDateOfReceipt();
+          if (empty($musician) || $date === null || $this->getCompositePayment($musician) === null) {
+            return $keyArg[0];
+          }
+          return $this->formatDate($date, $keyArg[1] ?? 'medium');
+        };
+
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_PARTS->value] = function(array $keyArg, ?Entities\Musician $musician) {
+          $compositePayment = $this->getCompositePayment($musician);
+          if (empty($compositePayment)) {
+            return $keyArg[0];
+          }
+          return $this->generateTransactionPartsTable($keyArg, $compositePayment);
         };
 
         // maybe add more, however, the proper receipt will be send out as attachjment.
@@ -1559,110 +1740,42 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
-
-          $keyArg = array_map(
-            function($value) {
-              return html_entity_decode($value, ENT_HTML5, 'UTF-8');
-            },
-            $keyArg);
-
-          $tableTemplate = [
-            'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
-            'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
-            'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
-          ];
-
-          $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
-          $totalSum['purpose'] = $this->l->t('Total Amount');
-
-          $rowTemplate = $tableTemplate['row'];
-
-          // in order to have the chance to emit a more simple table
-          $receivedIsZero = true;
-
-          $rowHtml = '';
-          $payments = $compositePayment->getProjectPayments();
-          /** @var Entities\ProjectPayment $payment */
-          foreach ($payments as $payment) {
-            $invoiced = $payment->getAmount()->mul($this->paymentSign);
-
-            $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
-            $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
-
-            // otherwise one would have to account for the dueDate,
-            // so keep it simple and just remove the current payment.
-            $received->subEq($invoiced);
-
-            if (!$received->eq(0)) {
-              $receivedIsZero = false;
-            }
-
-            $remaining = $totals->sub($received);
-
-            $purpose = $payment->getSubject();
-
-            $replacements = [];
-            foreach ($replacementKeys as $key) {
-              if ($key == 'purpose') {
-                $replacements[$key] = ${$key};
-                continue;
-              }
-              $totalSum[$key]->addEq(${$key});
-              $replacements[$key] = $this->moneyValue(${$key});
-            }
-
-            $row = $rowTemplate;
-            foreach ($replacementKeys as $key) {
-              $keyVariants = array_map(
-                fn($key) => '['.$key.']',
-                $this->translationVariants($key)
-              );
-              $row = str_ireplace($keyVariants, $replacements[$key], $row);
-            }
-            $rowHtml .= $row;
-          }
-
-          $headerReplacements = [
-            'purpose' => $this->l->t('Purpose'),
-            'invoiced' => $this->l->t('Invoice Amount'),
-            'totals' => $this->l->t('Total Amount'),
-            'received' => $this->l->t('Received'),
-            'remaining' => $this->l->t('Remaining'),
-          ];
-          $headerHtml = $tableTemplate['header'];
-          foreach ($replacementKeys as $key) {
-            $keyVariants = array_map(
-              fn($key) => '['.$key.']',
-              $this->translationVariants($key)
-            );
-            $headerHtml = str_ireplace($keyVariants, $headerReplacements[$key], $headerHtml);
-          }
-          $cssClass = '';
-          if ($receivedIsZero) {
-            $cssClass = ' nothing-received-yet';
-          }
-          $headerHtml = str_replace('[CSSCLASS]', $cssClass, $headerHtml);
-
-          $footerHtml = $tableTemplate['footer'];
-          foreach ($replacementKeys as $key) {
-            if ($key != 'purpose') {
-              $totalSum[$key] = $this->moneyValue($totalSum[$key]);
-            }
-            $keyVariants = array_map(
-              fn($key) => '['.$key.']',
-              $this->translationVariants($key)
-            );
-            $footerHtml = str_ireplace($keyVariants, $totalSum[$key], $footerHtml);
-          }
-
-          return $headerHtml . $rowHtml . $footerHtml;
+          return $this->generateTransactionPartsTable($keyArg, $compositePayment);
         }
 
         return $keyArg[0];
       };
 
     } // bulk-transaction fields
+
+    if (!empty($this->invoice)) {
+      $invoiceHandler = fn(callable $getter) => function(array $keyArg, ?Entities\Musician $musician) use ($getter) {
+        if (empty($musician) || $this->getCompositePayment($musician) !== $this->invoice) {
+          return $keyArg[0];
+        }
+        return $getter($keyArg, $this->invoice) ?? $keyArg[0];
+      };
+      $formatInvoiceDate = fn(array $keyArg, ?\DateTimeInterface $date) => $date === null
+        ? null
+        : $this->formatDate($date, $keyArg[1] ?? 'medium');
+
+      $substitutions = &$this->substitutions[EnumSubstitutionNamespace::MEMBER->value];
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_NUMBER->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getInvoiceNumber());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_DATE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $formatInvoiceDate($keyArg, $invoice->getInvoiceDate()));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_DUE_DATE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $formatInvoiceDate($keyArg, $invoice->getDueDate()));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_AMOUNT->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $this->moneyValue($invoice->getAmount()->mul($this->paymentSign)));
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_SUBJECT->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getSubject());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_PURPOSE->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $invoice->getPurpose());
+      $substitutions[EnumMemberSubstitutionKey::INVOICE_ITEMS->value] = $invoiceHandler(
+        fn(array $keyArg, Entities\Invoice $invoice) => $this->generateTransactionPartsTable($keyArg, $invoice));
+      unset($substitutions);
+    }
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
@@ -1687,13 +1800,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param EnumSubstitutionNamespace $nameSpace The name space of the variable.
    *
-   * @param null|string $message The composed email message body.
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @return bool|int
    */
   private function hasSubstitutionNamespace(EnumSubstitutionNamespace $nameSpace, ?string $message = null)
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -1704,15 +1817,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
-   * Replace all variables of the given namespace in
-   * $this->messageContents.
+   * Replace all variables of the given namespace in the supplied text,
+   * defaulting to $this->messageContents.
    *
    * @param EnumSubstitutionNamespace $nameSpace The variable prefix, e.g. MEMBER or one
    * of its translations.
    *
    * @param mixed $data Context dependent data, likely Entities\Musician.
    *
-   * @param null|string $message
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @param null|array $failures Optional failure array. If null then
    * the method will throw an exception on errror.
@@ -1722,7 +1835,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function replaceFormVariables(EnumSubstitutionNamespace $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -1731,16 +1844,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
+    $nameSpaceKey = $nameSpace->value; // handlers are registered with the untranslated namespace
     return preg_replace_callback(
       $regexp,
-      function($matches) use ($data, &$failures) {
+      function($matches) use ($data, &$failures, $nameSpaceKey) {
         $prefix = $matches[1]; // in order not to substitute $$
         $nameSpace = html_entity_decode($matches[2], ENT_HTML5, 'UTF-8');
         $separator = $matches[3];
         $variable  = array_map(function($value) {
           return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
-        $handler = $this->substitutions[$nameSpace][$variable[0]] ?? null;
+        $handler = $this->substitutions[$nameSpaceKey][$variable[0]] ?? null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
             throw new Exceptions\SubstitutionException(
@@ -1782,13 +1896,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Cleanup edge-cases. ATM this only replaces left-over '$$'
    * occurences with a single $.
    *
-   * @param null|string $message Email message body.
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @return string
    */
   private function finalizeSubstitutions(?string $message = null):string
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -1920,12 +2034,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
       . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL);
+    $subjectTemplate = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, message: $this->subject());
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate)
+      || $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $subjectTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -1943,6 +2059,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
     if ($this->donationReceiptId > 0) {
       $customHeaders['DONATION-RECEIPT-ID'] = $this->donationReceiptId;
+    }
+    if ($this->invoiceId > 0) {
+      $customHeaders['INVOICE-ID'] = $this->invoiceId;
     }
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
@@ -1964,6 +2083,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $this->implicitFileAttachments = [];
         $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
+        $strSubject = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $subjectTemplate);
+        $strSubject = $this->finalizeSubstitutions($strSubject);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
         if (!empty($this->implicitFileAttachments)) {
@@ -1998,7 +2119,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
 
         $msg = $this->composeAndSend(
-          $strMessage, [ $recipient ], $personalAttachments,
+          $strMessage, $strSubject, [ $recipient ], $personalAttachments,
           addCC: false,
           references: $templateMessageId,
           customHeaders: array_merge($customHeaders, self::HEADER_MARKER_RECIPIENT),
@@ -2017,6 +2138,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             // $this->flush();
           } elseif (!empty($this->donationReceipt)) {
             $this->donationReceipt->setNotificationMessage($sentEmailEntity);
+          } elseif (!empty($this->invoice)) {
+            $this->invoice->setNotificationEmail($sentEmailEntity);
           }
         } else {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -2031,7 +2154,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $mimeMsg = $this->composeAndSend(
-        $messageTemplate, [],
+        $messageTemplate, $this->finalizeSubstitutions($subjectTemplate), [],
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
@@ -2064,6 +2187,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $mimeMsg = $this->composeAndSend(
         $messageTemplate,
+        $this->finalizeSubstitutions($subjectTemplate),
         $recipients,
         customHeaders: $customHeaders,
       );
@@ -2132,11 +2256,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     // Find payments and potential attachments. Always attached a pre-filled
     // member-data update-form
-    if (!empty($this->bulkTransaction)) {
-      /** @var Entities\CompositePayment $compositePayment */
-      $compositePayment = $this->bulkTransaction->getPayment($musician);
+    if (!empty($this->bulkTransaction) || !empty($this->invoice)) {
+      $compositePayment = $this->getCompositePayment($musician);
       if (!empty($compositePayment)) {
-        $supportingDocument = $compositePayment->getSupportingDocument();
+        $supportingDocument = $compositePayment instanceof Entities\Invoice
+          ? $compositePayment->getWrittenInvoice()
+          : $compositePayment->getSupportingDocument();
         if (!empty($supportingDocument)) {
           $personalAttachments[] = function() use ($supportingDocument) {
             return [
@@ -2147,8 +2272,24 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             ];
           };
         }
-        /** @var Entities\ProjectPayment $projectPayment */
-        foreach ($compositePayment->getProjectPayments() as $projectPayment) {
+        if ($compositePayment instanceof Entities\Invoice && empty($supportingDocument)) {
+          $personalAttachments[] = function() use ($compositePayment) {
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            list($fileData, $mimeType, $fileName) = $financeService->invoiceDocument($compositePayment);
+            return [
+              'data' => $fileData,
+              'fileName' => $fileName,
+              'encoding' => 'base64',
+              'mimeType' => $mimeType,
+            ];
+          };
+        }
+        $payments = $compositePayment instanceof Entities\Invoice
+          ? $compositePayment->getInvoiceItems()
+          : $compositePayment->getProjectPayments();
+        /** @var Entities\ProjectPayment|Entities\InvoiceItem $projectPayment */
+        foreach ($payments as $projectPayment) {
           $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
           if (!empty($supportingDocument)) {
             $personalAttachments[] = function() use ($supportingDocument) {
@@ -2792,6 +2933,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param string $strMessage The message to send.
    *
+   * @param string $strSubject The subject after substitutions.
+   *
    * @param array $eMails The recipient list.
    *
    * @param array $extraAttachments Array of callables return a flat array
@@ -2825,6 +2968,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function composeAndSend(
     string $strMessage,
+    string $strSubject,
     array $eMails,
     array $extraAttachments = [],
     bool $addCC = true,
@@ -2884,7 +3028,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       });
 
-      $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+      $phpMailer->Subject = $this->messageTag . ' ' . $strSubject;
       $logMessage->subject = $phpMailer->Subject;
 
       $senderName = $this->fromName();
@@ -3326,6 +3470,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param string $strMessage The message to send.
    *
+   * @param string $strSubject The subject after substitutions.
+   *
    * @param array $eMails The recipient list.
    *
    * @param array $extraAttachments Array of callables return a flat array
@@ -3360,6 +3506,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function composeAndExport(
     string $strMessage,
+    string $strSubject,
     array $eMails,
     array $extraAttachments = [],
     bool $addCC = true,
@@ -3393,7 +3540,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $phpMailer = $this->getOutboundService();
       $messageId = $messageId ?? $phpMailer->generateMessageId();
 
-      $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+      $phpMailer->Subject = $this->messageTag . ' ' . $strSubject;
       $logMessage->subject = $phpMailer->Subject;
 
       $senderName = $this->fromName();
@@ -3531,6 +3678,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         returnLogEntry: true,
         shift: PHP_INT_MIN,
       );
+      $logEntry = $logEntry ?? [];
       array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
       $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
         'message' => $this->formatExceptionMessage($t),
@@ -3699,12 +3847,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       EnumSubstitutionNamespace::GLOBAL,
       failures: $failures,
     );
+    $subjectTemplate = $this->replaceFormVariables(
+      EnumSubstitutionNamespace::GLOBAL,
+      message: $this->subject(),
+      failures: $failures,
+    );
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('LINK VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate)
+      || $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $subjectTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -3722,6 +3876,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
     if ($this->donationReceiptId > 0) {
       $customHeaders['DONATION-RECEIPT-ID'] = $this->donationReceiptId;
+    }
+    if ($this->invoiceId > 0) {
+      $customHeaders['INVOICE-ID'] = $this->invoiceId;
     }
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
@@ -3762,6 +3919,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           failures: $failures,
         );
         $strMessage = $this->finalizeSubstitutions($strMessage);
+        $strSubject = $this->replaceFormVariables(
+          EnumSubstitutionNamespace::MEMBER,
+          $musician,
+          $subjectTemplate,
+          failures: $failures,
+        );
+        $strSubject = $this->finalizeSubstitutions($strSubject);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
         if (!empty($this->implicitFileAttachments)) {
@@ -3791,6 +3955,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         $message = $this->composeAndExport(
           $strMessage,
+          $strSubject,
           [ $recipient ],
           $personalAttachments,
           addCC: false,
@@ -3814,7 +3979,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $message = $this->composeAndExport(
-        $messageTemplate, [], [],
+        $messageTemplate, $this->finalizeSubstitutions($subjectTemplate), [], [],
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
@@ -3847,7 +4012,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       }
 
-      $message = $this->composeAndExport($messageTemplate, $recipients);
+      $message = $this->composeAndExport($messageTemplate, $this->finalizeSubstitutions($subjectTemplate), $recipients);
       if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
         ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
@@ -3918,7 +4083,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * - Cc, valid email addresses
    * - Bcc, valid email addresses
-   * - subject, must not be empty
+   * - subject, must not be empty, variable substitutions
    * - message-text, variable substitutions
    * - sender name, must not be empty
    * - file attachments, temporary local copy must exist
@@ -4208,15 +4373,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * sure that no variable tag ${...} remains.
    *
    * @param null|string $template A message body template, i.e. the message
-   * body with potential ${SUBSTITION} things.
+   * body with potential ${SUBSTITUTION} things. The subject is also validated.
    *
    * @return bool Execution status.
    */
   public function validateTemplate(?string $template = null):bool
   {
-    if (empty($template)) {
+    if ($template === null) {
       $template = $this->messageText();
     }
+    $template = $this->subject() . "\n" . $template;
 
     $templateError = [];
 
@@ -4241,7 +4407,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
-    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, $dummy)) {
       $failures = [];
       $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, null, $dummy, $failures);
       if (!empty($failures)) {
@@ -4251,7 +4417,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] =
               $this->l->t('Unknown substitution "%s".', $failure['namespace'] . '::' . implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
           }
         }
       }
@@ -4568,6 +4734,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
           },
         ]);
+    }
+
+    if (!empty($this->invoice)) {
+      $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value][EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DATE->value] = function($key) {
+        $dueDate = $this->invoice->getDueDate();
+        return $dueDate ? $this->formatDate($dueDate, 'medium') : $key[0];
+      };
+      $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value][EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DAYS->value] = function($key) {
+        $dueDate = $this->invoice->getDueDate();
+        return $dueDate ? (new DateTimeImmutable())->diff($dueDate)->format('%r%a') : $key[0];
+      };
     }
   }
 
@@ -4948,7 +5125,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     $draftData = [
       'projectId' => $this->requestParameters['projectId'],
       'projectName' => $this->requestParameters['projectName'],
-      'bulkTransactionId' => $this->requestParameters['bulkTransactionId'],
+      'bulkTransactionId' => $this->bulkTransactionId,
+      ComposerCgiKeys::DONATION_RECEIPT_ID => $this->donationReceiptId,
+      ComposerCgiKeys::INVOICE_ID => $this->invoiceId,
       self::POST_TAG => $this->requestParameters[self::POST_TAG],
       RecipientsFilter::POST_TAG => $this->requestParameters[RecipientsFilter::POST_TAG],
     ];
@@ -5032,6 +5211,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     if (empty($draftData['bulkTransactionId'])) {
       $draftData['bulkTransactionId'] = null;
     }
+    $draftData[ComposerCgiKeys::DONATION_RECEIPT_ID] = $draftData[ComposerCgiKeys::DONATION_RECEIPT_ID] ?? null;
+    $draftData[ComposerCgiKeys::INVOICE_ID] = $draftData[ComposerCgiKeys::INVOICE_ID] ?? null;
 
     $this->draftId = $draftId;
 
@@ -6021,7 +6202,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /** @return int The number of currently selected personal attachments.*/
   private function activePersonalAttachments():int
   {
-    $numAttachments = 0;
+    $numAttachments = empty($this->invoice) ? 0 : 1;
     // walk through the list of configured attachments and attach all requested.
     foreach ($this->personalAttachments() as $attachment) {
       if ($attachment['status'] != 'selected' && !$attachment['sub_selection']) {

@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-
-
 /** Repository for per-participant field definitions. */
 class ProjectParticipantFieldsRepository extends EntityRepository
 {

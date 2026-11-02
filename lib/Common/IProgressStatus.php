@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Common;
 
-
 /**
  * Simplistic progress-status interface.
  */

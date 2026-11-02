@@ -1,0 +1,38 @@
+name: PHPMD
+
+on:
+  push:
+    branches: [ master, main, nextcloud35, 'cjh-*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  phpmd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout build-system patches
+        run: git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: dom, mbstring, xml
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHPMD
+        working-directory: vendor-bin/phpmd
+        run: composer install --no-interaction --no-progress
+
+      - name: Check lib/
+        # The patched single-command entry point cannot dispatch worker subcommands.
+        run: >-
+          vendor-bin/phpmd/vendor/bin/phpmd lib/ --format text --ruleset .phpmd.xml
+          --suffixes php --exclude '*/lib/Service/IMAP/*'
+          --exclude '*/lib/Legacy/PhpMyEdit/*'
+          --exclude '*/lib/Database/Doctrine/ORM/Proxies/*' --threads 1 --no-cache

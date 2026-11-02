@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\TokenType;
  *
  * _@_category    Entities
  * _@_package     Entities\meta\Functions
+ *
  * @author      ツ Liverbool <nukboon@gmail.com>
  * @license     MIT License
  */

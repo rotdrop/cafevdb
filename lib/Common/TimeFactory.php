@@ -56,10 +56,10 @@ class TimeFactory implements ITimeFactory
   private ITimeFactory $timeFactory;
 
   /**
-   * @param ITimeFactory $timeFactory
+   * Obtain the wrapped time factory from the server.
    */
-  public function __construct(
-  ) {
+  public function __construct()
+  {
     $this->timeFactory = \OCP\Server::get(ITimeFactory::class);
   }
 

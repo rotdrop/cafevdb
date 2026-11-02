@@ -46,6 +46,8 @@ class GenericUndoable extends AbstractUndoable
    * @param Closure $doCallback
    *
    * @param null|Closure $undoCallback
+   *
+   * @param int $sortOrder
    */
   public function __construct(
     protected Closure $doCallback,

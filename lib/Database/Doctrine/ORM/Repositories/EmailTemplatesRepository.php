@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-
 /**
  * @todo The sole purpose of this repository is to map tag ->
  * name. Otherwise we just could use the stock "findAll()".

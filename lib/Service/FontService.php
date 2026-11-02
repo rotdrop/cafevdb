@@ -338,12 +338,11 @@ class FontService
           ),
           '/^.*\\.ttf$/i',
           RegexIterator::GET_MATCH);
-        foreach ($iterator as $key => $info) {
+        foreach ($iterator as $info) {
           // $this->logInfo('INFO ' . print_r($info, true));
-          $pathName = $key;
+          $pathName = $info[0];
           $this->systemFontDataCache[basename($pathName)] = $pathName;
         }
-        $info = null;
       }
       $this->logInfo('FONT CACHE ' . print_r($this->systemFontDataCache, true));
     }

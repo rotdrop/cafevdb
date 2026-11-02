@@ -29,7 +29,6 @@ use Closure;
 use Psr\Container\ContainerInterface;
 use OCP\Files;
 
-
 /**
  * Replace one file by another, maintaining an undo history in the cloud. Both
  * files may have different names.

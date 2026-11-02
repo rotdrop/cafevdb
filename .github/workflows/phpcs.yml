@@ -1,0 +1,33 @@
+name: PHPCS
+
+on:
+  push:
+    branches: [ master, main, nextcloud35, 'cjh-*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout build-system patches
+        run: git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: dom, simplexml, xmlwriter
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHPCS
+        working-directory: vendor-bin/phpcs
+        run: composer install --no-interaction --no-progress
+
+      - name: Check lib/
+        run: vendor-bin/phpcs/vendor/bin/phpcs --standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*' lib/

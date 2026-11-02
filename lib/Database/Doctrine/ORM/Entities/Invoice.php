@@ -74,6 +74,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   public const INVOICE_NUMBER_FIELDS = [ 'project', 'balanceDocumentsFolder' ];
 
+  public const NOTIFICATION_EMAIL_TEMPLATE = 'InvoiceNotification';
+
   #[ORM\Column(type: 'string', length: 255, nullable: false)]
   #[Gedmo\Slug(
     fields: [], // self-referencing. Does it work?
@@ -745,9 +747,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @param TaxationStatutorySource $TaxationStatutorySource
+   * @param TaxationStatutorySource $taxationStatutorySource
    *
-   * @return TaxExemptionNotice
+   * @return Invoice
    */
   public function setTaxationStatutorySource(TaxationStatutorySource $taxationStatutorySource): Invoice
   {

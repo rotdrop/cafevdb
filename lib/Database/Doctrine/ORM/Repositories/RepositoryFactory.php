@@ -72,6 +72,8 @@ class RepositoryFactory implements RepositoryFactoryInterface
    *
    * @param EntityManagerInterface $entityManager The EntityManager instance.
    * @param string                 $entityName    The name of the entity.
+   *
+   * @return EntityRepository
    */
   private function createRepository(
     EntityManagerInterface $entityManager,

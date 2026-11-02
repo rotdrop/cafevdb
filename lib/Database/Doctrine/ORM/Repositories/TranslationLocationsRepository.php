@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-
 /** Repository for in-source-file location of to-be-translated strings. */
 class TranslationLocationsRepository extends EntityRepository
 {

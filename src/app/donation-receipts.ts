@@ -29,6 +29,7 @@ import type { JQuerySelect } from './jquery.ts';
 import type { TableLoadCallback } from './pme.ts';
 
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
+import { DONATION_RECEIPTS_ACTION_MENU } from '../mountable-component-names.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import fileDownload from './file-download.ts';
 import { globalState } from './globals.ts';
@@ -48,6 +49,7 @@ import {
   refreshWidget as refreshSelectWidget,
 } from './select-utils.ts';
 import { templateRenderer } from './template-renderer.ts';
+import actionMenu from './vue-action-menu.ts';
 
 import './jquery-readonly.ts';
 import 'project-participant-fields-display.scss';
@@ -61,6 +63,8 @@ const pmeFormInit = (
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
   const $form = $container.find(pmeFormSelector) as JQuery<HTMLFormElement>;
+
+  actionMenu($container, template, DONATION_RECEIPTS_ACTION_MENU);
 
   if (!PHPMyEdit.hasEditableData($form)) {
     // no need to do further work

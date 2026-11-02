@@ -135,7 +135,7 @@ index 6814369..8bcd72e 100644
  const props = defineProps<{
  	config: AppointmentConfig
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue b/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
-index 1f4b2c0..bd9fae1 100644
+index 664c742..a3f1e64 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
 @@ -4,7 +4,7 @@
@@ -146,7 +146,7 @@ index 1f4b2c0..bd9fae1 100644
 +import type { CalendarInterface } from '../../../src/types/calendar.ts'
  
  import { showError } from '@nextcloud/dialogs'
- import { t } from '@nextcloud/l10n'
+ import { n, t } from '@nextcloud/l10n'
 @@ -13,14 +13,14 @@ import debounce from 'debounce'
  import pLimit from 'p-limit'
  import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -828,7 +828,7 @@ index e72a59e..0ed68f1 100644
  export default {
  	name: 'CalendarGrid',
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/Editor/AddTalkModal.vue b/node_modules/@nextcloud/app-calendar/src/components/Editor/AddTalkModal.vue
-index 1da7858..bb13aad 100644
+index 56f575c..e103642 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/Editor/AddTalkModal.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/Editor/AddTalkModal.vue
 @@ -96,9 +96,9 @@ import {
@@ -1292,10 +1292,10 @@ index a3a2a10..11ab04d 100644
  export default {
  	name: 'PropertyTitle',
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyTitleTimePicker.vue b/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyTitleTimePicker.vue
-index c86d032..b8f6053 100644
+index e7156b3..fb1822f 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyTitleTimePicker.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyTitleTimePicker.vue
-@@ -140,10 +140,10 @@ import { NcButton, NcTimezonePicker } from '@nextcloud/vue'
+@@ -142,10 +142,10 @@ import { NcButton, NcTimezonePicker } from '@nextcloud/vue'
  import { mapState } from 'pinia'
  import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
  import IconTimezone from 'vue-material-design-icons/Web.vue'
@@ -1311,10 +1311,10 @@ index c86d032..b8f6053 100644
  export default {
  	name: 'PropertyTitleTimePicker',
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/Editor/Repeat/Repeat.vue b/node_modules/@nextcloud/app-calendar/src/components/Editor/Repeat/Repeat.vue
-index 47cc368..7b82543 100644
+index d2af895..02f4638 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/Editor/Repeat/Repeat.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/Editor/Repeat/Repeat.vue
-@@ -97,15 +97,15 @@ import { mapState, mapStores } from 'pinia'
+@@ -98,15 +98,15 @@ import { mapState, mapStores } from 'pinia'
  import Check from 'vue-material-design-icons/Check.vue'
  import Pencil from 'vue-material-design-icons/PencilOutline.vue'
  import RepeatIcon from 'vue-material-design-icons/Repeat.vue'
@@ -1755,7 +1755,7 @@ index 2f57f95..6356fca 100644
  /**
   * Search and filter state for a list of rooms
 diff --git a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
-index 8a8301b..f2a237f 100644
+index 8a8301b..4e375af 100644
 --- a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
 +++ b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
 @@ -3,14 +3,14 @@
@@ -1763,7 +1763,7 @@ index 8a8301b..f2a237f 100644
   */
  
 -import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg'
-+import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg?rawb'
++import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg?raw'
  import { getRequestToken } from '@nextcloud/auth'
  import { translate as t } from '@nextcloud/l10n'
  import { linkTo } from '@nextcloud/router'
@@ -1775,13 +1775,13 @@ index 8a8301b..f2a237f 100644
  
  // CSP config for webpack dynamic chunk loading
  
-@@ -23,17 +23,14 @@ __webpack_nonce__ = btoa(getRequestToken())
+@@ -23,17 +23,15 @@ __webpack_nonce__ = btoa(getRequestToken())
  // eslint-disable-next-line
  __webpack_public_path__ = linkTo('calendar', 'js/')
  
 -// Decode calendar icon (inline data url -> raw svg)
 -const CalendarBlankSvgRaw = atob(CalendarBlankSvg.split(',')[1])
--
+ 
  registerContactsMenuAction({
  	id: 'calendar-availability',
  	displayName: () => t('calendar', 'Show availability'),
@@ -2165,7 +2165,7 @@ index a26e2b9..85c71a4 100644
  const pinia = createPinia()
  
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index fe60776..0e3a632 100644
+index 3f9fdac..3c84b8b 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 @@ -9,21 +9,21 @@ import { generateUrl } from '@nextcloud/router'
@@ -3168,10 +3168,10 @@ index 34ef8cc..6b61d12 100644
  export default {
  	name: 'Confirmation',
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/Calendar.vue b/node_modules/@nextcloud/app-calendar/src/views/Calendar.vue
-index b3d7022..7b6198d 100644
+index 82de865..d9a822c 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/Calendar.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/Calendar.vue
-@@ -108,47 +108,47 @@ import {
+@@ -109,47 +109,47 @@ import {
  } from '@nextcloud/vue'
  import { mapState, mapStores } from 'pinia'
  import PlaylistCheckIcon from 'vue-material-design-icons/PlaylistCheck.vue'
@@ -3354,10 +3354,10 @@ index 192cfda..639c413 100644
  export default {
  	name: 'EditFull',
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
-index 549c82c..1dbfc13 100644
+index 27c5a33..e2e4312 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
-@@ -327,25 +327,25 @@ import EditIcon from 'vue-material-design-icons/PencilOutline.vue'
+@@ -329,25 +329,25 @@ import EditIcon from 'vue-material-design-icons/PencilOutline.vue'
  import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
  import Download from 'vue-material-design-icons/TrayArrowDown.vue'
  import IconVideo from 'vue-material-design-icons/VideoOutline.vue'

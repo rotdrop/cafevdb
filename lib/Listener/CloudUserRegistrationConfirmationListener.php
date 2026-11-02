@@ -82,8 +82,12 @@ class CloudUserRegistrationConfirmationListener implements IEventListener
 
       $entityManager->registerPostCommitAction(
         new GenericUndoable(
-          function() use ($musician) { $musician->setCloudAccountDisabled(false); },
-          function() use ($musician) { $musician->setCloudAccountDisabled(true); },
+          function() use ($musician) {
+            $musician->setCloudAccountDisabled(false);
+          },
+          function() use ($musician) {
+            $musician->setCloudAccountDisabled(true);
+          },
         ),
       );
     }

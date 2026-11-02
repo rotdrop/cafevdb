@@ -73,6 +73,8 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
  * Events and tasks handling.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 #[PhpToTypeScript\Attributes\TypeScript]
 class EventsService

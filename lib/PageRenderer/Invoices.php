@@ -28,6 +28,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use BadFunctionCallException;
+use Exception;
 
 use OCP\IRequest;
 
@@ -2405,7 +2406,7 @@ WHERE dsf.id IS NOT NULL',
   {
     $rowTag = $row[$this->queryField($this->joinTableMasterFieldName(DatabaseTables::INVOICE_ITEMS_TABLE))];
     if (empty($rowTag)) {
-      $this->logException(new \Exception('blah'));
+      $this->logException(new Exception('blah'));
     }
     return $this->isCompositeRowTag($rowTag);
   }

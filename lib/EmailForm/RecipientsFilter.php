@@ -161,6 +161,10 @@ class RecipientsFilter
   /**@var int */
   private $donationReceiptId;
 
+  private ?Entities\Invoice $invoice = null;
+
+  private int $invoiceId = 0;
+
   private $instruments; // List of instruments for filtering
   private $instrumentGroups; // mapping of instruments to groups.
 
@@ -244,11 +248,15 @@ class RecipientsFilter
 
     $this->projectId = (int)($this->requestParameters['projectId'] ?? 0);
     $this->projectName = $this->requestParameters['projectName'] ?? '';
+    $this->project = null;
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)
         ->find($this->projectId);
     }
 
+    $this->bulkTransaction = null;
+    $this->donationReceipt = null;
+    $this->invoice = null;
     $this->bulkTransactionId = $this->requestParameters['bulkTransactionId'] ?? 0;
     if ($this->bulkTransactionId > 0) {
       $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
@@ -259,6 +267,17 @@ class RecipientsFilter
     if ($this->donationReceiptId > 0) {
       $this->donationReceipt = $this->getDatabaseRepository(Entities\DonationReceipt::class)
                                     ->find($this->donationReceiptId);
+    }
+
+    $this->invoiceId = (int)($this->requestParameters[ComposerCgiKeys::INVOICE_ID] ?? 0);
+    if ($this->invoiceId > 0) {
+      if ($this->bulkTransactionId > 0 || $this->donationReceiptId > 0) {
+        throw new RuntimeException($this->l->t('An invoice cannot be combined with a bulk transaction or donation receipt in the email form.'));
+      }
+      $this->invoice = $this->getDatabaseRepository(Entities\Invoice::class)->find($this->invoiceId);
+      if (empty($this->invoice)) {
+        throw new RuntimeException($this->l->t('Unable to find the invoice with id %d.', [$this->invoiceId]));
+      }
     }
 
     // See wether we were passed specific variables ...
@@ -615,6 +634,17 @@ class RecipientsFilter
       $this->emailRecs[] = $payment->getMusician()->getId(); // only a single recipient
 
       $this->frozen = true; // restrict to initial set of recipients
+
+      return;
+    } elseif (!empty($this->invoice)) {
+      $debitor = $this->invoice->getDebitor();
+      if (empty($debitor)) {
+        throw new RuntimeException(
+          $this->l->t('No debitor attached to the invoice with id %d.', [$this->invoiceId])
+        );
+      }
+      $this->emailRecs = [$debitor->getId()];
+      $this->frozen = true;
 
       return;
     } elseif (!empty($this->emailTable)) {

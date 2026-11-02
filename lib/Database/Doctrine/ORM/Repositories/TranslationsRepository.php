@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-
 /** Repository for translation entity. */
 class TranslationsRepository extends EntityRepository
 {

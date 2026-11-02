@@ -129,7 +129,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * message ids as is and add a new association which is filled with the
    * existing entities in a migration step.
    *
-   *
    * @todo Check why this is not a relation to the SentEmail entity.
    */
   #[ORM\Column(type: 'string', length: 512, nullable: true)]
@@ -158,7 +157,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Optional. In case an additional overview document needs to be added in
    * addition to the individual supporting documents of the project payments.
-   *
    *
    * @todo Support more than one supporting document.
    */
@@ -203,7 +201,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function addProjectPayment(ProjectPayment $projectPayment): self
   {
-    if (!$this->projectPayments->contains($projectPayment)){
+    if (!$this->projectPayments->contains($projectPayment)) {
       $this->projectPayments->add($projectPayment);
     }
     if ($projectPayment->getCompositePayment() !== $this) {

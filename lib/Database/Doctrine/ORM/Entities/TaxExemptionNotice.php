@@ -141,7 +141,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * @param Collection $TaxationStatutorySources
+   * @param Collection $taxationStatutorySources
    *
    * @return TaxExemptionNotice
    */

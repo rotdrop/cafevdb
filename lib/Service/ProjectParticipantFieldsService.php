@@ -1688,6 +1688,7 @@ class ProjectParticipantFieldsService
     } else {
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       if ($fieldData->count() !== 1) {
+        $project = $field->getProject();
         foreach ($fieldData as $fieldDatum) {
           $this->remove($fieldDatum, hard: true);
           $field->getFieldData()->removeField($fieldDatum);
@@ -1695,14 +1696,13 @@ class ProjectParticipantFieldsService
           $project->getParticipantFieldsData()->removeField($fieldDatum);
           $musician->getProjectParticipantFieldsData()->removeField($fieldDatum);
         }
-        $project = $field->getProject();
         $fieldDatum = new Entities\ProjectParticipantFieldDatum;
         $fieldDatum->setField($field)
           ->setDataOption($fieldOption)
           ->setMusician($musician)
           ->setProject($project);
         $field->getFieldData()->add($fieldDatum);
-        $fieldOption->getFieldData()->set($musician->getId(), $fieldDatm);
+        $fieldOption->getFieldData()->set($musician->getId(), $fieldDatum);
         $project->getParticipantFieldsData()->add($fieldDatum);
         $musician->getProjectParticipantFieldsData()->set($fieldDatum->getOptionKey()->getBytes(), $fieldDatum);
         $this->persist($fieldDatum);

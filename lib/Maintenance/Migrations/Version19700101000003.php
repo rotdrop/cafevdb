@@ -111,7 +111,7 @@ RETURN
   /** {@inheritdoc} */
   public function down(Schema $schema): void
   {
-    foreach (array_reverse(array_keys(self::FUNCTIONS)) AS $name) {
+    foreach (array_reverse(array_keys(self::FUNCTIONS)) as $name) {
       $this->addSql('DROP FUNCTION IF EXISTS ' . $name);
     }
   }

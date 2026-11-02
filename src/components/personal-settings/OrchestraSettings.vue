@@ -89,7 +89,6 @@ import {
   DOCUMENT_TEMPLATES,
   DOCUMENT_TEMPLATES_FOLDER,
   DOCUMENT_TYPE_TEMPLATE,
-  EVENT_DURATION_KEY,
   SHARED_FOLDER,
   STREET_ADDRESS_CITY,
   STREET_ADDRESS_COUNTRY,
@@ -110,6 +109,7 @@ import getInitialState from '../../toolkit/util/initial-state.ts'
 const props = defineProps<{ entry: TabEntry }>()
 const emit = defineEmits<{ error: [error: Error] }>()
 const state = getInitialState<{
+  bankHolidayOptions?: Array<{ value: string, name: string }>
   executiveBoardMembers?: Array<{ value: string|number, name: string }>
   localeCountryNames?: Record<string, string>
   userGroupMembers?: string[]|Record<string, string>
@@ -306,13 +306,20 @@ const remove = async (template: string, setValue: SetTemplateValue) => {
 
 const groups: AdminSettingGroup[] = [
   group(0, t(appId, 'Street Address'), [
+    // TRANSLATORS: STREET_ADDRESS_NAME_01
     field(STREET_ADDRESS_NAME_01, t(appId, 'Name')),
+    // TRANSLATORS: STREET_ADDRESS_NAME_02
     field(STREET_ADDRESS_NAME_02, t(appId, 'Additional name')),
+    // TRANSLATORS: STREET_ADDRESS_STREET
     field(STREET_ADDRESS_STREET, t(appId, 'Street')),
+    // TRANSLATORS: STREET_ADDRESS_HOUSE_NUMBER
     field(STREET_ADDRESS_HOUSE_NUMBER, t(appId, 'House number')),
+    // TRANSLATORS: STREET_ADDRESS_ZIP
     field(STREET_ADDRESS_ZIP, t(appId, 'ZIP')),
+    // TRANSLATORS: STREET_ADDRESS_CITY
     field(STREET_ADDRESS_CITY, t(appId, 'City')),
     {
+      // TRANSLATORS: STREET_ADDRESS_COUNTRY
       ...field(STREET_ADDRESS_COUNTRY, t(appId, 'Country'), 'select'),
       options: Object.entries(state?.localeCountryNames ?? {}).map(([value, label]) => ({ value, label })),
     },
@@ -327,8 +334,10 @@ const groups: AdminSettingGroup[] = [
     field(BANK_ACCOUNT_BIC, t(appId, 'BIC')),
     field(BANK_ACCOUNT_BANK_NAME, t(appId, 'Bank name')),
     field(BANK_ACCOUNT_CREDITOR_IDENTIFIER, t(appId, 'Creditor identifier')),
-    field(BANK_ACCOUNT_BANK_HOLIDAYS, t(appId, 'Bank holiday region')),
-    field(EVENT_DURATION_KEY, t(appId, 'Default event duration (minutes)'), 'number'),
+    {
+      ...field(BANK_ACCOUNT_BANK_HOLIDAYS, t(appId, 'Bank holiday region'), 'select'),
+      options: options(state?.bankHolidayOptions),
+    },
   ]),
   group(2, t(appId, 'Document templates'), Object.entries(DOCUMENT_TEMPLATES).map(([key, info]) => ({
     key,
@@ -346,18 +355,22 @@ const groups: AdminSettingGroup[] = [
       ['treasurer', t(appId, 'Treasurer')],
     ] as const).flatMap(([role, roleName]) => [
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}Id`, t(appId, '{role} participant', { role: roleName }), 'select'),
         heading: roleName,
         options: options(state?.executiveBoardMembers),
       },
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}UserId`, t(appId, '{role} cloud user', { role: roleName }), 'select'),
         options: Object.values(state?.userGroupMembers ?? []).map((value) => ({ value, label: value })),
       },
       {
+        // TRANSLATORS: {role} denotes a management board role like president or treasurer.
         ...field(`${role}GroupId`, t(appId, '{role} group', { role: roleName }), 'select'),
         options: options(state?.userGroups),
       },
+      // TRANSLATORS: {role} denotes a management board role like president or treasurer.
       field(`${role}Email`, t(appId, '{role} email', { role: roleName })),
     ]),
   ]),

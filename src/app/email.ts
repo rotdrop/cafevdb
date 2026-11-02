@@ -778,6 +778,8 @@ const emailFormCompositionHandlers = (
   const $projectId = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`);
   const $projectName = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`);
   const $bulkTransactionId = $formData.find(`input[name="${ComposerCgiKeys.BULK_TRANSACTION_ID}"]`);
+  const $donationReceiptId = $formData.find(`input[name="${ComposerCgiKeys.DONATION_RECEIPT_ID}"]`);
+  const $invoiceId = $formData.find(`input[name="${ComposerCgiKeys.INVOICE_ID}"]`);
   const $debugOutput = $form.find('#emailformdebug');
   const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector') as JQuery<HTMLSelectElement>;
   const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector') as JQuery<HTMLSelectElement>;
@@ -803,6 +805,7 @@ const emailFormCompositionHandlers = (
     closeAfterSelect: true,
   });
 
+<<<<<<< HEAD
   mountEmailSelect($templateEmailsSelector, {
     ...messageSelectorOptions($templateEmailsSelector),
     restoreOnBackspace: true,
@@ -810,6 +813,27 @@ const emailFormCompositionHandlers = (
     persist: false,
     onCreate(option) {
       $templateEmailsSelector.data('ignoreChange', option.value);
+=======
+  $templateEmailsSelector.data('unpersisted', {});
+  $templateEmailsSelector.selectize({
+    ...messageSelectorSelectizeOptions,
+    inputClass: appName + '-email-current-template',
+    plugins: ['clear_button', 'restore_on_backspace'],
+    create: true,
+    persist: false,
+    render: {
+      option_create(data, escape) {
+        return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
+      },
+    },
+    onOptionAdd(value, _data) {
+      const data = this.$input.data();
+      data.ignoreChange = value;
+      data.unpersisted[value] = true;
+    },
+    onInitialize() {
+      this.$wrapper.toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
+>>>>>>> origin/nextcloud35
     },
   });
   SelectUtils.widget($templateEmailsSelector).toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
@@ -1066,6 +1090,8 @@ const emailFormCompositionHandlers = (
                 projectId(requestData.projectId);
                 projectName(requestData.projectName);
                 bulkTransactionId(requestData.bulkTransactionId);
+                $donationReceiptId.val(requestData.donationReceiptId ?? 0);
+                $invoiceId.val(requestData.invoiceId ?? 0);
 
                 // Make the debug output less verbose
                 delete requestData.composerForm;
@@ -1112,9 +1138,13 @@ const emailFormCompositionHandlers = (
             break; // load
           case 'save':
             switch (topic) {
-              case 'template':
+              case 'template': {
                 SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
+                const persistedValue = requestData.templateMessagesSelector!;
+                console.info('SELECT DATA', { data: $templateEmailsSelector.data(), persistedValue });
+                $templateEmailsSelector.data('unpersisted')[persistedValue] = false;
                 break;
+              }
               case 'draft': {
                 // perhaps rather use data stuff in the future ...
                 const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
@@ -1606,7 +1636,17 @@ const emailFormCompositionHandlers = (
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = SelectUtils.selected($templateEmailsSelector);
-        if ($templateEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
+        console.info('UNPERSISTED TEST', {
+          current,
+          data: $templateEmailsSelector.data(),
+          currentString: String(current),
+          otherCurrentString: '' + current,
+          isUnpersisted: $templateEmailsSelector.data('unpersisted')[String(current)],
+          allOptions: SelectUtils.options($templateEmailsSelector),
+          filtered: SelectUtils.options($templateEmailsSelector).filter(function() { console.info('THIS OPTION', { val: $(this).val(), html: $(this).html() }); return $(this).html() === current; }),
+        });
+        if (!$templateEmailsSelector.data('unpersisted')[String(current)]
+            && SelectUtils.options($templateEmailsSelector).filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
             t(appName, 'A template with the name `{emailTemplateName}\' already exists, '
               + 'do you want to overwrite it?', { emailTemplateName: current }),
@@ -1648,7 +1688,7 @@ const emailFormCompositionHandlers = (
       if ($saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
         const current = SelectUtils.selected($templateEmailsSelector) as string;
-        if ($templateEmailsSelector.find('option').filter(function() {
+        if (SelectUtils.options($templateEmailsSelector).filter(function() {
           return $(this).html().trim() === current;
         }).length > 0) {
           Dialogs.confirm(
