@@ -52,8 +52,8 @@
       </template>
       <template #selected-option-container="{ option }">
         <span :key="option.value"
-              class="pme-select__selected"
-              :class="{ vs__selected: multiple, 'pme-select__selected--move-on-focus': showMoveButtons === 'focus' }"
+              class="pme-select__selected vs__selected"
+              :class="{ 'pme-select__selected--move-on-focus': showMoveButtons === 'focus' }"
               :data-value="option.value"
               :draggable="sortable && multiple && !blocked && !creating"
               @mousedown.stop
@@ -524,15 +524,55 @@ defineExpose({
     padding-block-start: 0;
   }
 
-  :deep(.nc-select.v-select.select.vs--multiple .vs__selected-options) {
+  :deep(.nc-select.v-select.select.vs--single .vs__dropdown-toggle) {
+    border: var(--border-width-input-focused, 2px) solid transparent !important;
+    box-shadow: var(--input-border-box-shadow) !important;
+  }
+
+  :deep(.nc-select.v-select.select.vs--single:not(.vs--disabled) .vs__dropdown-toggle) {
+    background: var(--color-main-background);
+  }
+
+  :deep(.nc-select.v-select.select.vs--single:not(.vs--disabled) .vs__dropdown-toggle:hover) {
+    box-shadow: 0 0 0 1px var(--vs-border-color) !important;
+  }
+
+  :deep(.nc-select.v-select.select.vs--single.vs--open .vs__dropdown-toggle) {
+    box-shadow: none !important;
+    border: var(--border-width-input-focused, 2px) solid var(--color-main-text) !important;
+    border-block-end-color: var(--color-border-maxcontrast) !important;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    outline: 2px solid var(--color-main-background);
+  }
+
+  :deep(.nc-select.v-select.select .vs__selected-options) {
     min-height: calc(var(--default-clickable-area) - 2 * var(--vs-border-width));
   }
 
-  :deep(.nc-select.v-select.select .pme-select__selected.vs__selected) {
+  :deep(.nc-select.v-select.select.vs--single .vs__search) {
+    padding-inline: var(--border-radius-element) calc(var(--default-clickable-area) + var(--default-grid-baseline)) !important;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :deep(.nc-select.v-select.select.vs--single:has(.vs__clear) .vs__search) {
+    padding-inline-end: calc(2 * var(--default-clickable-area)) !important;
+  }
+
+  :deep(.nc-select.v-select.select.vs--single .pme-select__selected) {
+    inset-block-start: 0;
+    padding-inline-start: var(--border-radius-element);
+  }
+
+  :deep(.nc-select.v-select.select.vs--multiple .pme-select__selected.vs__selected) {
     border-radius: var(--border-radius-large) !important;
   }
 
   :deep(.vs__dropdown-option) {
+    box-sizing: border-box;
+    min-height: var(--default-clickable-area);
+
     &:has(.pme-select__option--selected) {
       background-color: var(--color-primary-element-light);
       color: var(--color-main-text);

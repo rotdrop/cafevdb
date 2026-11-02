@@ -108,8 +108,11 @@ or a pointer click to open it.
 In focus-only mode the move buttons remain in the tab order; tabbing to a button
 reveals both move buttons for that item. `showMoveButtons` is also accepted by
 the mount adapter and in `data-selectize-options`.
-Multiple selects retain the same minimum input height when empty, without
-adding top padding to the dropdown toggle.
+Single and multiple selects use the theme's main background and matching
+input-border shadows, with a minimum input height even when empty and no top
+padding on the dropdown toggle. Single selections and search text are inset
+from the border. Blank dropdown options retain their values and a full-height
+clickable row.
 Selected dropdown options use the light primary background, hovered/highlighted
 options use the hover background, and bold group headings retain the normal
 dropdown background.

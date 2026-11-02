@@ -89,6 +89,23 @@ describe('PmeSelect', () => {
     expect(wrapper.findAll('button').every((button) => button.attributes('type') === 'button')).toBe(true);
   });
 
+  it('uses the upstream single-selection class without adding multi-selection buttons', () => {
+    const wrapper = render({ modelValue: 'violin' });
+    expect(wrapper.get('[data-value="violin"]').classes()).toContain('vs__selected');
+    expect(wrapper.find('.pme-select__move').exists()).toBe(false);
+    expect(wrapper.find('button[aria-label="Remove Violin"]').exists()).toBe(false);
+  });
+
+  it('preserves selectable blank options and their empty value', async () => {
+    const wrapper = render({ options: [{ value: '', label: '' }, ...options], modelValue: 'violin' });
+    await open(wrapper);
+    const blank = wrapper.findAll('[role="option"]').find((option) => option.text() === '');
+    expect(blank).toBeDefined();
+    await blank!.trigger('click');
+    expect(wrapper.vm.getValue()).toBe('');
+    expect(wrapper.emitted('change')?.at(-1)).toEqual(['']);
+  });
+
   it('preserves initial selection order, deduplicates values, and submits them in order', async () => {
     const wrapper = render({
       multiple: true,
