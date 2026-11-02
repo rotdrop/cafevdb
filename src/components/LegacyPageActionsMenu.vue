@@ -166,8 +166,8 @@ const nextFrame = () => {
 const setPosition = (x?: number, y?: number) => {
   if (x !== undefined && y !== undefined) {
     referenceElement.value!.style.position = 'fixed'
-    referenceElement.value!.style.left = x + 'px'
-    referenceElement.value!.style.top = y + 'px'
+    referenceElement.value!.style.left = `${x}px`
+    referenceElement.value!.style.top = `calc(${y}px - var(--header-height))`
 
     positioned.value = true
   } else if (positioned.value) {
