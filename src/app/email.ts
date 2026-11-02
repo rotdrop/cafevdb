@@ -805,7 +805,7 @@ const emailFormCompositionHandlers = (
     closeAfterSelect: true,
   });
 
-<<<<<<< HEAD
+  $templateEmailsSelector.data('unpersisted', {});
   mountEmailSelect($templateEmailsSelector, {
     ...messageSelectorOptions($templateEmailsSelector),
     restoreOnBackspace: true,
@@ -813,27 +813,7 @@ const emailFormCompositionHandlers = (
     persist: false,
     onCreate(option) {
       $templateEmailsSelector.data('ignoreChange', option.value);
-=======
-  $templateEmailsSelector.data('unpersisted', {});
-  $templateEmailsSelector.selectize({
-    ...messageSelectorSelectizeOptions,
-    inputClass: appName + '-email-current-template',
-    plugins: ['clear_button', 'restore_on_backspace'],
-    create: true,
-    persist: false,
-    render: {
-      option_create(data, escape) {
-        return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
-      },
-    },
-    onOptionAdd(value, _data) {
-      const data = this.$input.data();
-      data.ignoreChange = value;
-      data.unpersisted[value] = true;
-    },
-    onInitialize() {
-      this.$wrapper.toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
->>>>>>> origin/nextcloud35
+      $templateEmailsSelector.data('unpersisted')[option.value] = true;
     },
   });
   SelectUtils.widget($templateEmailsSelector).toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
