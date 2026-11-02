@@ -91,7 +91,7 @@ multiline text rather than rendered HTML.
 | HTML options and optgroups | `options: { value, label, groups?, disabled? }[]` and `groups: { value, label, disabled? }[]` |
 | Initial-values data attribute | `modelValue` / `v-model`, preserving selection order |
 | `drag_drop` | `sortable`, with drag-and-drop and keyboard-accessible move buttons |
-| `showMoveButtons` | `'focus'` (default) shows move buttons on keyboard focus within a selected item; `true` always shows them; `false` removes them without disabling drag-and-drop |
+| `showMoveButtons` | `true` (default) always shows move buttons; `false` removes them without disabling drag-and-drop; `'focus'` shows them on keyboard focus within a selected item |
 | `remove_button`, `clear_button` | Multiple-selection remove buttons; single-selection clear button |
 | `not-empty` class | `notEmpty`, preventing removal of the final selection |
 | `lockOptgroupOrder: true` | Groups always retain their declared order |
@@ -108,6 +108,8 @@ or a pointer click to open it.
 In focus-only mode the move buttons remain in the tab order; tabbing to a button
 reveals both move buttons for that item. `showMoveButtons` is also accepted by
 the mount adapter and in `data-selectize-options`.
+Multiple selects retain the same minimum input height when empty, without
+adding top padding to the dropdown toggle.
 Selected dropdown options use the light primary background, hovered/highlighted
 options use the hover background, and bold group headings retain the normal
 dropdown background.

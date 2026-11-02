@@ -155,7 +155,7 @@ const props = withDefaults(defineProps<PmeSelectProps>(), {
   required: false,
   notEmpty: false,
   sortable: false,
-  showMoveButtons: 'focus',
+  showMoveButtons: true,
   placeholder: '',
   inputId: undefined,
   name: undefined,
@@ -522,6 +522,10 @@ defineExpose({
 
   :deep(.nc-select.v-select.select .vs__dropdown-toggle) {
     padding-block-start: 0;
+  }
+
+  :deep(.nc-select.v-select.select.vs--multiple .vs__selected-options) {
+    min-height: calc(var(--default-clickable-area) - 2 * var(--vs-border-width));
   }
 
   :deep(.nc-select.v-select.select .pme-select__selected.vs__selected) {

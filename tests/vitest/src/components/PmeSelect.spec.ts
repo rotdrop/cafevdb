@@ -222,8 +222,11 @@ describe('PmeSelect', () => {
     expect(dataTransfer.setData).toHaveBeenCalledWith('text/plain', 'flute');
   });
 
-  it('shows move buttons on keyboard focus by default and allows always-visible buttons', async () => {
+  it('always shows move buttons by default and allows focus-only buttons', async () => {
     const wrapper = render({ multiple: true, sortable: true, modelValue: ['violin', 'viola'] });
+    expect(wrapper.find('.pme-select__selected--move-on-focus').exists()).toBe(false);
+    expect(wrapper.findAll('.pme-select__move')).toHaveLength(4);
+    await wrapper.setProps({ showMoveButtons: 'focus' });
     expect(wrapper.findAll('.pme-select__selected--move-on-focus')).toHaveLength(2);
     const button = wrapper.get<HTMLButtonElement>('button[aria-label="Move Violin later"]');
     expect(button.element.tabIndex).toBe(0);

@@ -43,7 +43,7 @@ export interface PmeSelectProps {
   /** Prevent clearing the last selection, independently of form validation. */
   notEmpty?: boolean;
   sortable?: boolean;
-  /** Show sorting buttons always, only on keyboard focus (default), or never. */
+  /** Show sorting buttons always (default), only on keyboard focus, or never. */
   showMoveButtons?: boolean|'focus';
   placeholder?: string;
   inputId?: string;

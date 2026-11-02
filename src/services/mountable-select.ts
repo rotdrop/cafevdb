@@ -220,7 +220,7 @@ export class SelectizeService {
       required: this.required,
       notEmpty: this.select.classList.contains('not-empty'),
       sortable: plugins.some((plugin) => (typeof plugin === 'string' ? plugin : plugin.name) === 'drag_drop'),
-      showMoveButtons: config.showMoveButtons ?? 'focus',
+      showMoveButtons: config.showMoveButtons ?? true,
       create: this.getCreateOptions(),
       createOnBlur: config.createOnBlur ?? false,
       persist: config.persist ?? false,
