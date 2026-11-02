@@ -1800,13 +1800,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param EnumSubstitutionNamespace $nameSpace The name space of the variable.
    *
-   * @param null|string $message The composed email message body.
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @return bool|int
    */
   private function hasSubstitutionNamespace(EnumSubstitutionNamespace $nameSpace, ?string $message = null)
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -1817,15 +1817,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
-   * Replace all variables of the given namespace in
-   * $this->messageContents.
+   * Replace all variables of the given namespace in the supplied text,
+   * defaulting to $this->messageContents.
    *
    * @param EnumSubstitutionNamespace $nameSpace The variable prefix, e.g. MEMBER or one
    * of its translations.
    *
    * @param mixed $data Context dependent data, likely Entities\Musician.
    *
-   * @param null|string $message
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @param null|array $failures Optional failure array. If null then
    * the method will throw an exception on errror.
@@ -1835,7 +1835,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function replaceFormVariables(EnumSubstitutionNamespace $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -1896,13 +1896,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Cleanup edge-cases. ATM this only replaces left-over '$$'
    * occurences with a single $.
    *
-   * @param null|string $message Email message body.
+   * @param null|string $message The subject or message body. Null uses the current body.
    *
    * @return string
    */
   private function finalizeSubstitutions(?string $message = null):string
   {
-    if (empty($message)) {
+    if ($message === null) {
       $message = $this->messageContents;
     }
 
@@ -2034,12 +2034,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
       . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL);
+    $subjectTemplate = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, message: $this->subject());
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate)
+      || $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $subjectTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -2081,6 +2083,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $this->implicitFileAttachments = [];
         $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
+        $strSubject = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $subjectTemplate);
+        $strSubject = $this->finalizeSubstitutions($strSubject);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
         if (!empty($this->implicitFileAttachments)) {
@@ -2115,7 +2119,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
 
         $msg = $this->composeAndSend(
-          $strMessage, [ $recipient ], $personalAttachments,
+          $strMessage, $strSubject, [ $recipient ], $personalAttachments,
           addCC: false,
           references: $templateMessageId,
           customHeaders: array_merge($customHeaders, self::HEADER_MARKER_RECIPIENT),
@@ -2150,7 +2154,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $mimeMsg = $this->composeAndSend(
-        $messageTemplate, [],
+        $messageTemplate, $this->finalizeSubstitutions($subjectTemplate), [],
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
@@ -2183,6 +2187,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $mimeMsg = $this->composeAndSend(
         $messageTemplate,
+        $this->finalizeSubstitutions($subjectTemplate),
         $recipients,
         customHeaders: $customHeaders,
       );
@@ -2928,6 +2933,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param string $strMessage The message to send.
    *
+   * @param string $strSubject The subject after substitutions.
+   *
    * @param array $eMails The recipient list.
    *
    * @param array $extraAttachments Array of callables return a flat array
@@ -2961,6 +2968,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function composeAndSend(
     string $strMessage,
+    string $strSubject,
     array $eMails,
     array $extraAttachments = [],
     bool $addCC = true,
@@ -3020,7 +3028,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       });
 
-      $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+      $phpMailer->Subject = $this->messageTag . ' ' . $strSubject;
       $logMessage->subject = $phpMailer->Subject;
 
       $senderName = $this->fromName();
@@ -3462,6 +3470,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @param string $strMessage The message to send.
    *
+   * @param string $strSubject The subject after substitutions.
+   *
    * @param array $eMails The recipient list.
    *
    * @param array $extraAttachments Array of callables return a flat array
@@ -3496,6 +3506,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function composeAndExport(
     string $strMessage,
+    string $strSubject,
     array $eMails,
     array $extraAttachments = [],
     bool $addCC = true,
@@ -3529,7 +3540,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $phpMailer = $this->getOutboundService();
       $messageId = $messageId ?? $phpMailer->generateMessageId();
 
-      $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+      $phpMailer->Subject = $this->messageTag . ' ' . $strSubject;
       $logMessage->subject = $phpMailer->Subject;
 
       $senderName = $this->fromName();
@@ -3836,12 +3847,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       EnumSubstitutionNamespace::GLOBAL,
       failures: $failures,
     );
+    $subjectTemplate = $this->replaceFormVariables(
+      EnumSubstitutionNamespace::GLOBAL,
+      message: $this->subject(),
+      failures: $failures,
+    );
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('LINK VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate)
+      || $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $subjectTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -3902,6 +3919,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           failures: $failures,
         );
         $strMessage = $this->finalizeSubstitutions($strMessage);
+        $strSubject = $this->replaceFormVariables(
+          EnumSubstitutionNamespace::MEMBER,
+          $musician,
+          $subjectTemplate,
+          failures: $failures,
+        );
+        $strSubject = $this->finalizeSubstitutions($strSubject);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
         if (!empty($this->implicitFileAttachments)) {
@@ -3931,6 +3955,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         $message = $this->composeAndExport(
           $strMessage,
+          $strSubject,
           [ $recipient ],
           $personalAttachments,
           addCC: false,
@@ -3954,7 +3979,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $message = $this->composeAndExport(
-        $messageTemplate, [], [],
+        $messageTemplate, $this->finalizeSubstitutions($subjectTemplate), [], [],
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
@@ -3987,7 +4012,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       }
 
-      $message = $this->composeAndExport($messageTemplate, $recipients);
+      $message = $this->composeAndExport($messageTemplate, $this->finalizeSubstitutions($subjectTemplate), $recipients);
       if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
         ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
@@ -4058,7 +4083,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * - Cc, valid email addresses
    * - Bcc, valid email addresses
-   * - subject, must not be empty
+   * - subject, must not be empty, variable substitutions
    * - message-text, variable substitutions
    * - sender name, must not be empty
    * - file attachments, temporary local copy must exist
@@ -4348,15 +4373,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * sure that no variable tag ${...} remains.
    *
    * @param null|string $template A message body template, i.e. the message
-   * body with potential ${SUBSTITION} things.
+   * body with potential ${SUBSTITUTION} things. The subject is also validated.
    *
    * @return bool Execution status.
    */
   public function validateTemplate(?string $template = null):bool
   {
-    if (empty($template)) {
+    if ($template === null) {
       $template = $this->messageText();
     }
+    $template = $this->subject() . "\n" . $template;
 
     $templateError = [];
 
@@ -4381,7 +4407,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
-    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, $dummy)) {
       $failures = [];
       $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, null, $dummy, $failures);
       if (!empty($failures)) {
