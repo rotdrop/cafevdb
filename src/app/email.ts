@@ -814,6 +814,7 @@ const emailFormCompositionHandlers = (
     openOnFocus: selectizeOpenOnFocus,
   };
 
+  $templateEmailsSelector.data('unpersisted', {});
   $templateEmailsSelector.selectize({
     ...messageSelectorSelectizeOptions,
     inputClass: appName + '-email-current-template',
@@ -826,7 +827,9 @@ const emailFormCompositionHandlers = (
       },
     },
     onOptionAdd(value, _data) {
-      this.$input.data('ignoreChange', value);
+      const data = this.$input.data();
+      data.ignoreChange = value;
+      data.unpersisted[value] = true;
     },
     onInitialize() {
       this.$wrapper.toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
@@ -1128,9 +1131,12 @@ const emailFormCompositionHandlers = (
             break; // load
           case 'save':
             switch (topic) {
-              case 'template':
+              case 'template': {
                 SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
+                const persistedValue = requestData.templateMessagesSelector!;
+                $templateEmailsSelector.data('unpersisted')[persistedValue] = false;
                 break;
+              }
               case 'draft': {
                 // perhaps rather use data stuff in the future ...
                 const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
@@ -1622,7 +1628,8 @@ const emailFormCompositionHandlers = (
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
         const current = SelectUtils.selected($templateEmailsSelector);
-        if ($templateEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
+        if (!$templateEmailsSelector.data('unpersisted')[String(current)]
+            && SelectUtils.options($templateEmailsSelector).filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
             t(appName, 'A template with the name `{emailTemplateName}\' already exists, '
               + 'do you want to overwrite it?', { emailTemplateName: current }),
@@ -1664,7 +1671,7 @@ const emailFormCompositionHandlers = (
       if ($saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
         const current = SelectUtils.selected($templateEmailsSelector) as string;
-        if ($templateEmailsSelector.find('option').filter(function() {
+        if (SelectUtils.options($templateEmailsSelector).filter(function() {
           return $(this).html().trim() === current;
         }).length > 0) {
           Dialogs.confirm(
