@@ -49,6 +49,7 @@ class Html2Text
       '-dump',
       '-I', 'utf-8',
       '-O', 'utf-8',
+      '-cols', '1000000',
       '-T',
       'text/html',
     ],
