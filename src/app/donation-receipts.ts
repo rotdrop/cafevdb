@@ -30,6 +30,7 @@ import type { TableLoadCallback } from './pme.ts';
 
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
 import * as CAFEVDB from './cafevdb.ts';
+import { DONATION_RECEIPTS_ACTION_MENU } from '../mountable-component-names.ts';
 import fileDownload from './file-download.ts';
 import { globalState } from './globals.ts';
 import $, { isJQuerySelect } from './jquery.ts';
@@ -48,6 +49,7 @@ import {
   refreshWidget as refreshSelectWidget,
 } from './select-utils.ts';
 import { templateRenderer } from './template-renderer.ts';
+import actionMenu from './vue-action-menu.ts';
 
 import './jquery-readonly.ts';
 import 'project-participant-fields-display.scss';
@@ -292,6 +294,7 @@ const documentReady = () => {
     {
       callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
+          actionMenu(PHPMyEdit.container(selector), template, DONATION_RECEIPTS_ACTION_MENU);
           pmeFormInit(selector, parameters, resizeCB);
         }
         console.info('RESIZE DB');
@@ -311,6 +314,7 @@ const documentReady = () => {
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
     if (renderer === templateRenderer(template)) {
+      actionMenu(PHPMyEdit.defaultSelector, template, DONATION_RECEIPTS_ACTION_MENU);
       pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });
