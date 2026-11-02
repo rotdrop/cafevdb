@@ -29,8 +29,8 @@ import type { JQuerySelect } from './jquery.ts';
 import type { TableLoadCallback } from './pme.ts';
 
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
-import * as CAFEVDB from './cafevdb.ts';
 import { DONATION_RECEIPTS_ACTION_MENU } from '../mountable-component-names.ts';
+import * as CAFEVDB from './cafevdb.ts';
 import fileDownload from './file-download.ts';
 import { globalState } from './globals.ts';
 import $, { isJQuerySelect } from './jquery.ts';
@@ -63,6 +63,8 @@ const pmeFormInit = (
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
   const $form = $container.find(pmeFormSelector) as JQuery<HTMLFormElement>;
+
+  actionMenu($container, template, DONATION_RECEIPTS_ACTION_MENU);
 
   if (!PHPMyEdit.hasEditableData($form)) {
     // no need to do further work
@@ -294,7 +296,6 @@ const documentReady = () => {
     {
       callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
-          actionMenu(PHPMyEdit.container(selector), template, DONATION_RECEIPTS_ACTION_MENU);
           pmeFormInit(selector, parameters, resizeCB);
         }
         console.info('RESIZE DB');
@@ -314,7 +315,6 @@ const documentReady = () => {
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
     if (renderer === templateRenderer(template)) {
-      actionMenu(PHPMyEdit.defaultSelector, template, DONATION_RECEIPTS_ACTION_MENU);
       pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });
