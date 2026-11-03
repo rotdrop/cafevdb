@@ -7,6 +7,8 @@ Tooltip integration is deliberately omitted.
 
 PME's goto and rows-per-page controls do not use it; they use the button-like
 [`PmeNavigationSelect`](pme-navigation-select.md) instead.
+The export control is a separate [`PmeExportMenu`](pme-export-menu.md)
+action menu using `NcActions`, not a select widget.
 
 The component is registered as `CHOSEN_SELECT` in the mountable-component
 provider. Its typed props and exposed controls are in

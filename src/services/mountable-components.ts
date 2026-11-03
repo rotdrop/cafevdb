@@ -78,6 +78,9 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
         case MountableComponents.PME_NAVIGATION_SELECT:
           vueComponent = (await import('../components/PmeNavigationSelect.vue')).default;
           break;
+        case MountableComponents.PME_EXPORT_MENU:
+          vueComponent = (await import('../components/PmeExportMenu.vue')).default;
+          break;
         case MountableComponents.PME_SELECT:
           vueComponent = (await import('../components/PmeSelect.vue')).default;
           break;

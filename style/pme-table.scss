@@ -337,6 +337,11 @@ tr.pme-navigation {
   }
 }
 
+.pme-export-menu-placeholder {
+  height: 28px;
+  min-height: 28px;
+}
+
 .pme-export-block select,
 .pme-menu-block select {
   &, option {
