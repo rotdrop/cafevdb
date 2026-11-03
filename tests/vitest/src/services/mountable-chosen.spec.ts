@@ -135,6 +135,7 @@ describe('mountChosen', () => {
       allow_single_deselect: true,
       single_backstroke_delete: false,
     });
+
     expect((await component()).props).toMatchObject({
       disableSearch: true,
       disableSearchThreshold: 8,
@@ -142,6 +143,20 @@ describe('mountChosen', () => {
       allowSingleDeselect: true,
       dropup: true,
     });
+  });
+
+  it.each([
+    { classes: '', option: undefined, expected: false },
+    { classes: 'chosen-auto', option: undefined, expected: 'auto' },
+    { classes: 'chosen-auto chosen-dropup', option: undefined, expected: true },
+    { classes: 'chosen-dropup', option: 'auto', expected: 'auto' },
+    { classes: 'chosen-dropup', option: false, expected: false },
+    { classes: '', option: true, expected: true },
+  ] as const)('maps direction classes and options: %j', async ({ classes, option, expected }) => {
+    const select = makeSelect(`class="${classes}"`);
+    $(select).chosen({ dropup: option });
+    await getMountedChosen(select)!.ready;
+    expect((await component()).props.dropup).toBe(expected);
   });
 
   it('supports select-utils selection, replacement, clearing, and widget lookup', async () => {

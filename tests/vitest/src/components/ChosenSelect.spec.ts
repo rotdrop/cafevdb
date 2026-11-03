@@ -48,6 +48,115 @@ const choose = async (wrapper: ReturnType<typeof render>, label: string) => {
 
 afterEach(() => {
   wrappers.splice(0).forEach((wrapper) => wrapper.unmount());
+  vi.restoreAllMocks();
+});
+
+describe('ChosenSelect automatic direction', () => {
+  const geometry = (top: number, height = 200) => {
+    const layout = { top, height };
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: HTMLElement) {
+      if (this.classList.contains('vs__dropdown-toggle')) {
+        return new DOMRect(0, layout.top, 200, 40);
+      }
+      if (this.classList.contains('vs__dropdown-menu')) {
+        return new DOMRect(0, 0, 200, layout.height);
+      }
+      return new DOMRect();
+    });
+    return layout;
+  };
+
+  it.each([
+    { top: 100, height: 200, up: false, reason: 'prefers down when the menu fits below' },
+    { top: window.innerHeight - 240, height: 200, up: false, reason: 'keeps down on an exact fit' },
+    { top: window.innerHeight - 100, height: 200, up: true, reason: 'flips up when below is insufficient' },
+    { top: 100, height: window.innerHeight * 2, up: false, reason: 'uses down when neither fits and below is larger' },
+    { top: window.innerHeight - 100, height: window.innerHeight * 2, up: true, reason: 'uses up when neither fits and above is larger' },
+    { top: (window.innerHeight - 40) / 2, height: window.innerHeight * 2, up: false, reason: 'prefers down on equal space' },
+  ])('$reason', async ({ top, height, up }) => {
+    geometry(top, height);
+    const wrapper = render({ dropup: 'auto' });
+    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    await open(wrapper);
+    expect(wrapper.classes().includes('chosen-select--dropup')).toBe(up);
+  });
+
+  it.each([undefined, false, true])('preserves fixed direction %s regardless of available space', async (dropup) => {
+    geometry(dropup ? 0 : window.innerHeight - 50);
+    const wrapper = render({ dropup });
+    await open(wrapper);
+    expect(wrapper.classes().includes('chosen-select--dropup')).toBe(!!dropup);
+  });
+
+  it('updates while open on viewport resize, ancestor scroll, and filtering', async () => {
+    const layout = geometry(window.innerHeight - 100);
+    const wrapper = render({ dropup: 'auto' });
+    await open(wrapper);
+    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    layout.top = 100;
+    window.dispatchEvent(new Event('resize'));
+    await flushPromises();
+    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    layout.top = window.innerHeight - 100;
+    wrapper.element.parentElement!.dispatchEvent(new Event('scroll'));
+    await flushPromises();
+    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    layout.height = 20;
+    await wrapper.get('input[role="combobox"]').setValue('violin');
+    await flushPromises();
+    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+  });
+
+  it('measures clipped ancestor content rather than only the viewport', async () => {
+    geometry(300);
+    const wrapper = render({ dropup: 'auto' });
+    const container = wrapper.element.parentElement!;
+    container.style.overflowY = 'auto';
+    Object.defineProperty(container, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => new DOMRect(0, 100, 300, 300),
+    });
+    vi.spyOn(container, 'clientHeight', 'get').mockReturnValue(300);
+    expect(getComputedStyle(container).overflowY).toBe('auto');
+    expect(container.clientHeight).toBe(300);
+    await open(wrapper);
+    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    container.style.overflowY = '';
+  });
+
+  it('rechecks when observed layout sizes change and releases observers on close', async () => {
+    const layout = geometry(window.innerHeight - 100);
+    const disconnect = vi.fn();
+    let update!: () => void;
+    vi.spyOn(globalThis, 'ResizeObserver').mockImplementation(class {
+      constructor(callback: ResizeObserverCallback) { update = () => callback([], this); }
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = disconnect;
+    });
+    const wrapper = render({ dropup: 'auto' });
+    await open(wrapper);
+    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    layout.height = 10;
+    update();
+    await flushPromises();
+    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    wrapper.vm.close();
+    await flushPromises();
+    expect(disconnect).toHaveBeenCalled();
+    layout.top = window.innerHeight - 50;
+    layout.height = 200;
+    window.dispatchEvent(new Event('resize'));
+    await flushPromises();
+    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    await open(wrapper);
+    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    const removeListener = vi.spyOn(window, 'removeEventListener');
+    wrapper.unmount();
+    wrappers.splice(wrappers.indexOf(wrapper), 1);
+    expect(removeListener).toHaveBeenCalledWith('scroll', expect.any(Function), true);
+    expect(removeListener).toHaveBeenCalledWith('resize', expect.any(Function));
+  });
 });
 
 describe('ChosenSelect', () => {

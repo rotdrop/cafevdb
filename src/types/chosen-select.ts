@@ -21,7 +21,8 @@ export interface ChosenSelectProps {
   disableSearch?: boolean;
   disableSearchThreshold?: number;
   noResultsText?: string;
-  dropup?: boolean;
+  /** Auto prefers down, flipping up only when there is more space above. */
+  dropup?: boolean|'auto';
 }
 
 export interface ChosenSelectComponentProps extends ChosenSelectProps {

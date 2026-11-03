@@ -3,7 +3,7 @@
  - SPDX-License-Identifier: AGPL-3.0-or-later
  -->
 <template>
-  <div class="chosen-select" :class="{ 'chosen-select--dropup': state.dropup }">
+  <div ref="root" class="chosen-select" :class="{ 'chosen-select--dropup': dropup }">
     <label class="chosen-select__label" :for="selectId">{{ state.label }}</label>
     <NcSelect :modelValue="selectedChoices"
               :options="choices"
@@ -23,8 +23,8 @@
               :appendToBody="false"
               @update:modelValue="choose"
               @search="search = $event"
-              @open="emit('open')"
-              @close="emit('close')"
+              @open="onOpen"
+              @close="onClose"
     >
       <template #search="{ attributes, events }">
         <input v-bind="{ ...attributes, ref: undefined }"
@@ -52,7 +52,7 @@
 import type { ChosenSelectControls, ChosenSelectProps, ChosenSelectValue } from '../types/chosen-select.ts'
 
 import { translate as t } from '@nextcloud/l10n'
-import { computed, ref, useId, useTemplateRef, watch, watchEffect } from 'vue'
+import { computed, nextTick, ref, useId, useTemplateRef, watch, watchEffect } from 'vue'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { appName } from '../config.ts'
 
@@ -77,8 +77,12 @@ const suppliedState = ref<ChosenSelectProps>()
 const state = computed(() => suppliedState.value ?? props)
 const uid = useId()
 const selectId = computed(() => state.value.inputId || `chosen-select-${uid}`)
+const root = useTemplateRef('root')
 const searchInput = useTemplateRef('searchInput')
 const search = ref('')
+const opened = ref(false)
+const autoDropup = ref(false)
+const dropup = computed(() => state.value.dropup === 'auto' ? autoDropup.value : !!state.value.dropup)
 const blocked = computed(() => state.value.disabled || state.value.readonly)
 const searchable = computed(() => !state.value.disableSearch
   && (state.value.multiple || state.value.options.length > (state.value.disableSearchThreshold ?? 0)))
@@ -132,6 +136,74 @@ const choices = computed(() => {
   }
   return result
 })
+
+const onOpen = () => {
+  opened.value = true
+  emit('open')
+}
+const onClose = () => {
+  opened.value = false
+  autoDropup.value = false
+  emit('close')
+}
+watch([opened, choices, () => state.value.dropup], async (_value, _previous, onCleanup) => {
+  if (!opened.value || state.value.dropup !== 'auto') {
+    return
+  }
+  let cancelled = false
+  const updateDirection = () => {
+    const toggle = root.value?.querySelector<HTMLElement>('.vs__dropdown-toggle')
+    const menu = root.value?.querySelector<HTMLElement>('.vs__dropdown-menu')
+    if (!toggle || !menu) {
+      return
+    }
+    let top = window.visualViewport?.offsetTop ?? 0
+    let bottom = top + (window.visualViewport?.height ?? window.innerHeight)
+    for (let ancestor = root.value?.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      if (/(auto|scroll|hidden|clip)/.test(getComputedStyle(ancestor).overflowY)) {
+        const bounds = ancestor.getBoundingClientRect()
+        top = Math.max(top, bounds.top + ancestor.clientTop)
+        bottom = Math.min(bottom, bounds.top + ancestor.clientTop + ancestor.clientHeight)
+      }
+    }
+    const bounds = toggle.getBoundingClientRect()
+    const above = Math.max(0, bounds.top - top)
+    const below = Math.max(0, bottom - bounds.bottom)
+    autoDropup.value = menu.getBoundingClientRect().height > below && above > below
+  }
+  const observer = new ResizeObserver(updateDirection)
+  onCleanup(() => {
+    cancelled = true
+    observer.disconnect()
+    window.removeEventListener('resize', updateDirection)
+    window.removeEventListener('scroll', updateDirection, true)
+    window.visualViewport?.removeEventListener('resize', updateDirection)
+    window.visualViewport?.removeEventListener('scroll', updateDirection)
+  })
+  // Measure after rendering the menu and after legacy open handlers adjust overflow.
+  await nextTick()
+  if (cancelled) {
+    return
+  }
+  updateDirection()
+  if (root.value) {
+    observer.observe(root.value)
+    const menu = root.value.querySelector('.vs__dropdown-menu')
+    if (menu) {
+      observer.observe(menu)
+    }
+    for (let ancestor = root.value.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      if (/(auto|scroll|hidden|clip)/.test(getComputedStyle(ancestor).overflowY)) {
+        observer.observe(ancestor)
+      }
+    }
+  }
+  window.addEventListener('resize', updateDirection)
+  window.addEventListener('scroll', updateDirection, true)
+  window.visualViewport?.addEventListener('resize', updateDirection)
+  window.visualViewport?.addEventListener('scroll', updateDirection)
+}, { flush: 'post' })
+
 const getChoiceKey = (option: Choice) => option.key
 const getChoiceLabel = (option: Choice) => option.label
 const isSelectable = (option: Choice) => !blocked.value && !option.disabled && !option.group

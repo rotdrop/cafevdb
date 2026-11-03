@@ -35,6 +35,23 @@ Backspace does not remove selections when the search is empty, matching the
 legacy initializers' `single_backstroke_delete: false` behavior.
 `title_attributes` is accepted but ignored along with tooltip handling.
 
+### Dropdown direction
+
+Direction is downward by default. The existing `chosen-dropup` class still
+forces upward opening. Opt into space-aware positioning with the `chosen-auto`
+class, or pass `dropup: 'auto'` to `.chosen()` or `mountChosen()`. Explicit
+`dropup: true` and `dropup: false` force up and down respectively. An explicit
+option overrides the classes; `chosen-dropup` takes precedence over
+`chosen-auto` when both classes are present.
+
+The standalone Vue component accepts the same `dropup: boolean | 'auto'` prop.
+Auto mode prefers down whenever the menu fits below. Otherwise it opens up
+only when there is more room above; if neither direction fits, it uses the side
+with more room (down on a tie). Available space is bounded by the viewport and
+clipping/scrolling ancestors. Direction is recalculated when opening, filtering,
+resizing, scrolling, or changing the menu's size, with listeners removed on
+close or unmount. Borders and chevrons follow the effective direction.
+
 The bridge emits `chosen:ready`, `chosen:update`,
 `chosen:before_showing_dropdown`, `chosen:showing_dropdown`, and
 `chosen:hiding_dropdown`. It handles `chosen:updated`, `chosen:open`,
