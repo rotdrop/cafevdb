@@ -517,8 +517,27 @@ defineExpose({
   vertical-align: middle;
 }
 
+:global(.selectize-control.pme-vue-select-control > .pme-select) {
+  width: 100%;
+  min-width: 0;
+}
+
 .pme-select {
   min-width: 180px;
+
+  :deep(.nc-select.v-select.select) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+
+  :deep(.nc-select.v-select.select.vs--multiple),
+  :deep(.nc-select.v-select.select.vs--multiple .vs__dropdown-toggle),
+  :deep(.nc-select.v-select.select.vs--multiple .vs__selected-options) {
+    height: auto;
+    max-height: none;
+  }
 
   :deep(.nc-select.v-select.select .vs__dropdown-toggle) {
     padding-block-start: 0;

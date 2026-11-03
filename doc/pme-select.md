@@ -113,6 +113,9 @@ input-border shadows, with a minimum input height even when empty and no top
 padding on the dropdown toggle. Single selections and search text are inset
 from the border. Blank dropdown options retain their values and a full-height
 clickable row.
+Vue controls fill their legacy `.selectize-control` wrapper, so existing
+width rules also size the inner widget. Multi-selects grow vertically to show
+all selected rows; the dropdown menu retains its own scrolling limit.
 Selected dropdown options use the light primary background, hovered/highlighted
 options use the hover background, and bold group headings retain the normal
 dropdown background.
