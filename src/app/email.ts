@@ -85,6 +85,7 @@ import {
   PROJECT_EVENTS_LISTING,
 } from '../event-bus-events.ts';
 import { addressBookSelectOptions, selectedFreeFormContacts } from '../services/address-book-select.ts';
+import { DualListboxService, getMountedDualListbox } from '../services/mountable-dual-listbox.ts';
 import { getMountedSelectize } from '../services/mountable-select.ts';
 import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import { asKey } from '../toolkit/types/type-traits.ts';
@@ -115,7 +116,6 @@ import { urlDecode } from './url-decode.ts';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-import 'bootstrap4-duallistbox';
 import './jquery-readonly.ts';
 import 'emailform.module.scss';
 import {
@@ -353,39 +353,12 @@ const emailFormRecipientsSelectControls = ($dialogHolder: JQuery, $fieldset: JQu
     closeAfterSelect: false,
   });
 
-  const $recipientsSelect = $fieldset.find('#recipients-select');
-  $recipientsSelect.bootstrapDualListbox({
-    // moveOnSelect: false,
-    // preserveSelectionOnMove : 'all',
-    moveAllLabel: t(appName, 'Move all'),
-    btnMoveAllText: t(appName, 'Select all'),
-    moveSelectedLabel: t(appName, 'Move selected'),
-    removeSelectedLabel: t(appName, 'Remove selected'),
-    removeAllLabel: t(appName, 'Remove all'),
-    btnRemoveAllText: t(appName, 'Remove all'),
-    nonSelectedListLabel: t(appName, 'Remaining Recipients'),
-    selectedListLabel: t(appName, 'Selected Recipients'),
-    infoText: '&nbsp;', // t(appName, 'Showing all {0}'),
-    infoTextFiltered: '<span class="badge bg-warning">'
-      + t(appName, 'Filtered')
-      + '</span> {0} '
-      + t(appName, 'from')
-      + ' {1}',
-    infoTextEmpty: t(appName, 'Empty list'),
-    filterPlaceHolder: t(appName, 'Filter'),
-    filterTextClear: t(appName, 'show all'),
-    selectorMinimalHeight: 200,
-  });
-  const $dualListBoxContainer = $fieldset.find('.bootstrap-duallistbox-container');
-  const dualSelect = $dualListBoxContainer.find('select');
-  dualSelect.attr(
-    'title',
-    t(appName, 'Click on the names to move the respective person to the other box'),
-  );
-  dualSelect.addClass('tooltip-top');
-
-  if ($recipientsSelect.prop('readonly')) {
-    $dualListBoxContainer.find('input, select, button').readonly(true);
+  const recipientsSelect = $fieldset.find<HTMLSelectElement>('#recipients-select')[0];
+  if (recipientsSelect) {
+    void DualListboxService.mount(recipientsSelect).ready.catch((error: unknown) => {
+      console.error('Unable to mount email recipients control.', error);
+      notificationShow(t(appName, 'Unable to initialize the select controls.'), { timeout: 15 });
+    });
   }
 
   toolTipsInit($dialogHolder.find('div#emailformrecipients'));
@@ -412,7 +385,7 @@ const emailFormRecipientsHandlers = (
 
   emailFormRecipientsSelectControls($dialogHolder, $fieldset);
 
-  const $recipientsSelect = $fieldset.find('select#recipients-select');
+  const $recipientsSelect = $fieldset.find<HTMLSelectElement>('select#recipients-select');
   const $missingAddresses = $fieldset.find('.missing-email-addresses.names');
   const $missingLabel = $fieldset.find('.missing-email-addresses.label');
   const $noMissingLabel = $fieldset.find('.missing-email-addresses.label.empty');
@@ -526,7 +499,7 @@ const emailFormRecipientsHandlers = (
           // list of recipients
           $recipientsSelect.html(data.recipientsOptions);
           console.info('RECIPIENT OPTIONS', { options: data.recipientsOptions, $recipientsSelect });
-          $recipientsSelect.bootstrapDualListbox('refresh', true);
+          getMountedDualListbox($recipientsSelect[0])?.refresh();
 
           // list of broken email addresses
           $missingAddresses.html(data.missingEmailAddresses);
@@ -603,7 +576,7 @@ const emailFormRecipientsHandlers = (
     exceptions = exceptions ?? [];
     exceptions.push('.action-menu-toggle.basic-recipients-set');
 
-    const $otherInputs = $fieldset.find('input, select, button').not(exceptions.join(','));
+    const $otherInputs = $fieldset.find('input, select, button').not('.dual-listbox-control *').not(exceptions.join(','));
     // Disable all recipient filters as they do not make any
     // sense. Sending to the mailing lists means to just send to
     // that list, further recipient choices are technically not possible.

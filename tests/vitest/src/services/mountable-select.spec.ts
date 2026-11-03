@@ -44,7 +44,11 @@ const { subscriptions, createComponent } = vi.hoisted(() => ({
 
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
   subscribe: (event: string, callback: () => void) => {
-    subscriptions.set(event, callback);
+    const previous = subscriptions.get(event);
+    subscriptions.set(event, () => {
+      previous?.();
+      callback();
+    });
   },
   awaitEmit: async (_event: string, payload: { propsData: PmeSelectComponentProps }) =>
     createComponent(payload.propsData),

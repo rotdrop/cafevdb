@@ -3,6 +3,7 @@
  */
 import type { SelectizeAdapterOptions, SelectizeService } from './mountable-select.ts';
 
+import { getMountedDualListbox } from './mountable-dual-listbox.ts';
 import { getMountedSelectize, mountSelectize } from './mountable-select.ts';
 
 const scopes = new WeakMap<HTMLElement, MountedSelectScope>();
@@ -53,5 +54,6 @@ export const destroyMountedSelects = (container: HTMLElement) => {
   scopes.get(container)?.destroy();
   for (const select of container.querySelectorAll('select')) {
     getMountedSelectize(select)?.destroy();
+    getMountedDualListbox(select)?.destroy();
   }
 };

@@ -267,12 +267,8 @@ JS_FILES = \
  $(shell find $(ABSSRCDIR)/3rdparty/rotdrop -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
-BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
-
 NPM_INIT_DEPS =\
  $(MAKEFILE_DEP) package-lock.json package.json $(BUNDLER_CONFIG) eslint.config.mjs
-
-THIRD_PARTY_NPM_DEPS = $(BOOTSTRAP_DUALLISTBOX_DIST)
 
 DW_APP_CONFIG = node_modules/@rotdrop/nextcloud-app-dokuwiki/build/ts-types/app-config.ts
 DW_APP_CONFIG_PATCH = patches/

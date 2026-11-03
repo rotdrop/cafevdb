@@ -26,12 +26,14 @@
  */
 
 import type { ChosenSelectComponentProps } from './types/chosen-select.ts';
+import type { DualListboxComponentProps } from './types/dual-listbox.ts';
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 import type { PmeExportMenuComponentProps } from './types/pme-export-menu.ts';
 import type { PmeNavigationSelectComponentProps } from './types/pme-navigation-select.ts';
 import type { PmeSelectComponentProps } from './types/pme-select.ts';
 
 export const CHOSEN_SELECT = 'ChosenSelect';
+export const DUAL_LISTBOX = 'DualListbox';
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
@@ -45,6 +47,7 @@ export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMen
 
 export interface ComponentProps {
   [CHOSEN_SELECT]: ChosenSelectComponentProps;
+  [DUAL_LISTBOX]: DualListboxComponentProps;
   [DOKU_WIKI_WRAPPER]: {
     wikiPage?: string;
     query?: Record<string, string>;
