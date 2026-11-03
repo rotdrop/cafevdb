@@ -54,6 +54,9 @@ vi.mock('~/src/event-bus-events.ts', () => ({
   GET_VUE_COMPONENT: 'get-vue-component',
   LEGACY_PAGE_CLEANUP: 'cleanup',
 }));
+vi.mock('~/src/services/mountable-chosen.ts', () => ({
+  getMountedChosen: () => undefined,
+}));
 vi.mock('~/src/mountable-component-names.ts', () => ({
   PME_SELECT: 'PmeSelect',
 }));
