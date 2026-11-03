@@ -214,6 +214,14 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
     border-block-start-color: transparent;
     border-block-end-color: var(--vs-border-color);
   }
+
+  &--dropup :deep(.v-select .vs__open-indicator) {
+    transform: rotate(180deg) scale(var(--vs-controls-size));
+  }
+
+  &--dropup :deep(.v-select.vs--open .vs__open-indicator) {
+    transform: scale(var(--vs-controls-size));
+  }
 }
 
 .chosen-select__group {
