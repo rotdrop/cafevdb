@@ -148,7 +148,7 @@ jobs:
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
           trap 'rm -f .clipassword' EXIT
-          CAFEVDB_USER=cafevdb-ci make selectize jstest
+          CAFEVDB_USER=cafevdb-ci make jstest
 
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v4

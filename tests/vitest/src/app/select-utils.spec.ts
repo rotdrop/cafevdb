@@ -21,7 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Selectize from 'selectize';
 import {
   beforeEach,
   describe,
@@ -31,6 +30,10 @@ import {
 } from 'vitest';
 import $ from '~/src/app/jquery.ts';
 import * as SelectUtils from '~/src/app/select-utils.ts';
+
+vi.mock('~/src/services/mountable-select.ts', () => ({
+  getMountedSelectize: () => undefined,
+}));
 
 beforeEach(() => {
   document.body.innerHTML = `<select id="single">
@@ -48,19 +51,20 @@ beforeEach(() => {
 `;
 });
 
-describe('Handle selectized select element', () => {
-  it('detects selectize', () => {
+describe('Select utilities', () => {
+  it('recognizes native selects without an enhanced control', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
-    $single.selectize();
-    expect(SelectUtils.selectizeActive($single)).toBeTruthy();
-    expect(SelectUtils.selectizeActive($multiple)).toBeFalsy();
-    expect(SelectUtils.isSelectizedJQuery($single)).toBeTruthy();
-    expect(SelectUtils.isSelectizedJQuery($multiple)).toBeFalsy();
-    expect(SelectUtils.getSelectize($single) instanceof Selectize).toBeTruthy();
-    expect(SelectUtils.getSelectize($multiple)).toBeUndefined();
-    expect(SelectUtils.getControlObject($single) instanceof Selectize).toBeTruthy();
+    expect(SelectUtils.isVanilla($single)).toBe(true);
+    expect(SelectUtils.isVanilla($multiple)).toBe(true);
+    expect(SelectUtils.getControlObject($single)).toBeUndefined();
     expect(SelectUtils.getControlObject($multiple)).toBeUndefined();
+  });
+
+  it('does not recognize legacy class names as an enhanced control', () => {
+    const $single = $<HTMLSelectElement>('#single').addClass('selectize');
+    expect(SelectUtils.isVanilla($single)).toBe(true);
+    expect(SelectUtils.selectFromWidget($('<div class="selectize-control"></div>')).length).toBe(0);
   });
 
   describe('Native and Chosen select utility compatibility', () => {
@@ -97,7 +101,6 @@ describe('Handle selectized select element', () => {
   it('finds all children and options', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
-    $single.selectize();
     expect(SelectUtils.children($single).length).toBe(1);
     expect(SelectUtils.children($multiple).length).toBe(3);
     expect(SelectUtils.options($single).length).toBe(3);
@@ -105,7 +108,6 @@ describe('Handle selectized select element', () => {
   });
   it('does not duplicate options but includes options added later', () => {
     const $single = $<HTMLSelectElement>('#single');
-    $single.selectize();
     $single.append('<option value="four">Four</option>');
     expect(SelectUtils.children($single).length).toBe(2);
     expect(SelectUtils.options($single).length).toBe(4);
@@ -113,14 +115,12 @@ describe('Handle selectized select element', () => {
   it('can determine the option values', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
-    $single.selectize();
     expect(SelectUtils.optionValues($single).sort()).toEqual(['one', 'three', 'two']);
     expect(SelectUtils.optionValues($multiple).sort()).toEqual(['one', 'three', 'two']);
   });
   it('can set select value(s)', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
-    $multiple.selectize();
     expect(SelectUtils.selected($single, 'two')).toEqual('one');
     expect(SelectUtils.selected($single)).toEqual('two');
     expect(SelectUtils.selected($multiple, ['two', 'three'])).toEqual([]);
@@ -131,11 +131,33 @@ describe('Handle selectized select element', () => {
   it('can determine the widget', () => {
     const $single = $<HTMLSelectElement>('#single');
     const $multiple = $<HTMLSelectElement>('#multiple');
-    $multiple.selectize();
     expect(SelectUtils.widget($single)[0]).toBeInstanceOf(HTMLSelectElement);
-    expect(SelectUtils.widget($multiple)[0]).toBeInstanceOf(HTMLDivElement);
+    expect(SelectUtils.widget($multiple)[0]).toBeInstanceOf(HTMLSelectElement);
 
     expect(SelectUtils.selectFromWidget(SelectUtils.widget($single))).toEqual($single);
     expect(SelectUtils.selectFromWidget(SelectUtils.widget($multiple))[0]).toEqual($multiple[0]);
+  });
+
+  it('excludes disabled options from possible values', () => {
+    const $single = $<HTMLSelectElement>('#single');
+    $single.find('option[value="two"]').prop('disabled', true);
+    expect(SelectUtils.optionValues($single)).toEqual(['one', 'three']);
+  });
+
+  it.each([false, true])('refreshes disabled and readonly properties without changing native state (chosen=%s)', (chosen) => {
+    const $select = $<HTMLSelectElement>('#single');
+    if (chosen) {
+      $select.data('chosen', {});
+    }
+    const updates = vi.fn();
+    $select.on('chosen:updated', updates);
+    $select.prop('readonly', true);
+    SelectUtils.refreshWidgetProperties($select);
+    expect($select.prop('disabled')).toBe(false);
+    expect(SelectUtils.locked($select)).toBe(true);
+    $select.prop('disabled', true);
+    SelectUtils.refreshWidget($select);
+    expect($select.prop('disabled')).toBe(true);
+    expect(updates).toHaveBeenCalledTimes(chosen ? 2 : 0);
   });
 });

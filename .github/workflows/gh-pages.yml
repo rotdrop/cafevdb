@@ -161,7 +161,7 @@ jobs:
 
       - name: Build the app (needed for the generated sources below build/)
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: CAFEVDB_USER=cafevdb-ci make selectize build
+        run: CAFEVDB_USER=cafevdb-ci make build
 
       - name: Generate API docs and push to gh-pages
         working-directory: server/apps/${{ env.APP_NAME }}

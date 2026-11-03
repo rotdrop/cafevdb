@@ -6,9 +6,11 @@ Selectize or jQuery. The `mountSelectize` service adapts native selects to this
 SFC through the mountable-component event bus. PME's initializer now mounts
 `.selectize` fields through the service and destroys them when replacing the
 PME container. The shared `select-utils.ts` functions dispatch to Vue-backed
-controls as well as native, Chosen, and jQuery Selectize controls. The email
+controls as well as native and Chosen controls. The email
 composer, recipient filters, address-book popup, and SEPA mandate selects also
-use this service. Chosen and dual-listbox integrations are unchanged.
+use this service. Chosen and dual-listbox integrations are unchanged. The
+legacy Selectize package, submodule, build targets, and utility branches have
+been removed.
 
 ```ts
 import { mountSelectize } from '../services/mountable-select.ts'
@@ -61,9 +63,8 @@ DTOs. `address-book-select.ts` adds validated free-form contacts and the contact
 save payload without exposing widget internals.
 
 `getControlObject` returns the Vue service for Vue-backed selects.
-`vueSelectActive` detects those controls; `getSelectize`, `selectizeActive`, and
-`isSelectizedJQuery` continue to describe only genuine jQuery Selectize instances.
-Code using Selectize-specific internals must not use them for Vue controls.
+`vueSelectActive` detects those controls. The legacy `getSelectize`,
+`selectizeActive`, and `isSelectizedJQuery` helpers are no longer exported.
 
 ```vue
 <PmeSelect v-model="instruments"
@@ -171,5 +172,6 @@ their submitted values. `required` uses native browser validation independently
 of `notEmpty`.
 
 A fully compatible Selectize instance facade and arbitrary Selectize plugins
-are outside the scope. Legacy compatibility branches in shared utilities and
-the package dependency have not been removed as part of this consumer migration.
+are outside the scope. The `.selectize` marker, `data-selectize-options`, and
+`.selectize-control` wrapper class remain as configuration and styling hooks
+for the Vue adapter, not as dependencies on the removed library.

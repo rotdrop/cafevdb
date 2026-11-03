@@ -127,7 +127,6 @@
     "qs": "^6.15.2",
     "sanitize.css": "^13.0.0",
     "sass": "^1.99.0",
-    "selectize": "file:3rdparty/selectize",
     "serialize-error": "^13.0.1",
     "sql-formatter": "^15.8.0",
     "stacktrace-gps": "github:stacktracejs/stacktrace-gps#62f6967fc85e6fdd5fb9cea1a056b935d9b07a9a",

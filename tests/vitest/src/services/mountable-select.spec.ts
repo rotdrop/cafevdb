@@ -293,9 +293,6 @@ describe('mountSelectize', () => {
       const [service] = await mountSelectize(select);
       expect(SelectUtils.isVanilla($select)).toBe(false);
       expect(SelectUtils.vueSelectActive($select)).toBe(true);
-      expect(SelectUtils.selectizeActive($select)).toBe(false);
-      expect(SelectUtils.isSelectizedJQuery($select)).toBe(false);
-      expect(SelectUtils.getSelectize($select)).toBeUndefined();
       expect(SelectUtils.getControlObject($select)).toBe(service);
       expect(SelectUtils.widget($select)[0]).toBe(service.element);
       expect(SelectUtils.selectFromWidget(SelectUtils.widget($select))[0]).toBe(select);
