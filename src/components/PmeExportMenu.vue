@@ -18,11 +18,19 @@
     <NcActionButton :name="t(appName, 'Excel Export')"
                     :closeAfterClick="true"
                     @click="download('EXCEL')"
-    />
+    >
+      <template #icon>
+        <ExcelIcon :size="20" />
+      </template>
+    </NcActionButton>
     <NcActionButton :name="t(appName, 'CSV Export')"
                     :closeAfterClick="true"
                     @click="download('CSV')"
-    />
+    >
+      <template #icon>
+        <CsvIcon :size="20" />
+      </template>
+    </NcActionButton>
   </NcActions>
 </template>
 
@@ -35,6 +43,8 @@ import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import ExportIcon from 'vue-material-design-icons/Download.vue'
+import CsvIcon from 'vue-material-design-icons/FileDelimited.vue'
+import ExcelIcon from 'vue-material-design-icons/MicrosoftExcel.vue'
 import { appName } from '../config.ts'
 import { POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bus-events.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
