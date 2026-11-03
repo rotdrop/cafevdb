@@ -1153,9 +1153,10 @@ form.pme-form {
   .pme-filter-controls {
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: 4px;
 
-    &:has(> select.pme-filter-comp) {
+    &:has(> select.pme-filter-comp, > .#{$appName}-vue-select-control.pme-filter-comp) {
+      gap: 0;
       border-radius: var(--border-radius-element);
       box-shadow: 0 0 0 1px var(--color-border-maxcontrast);
       transition: box-shadow var(--animation-quick, 100ms) ease;
@@ -1167,6 +1168,7 @@ form.pme-form {
       }
 
       > select.pme-filter-comp,
+      > .#{$appName}-vue-select-control.pme-filter-comp,
       > input[type="text"].pme-filter {
         border: 0;
         outline: none;
@@ -1179,6 +1181,12 @@ form.pme-form {
         border-inline-end: 1px solid var(--color-border-maxcontrast);
       }
 
+      > .#{$appName}-vue-select-control.pme-filter-comp .vs__dropdown-toggle {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast) !important;
+      }
+
       > input[type="text"].pme-filter {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
@@ -1187,9 +1195,9 @@ form.pme-form {
 
     > select.pme-filter-comp,
     > .#{$appName}-vue-select-control.pme-filter-comp {
-      flex: 0 1 auto;
-      width: 4.5em;
-      min-width: 4.5em;
+      flex: 0 0 6em;
+      width: 6em;
+      min-width: 6em;
     }
 
     > select.pme-filter-comp {
@@ -1257,26 +1265,39 @@ table.pme-main {
     }
   }
 
-  .pme-filter-select-controls .#{$appName}-vue-select-control .nc-select.v-select.select.vs--multiple {
-    --default-clickable-area: 40px;
+  .pme-filter-select-controls .#{$appName}-vue-select-control {
+    display: block;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
 
-    .vs__dropdown-toggle {
-      box-sizing: border-box;
-      min-height: 40px;
-      padding-block: 2px;
+    .#{$appName}-vue-select {
+      width: 100%;
+      min-width: 0;
     }
 
-    .vs__selected-options {
-      align-items: center;
-    }
+    .nc-select.v-select.select.vs--multiple {
+      --default-clickable-area: 40px;
 
-    .vs__selected {
-      min-height: 28px;
-    }
+      .vs__dropdown-toggle {
+        box-sizing: border-box;
+        min-height: 40px;
+        padding-block: 2px;
+      }
 
-    .vs__search {
-      min-height: 28px;
-      height: 28px !important;
+      .vs__selected-options {
+        align-items: center;
+      }
+
+      .vs__selected {
+        min-height: 28px;
+      }
+
+      .vs__search {
+        min-height: 28px;
+        height: 28px !important;
+      }
     }
   }
 

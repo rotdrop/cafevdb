@@ -134,6 +134,13 @@ over auto when both are present. `no-vue-select` excludes a field from PME's
 automatic native-adapter initialization. The effective component direction
 uses `cafevdb-vue-select--dropup`.
 
+PME comparison filters style `.pme-filter-controls` for both a native select
+and its mounted `cafevdb-vue-select-control` host. The comparison control is
+fixed at 6em and 40px high beside a flexible text input; a single shared border
+highlights on hover or focus. Multi-select filter hosts fill their flex cell,
+stay at a 40px minimum when empty or on one line, and grow naturally when
+selected values wrap.
+
 PME navigation and export actions remain separate components:
 [`PmeNavigationSelect`](pme-navigation-select.md) and
 [`PmeExportMenu`](pme-export-menu.md).
