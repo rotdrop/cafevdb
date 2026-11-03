@@ -1289,8 +1289,9 @@ form.pme-form {
 
     > select.pme-filter-comp,
     > .chosen-vue-select-control.pme-filter-comp {
-      flex: 0 0 auto;
-      width: 6em;
+      flex: 0 1 auto;
+      width: 4em;
+      min-width: 4em;
     }
 
     > select.pme-filter-comp {
@@ -1300,9 +1301,8 @@ form.pme-form {
     }
 
     > input[type="text"].pme-filter {
-      flex: 1 1 0;
-      min-width: 0;
-      width: 0;
+      flex: 1 0 auto;
+      width: fit-content;
       height: 40px;
       min-height: 40px;
       margin-block: 0;
