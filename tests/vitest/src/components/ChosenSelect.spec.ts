@@ -160,6 +160,23 @@ describe('ChosenSelect automatic direction', () => {
 });
 
 describe('ChosenSelect', () => {
+  it.each([undefined, false, true])('makes button appearance opt-in (buttonStyle=%s)', async (buttonStyle) => {
+    const wrapper = render({ buttonStyle });
+    expect(wrapper.classes().includes('chosen-select--button')).toBe(buttonStyle === true);
+    await choose(wrapper, 'Violin');
+    expect(wrapper.vm.getValue()).toBe('violin');
+  });
+
+  it('updates button appearance when legacy properties are refreshed', async () => {
+    const wrapper = render();
+    wrapper.vm.setState({ options, label: 'Instrument', buttonStyle: true });
+    await flushPromises();
+    expect(wrapper.classes()).toContain('chosen-select--button');
+    wrapper.vm.setState({ options, label: 'Instrument', buttonStyle: false });
+    await flushPromises();
+    expect(wrapper.classes()).not.toContain('chosen-select--button');
+  });
+
   it('selects a single value and emits the native-shaped value', async () => {
     const wrapper = render();
     await choose(wrapper, 'Violin');

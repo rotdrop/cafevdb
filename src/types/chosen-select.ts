@@ -21,6 +21,8 @@ export interface ChosenSelectProps {
   disableSearch?: boolean;
   disableSearchThreshold?: number;
   noResultsText?: string;
+  /** Use the button background for action-menu style selects. */
+  buttonStyle?: boolean;
   /** Auto prefers down, flipping up only when there is more space above. */
   dropup?: boolean|'auto';
 }

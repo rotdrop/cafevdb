@@ -35,6 +35,15 @@ Backspace does not remove selections when the search is empty, matching the
 legacy initializers' `single_backstroke_delete: false` behavior.
 `title_attributes` is accepted but ignored along with tooltip handling.
 
+### Button appearance
+
+The default appearance remains that of a select field. Set `button_style: true`
+in `.chosen()` or `mountChosen()` options (or `buttonStyle: true` on the Vue
+component) to use `var(--color-primary-element-light)` for the toggle background.
+PME goto and page-size controls enable this option: their select toggle and
+adjacent input button share the background and align at the same height.
+The option does not change the dropdown menu's background or selection behavior.
+
 ### Dropdown direction
 
 Direction is downward by default. The existing `chosen-dropup` class still

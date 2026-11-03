@@ -2163,6 +2163,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
   if (PHPMyEdit.selectChosen) {
     const gotoSelect = $container.find('select.' + pmeGoto);
     gotoSelect.chosen({
+      button_style: true,
       width: 'auto',
       inherit_select_classes: true,
       title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
@@ -2177,6 +2178,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
     $container.find('select.' + pmeGoto).trigger('chosen:updated');
 
     $container.find('select.' + pmePageRows).chosen({
+      button_style: true,
       width: 'auto',
       inherit_select_classes: true,
       title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
