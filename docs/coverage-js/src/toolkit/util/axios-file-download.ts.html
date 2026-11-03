@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.54% </span>
+                <span class="strong">54.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/22</span>
+                <span class='fraction'>12/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">38.88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>7/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.54% </span>
+                <span class="strong">54.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/22</span>
+                <span class='fraction'>12/22</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -195,32 +195,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -283,32 +283,32 @@ import { generateUrl as generateAppUrl } from './generate-url.ts';
    POST request to the URL with this data.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const axiosFileDownload = <span class="fstat-no" title="function not covered" >async (u</span>rl: string, post?: Record&lt;string, any&gt;) =&gt; {
+const axiosFileDownload = async (url: string, post?: Record&lt;string, any&gt;) =&gt; {
 &nbsp;
-  const downloadUrl = (<span class="cstat-no" title="statement not covered" >url.startsWith(generateUrl('')) || url.startsWith(generateRemoteUrl('')))</span>
-    ? url
+  const downloadUrl = (url.startsWith(generateUrl('')) || url.startsWith(generateRemoteUrl('')))
+    ? <span class="branch-0 cbranch-no" title="branch not covered" >url</span>
     : generateAppUrl(url);
 &nbsp;
-  const axiosOptions = <span class="cstat-no" title="statement not covered" >{ responseType: 'blob' as ResponseType };</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const response = <span class="cstat-no" title="statement not covered" >post</span>
+  const axiosOptions = { responseType: 'blob' as ResponseType };
+  try {
+    const response = post
       ? await axios.post(downloadUrl, post, axiosOptions)
-      : await axios.get(downloadUrl, axiosOptions);
+      : <span class="branch-1 cbranch-no" title="branch not covered" >await axios.get(downloadUrl, axiosOptions);</span>
 &nbsp;
     let fileName = <span class="cstat-no" title="statement not covered" >'download';</span>
 &nbsp;
     const contentDisposition = <span class="cstat-no" title="statement not covered" >response.headers?.['content-disposition'];</span>
-<span class="cstat-no" title="statement not covered" >    if (typeof contentDisposition === 'string') {</span>
-      const contentMeta = <span class="cstat-no" title="statement not covered" >parseContentDisposition(contentDisposition);</span>
-<span class="cstat-no" title="statement not covered" >      fileName = contentMeta.parameters.filename || fileName;</span>
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof contentDisposition === 'string') {
+      const contentMeta = parseContentDisposition(contentDisposition);
+      fileName = contentMeta.parameters.filename || <span class="branch-1 cbranch-no" title="branch not covered" >fileName;</span>
     }
-    let contentType = <span class="cstat-no" title="statement not covered" >response.headers?.['content-type'];</span>
-<span class="cstat-no" title="statement not covered" >    if (typeof contentType === 'string') {</span>
-<span class="cstat-no" title="statement not covered" >      contentType = contentType.split(';')[0];</span>
-    } else {
+    let contentType = response.headers?.['content-type'];
+    if (typeof contentType === 'string') {
+      contentType = contentType.split(';')[0];
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>{
 <span class="cstat-no" title="statement not covered" >      contentType = 'application/octetstream';</span>
     }
-<span class="cstat-no" title="statement not covered" >    fileDownload(response.data, fileName, contentType);</span>
+    fileDownload(response.data, fileName, contentType);
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    if (isAxiosErrorResponse(error)</span>
       &amp;&amp; error.response.data
@@ -334,7 +334,7 @@ export default axiosFileDownload;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-03T09:04:11.169Z
+                at 2026-11-03T18:06:48.639Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
