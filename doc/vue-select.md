@@ -144,6 +144,9 @@ The shared component root uses a column flex layout: NcSelect's inline-block
 outer container must not introduce inline whitespace or baseline space.
 This applies equally to clearable singles, non-clearable singles, and
 multi-selects, while keeping validation messages below the control.
+The comparison pair uses the core text-input border colors and background
+halo. Hovering or focusing either field, or opening the dropdown, highlights
+the whole pair; the select toggle does not draw an additional border or outline.
 
 PME navigation and export actions remain separate components:
 [`PmeNavigationSelect`](pme-navigation-select.md) and
