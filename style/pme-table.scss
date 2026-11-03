@@ -1285,7 +1285,37 @@ form.pme-form {
   .pme-filter-controls {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 0;
+
+    &:has(> select.pme-filter-comp) {
+      border-radius: var(--border-radius-element);
+      box-shadow: 0 0 0 1px var(--color-border-maxcontrast);
+      transition: box-shadow var(--animation-quick, 100ms) ease;
+
+      &:hover,
+      &:focus-within,
+      &:has(.vs--open) {
+        box-shadow: 0 0 0 2px var(--color-primary-element);
+      }
+
+      > select.pme-filter-comp,
+      > input[type="text"].pme-filter {
+        border: 0;
+        outline: none;
+        box-shadow: none !important;
+      }
+
+      > select.pme-filter-comp {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast);
+      }
+
+      > input[type="text"].pme-filter {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+      }
+    }
 
     > select.pme-filter-comp,
     > .chosen-vue-select-control.pme-filter-comp {
@@ -1316,12 +1346,10 @@ form.pme-form {
         height: 40px;
         background-color: var(--color-main-background);
         border-radius: var(--border-radius-element);
-        box-shadow: 0 0 0 1px var(--color-border-maxcontrast) !important;
-      }
-
-      &:not(.vs--disabled) .vs__dropdown-toggle:hover,
-      &.vs--open .vs__dropdown-toggle {
-        box-shadow: 0 0 0 2px var(--color-primary-element) !important;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast) !important;
+        box-shadow: none !important;
       }
 
       &.vs--open .vs__dropdown-toggle {

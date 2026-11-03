@@ -276,6 +276,15 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
     min-width: 0;
   }
 
+  :deep(.vs__search),
+  :deep(.vs__search:hover),
+  :deep(.vs__search:active),
+  :deep(.vs__search:focus) {
+    background: none !important;
+    opacity: 1;
+    filter: none;
+  }
+
   &--single-no-clear :deep(.nc-select.v-select.select.vs--single .vs__selected) {
     padding-inline-end: var(--default-clickable-area);
   }
