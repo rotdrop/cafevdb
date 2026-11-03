@@ -1425,6 +1425,7 @@ table.pme-main {
     margin: 0;
     border-radius: var(--border-radius-element);
     background-color: var(--color-primary-element-light);
+    color: var(--color-primary-element-light-text);
     cursor: pointer;
 
     &:hover {
@@ -1440,19 +1441,31 @@ table.pme-main {
   label.pme-filter-negate span,
   label.pme-filter-negate-label span {
     display: block;
+    position: relative;
     overflow: hidden;
     text-indent: -10000px;
     width: 100%;
     height: 100%;
     border-radius: inherit;
-    background: url(../img/dont.svg) center / #{$tableRowHeight} no-repeat;
-    opacity: 0.4;
+    transition: box-shadow var(--animation-quick, 100ms) ease;
+
+    &::after {
+      content: '\00ac';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-indent: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
   }
 
   label.pme-filter-negate input[type=checkbox]:checked ~ span,
   label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
-    opacity:1.0;
-    background-image: url(../img/dontred.svg);
+    box-shadow: inset 0 2px 4px var(--color-box-shadow),
+      inset 0 0 0 2px var(--color-primary-element);
   }
 
   label.pme-filter-negate input[type=checkbox],

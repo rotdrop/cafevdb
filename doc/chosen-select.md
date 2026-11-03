@@ -13,6 +13,7 @@ The pair has no gap, square adjoining corners, and a shared outer boundary
 that highlights on hover or focus of either control.
 Multi-select filters place the negation checkbox in a separate, vertically
 centered button after the select, leaving its floating label unobstructed.
+It displays a logical negation sign (`¬`), with an inset shadow when checked.
 Their empty and single-line controls are 40px high and grow when selections wrap.
 
 PME's goto and rows-per-page controls do not use it; they use the button-like
