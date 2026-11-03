@@ -69,6 +69,7 @@ const download = async (format: 'EXCEL'|'CSV') => {
   :deep(.action-item__menutoggle) {
     --default-clickable-area: 28px;
     --clickable-area-small: 28px;
+    --font-weight-element: bold;
     box-sizing: border-box;
     height: 28px;
     min-height: 28px;
