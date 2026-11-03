@@ -27,7 +27,7 @@
 
 /* eslint camelcase: ["error", {properties: "never"}] */
 
-import type { Editor, RawEditorOptions } from 'tinymce';
+import type { Editor } from 'tinymce';
 
 import { getLanguage } from '@nextcloud/l10n';
 import { getAppRootUrl } from '@nextcloud/router';
@@ -35,6 +35,8 @@ import tinyMCE from 'tinymce';
 import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 import { appName } from '../config.ts';
 import $ from './jquery.ts';
+
+import '@tinymce/tinymce-jquery';
 
 declare global {
   interface Window {
@@ -324,16 +326,6 @@ const myInit = (lang: string) => {
   tinyMCE.init(allconfig);
 };
 
-const myInitElement = (element: HTMLElement, plusConfig: RawEditorOptions) => {
-  const existingEditor = element.id ? tinyMCE.get(element.id) : null;
-  if (existingEditor) {
-    return Promise.resolve([existingEditor]);
-  }
-  const elementConfig = { ...plusConfig };
-  delete elementConfig.selector;
-  return tinyMCE.init({ ...elementConfig, target: element });
-};
-
 $(function() {
   myInit(getLanguage().split('-')[0]);
 });
@@ -343,6 +335,5 @@ export {
   myConfig as config,
   myGetConfig as getConfig,
   myInit as init,
-  myInitElement as initElement,
   mySmallConfig as smallConfig,
 };

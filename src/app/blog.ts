@@ -126,6 +126,7 @@ function editWindow(data: BlogResponse) {
 
       $('#blogtextarea').val(BlogState.text ?? '');
 
+      // $('#blogtextarea').tinymce(myTinyMCE.config);
       // $('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
       WysiwygEditor.addEditor('#blogtextarea', function() {
         $(self).dialog('option', 'position', popupPosition);
@@ -134,6 +135,7 @@ function editWindow(data: BlogResponse) {
       $dialogHolder.on('resize. ' + appName, resizeHandler);
     },
     close() {
+      // $('#blogtextarea').tinymce().remove();
       // $('#blogtextarea').ckeditor().remove();
       $.fn.cafevTooltip.remove();
       WysiwygEditor.removeEditor('#blogtextarea');
@@ -146,6 +148,7 @@ function editWindow(data: BlogResponse) {
 /** @param event TBD. */
 function cancel(event: JQuery.ClickEvent) {
   event.preventDefault();
+  // $('#blogtextarea').tinymce().save();
   if ($('#blogtextarea').val() === BlogState.text) {
     $('#blogedit').dialog('close').remove();
   } else {
@@ -166,6 +169,7 @@ function cancel(event: JQuery.ClickEvent) {
 /** @param event TBD. */
 function submit(event: JQuery.ClickEvent) {
   event.preventDefault();
+  // $('#blogtextarea').tinymce().save();
   let popupValue = 0;
   if ($('#blogpopupset').prop('checked')) {
     popupValue = 1;

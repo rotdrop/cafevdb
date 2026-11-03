@@ -80,6 +80,8 @@ interface JQuery<TElement = HTMLElement> {
   octemplate<T extends Record<string, unknown>>(vars: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>;
   avatar(user: string, size: number): void;
   bootstrapDualListbox(arg: Record<string, unknown>|'refresh', value?: boolean): void;
+  tinymce(): undefined|Editor;
+  tinymce(options: RawEditorOptions): Promise<Editor[]>;
 }
 
 interface JQueryStatic {

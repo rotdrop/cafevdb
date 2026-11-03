@@ -52,6 +52,7 @@
     "@rotdrop/async-nextcloud-event-bus": "github:rotdrop/async-nextcloud-event-bus#feature/async-emit",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop/nextcloud-vue-components",
+    "@tinymce/tinymce-jquery": "^2.2.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/bootstrap": "^5.2.10",
     "@types/capitalize": "^2.0.2",
