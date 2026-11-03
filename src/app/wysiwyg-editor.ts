@@ -25,7 +25,7 @@
  * @module
  */
 
-import type { RawEditorOptions } from 'tinymce';
+import type { Editor, RawEditorOptions } from 'tinymce';
 
 import { globalState } from './cafevdb.ts';
 import $, { jq } from './jquery.ts';
@@ -126,7 +126,17 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                 if ($editorElement.prop('disabled') || $editorElement.prop('readonly')) {
                   elementConfig.readonly = true; // does not seem to work ..
                 }
-                $editorElement.tinymce({ ...mceConfig, ...elementConfig });
+                myTinyMCE.initElement(editorElement, { ...mceConfig, ...elementConfig })
+                  .then((editors) => {
+                    const editor = editors[0];
+                    if (editor) {
+                      mceDeferred!.resolve(editor.id);
+                    }
+                  })
+                  .catch((error: unknown) => {
+                    console.error('There was a problem initializing the editor:', error);
+                    mceDeferred!.reject(error);
+                  });
                 const mceDeferredTimer = setTimeout(() => mceDeferred.reject('timeout'), mceDeferredTimeout);
                 $editorElement.data('mceDeferredTimer', mceDeferredTimer);
                 return mceDeferred.then(
@@ -144,7 +154,8 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                       case 'timeout':
                         console.error('There was a problem initializing the editor:', error);
                         try {
-                          $editorElement.tinymce().remove();
+                          const editor: Editor | undefined = $editorElement.data('mceInstance');
+                          editor?.remove();
                         } catch (e) {
                           console.error('EXCEPTION', e);
                         }
@@ -199,9 +210,9 @@ const removeEditor = function(selector: string|JQuery) {
         mceDeferred.reject('removed');
         $editorElement.removeData('mceDeferred');
       }
-      if ($editorElement.tinymce && $editorElement.tinymce()) {
-        $editorElement.tinymce().remove();
-      }
+      const editor: Editor | undefined = $editorElement.data('mceInstance');
+      editor?.remove();
+      $editorElement.removeData('mceInstance');
     } catch (e) {
       console.debug('EXCEPTION', e);
     }
@@ -223,9 +234,11 @@ const updateEditor = function(selector: string|JQuery, contents: string) {
   switch (globalState.wysiwygEditor) {
     case 'tinymce':
       $editorElements.each(function() {
-        const tinymce = $(this).tinymce();
-        tinymce.setContent(contents);
-        tinymce.undoManager.add();
+        const editor: Editor | undefined = $(this).data('mceInstance');
+        if (editor) {
+          editor.setContent(contents);
+          editor.undoManager.add();
+        }
       });
       break;
     case 'ckeditor':
@@ -254,8 +267,8 @@ const snapshotEditor = function(selector: string|JQuery) {
   switch (globalState.wysiwygEditor) {
     case 'tinymce':
       $editorElements.each(function() {
-        const tinymce = $(this).tinymce();
-        tinymce.undoManager.add();
+        const editor: Editor | undefined = $(this).data('mceInstance');
+        editor?.undoManager.add();
       });
       break;
     case 'ckeditor':
