@@ -689,6 +689,7 @@ GROUP BY t.id';
           'project-instruments',
           'tooltip-top',
           'select-wide',
+          'selectize',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
@@ -751,6 +752,7 @@ GROUP BY t.id';
             'no-search',
             'instrument-voice',
             'select-wide',
+            'selectize',
           ],
         ],
         'display|CAP' => [

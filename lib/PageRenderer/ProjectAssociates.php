@@ -623,6 +623,7 @@ GROUP BY t.id';
           'project-instruments',
           'tooltip-top',
           'select-wide',
+          'selectize',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
