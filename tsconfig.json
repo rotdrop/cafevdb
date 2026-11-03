@@ -39,7 +39,6 @@
     "types": [
       "bootstrap",
       "camelcase",
-      "chosen-js",
       "jquery",
       "jqueryui",
       "moment",

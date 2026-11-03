@@ -90,9 +90,22 @@ interface JQueryStatic {
   };
 }
 
+interface JQuery<TElement = HTMLElement> {
+  chosen(options?: Chosen.Options|'destroy'): JQuery<TElement>;
+}
+
 declare namespace Chosen {
+  /** Options accepted by the Vue compatibility facade, not the retired widget. */
   interface Options {
+    width?: string;
+    inherit_select_classes?: boolean;
+    disable_search?: boolean;
+    disable_search_threshold?: number;
+    allow_single_deselect?: boolean;
+    no_results_text?: string;
+    single_backstroke_delete?: boolean;
     title_attributes?: string[];
+    dropup?: boolean|'auto';
   }
 }
 

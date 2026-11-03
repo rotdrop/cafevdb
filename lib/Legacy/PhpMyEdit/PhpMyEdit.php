@@ -4946,22 +4946,24 @@ EOT;
 				//$escape	  = true;
 				$escape	  = $this->fdd[$k]['escape'] ?? false;
 				$attributes = $this->htmlAttributes(self::OPERATION_FILTER, $k, []);
-				echo '<div class="'.$negate_css_class_name.'">';
-				echo $this->htmlRadioCheck($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'_comp',
-										   $negate_css_class_name,
-										   array('not' => $this->labels['Not']), null, null, null,
-										   $negate,
-										   true /* checkbox */);
-				echo '</div><div class="'.$css_class_name.'">';
+				echo '<div class="'.$this->getCSSclass('filter-select-controls').'">';
+				echo '<div class="'.$css_class_name.'">';
 				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
 				echo $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.self::QUERY_FIELD_IDX,
 									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
 									   null /* help */, $attributes);
-				echo '</div>';
+				echo '</div><div class="'.$negate_css_class_name.'">';
+				echo $this->htmlRadioCheck($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'_comp',
+										   $negate_css_class_name,
+										   array('not' => $this->labels['Not']), null, null, null,
+										   $negate,
+										   true /* checkbox */);
+				echo '</div></div>';
 			} elseif (($this->fdd[$fd][self::FDD_SELECT] == 'N' ||
 					   $this->fdd[$fd][self::FDD_SELECT] == 'T')) {
+				echo '<div class="'.$this->getCSSclass('filter-controls').'">';
 				$len_props = '';
 				$maxlen = !empty($this->fdd[$k]['maxlen']) ? intval($this->fdd[$k]['maxlen']) : 0;
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields[self::QUERY_FIELD . $k]));
@@ -4987,6 +4989,7 @@ EOT;
 				echo '" type="text" name="'.$name.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, strtok($css_class_name, ' ') . '-text');
 				echo ' />';
+				echo '</div>';
 			} else {
 				echo '&nbsp;';
 			}

@@ -867,7 +867,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
               max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
               min-width: var(--drop-down-min-width); /* in order to have something left ... */
               width:0!important;
-              &.chosen-with-drop, &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
+              &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
                 flex-grow:10;
                 flex-shrink:0;
               }
@@ -875,11 +875,6 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
                 overflow: hidden;
               }
             }
-          }
-
-          .chosen-container .chosen-default {
-            color: #000;
-            font-weight:bold;
           }
 
           #emailCurrentTemplate {

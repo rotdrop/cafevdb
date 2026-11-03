@@ -25,6 +25,7 @@
  * @module
  */
 
+import { getMountedChosen } from '../services/mountable-chosen.ts';
 import { getMountedSelectize } from '../services/mountable-select.ts';
 import jQuery from './jquery.ts';
 
@@ -45,7 +46,7 @@ const chosenActive = function($select: JQuerySelect) {
   return $select.data('chosen') !== undefined;
 };
 
-const getVueSelect = ($select: JQuerySelect) => getMountedSelectize($select[0]);
+const getVueSelect = ($select: JQuerySelect) => getMountedSelectize($select[0]) ?? getMountedChosen($select[0]);
 
 const vueSelectActive = ($select: JQuerySelect) => !!getVueSelect($select);
 

@@ -183,35 +183,6 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   font-weight:bold;
   vertical-align:middle;
 
-  a.chosen-default span {
-    /*font-weight:bold;*/
-    color: #555;
-
-    &:hover, &:focus, &:active {
-      /*font-weight:bold;*/
-      color: #333;
-    }
-  }
-
-  a.chosen-single {
-    border-radius: 3px;
-    height: auto;
-    background: transparent;
-    box-shadow: none;
-    outline: medium, none;
-    margin: 0px 0px 3px 0px !important;
-    background-color: rgba(240, 240, 240, 0.9);
-    color: #555;
-    border: 1px solid rgba(190, 190, 190, 0.9);
-    padding: 4px 4px 5px 4px;
-    line-height: 16px;
-    font-size: 13px;
-
-    &:hover, &:focus {
-      background-color:rgba(250,250,250,.9);
-      color: #333;
-    }
-  }
 } /* .chosen-container.#{$appName}-menu */
 
 /*******************************************************************************
@@ -1062,54 +1033,6 @@ textarea, input {
     background-image:url('../img/lock.svg') !important;
     background-repeat:no-repeat !important;
     background-position:center center !important;
-  }
-}
-
-.chosen-disabled.chosen-container a:hover {
-  background-image:url('../img/lock.svg') !important;
-  background-repeat:no-repeat;
-  background-position:center center;
-}
-
-
-/********************************************************************************/
-
-/*****************************************************************************
- *
- * Style chosen pull-down menu entries
- *
- */
-
-.chosen-container .chosen-results li.highlighted {
-  -moz-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
-  -webkit-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
-  box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
-  -moz-border-radius:.5em;
-  -webkit-border-radius:.5em;
-  border-radius:.5em;
-}
-
-/*****************************************************************************
- *
- * Pull-up menu if desired
- *
- */
-
-.chosen-dropup:not(.pme-filter) {
-  .chosen-container-active.chosen-with-drop .chosen-single {
-    -moz-border-radius-topright: 0 !important;
-    border-top-right-radius: 0 !important;
-    -moz-border-radius-topleft: 0 !important;
-    border-top-left-radius: 0 !important;
-  }
-
-  .chosen-drop {
-    top: auto !important;
-    bottom: 100%;
-    border: solid #aaa;
-    border-width: 1px 1px 0 1px;
-    margin-top: -1px;
-    border-radius: 4px 4px 0px 0px !important;
   }
 }
 

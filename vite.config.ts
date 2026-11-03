@@ -164,7 +164,6 @@ const overrides = defineConfig(({ mode }) => ({
   resolve: {
     alias: [
       // Aliases are non-recursive and first-come first-serve
-      { find: /^(chosen\/.*)$/, replacement: path.resolve(import.meta.dirname, './3rdparty/$1') },
       { find: /^([^./@].*)\.scss$/, replacement: path.resolve(import.meta.dirname, './style/$1.scss') },
     ],
   },

@@ -337,6 +337,11 @@ tr.pme-navigation {
   }
 }
 
+.pme-export-menu-placeholder {
+  height: 28px;
+  min-height: 28px;
+}
+
 .pme-export-block select,
 .pme-menu-block select {
   &, option {
@@ -352,104 +357,14 @@ tr.pme-navigation {
 
     &.chosen-container-multi {
       height:28px;
-      .chosen-choices li.search-choice {
-        line-height:12px;
-      }
-    }
-
-    .chosen-search-input {
-      height: #{$tableRowHeight}!important;
-      min-height:unset;
     }
   }
 } /* tr.pme-navigation */
-
-.pme-goto .chosen-container,
-.pme-pagerows .chosen-container {
-  min-width:4em;
-}
-
-.pme-export-block a.chosen-default span,
-.pme-menu-block a.chosen-default span {
-  /*font-weight:bold;*/
-  color:#555;
-}
 
 .ui-widget.ui-dialog form.pme-form.pme-list tr.pme-navigation input.pme-reload {
   width: 30px!important;
   height: 30px!important;
 }
-
-.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:hover,
-.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:focus,
-.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:active,
-.pme-menu-block a.chosen-default span:hover,
-.pme-menu-block a.chosen-default span:focus,
-.pme-menu-block a.chosen-default span:active,
-.pme-export-block a.chosen-default span:hover,
-.pme-export-block a.chosen-default span:focus,
-.pme-export-block a.chosen-default span:active {
-  /*font-weight:bold;*/
-  color:#333;
-}
-
-.pme-goto a.chosen-single,
-.pme-pagerows a.chosen-single,
-.pme-menu-block a.chosen-single,
-.pme-export-block a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-single {
-  height: auto;
-  background: transparent;
-  background-repeat:no-repeat;
-  box-shadow: none;
-  outline: medium, none;
-  margin:0;
-  /* margin: 3px 0px 3px 0px !important; */
-  background-color: rgba(240, 240, 240, 0.9);
-  color: #555;
-  border: 1px solid rgba(190, 190, 190, 0.9);
-  padding: 4px 4px 4px 4px;
-  height:28px;
-  line-height: 19px;
-  font-size: 13px;
-}
-
-.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-single {
-  margin: 3px 0px 3px 0px !important;
-}
-
-.pme-goto a.chosen-single:hover, .pme-goto a.chosen-single:focus,
-.pme-pagerows a.chosen-single:hover, .pme-pagerows a.chosen-single:focus,
-.pme-export-block a.chosen-single:hover, .pme-export-block a.chosen-single:focus,
-.pme-menu-block a.chosen-single:hover, .pme-menu-block a.chosen-single:focus {
-  background-color:rgba(250,250,250,.9);
-  color:#333;
-}
-
-.pme-menu-block a.chosen-single,
-.pme-export-block a.chosen-single {
-  border-radius: 3px;
-}
-
-.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
-.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
-.pme-goto a.chosen-single,
-.pme-pagerows a.chosen-single {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-}
-
-.pme-goto ul.chosen-results li,
-.pme-pagerows ul.chosen-results li {
-  text-align: right;
-}
-
 
 .ui-widget form.pme-form.pme-list span.pme-goto input.pme-goto:focus,
 /*span.pme-goto input.pme-goto:hover,*/
@@ -471,7 +386,8 @@ span.pme-pagerows input.pme-pagerows {
   border-bottom-left-radius: 3px !important;
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
-  background-color: rgba(240,240,240,.9) !important;
+  // background-color: rgba(240,240,240,.9) !important;
+  background-color: var(--color-primary-element-light) !important;
   cursor: default;
   text-align:right;
   margin-right:0px;
@@ -1211,48 +1127,6 @@ table.pme-main {
 
   div.pme-filter div.chosen-container {
     box-sizing: border-box;
-
-    .chosen-choices {
-      margin: 3px 3px 3px 0;
-      padding: 0 12px;
-      font-size: var(--default-font-size);
-      background-color: var(--color-main-background);
-      color: var(--color-main-text);
-      border: 2px solid var(--color-border-maxcontrast);
-      min-height: 36px;
-      height: fit-content;
-      outline: none;
-      border-radius: var(--border-radius-large);
-      text-overflow: ellipsis;
-      cursor: pointer;
-      &:hover, &:focus, &:active {
-        &:not(:disabled, .#{$disabledCssClass}) {
-          border-color: var(--color-primary-element);
-        }
-      }
-      .chosen-search-input {
-        margin: -2px;
-      }
-    }
-    .chosen-drop {
-      border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
-      border: 2px solid var(--color-border-maxcontrast);
-      border-top: 0;
-      &:hover, &:focus, &:active {
-        &:not(:disabled, .#{$disabledCssClass}) {
-          border-color: var(--color-primary-element);
-        }
-      }
-    }
-    &.chosen-with-drop {
-      .chosen-drop {
-        top: calc(100% - 3px);
-      }
-      .chosen-choices {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-    }
   }
 
 } /* table.pme-main */
@@ -1275,6 +1149,95 @@ form.pme-form {
     width:100%;
     white-space:nowrap;
   }
+
+  .pme-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 0;
+
+    &:has(> select.pme-filter-comp) {
+      border-radius: var(--border-radius-element);
+      box-shadow: 0 0 0 1px var(--color-border-maxcontrast);
+      transition: box-shadow var(--animation-quick, 100ms) ease;
+
+      &:hover,
+      &:focus-within,
+      &:has(.vs--open) {
+        box-shadow: 0 0 0 2px var(--color-primary-element);
+      }
+
+      > select.pme-filter-comp,
+      > input[type="text"].pme-filter {
+        border: 0;
+        outline: none;
+        box-shadow: none !important;
+      }
+
+      > select.pme-filter-comp {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast);
+      }
+
+      > input[type="text"].pme-filter {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+      }
+    }
+
+    > select.pme-filter-comp,
+    > .chosen-vue-select-control.pme-filter-comp {
+      flex: 0 1 auto;
+      width: 4.5em;
+      min-width: 4.5em;
+    }
+
+    > select.pme-filter-comp {
+      box-sizing: border-box;
+      height: 40px;
+      margin-block: 0;
+    }
+
+    > input[type="text"].pme-filter {
+      flex: 1 0 auto;
+      width: fit-content;
+      height: 40px;
+      min-height: 40px;
+      margin-block: 0;
+    }
+
+    > .chosen-vue-select-control.pme-filter-comp .nc-select.v-select.select {
+      --default-clickable-area: 40px;
+      margin-block: 0;
+
+      .vs__dropdown-toggle {
+        height: 40px;
+        background-color: var(--color-main-background);
+        border-radius: var(--border-radius-element);
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast) !important;
+        box-shadow: none !important;
+      }
+
+      &.vs--open .vs__dropdown-toggle {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+      }
+
+      .vs__selected-options {
+        min-height: 40px;
+      }
+
+      .vs__selected {
+        inset-block: 0;
+      }
+
+      .vs__actions {
+        margin-block-start: 0;
+      }
+    }
+  }
 }
 
 td.pme-filter, th.pme-filter {
@@ -1283,45 +1246,104 @@ td.pme-filter, th.pme-filter {
 }
 
 table.pme-main {
+  .pme-filter-select-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    > div.pme-filter {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  .pme-filter-select-controls .chosen-vue-select-control .nc-select.v-select.select.vs--multiple {
+    --default-clickable-area: 40px;
+
+    .vs__dropdown-toggle {
+      box-sizing: border-box;
+      min-height: 40px;
+      padding-block: 2px;
+    }
+
+    .vs__selected-options {
+      align-items: center;
+    }
+
+    .vs__selected {
+      min-height: 28px;
+    }
+
+    .vs__search {
+      min-height: 28px;
+      height: 28px !important;
+    }
+  }
+
   div.pme-filter-negate {
-    height:0px;
-    width:0px;
-    overflow:visible;
-    position:relative;
+    flex: 0 0 40px;
   }
 
   label.pme-filter-negate-label,
   label.pme-filter-negate {
-    vertical-align:top;
-    display:inline-block;
-    position:relative;
-    top:-12px;
-    height:fit-content;
-    width:fit-content;
+    display: block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    border-radius: var(--border-radius-element);
+    background-color: var(--color-primary-element-light);
+    color: var(--color-primary-element-light-text);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-primary-element-light-hover);
+    }
+
+    &:focus-within {
+      outline: 2px solid var(--color-primary-element);
+      outline-offset: 2px;
+    }
   }
 
   label.pme-filter-negate span,
   label.pme-filter-negate-label span {
-    display:inline-block;
-    text-indent:-10000px;
-    width:#{$tableRowHeight};
-    height:#{$tableRowHeight};
-    position:relative;
-    background:url(../img/dont.svg);
-    cursor:pointer;
-    opacity:0.4;
-    z-index:1;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    text-indent: -10000px;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    transition: box-shadow var(--animation-quick, 100ms) ease;
+
+    &::after {
+      content: '\00ac';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-indent: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
   }
 
   label.pme-filter-negate input[type=checkbox]:checked ~ span,
   label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
-    opacity:1.0;
-    background:url(../img/dontred.svg);
+    box-shadow: inset 0 2px 4px var(--color-box-shadow),
+      inset 0 0 0 2px var(--color-primary-element);
   }
 
   label.pme-filter-negate input[type=checkbox],
   label.pme-filter-negate-label input[type=checkbox] {
-    display:none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    clip-path: inset(50%);
   }
 
   select.pme-filter {
@@ -1333,7 +1355,7 @@ table.pme-main {
   }
 
   /* Style links in a more ordinary fashion */
-  a:not(.ui-tabs-anchor, .chosen-single, .remove-single) {
+  a:not(.ui-tabs-anchor, .remove-single) {
     color:CornFlowerBlue;
     text-decoration:underline;
     font-weight:bold;

@@ -34,6 +34,9 @@ import * as SelectUtils from '~/src/app/select-utils.ts';
 vi.mock('~/src/services/mountable-select.ts', () => ({
   getMountedSelectize: () => undefined,
 }));
+vi.mock('~/src/services/mountable-chosen.ts', () => ({
+  getMountedChosen: () => undefined,
+}));
 
 beforeEach(() => {
   document.body.innerHTML = `<select id="single">

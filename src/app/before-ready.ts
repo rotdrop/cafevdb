@@ -133,6 +133,9 @@ const documentReady = function() {
   });
 
   content.on('chosen:showing_dropdown chosen:update_results', 'select', function(_event, params) {
+    if (!params?.chosen) {
+      return;
+    }
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
@@ -146,6 +149,9 @@ const documentReady = function() {
   });
 
   content.on('chosen:hiding_dropdown', 'select', function(_event, params) {
+    if (!params?.chosen) {
+      return;
+    }
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');

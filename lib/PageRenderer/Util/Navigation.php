@@ -225,9 +225,8 @@ class Navigation
 
 
   /**
-   * Acutally rather a multi-select than a button, meant as drop-down
-   * menu. Generates data which can be passed to prependTableButton()
-   * below.
+   * Button placeholder for the mountable Vue export action menu.
+   * Generates data which can be passed to prependTableButton() below.
    *
    * @return array Return [ 'code' => HTML_FRAGMENT ]
    */
@@ -235,29 +234,9 @@ class Navigation
   {
     $data = ''
           .'<span id="pme-export-block" class="pme-export-block pme-button-container">'
-          .'<select '
-          .'data-placeholder="'.$this->l->t('Export Table').'" '
-          .'class="pme-export-choice" '
-          .'id="pme-export-choice" '
-          .'title="'.$this->toolTipsService['pme-export-choice'].'" '
-          .'name="export" >
-  <option value=""></option>
-  <!-- <option disabled '
-    .'title="'.$this->toolTipsService['pme-export-ods'].'" '
-    .'value="ODS">'.$this->l->t('LibreOffice Export').'</option> -->
-  <option '
-    .'title="'.$this->toolTipsService['pme-export-excel'].'" '
-    .'value="EXCEL">'.$this->l->t('Excel Export').'</option>
-  <!-- <option '
-    .'title="'.$this->toolTipsService['pme-export-pdf'].'" '
-    .'value="PDF">'.$this->l->t('PDF Export').'</option> -->
-  <option '
-    .'title="'.$this->toolTipsService['pme-export-csv'].'" '
-    .'value="CSV">'.$this->l->t('CSV Export').'</option>
-  <!-- <option '
-    .'title="'.$this->toolTipsService['pme-export-html'].'" '
-    .'value="HTML">'.$this->l->t('HTML Export').'</option> -->
-</select></span>';
+          .'<button type="button" class="pme-export-menu-placeholder">'
+          .$this->l->t('Export Table')
+          .'</button></span>';
 
     $button = ['code' => $data];
 

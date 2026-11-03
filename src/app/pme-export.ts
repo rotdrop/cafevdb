@@ -32,77 +32,19 @@
 
 import { translate as t } from '@nextcloud/l10n';
 import { appName, appPrefix } from '../config.ts';
-import fileDownload from './file-download.ts';
-import $ from './jquery.ts';
-import * as SelectUtils from './select-utils.ts';
+import { PmeExportService } from '../services/mountable-pme-export.ts';
+import * as Notification from './notification.ts';
 
-/**
- * Handle the export menu actions.
- *
- * @param $select TBD.
- */
-const handleTableExportMenu = function($select: JQuery<HTMLSelectElement>) {
-  const exportFormat = SelectUtils.selected($select) as string;
-
-  // this is the form; we need its values
-  const form = $('form.pme-form');
-
-  const post = form.serializeArray();
-  post.push({ name: 'exportFormat', value: exportFormat });
-
-  fileDownload(
-    'page/pme/export',
-    post,
-    {
-      errorMessage(url, _data) {
-        return t(
-          appName,
-          'Unable to download table in format "{format}" from "{url}": ',
-          { format: exportFormat, url },
-        );
-      },
-    },
-  );
-
-  // Cheating. In principle we mis-use this as a simple pull-down
-  // menu, so let the text remain at its default value. Make sure to
-  // also remove and re-attach the tool-tips, otherwise some of the
-  // tips remain, because chosen() removes the element underneath.
-  SelectUtils.deselectAll($select);
-  $.fn.cafevTooltip.remove();
-
-  $('div.chosen-container').cafevTooltip({ placement: 'auto' });
-};
-
-const pmeExportMenu = function(containerSel?: string) {
-  if (containerSel && typeof containerSel !== 'string') {
-    console.error('PME EXPORT MENU, ARGUMENT SHOULD BE A SELECTOR', { containerSel });
-  }
-  if (typeof containerSel === 'undefined') {
-    containerSel = '#' + appPrefix('page-body');
-  }
-  const container = $(containerSel);
-
-  // Emulate a pull-down menu with export options via the chosen
-  // plugin.
-  const $exportSelect = container.find('select.pme-export-choice') as JQuery<HTMLSelectElement>;
-  $exportSelect.chosen({
-    width: 'auto',
-    disable_search: true,
-    inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-  });
-
-  // install placeholder as first item if chosen is not active
-  SelectUtils.makePlaceholder($exportSelect);
-
-  $exportSelect
-    .off('change')
-    .on('change', function(this: HTMLSelectElement) {
-      handleTableExportMenu($(this));
-      return false;
+const pmeExportMenu = function(containerSel = '#' + appPrefix('page-body')) {
+  document.querySelectorAll(containerSel).forEach((container) => {
+    container.querySelectorAll<HTMLButtonElement>('button.pme-export-menu-placeholder').forEach((button) => {
+      const mount = async () => PmeExportService.create(button).ready;
+      mount().catch((error: unknown) => {
+        console.error('Unable to mount the PME export menu', error);
+        Notification.show(t(appName, 'Unable to initialize the export menu.'), { timeout: 15 });
+      });
     });
-
+  });
 };
 
 export default pmeExportMenu;

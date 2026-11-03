@@ -57,6 +57,7 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
+import { mountPmeNavigation, refreshPmeNavigation } from '../services/mountable-pme-navigation.ts';
 import { mountSelectize } from '../services/mountable-select.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import clear from '../util/clear-object.ts';
@@ -1516,6 +1517,7 @@ const maybeTranspose = function(transpose: boolean, containerSel?: string) {
     $container.find(tr).removeClass(trClass).addClass(unTrClass);
   }
   $container.find(pmeClassSelector('input', 'pagerows')).val(pageitems);
+  $container.each((_index, element) => refreshPmeNavigation(element));
 };
 
 /**
@@ -2162,25 +2164,14 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
 
   if (PHPMyEdit.selectChosen) {
     const gotoSelect = $container.find('select.' + pmeGoto);
-    gotoSelect.chosen({
-      width: 'auto',
-      inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-      disable_search_threshold: 10,
-    });
-    if (gotoSelect.is(':disabled')) {
-      // there is only one page
-      gotoSelect.attr('data-placeholder', '1');
-    } else {
-      gotoSelect.attr('data-placeholder', ' ');
-    }
-    $container.find('select.' + pmeGoto).trigger('chosen:updated');
-
-    $container.find('select.' + pmePageRows).chosen({
-      width: 'auto',
-      inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-      disable_search: true,
+    // there is only one page if disabled
+    gotoSelect.attr('data-placeholder', gotoSelect.is(':disabled') ? '1' : ' ');
+    // The caption buttons and the selects are combined into one button-like select.
+    Promise.all($container.get().flatMap((container) => [
+      mountPmeNavigation(container, `span.${pmeGoto} > select.${pmeGoto}`, { searchThreshold: 10 }),
+      mountPmeNavigation(container, `span.${pmePageRows} > select.${pmePageRows}`),
+    ])).catch((error: unknown) => {
+      console.error('Unable to mount the PME navigation selects', error);
     });
   }
 

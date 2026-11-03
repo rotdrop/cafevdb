@@ -34,10 +34,7 @@ import 'jquery-ui';
 import 'jquery-ui/ui/effect';
 import 'jquery-ui/ui/widgets/dialog';
 import 'jquery-ui/ui/widgets/tabs';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('chosen/public/chosen.jquery.js');
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('chosen/public/chosen.css');
+import './jquery-chosen.ts';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
