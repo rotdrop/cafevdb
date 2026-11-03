@@ -140,6 +140,10 @@ fixed at 4.5em and 40px high beside a flexible text input; a single shared borde
 highlights on hover or focus. Multi-select filter hosts fill their flex cell,
 stay at a 40px minimum when empty or on one line, and grow naturally when
 selected values wrap. They retain Nextcloud's default clickable-area sizing.
+The shared component root uses a column flex layout: NcSelect's inline-block
+outer container must not introduce inline whitespace or baseline space.
+This applies equally to clearable singles, non-clearable singles, and
+multi-selects, while keeping validation messages below the control.
 
 PME navigation and export actions remain separate components:
 [`PmeNavigationSelect`](pme-navigation-select.md) and

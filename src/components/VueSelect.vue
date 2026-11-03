@@ -683,6 +683,9 @@ defineExpose({
 }
 
 .#{$appName}-vue-select {
+  // Avoid inline-block baseline/whitespace space around NcSelect.
+  display: flex;
+  flex-direction: column;
   min-width: 4em;
   width: 100%;
 
@@ -837,11 +840,6 @@ defineExpose({
 
   &--single-no-clear :deep(.nc-select.v-select.select.vs--single .vs__selected) {
     padding-inline-end: var(--default-clickable-area);
-  }
-
-  &--single-no-clear {
-    display: flex;
-    align-items: stretch;
   }
 
   &--dropup :deep(.vs__dropdown-menu) {
