@@ -31,6 +31,8 @@ dropdowns. Option labels and no-results messages are rendered as text.
 ## Legacy integration
 
 `globals.ts` loads `jquery-chosen.ts` instead of Chosen's JavaScript and CSS.
+The old Chosen submodule and its third-party typings are no longer required.
+The supported legacy options are declared locally in `src/app/jquery-types.d.ts`.
 The small compatibility facade preserves the legacy calls:
 
 ```typescript
@@ -85,6 +87,10 @@ resets also reset the visible selection.
 Existing `select-utils.ts` functions work with both mounted select services.
 The host retains the `.chosen-container` class and `<select-id>_chosen` ID for
 legacy layout selectors, but does not reproduce Chosen's internal markup.
+Host-level sizing and positioning rules in `style/` therefore remain relevant.
+Rules for the retired widget's internal `.chosen-single`, `.chosen-choices`,
+`.chosen-results`, and `.chosen-drop` elements have been removed; Vue/NcSelect
+owns their replacements' appearance.
 Instances are destroyed by `.chosen('destroy')`, legacy-page cleanup, or removal
 of a previously connected select or host. Destroying during asynchronous loading
 prevents the component from mounting afterward. Loading failures restore the

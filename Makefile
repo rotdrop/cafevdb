@@ -267,8 +267,6 @@ JS_FILES = \
  $(shell find $(ABSSRCDIR)/3rdparty/rotdrop -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
-CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
-
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
@@ -288,7 +286,6 @@ fi
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
  tinymce\
- $(CHOSEN_DIST)\
  $(CSS_FILES)\
  $(JS_FILES)\
  $(L10N_FILES)\
