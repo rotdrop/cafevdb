@@ -543,6 +543,11 @@ defineExpose({
     padding-block-start: 0;
   }
 
+  :deep(.nc-select.v-select.select.vs--multiple .vs__dropdown-toggle) {
+    // Multi-select uses per-item remove buttons, not the global clear button.
+    padding-inline-end: var(--default-clickable-area) !important;
+  }
+
   :deep(.nc-select.v-select.select.vs--single .vs__dropdown-toggle) {
     border: var(--border-width-input-focused, 2px) solid transparent !important;
     box-shadow: var(--input-border-box-shadow) !important;

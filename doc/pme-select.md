@@ -12,6 +12,9 @@ use this service. Chosen and dual-listbox integrations are unchanged. The
 legacy Selectize package, submodule, build targets, and utility branches have
 been removed.
 
+Multi-selects use per-item remove buttons and reserve one clickable area at the
+inline end of the toggle for the dropdown indicator, not the global clear button.
+
 ```ts
 import { mountSelectize } from '../services/mountable-select.ts'
 
