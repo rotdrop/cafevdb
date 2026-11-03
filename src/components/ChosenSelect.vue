@@ -276,6 +276,10 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
     min-width: 0;
   }
 
+  :deep(.nc-select.v-select.select.vs--multiple) {
+    margin-block: 0;
+  }
+
   :deep(.vs__search),
   :deep(.vs__search:hover),
   :deep(.vs__search:active),

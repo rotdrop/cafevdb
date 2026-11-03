@@ -11,6 +11,8 @@ remaining space. Both controls have a 40px height and no vertical margins;
 the comparison toggle uses the normal input background and rounded corners.
 The pair has no gap, square adjoining corners, and a shared outer boundary
 that highlights on hover or focus of either control.
+Multi-select filters place the negation checkbox in a separate, vertically
+centered button after the select, leaving its floating label unobstructed.
 
 PME's goto and rows-per-page controls do not use it; they use the button-like
 [`PmeNavigationSelect`](pme-navigation-select.md) instead.
