@@ -126,16 +126,6 @@ describe('mountChosen', () => {
     });
   });
 
-  it.each([undefined, false, true])('maps button_style=%s to the component', async (buttonStyle) => {
-    const select = makeSelect();
-    $(select).chosen({ button_style: buttonStyle });
-    const service = getMountedChosen(select)!;
-    await service.ready;
-    expect((await component()).props.buttonStyle).toBe(buttonStyle ?? false);
-    service.refresh();
-    expect((await component()).setState.mock.calls.at(-1)[0].buttonStyle).toBe(buttonStyle ?? false);
-  });
-
   it('maps every behavioral option used by the legacy initializers', async () => {
     const select = makeSelect('class="chosen-dropup"');
     await mountChosen(select, {

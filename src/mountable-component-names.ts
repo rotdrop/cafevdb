@@ -27,6 +27,7 @@
 
 import type { ChosenSelectComponentProps } from './types/chosen-select.ts';
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
+import type { PmeNavigationSelectComponentProps } from './types/pme-navigation-select.ts';
 import type { PmeSelectComponentProps } from './types/pme-select.ts';
 
 export const CHOSEN_SELECT = 'ChosenSelect';
@@ -34,6 +35,7 @@ export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
+export const PME_NAVIGATION_SELECT = 'PmeNavigationSelect';
 export const PME_SELECT = 'PmeSelect';
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
 export const PROJECT_PAYMENT_ACTIONS_MENU = 'ProjectPaymentsActionsMenu';
@@ -78,6 +80,7 @@ export interface ComponentProps {
   [LEGACY_QUERY_LOG]: {
     queryLog: LegacySqlQueryLogItem[];
   };
+  [PME_NAVIGATION_SELECT]: PmeNavigationSelectComponentProps;
   [PME_SELECT]: PmeSelectComponentProps;
   [PROJECT_ACTIONS_MENU]: {
     entityId: number;

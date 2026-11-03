@@ -110,7 +110,6 @@ export class ChosenService {
       disableSearch: this.options.disable_search ?? false,
       disableSearchThreshold: this.options.disable_search_threshold ?? 0,
       noResultsText: this.options.no_results_text,
-      buttonStyle: this.options.button_style ?? false,
       dropup: this.options.dropup ?? (this.select.classList.contains('chosen-dropup')
         ? true
         : this.select.classList.contains('chosen-auto') ? 'auto' : false),

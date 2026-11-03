@@ -94,7 +94,6 @@ declare namespace Chosen {
   interface Options {
     title_attributes?: string[];
     dropup?: boolean|'auto';
-    button_style?: boolean;
   }
 }
 

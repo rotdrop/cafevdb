@@ -5,6 +5,9 @@ Nextcloud's `NcSelect`, not the Chosen jQuery widget. Its scope is the Chosen
 features used in `src/app/*.ts`; it is not a general Chosen implementation.
 Tooltip integration is deliberately omitted.
 
+PME's goto and rows-per-page controls do not use it; they use the button-like
+[`PmeNavigationSelect`](pme-navigation-select.md) instead.
+
 The component is registered as `CHOSEN_SELECT` in the mountable-component
 provider. Its typed props and exposed controls are in
 `src/types/chosen-select.ts`. It supports single and multiple selection,
@@ -34,15 +37,6 @@ The facade accepts `width`, `inherit_select_classes`, `disable_search`,
 Backspace does not remove selections when the search is empty, matching the
 legacy initializers' `single_backstroke_delete: false` behavior.
 `title_attributes` is accepted but ignored along with tooltip handling.
-
-### Button appearance
-
-The default appearance remains that of a select field. Set `button_style: true`
-in `.chosen()` or `mountChosen()` options (or `buttonStyle: true` on the Vue
-component) to use `var(--color-primary-element-light)` for the toggle background.
-PME goto and page-size controls enable this option: their select toggle and
-adjacent input button share the background and align at the same height.
-The option does not change the dropdown menu's background or selection behavior.
 
 ### Dropdown direction
 

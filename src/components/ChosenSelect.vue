@@ -5,7 +5,7 @@
 <template>
   <div ref="root"
        class="chosen-select"
-       :class="{ 'chosen-select--dropup': dropup, 'chosen-select--button': state.buttonStyle }"
+       :class="{ 'chosen-select--dropup': dropup }"
   >
     <label class="chosen-select__label" :for="selectId">{{ state.label }}</label>
     <NcSelect :modelValue="selectedChoices"
@@ -271,10 +271,6 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
   :deep(.v-select) {
     width: 100%;
     min-width: 0;
-  }
-
-  &--button :deep(.nc-select.v-select.select .vs__dropdown-toggle) {
-    background-color: var(--color-primary-element-light);
   }
 
   &--dropup :deep(.vs__dropdown-menu) {
