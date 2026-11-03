@@ -2,7 +2,7 @@
 
 `src/components/PmeNavigationSelect.vue` replaces each legacy PME navigation
 combo of a caption button plus select (`Go to`, `Rows/Page`) by a single
-button-like select. It is separate from `ChosenSelect.vue` and `PmeSelect.vue`.
+button-like select. It is separate from the shared `VueSelect.vue`.
 
 The trigger is at most 28px tall, uses the button background
 `var(--color-primary-element-light)`, and shows the caption followed by the

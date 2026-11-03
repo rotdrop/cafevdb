@@ -65,9 +65,9 @@ describe('Select utilities', () => {
   });
 
   it('does not recognize legacy class names as an enhanced control', () => {
-    const $single = $<HTMLSelectElement>('#single').addClass('selectize');
+    const $single = $<HTMLSelectElement>('#single').addClass('cafevdb-vue-select--ordered');
     expect(SelectUtils.isVanilla($single)).toBe(true);
-    expect(SelectUtils.selectFromWidget($('<div class="selectize-control"></div>')).length).toBe(0);
+    expect(SelectUtils.selectFromWidget($('<div class="cafevdb-vue-select-control"></div>')).length).toBe(0);
   });
 
   describe('Native and Chosen select utility compatibility', () => {
@@ -76,7 +76,7 @@ describe('Select utilities', () => {
       const control = {};
       if (chosen) {
         $select.data('chosen', control);
-        $select.after('<div class="chosen-container"></div>');
+        $select.after('<div class="cafevdb-vue-select-control"></div>');
       }
       const changes = vi.fn();
       const updates = vi.fn();

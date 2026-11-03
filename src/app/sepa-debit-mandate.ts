@@ -215,7 +215,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   $popup.on(
     'blur',
-    `${mandateFormSelector} input[type="text"]:not(.no-validation):not(.selectize-input-element)`,
+    `${mandateFormSelector} input[type="text"]:not(.no-validation):not(.${appName}-vue-select__input)`,
     function(this: HTMLInputElement, event: JQuery.Event) {
       // @todo This is a JQ TS kludge. Get rid of this trampoline.
       validateInput.call(this, event);
@@ -435,7 +435,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     // $.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
     $widget.find('button.close').trigger('focus');
 
-    mandateFieldset.find<HTMLSelectElement>('select.selectize').each(function() {
+    mandateFieldset.find<HTMLSelectElement>(`select.${appName}-vue-select--ordered`).each(function() {
       void mountedSelectScope($dlg[0]).mount(this, {
         closeAfterSelect: true,
       }).catch((error: unknown) => {
@@ -444,7 +444,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       });
     });
 
-    mandateFieldset.find('select.chosen').each(function() {
+    mandateFieldset.find(`select.${appName}-vue-select`).each(function() {
       const $self = $(this);
       const disabled = $self.prop('disabled');
       $self

@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import type { PmeSelectGroup, PmeSelectOption } from '../types/pme-select.ts';
+import type { VueSelectGroup, VueSelectOption } from '../types/vue-select.ts';
 
 const plainTitle = (title: string) => {
   const template = document.createElement('template');
@@ -10,14 +10,14 @@ const plainTitle = (title: string) => {
 };
 
 export const readSelectOptions = (select: HTMLSelectElement) => {
-  const groups: PmeSelectGroup[] = [];
+  const groups: VueSelectGroup[] = [];
   const ids = new Map<HTMLOptGroupElement, string>();
   for (const [index, group] of Array.from(select.querySelectorAll<HTMLOptGroupElement>(':scope > optgroup')).entries()) {
     const value = group.dataset.groupId || (group.classList.contains('free-form') ? 'free-form' : String(index));
     ids.set(group, value);
     groups.push({ value, label: group.label, disabled: group.disabled });
   }
-  const options = Array.from(select.options, (option): PmeSelectOption => ({
+  const options = Array.from(select.options, (option): VueSelectOption => ({
     value: option.value,
     label: option.label || option.textContent || option.value,
     groups: option.parentElement instanceof HTMLOptGroupElement ? [ids.get(option.parentElement)!] : [],
@@ -27,7 +27,7 @@ export const readSelectOptions = (select: HTMLSelectElement) => {
   return { options, groups };
 };
 
-export const appendSelectOption = (select: HTMLSelectElement, option: PmeSelectOption, groups: PmeSelectGroup[]) => {
+export const appendSelectOption = (select: HTMLSelectElement, option: VueSelectOption, groups: VueSelectGroup[]) => {
   const nativeOption = new Option(option.label, option.value);
   nativeOption.disabled = option.disabled ?? false;
   nativeOption.title = option.title ?? '';

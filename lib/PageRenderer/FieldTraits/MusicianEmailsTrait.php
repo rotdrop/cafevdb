@@ -107,8 +107,8 @@ trait MusicianEmailsTrait
             'select' => 'M',
             'css'    => [
               'postfix' => array_merge([
-                'selectize',
-                'no-chosen',
+                $this->appName() . '-vue-select--ordered',
+                'no-vue-select',
               ], $css),
             ],
             'values' => [
@@ -122,7 +122,7 @@ trait MusicianEmailsTrait
               'attributes' => [
                 'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
                 'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-                'data-selectize-options' => [
+                'data-vue-select-options' => [
                   'create' => [
                     'url' => MusicianValidationController::END_POINT . '/' . EnumMusicianValidationTopic::EMAIL->value,
                     'post' => [
@@ -165,8 +165,8 @@ trait MusicianEmailsTrait
           ],
           'css'   => [
             'postfix' => array_merge([
-              'selectize',
-              'no-chosen',
+              $this->appName() . '-vue-select--ordered',
+              'no-vue-select',
               'duplicates-indicator',
             ], $css),
           ],
@@ -175,7 +175,7 @@ trait MusicianEmailsTrait
             'attributes' => [
               'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
               'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-              'data-selectize-options' => [
+              'data-vue-select-options' => [
                 'create' => false,
               ],
             ],

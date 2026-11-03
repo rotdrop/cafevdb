@@ -80,7 +80,7 @@
       &.projects--instrumentation,
       &.projects--instrumentation-voices,
       &.projects--participant-fields {
-        div.chosen-container {
+        .#{$appName}-vue-select-control {
           max-width:40em;
           min-width:20em;
           width:auto !important;
@@ -199,14 +199,14 @@
       overflow:visible; /* for chosen */
       min-height:10em;
 
-      [class^="chosen"] {
+      .#{$appName}-vue-select-control {
         border-radius:3px !important;
         /*  border:1px solid #AAA;*/
         background-color: #FFF !important;
       }
     }
 
-    #cmsarticleselect_chosen {
+    #cmsarticleselect-vue-select-control {
       min-width:20em !important;
       width:auto;
     }

@@ -244,20 +244,20 @@
     }
   }
 
-  /* selectize stuff */
+  /* Vue select sizing */
 
-  .pme-vue-select-control .pme-select.mandateProjectId {
+  .#{$appName}-vue-select-control .#{$appName}-vue-select.mandateProjectId {
     min-width: 10rem;
     max-width: 30rem;
   }
 
-  .selectize-control {
+  .#{$appName}-vue-select-control {
     &.mandateProjectId {
       min-width:10rem;
       max-width:10rem;
     }
 
-    &.single .selectize-dropdown {
+    .vs--single .vs__dropdown-menu {
       width:auto!important;
       min-width:10rem;
       max-width:30rem;
@@ -471,7 +471,7 @@ form.pme-form {
       width:100%;
     }
 
-    .chosen-container.sepa-bulk-transactions {
+    .#{$appName}-vue-select-control.sepa-bulk-transactions {
       width:100%!important;
       height:auto!important;
     }

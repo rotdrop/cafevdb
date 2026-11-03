@@ -589,8 +589,8 @@ GROUP BY t.id';
         'postfix' => [
           'musician-instruments',
           'tooltip-top',
-          'no-chosen',
-          'selectize',
+          'no-vue-select',
+          $this->appName() . '-vue-select--ordered',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
@@ -618,7 +618,7 @@ GROUP BY t.id';
       ],
       'display' => [
         'attributes' => [
-          'data-selectize-options' => [
+          'data-vue-select-options' => [
             'create' => false,
             'plugins' => [ 'drag_drop', ],
           ],
@@ -649,7 +649,7 @@ GROUP BY t.id';
       $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'orchestra' ] ],
-        'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
+        'css'     => [ 'postfix' => [ $this->appName() . '-vue-select--ordered', 'no-vue-select', ], ],
         'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
         'default' => null,
         'select'  => 'M',
@@ -663,7 +663,7 @@ GROUP BY t.id';
         ],
         'display' => [
           'attributes' => [
-            'data-selectize-options' => [
+            'data-vue-select-options' => [
               'create' => false,
             ],
           ],
@@ -832,7 +832,7 @@ GROUP BY t.id';
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
-      'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
+      'css'      => [ 'postfix' => [ 'musician-address', 'country', $this->appName() . '-vue-select--up', CssClasses::ALLOW_EMPTY, ], ],
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
       'sort'     => true,

@@ -2,11 +2,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import type { ChosenSelectComponentProps, ChosenSelectValue } from '~/src/types/chosen-select.ts';
+import type { VueSelectComponentProps, VueSelectValue } from '~/src/types/vue-select.ts';
 
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import ChosenSelect from '~/src/components/ChosenSelect.vue';
+import VueSelect from '~/src/components/VueSelect.vue';
 import $ from '~/src/app/jquery.ts';
 import * as SelectUtils from '~/src/app/select-utils.ts';
 import { ChosenService, getMountedChosen, mountChosen } from '~/src/services/mountable-chosen.ts';
@@ -21,16 +21,21 @@ const { callbacks, requestComponent, notify } = vi.hoisted(() => ({
 }));
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
   subscribe: (_name: string, callback: () => void) => callbacks.push(callback),
-  awaitEmit: (_name: string, payload: { propsData: ChosenSelectComponentProps }) => requestComponent(payload.propsData),
+  awaitEmit: (_name: string, payload: { propsData: VueSelectComponentProps }) => requestComponent(payload.propsData),
 }));
 vi.mock('~/src/event-bus-events.ts', () => ({
   GET_VUE_COMPONENT: 'get-component',
   LEGACY_PAGE_CLEANUP: 'cleanup',
 }));
 vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
+vi.mock('~/src/util/console.ts', () => ({
+  default: class {
+    error = vi.fn();
+  },
+}));
 vi.mock('~/src/app/notification.ts', () => ({ show: notify }));
 
-const createComponent = (props: ChosenSelectComponentProps) => ({
+const createComponent = (props: VueSelectComponentProps) => ({
   props,
   mount: vi.fn(),
   unmount: vi.fn(),
@@ -41,7 +46,7 @@ const createComponent = (props: ChosenSelectComponentProps) => ({
   close: vi.fn(() => props.onClose?.()),
   focus: vi.fn(),
 });
-requestComponent.mockImplementation(async (props: ChosenSelectComponentProps) => createComponent(props));
+requestComponent.mockImplementation(async (props: VueSelectComponentProps) => createComponent(props));
 const makeSelect = (attributes = '', options = '<option value="a">A</option><option value="b">B</option>') => {
   const form = document.createElement('form');
   form.innerHTML = `<label for="field">Field label</label><select id="field" name="field" ${attributes}>${options}</select>`;
@@ -49,7 +54,7 @@ const makeSelect = (attributes = '', options = '<option value="a">A</option><opt
   return form.querySelector('select')!;
 };
 const component = async () => requestComponent.mock.results.at(-1)!.value;
-const changeComponentValue = async (value: ChosenSelectValue) => {
+const changeComponentValue = async (value: VueSelectValue) => {
   (await component()).props.onChange(value);
 };
 
@@ -57,15 +62,17 @@ afterEach(() => {
   callbacks.forEach((callback) => callback());
   document.body.replaceChildren();
   vi.clearAllMocks();
-  requestComponent.mockImplementation(async (props: ChosenSelectComponentProps) => createComponent(props));
+  requestComponent.mockImplementation(async (props: VueSelectComponentProps) => createComponent(props));
 });
 
 describe('mountChosen', () => {
-  it('mounts separately from PME selects and preserves native form submission', async () => {
-    const select = makeSelect('class="chosen extra" multiple', '<option value="a" selected>A</option><option value="b" selected>B</option>');
+  it('uses the shared select host and preserves native form submission', async () => {
+    const select = makeSelect('class="cafevdb-vue-select extra" multiple', '<option value="a" selected>A</option><option value="b" selected>B</option>');
     const [service] = await mountChosen(select, { inherit_select_classes: true, width: '100%' });
     expect(getMountedChosen(select)).toBe(service);
     expect(service.element.classList.contains('extra')).toBe(true);
+    expect(service.element.classList.contains('cafevdb-vue-select-control')).toBe(true);
+    expect(service.element.className).not.toMatch(/chosen|selectize/);
     expect(service.element.style.width).toBe('100%');
     expect(select.hidden).toBe(true);
     expect(select.name).toBe('field');
@@ -74,6 +81,9 @@ describe('mountChosen', () => {
       label: 'Field label',
       modelValue: ['a', 'b'],
       multiple: true,
+      hideSelected: true,
+      nativeOrder: true,
+      removeOnBackspace: false,
     });
   });
 
@@ -127,7 +137,7 @@ describe('mountChosen', () => {
   });
 
   it('maps every behavioral option used by the legacy initializers', async () => {
-    const select = makeSelect('class="chosen-dropup"');
+    const select = makeSelect('class="cafevdb-vue-select--up"');
     await mountChosen(select, {
       disable_search: true,
       disable_search_threshold: 8,
@@ -147,10 +157,10 @@ describe('mountChosen', () => {
 
   it.each([
     { classes: '', option: undefined, expected: false },
-    { classes: 'chosen-auto', option: undefined, expected: 'auto' },
-    { classes: 'chosen-auto chosen-dropup', option: undefined, expected: true },
-    { classes: 'chosen-dropup', option: 'auto', expected: 'auto' },
-    { classes: 'chosen-dropup', option: false, expected: false },
+    { classes: 'cafevdb-vue-select--auto', option: undefined, expected: 'auto' },
+    { classes: 'cafevdb-vue-select--auto cafevdb-vue-select--up', option: undefined, expected: true },
+    { classes: 'cafevdb-vue-select--up', option: 'auto', expected: 'auto' },
+    { classes: 'cafevdb-vue-select--up', option: false, expected: false },
     { classes: '', option: true, expected: true },
   ] as const)('maps direction classes and options: %j', async ({ classes, option, expected }) => {
     const select = makeSelect(`class="${classes}"`);
@@ -216,7 +226,7 @@ describe('mountChosen', () => {
     expect(select.required).toBe(true);
     expect(select.hidden).toBe(false);
     expect(getMountedChosen(select)).toBeUndefined();
-    expect(document.getElementById('field_chosen')).toBeNull();
+    expect(document.getElementById('field-vue-select-control')).toBeNull();
   });
 
   it('resets the visible selection with its native form and respects cancelled resets', async () => {
@@ -234,7 +244,7 @@ describe('mountChosen', () => {
   });
 
   it('does not duplicate instances on repeated initialization', async () => {
-    const select = makeSelect('class="chosen"');
+    const select = makeSelect('class="cafevdb-vue-select"');
     const [first] = await mountChosen(select);
     const [second] = await mountChosen(select.parentElement!);
     expect(second).toBe(first);
@@ -277,16 +287,16 @@ describe('mountChosen', () => {
 
 describe('legacy chosen bridge', () => {
   it('connects the real Vue control to native forms and legacy refresh/open events', async () => {
-    const mountWidget = (props: ChosenSelectComponentProps, element: HTMLElement) => mount(ChosenSelect, { props, attachTo: element });
+    const mountWidget = (props: VueSelectComponentProps, element: HTMLElement) => mount(VueSelect, { props, attachTo: element });
     let wrapper: ReturnType<typeof mountWidget>;
-    requestComponent.mockImplementationOnce(async (props: ChosenSelectComponentProps) => ({
+    requestComponent.mockImplementationOnce(async (props: VueSelectComponentProps) => ({
       mount: (element: HTMLElement) => {
         wrapper = mountWidget(props, element.parentElement!);
         element.remove();
       },
       unmount: () => wrapper.unmount(),
       destroy: () => {},
-      setState: (state: ChosenSelectComponentProps) => wrapper.vm.setState(state),
+      setState: (state: VueSelectComponentProps) => wrapper.vm.setState(state),
       open: () => wrapper.vm.open(),
       close: () => wrapper.vm.close(),
       focus: () => wrapper.vm.focus(),

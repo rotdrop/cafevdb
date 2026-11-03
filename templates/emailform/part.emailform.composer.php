@@ -354,7 +354,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
       <td class="event-attachments caption">
         <?php echo $l->t('Attached Events'); ?>
       </td>
-      <td class="event-attachments events content chosen-dropup menu-dropup" colspan="2">
+      <td class="event-attachments events content <?= $appName ?>-vue-select--up menu-dropup" colspan="2">
         <span class="flex-container flex-begin flex-justify-full">
           <select multiple="multiple"
                   title="<?php echo $toolTips['emailform:composer:attachments:event-select']; ?>"
@@ -384,7 +384,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
       <td class="file-attachments caption">
         <?php echo $l->t('Attached Files'); ?>
       </td>
-      <td class="file-attachments files content chosen-dropup menu-dropup" colspan="2">
+      <td class="file-attachments files content <?= $appName ?>-vue-select--up menu-dropup" colspan="2">
         <span class="flex-container flex-begin flex-justify-full">
           <select multiple="multiple"
                   title="<?php echo $toolTips['emailform:composer::attachments:file-select']; ?>"

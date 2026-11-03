@@ -21,9 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../variables.scss' as *;
+
 @mixin personalEmailAddresses() {
-  td.pme-value.email.selectize {
-    .selectize-control {
+  td.pme-value.email.#{$appName}-vue-select--ordered {
+    .#{$appName}-vue-select-control {
       width: calc(100% - 3px);
     }
   }

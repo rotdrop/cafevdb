@@ -352,10 +352,10 @@ tr.pme-navigation {
 }
 
 tr.pme-navigation {
-  td.pme-buttons span .chosen-container {
+  td.pme-buttons span .#{$appName}-vue-select-control {
     height:28px;
 
-    &.chosen-container-multi {
+    &.#{$appName}-vue-select-control--multiple {
       height:28px;
     }
   }
@@ -401,7 +401,7 @@ span.pme-pagerows input.pme-pagerows {
  *
  */
 
-td.chosen-hidden div.chosen-container,
+td.#{$appName}-vue-select--hidden .#{$appName}-vue-select-control,
 td.select-hidden select {
     display: none;
 }
@@ -1125,7 +1125,7 @@ table.pme-main {
     }
   }
 
-  div.pme-filter div.chosen-container {
+  div.pme-filter .#{$appName}-vue-select-control {
     box-sizing: border-box;
   }
 
@@ -1186,7 +1186,7 @@ form.pme-form {
     }
 
     > select.pme-filter-comp,
-    > .chosen-vue-select-control.pme-filter-comp {
+    > .#{$appName}-vue-select-control.pme-filter-comp {
       flex: 0 1 auto;
       width: 4.5em;
       min-width: 4.5em;
@@ -1206,7 +1206,7 @@ form.pme-form {
       margin-block: 0;
     }
 
-    > .chosen-vue-select-control.pme-filter-comp .nc-select.v-select.select {
+    > .#{$appName}-vue-select-control.pme-filter-comp .nc-select.v-select.select {
       --default-clickable-area: 40px;
       margin-block: 0;
 
@@ -1257,7 +1257,7 @@ table.pme-main {
     }
   }
 
-  .pme-filter-select-controls .chosen-vue-select-control .nc-select.v-select.select.vs--multiple {
+  .pme-filter-select-controls .#{$appName}-vue-select-control .nc-select.v-select.select.vs--multiple {
     --default-clickable-area: 40px;
 
     .vs__dropdown-toggle {
@@ -1582,7 +1582,7 @@ form.pme-form {
 
     /* Hacks for some select stylers. The unhacked select is left as is. */
     &.select-wide {
-      .chosen-container, .selectize-control {
+      .#{$appName}-vue-select-control {
         min-width:50%;
         width:auto;
       }

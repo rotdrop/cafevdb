@@ -1235,8 +1235,8 @@ trait ParticipantFieldsTrait
 
                 // TODO: try selectize with sort options for a better user
                 // experience
-                $keyFdd['css']['postfix'][] = 'no-chosen';
-                $keyFdd['css']['postfix'][] = 'selectize';
+                $keyFdd['css']['postfix'][] = 'no-vue-select';
+                $keyFdd['css']['postfix'][] = $this->appName() . '-vue-select--ordered';
                 $keyFdd['css']['postfix'][] = 'select-wide';
 
                 if (!empty($defaultValue)) {

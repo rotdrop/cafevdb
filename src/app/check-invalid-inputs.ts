@@ -100,11 +100,11 @@ function checkInvalidInputs($container: JQuery, userOptions?: Partial<Options>) 
         $effectInput = selectWidget($input);
         $tooltipInput = selectWidget($input);
       } else {
-        // selectize moves the "required" property to its own input
-        const $selectize = $input.closest('.selectize-control');
-        if ($selectize.length > 0) {
+        // The visible Vue input owns validation while the native select is hidden.
+        const $vueSelect = $input.closest(`.${appName}-vue-select-control`);
+        if ($vueSelect.length > 0) {
           $effectInput = $input.parent();
-          $tooltipInput = $selectize;
+          $tooltipInput = $vueSelect;
         }
       }
 

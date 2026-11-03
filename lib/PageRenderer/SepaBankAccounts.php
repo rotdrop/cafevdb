@@ -746,7 +746,7 @@ class SepaBankAccounts extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 11,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'mandate-project', CssClasses::ALLOW_EMPTY, 'chosen-width-auto', ], ],
+        'css'      => [ 'postfix' => [ 'mandate-project', CssClasses::ALLOW_EMPTY, $this->appName() . '-vue-select--width-auto', ], ],
         'values' => [
           'description' => [
             'columns' => [ 'year' => "CONCAT(\$table.year, IF(\$table.year IS NULL, '', ': '))", 'name' => 'name' ],
