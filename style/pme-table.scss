@@ -1281,6 +1281,67 @@ form.pme-form {
     width:100%;
     white-space:nowrap;
   }
+
+  .pme-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    > select.pme-filter-comp,
+    > .chosen-vue-select-control.pme-filter-comp {
+      flex: 0 0 auto;
+      width: 6em;
+    }
+
+    > select.pme-filter-comp {
+      box-sizing: border-box;
+      height: 40px;
+      margin-block: 0;
+    }
+
+    > input[type="text"].pme-filter {
+      flex: 1 1 0;
+      min-width: 0;
+      width: 0;
+      height: 40px;
+      min-height: 40px;
+      margin-block: 0;
+    }
+
+    > .chosen-vue-select-control.pme-filter-comp .nc-select.v-select.select {
+      --default-clickable-area: 40px;
+      margin-block: 0;
+
+      .vs__dropdown-toggle {
+        height: 40px;
+        background-color: var(--color-main-background);
+        border-radius: var(--border-radius-element);
+        box-shadow: 0 0 0 1px var(--color-border-maxcontrast) !important;
+      }
+
+      &:not(.vs--disabled) .vs__dropdown-toggle:hover,
+      &.vs--open .vs__dropdown-toggle {
+        box-shadow: 0 0 0 2px var(--color-primary-element) !important;
+      }
+
+      &.vs--open .vs__dropdown-toggle {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+      }
+
+      .vs__selected-options {
+        min-height: 40px;
+      }
+
+      .vs__selected {
+        inset-block: 0;
+      }
+
+      .vs__actions {
+        margin-block-start: 0;
+      }
+    }
+  }
 }
 
 td.pme-filter, th.pme-filter {

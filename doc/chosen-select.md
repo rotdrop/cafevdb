@@ -5,6 +5,11 @@ Nextcloud's `NcSelect`, not the Chosen jQuery widget. Its scope is the Chosen
 features used in `src/app/*.ts`; it is not a general Chosen implementation.
 Tooltip integration is deliberately omitted.
 
+Numeric/date comparison filters use a `.pme-filter-controls` flex wrapper.
+The comparison select stays compact while the adjacent text input fills the
+remaining space. Both controls have a 40px height and no vertical margins;
+the comparison toggle uses the normal input background and rounded corners.
+
 PME's goto and rows-per-page controls do not use it; they use the button-like
 [`PmeNavigationSelect`](pme-navigation-select.md) instead.
 The export control is a separate [`PmeExportMenu`](pme-export-menu.md)
