@@ -201,6 +201,18 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
   &--dropup :deep(.vs__dropdown-menu) {
     top: auto;
     bottom: 100%;
+    border-radius: var(--vs-border-radius) var(--vs-border-radius) 0 0;
+    border-top-style: var(--vs-border-style);
+    border-bottom-style: none;
+  }
+
+  &--dropup :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    border-end-start-radius: var(--vs-border-radius);
+    border-end-end-radius: var(--vs-border-radius);
+    border-block-start-color: transparent;
+    border-block-end-color: var(--vs-border-color);
   }
 }
 
