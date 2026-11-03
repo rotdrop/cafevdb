@@ -26,11 +26,13 @@
  */
 
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
+import type { PmeSelectComponentProps } from './types/pme-select.ts';
 
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
+export const PME_SELECT = 'PmeSelect';
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
 export const PROJECT_PAYMENT_ACTIONS_MENU = 'ProjectPaymentsActionsMenu';
 export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMenu';
@@ -73,6 +75,7 @@ export interface ComponentProps {
   [LEGACY_QUERY_LOG]: {
     queryLog: LegacySqlQueryLogItem[];
   };
+  [PME_SELECT]: PmeSelectComponentProps;
   [PROJECT_ACTIONS_MENU]: {
     entityId: number;
     projectName?: string;

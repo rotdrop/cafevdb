@@ -30,8 +30,8 @@
  * General PME table stuff, popup-handling.
  */
 
-import type { IOptions as SelectizeOptions } from 'selectize';
 import type { MountableComponent } from '../services/mountable-components.ts';
+import type { SelectizeService } from '../services/mountable-select.ts';
 import type {
   PageTemplateValue,
   TableDialogCallbackData,
@@ -46,12 +46,10 @@ import {
   subscribe as asyncSubscribe,
   awaitEmit,
 } from '@rotdrop/async-nextcloud-event-bus';
-import { mergician } from 'mergician';
 import { parse as qsParse } from 'qs';
 import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
 import { ALLOW_EMPTY, DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { appName } from '../config.ts';
 import {
   LEGACY_HISTORY_PATCH,
@@ -59,6 +57,7 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
+import { mountSelectize } from '../services/mountable-select.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import clear from '../util/clear-object.ts';
 import { close as closeActionMenus } from './action-menu.ts';
@@ -101,22 +100,16 @@ import {
 } from './pme-state.ts';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.ts';
 import {
-  getControlObject as getSelectConstrolObject,
   refreshWidget as refreshSelectWidget,
   deselectAll as selectDeselectAll,
-  widget as selectWidget,
 } from './select-utils.ts';
 import { templateFromRenderer } from './template-renderer.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-import 'selectize/dist/css/selectize.bootstrap.css';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import { loadingCssClass } from 'variables.module.scss';
-
-require('cafevdb-selectize.scss');
-
 import 'pme-table.scss';
+import { loadingCssClass } from 'variables.module.scss';
 
 export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
   callback(
@@ -152,6 +145,9 @@ const pmeDestroyVueComponents = function($container: JQuery) {
     console.info('REMOVED VUE COMPONENT', { component });
   }
   $container.data('vueComponents', []);
+  const selectizeServices: SelectizeService[] = $container.data('selectizeServices') || [];
+  selectizeServices.forEach((service) => service.destroy());
+  $container.data('selectizeServices', []);
 };
 
 asyncSubscribe(LEGACY_PAGE_CLEANUP, () => {
@@ -1610,20 +1606,6 @@ const installFilterChosen = function(containerSel: string|JQuery) {
   });
 };
 
-const removeButtonPlugin = {
-  name: 'remove_button',
-  options: {
-    title: t(appName, 'Remove'),
-  },
-};
-
-const clearButtonPlugin = {
-  name: 'clear_button',
-  options: {
-    title: t(appName, 'Clear'),
-  },
-};
-
 /**
  * Internal helper function.
  *
@@ -1631,80 +1613,40 @@ const clearButtonPlugin = {
  *
  * @param [onlyClass] TBD.
  */
-function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 'selectize') {
+async function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 'selectize') {
   const $container = pmeContainer(containerSel);
-
-  ($container.find(pmeSelectInputSelector + '.' + onlyClass) as JQuery<HTMLSelectElement>).each(function() {
-    const $self = $(this);
-    const plugins = $self.hasClass('not-empty')
-      ? []
-      : [$self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin];
-    const pmeSelectizeOptions = { ...($self.data('selectizeOptions') || {}) };
-    const createOptions = pmeSelectizeOptions.create ?? false;
-    if (createOptions !== true) {
-      delete pmeSelectizeOptions.create;
-    }
-    const selectizeOptions: SelectizeOptions<string, { [key: string]: string }> = mergician({ appendArrays: true, dedupArrays: true })(
-      {
-        plugins,
-        delimiter: ',',
-        persist: false,
-        hideSelected: false,
-        openOnFocus: true, // false,
-        items: JSON.parse($self.attr(`data-${DATA_PME_INITIAL_VALUES}`) ?? '[]'),
-        // closeAfterSelect: true,
-        create: false,
-        inputClass: pmeToken('selectize-input'),
+  const selectElements = ($container.find(pmeSelectInputSelector + '.' + onlyClass) as JQuery<HTMLSelectElement>).toArray();
+  const services = await Promise.all(selectElements.map(async (select) => {
+    const [service] = await mountSelectize(select, {
+      onOpen: () => {
+        ensureDropdownVisibility($container);
+        $.fn.cafevTooltip.remove();
       },
-      pmeSelectizeOptions,
-    );
-    if (createOptions && createOptions !== true) {
-      const inputField = createOptions.inputField || 'input';
-      const valueField = selectizeOptions.valueField || 'value';
-      const labelField = selectizeOptions.labelField || 'text';
-      if (createOptions.url) {
-        selectizeOptions.create = function(inputData: string, setterCallback: (data: false|Record<string, string>) => void) {
-          $.post(generateAppUrl(createOptions.url), {
-            ...(createOptions.post || {}),
-            [inputField]: inputData,
-          })
-            .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-              setterCallback(false);
-            })
-            .done(function(data) {
-              if (!data || !data[valueField] || !data[labelField]) {
-                setterCallback(false);
-              }
-              setterCallback(data);
-            });
-        };
-      } else {
-        selectizeOptions.create = function(inputData: string) {
-          return { [valueField]: inputData, [labelField]: inputData };
-        };
-      }
+      onClose: () => {
+        resetDropdownVisibility($container);
+        $.fn.cafevTooltip.remove();
+      },
+    });
+    if (!service) {
+      return undefined;
     }
-    // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
-    $self.selectize(selectizeOptions);
-    const selectizeInstance = getSelectConstrolObject($self);
-    selectizeInstance.$control_input.removeAttr('autofill');
-    const $selectWidget = selectWidget($self);
-    const toolTip = $self.attr('title') || $self.attr('data-original-title');
+    if (!select.isConnected || !$container[0]?.contains(select)) {
+      service.destroy();
+      return undefined;
+    }
+
+    const $widget = $(select).next('.pme-vue-select-control');
+    const toolTip = select.title || select.dataset.originalTitle;
     if (toolTip) {
-      $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
+      $widget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
     }
-    selectizeInstance.off('before_dropdown_open');
-    selectizeInstance.on('before_dropdown_open', function() {
-      ensureDropdownVisibility($container);
-      $.fn.cafevTooltip.remove();
-    });
-    selectizeInstance.off('dropdown_close');
-    selectizeInstance.on('dropdown_close', function() {
-      resetDropdownVisibility($container);
-      $.fn.cafevTooltip.remove();
-    });
-  });
+    return service;
+  }));
+  const mounted = new Set<SelectizeService>([
+    ...($container.data('selectizeServices') || []),
+    ...services.filter((service): service is SelectizeService => service !== undefined),
+  ]);
+  $container.data('selectizeServices', [...mounted]);
 }
 
 /**
@@ -1713,6 +1655,10 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
  * @param onlyClass TBD.
  */
 function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
+  void installInputSelectize(containerSel).catch((error: unknown) => {
+    console.error('Unable to mount PME select controls.', error);
+    Notification.show(t(appName, 'Unable to initialize the select controls.'), { timeout: 15 });
+  });
 
   if (!PHPMyEdit.selectChosen) {
     return;
@@ -1740,7 +1686,9 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
   // Then the general stuff
   $container.find(pmeSelectInputSelector).each(function() {
     const self = $(this);
-    if (self.hasClass('no-chosen') || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
+    if (self.hasClass('no-chosen')
+      || self.hasClass('selectize')
+      || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
       return;
     }
     console.debug('destroy chosen');
@@ -1777,7 +1725,6 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
       $(this).attr('title', PHPMyEdit.inputSelectChosenTitle);
     });
 
-  installInputSelectize(containerSel);
 }
 
 /**

@@ -242,15 +242,6 @@ namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
-.PHONY: selectize
-selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
-
-$(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js: $(shell find $(ABSSRCDIR)/3rdparty/selectize/src -name "*.js")
-	make -C $(ABSSRCDIR)/3rdparty/selectize compile clean
-
-$(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCDIR)/3rdparty/selectize/src/scss/*.scss)
-	make -C $(ABSSRCDIR)/3rdparty/selectize compile clean
-
 # Copy from node_modules/ to 3rdparty/tinymce/
 .PHONY: tinymce
 tinymce: $(ABSSRCDIR)/3rdparty/tinymce/__ready__
@@ -276,10 +267,6 @@ JS_FILES = \
  $(shell find $(ABSSRCDIR)/3rdparty/rotdrop -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
-SELECTIZE_DIST =\
- $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js\
- $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
-
 CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
 
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
@@ -287,7 +274,7 @@ BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallist
 NPM_INIT_DEPS =\
  $(MAKEFILE_DEP) package-lock.json package.json $(BUNDLER_CONFIG) eslint.config.mjs
 
-THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
+THIRD_PARTY_NPM_DEPS = $(BOOTSTRAP_DUALLISTBOX_DIST)
 
 DW_APP_CONFIG = node_modules/@rotdrop/nextcloud-app-dokuwiki/build/ts-types/app-config.ts
 DW_APP_CONFIG_PATCH = patches/

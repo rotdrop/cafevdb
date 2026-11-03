@@ -63,7 +63,7 @@ the `xpath` binary is installed (`libxml-xpath-perl` on Debian/Ubuntu). The
 targets install their isolated Composer tools when needed:
 
 ```sh
-git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib dev-scripts/MakeHelp 3rdparty/selectize
+git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init dev-scripts/lib dev-scripts/MakeHelp
 make phpcs
 make phpmd
 ```

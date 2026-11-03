@@ -234,6 +234,25 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
       min-height:4.4em;
       width: 100%;
     }
+
+    .pme-vue-select-control {
+      display: block;
+
+      .pme-select .nc-select.v-select.select {
+        margin: 0;
+
+        .vs__dropdown-toggle {
+          border: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          outline: none !important;
+        }
+
+        .vs__selected-options {
+          min-height: 4.4em;
+        }
+      }
+    }
   }
 
   .ui-dialog-buttonpane {

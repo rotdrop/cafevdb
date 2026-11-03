@@ -62,7 +62,6 @@ declare module 'tooltips.module.scss' {
   export const tooltipMostWideCssClass = 'tooltip-mostwide';
 }
 
-declare module 'cafevdb-selectize.scss';
 declare module 'config-check.scss';
 declare module 'donation-receipts.scss';
 declare module 'emailform.scss';
@@ -71,7 +70,6 @@ declare module 'mobile.scss';
 declare module 'musicians.scss';
 declare module 'oc-fixes.scss';
 declare module 'project-participant-fields-display.scss';
-declare module 'selectize/dist/css/selectize.bootstrap.css';
 declare module 'sepa-bank-accounts.scss';
 
 declare module '*.module.scss';

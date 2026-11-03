@@ -18,9 +18,6 @@
 [submodule "3rdparty/doctrine-orm"]
 	path = 3rdparty/doctrine-orm
 	url = git@github.com:rotdrop/orm.git
-[submodule "3rdparty/selectize"]
-	path = 3rdparty/selectize
-	url = git@github.com:rotdrop/selectize.js.git
 [submodule "3rdparty/opentbs"]
 	path = 3rdparty/opentbs
 	url = git@github.com:rotdrop/opentbs.git
