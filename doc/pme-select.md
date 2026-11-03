@@ -116,6 +116,9 @@ clickable row.
 Vue controls fill their legacy `.selectize-control` wrapper, so existing
 width rules also size the inner widget. Multi-selects grow vertically to show
 all selected rows; the dropdown menu retains its own scrolling limit.
+In `.select-popup-dialog`, the control instead sits flush between the dialog
+title bar and button pane, without input borders, shadows, rounded corners,
+or outer margins. Its selected-items area retains the popup's minimum height.
 Selected dropdown options use the light primary background, hovered/highlighted
 options use the hover background, and bold group headings retain the normal
 dropdown background.
