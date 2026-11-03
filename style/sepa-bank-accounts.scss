@@ -28,10 +28,17 @@ table.pme-main td.pme-value.sepa-bank-accounts {
     width:100%;
   }
 
-  tr.bank-account-data td.iban {
-    &, input {
-      width:100%;
-      cursor:pointer;
+  tr.bank-account-data {
+    td.iban {
+      &, input {
+        width:100%;
+        cursor:pointer;
+      }
+    }
+    input {
+      min-height:unset;
+      // margin:0;
+      padding: 2px 12px;
     }
   }
 
@@ -39,8 +46,8 @@ table.pme-main td.pme-value.sepa-bank-accounts {
     background-repeat:no-repeat;
     background-size: #{$iconSize} #{$iconSize};
     background-position: center;
-    width:28px;
-    height:28px;
+    width: var(--default-clickable-area);
+    height: var(--default-clickable-area);
     vertical-align:middle;
     margin-right:1em;
   }
@@ -64,9 +71,9 @@ table.pme-main td.pme-value.sepa-bank-accounts {
     background-image:url('../../../core/img/actions/add.svg');
     background-origin:content-box;
     background-repeat:no-repeat;
-    background-position-x:-31px;
+    background-position-x: -31px;
+    background-position-y: center;
     background-size: #{$iconSize} #{$iconSize};
-    clear:unset;
     padding-left:34px;
   }
 }
