@@ -471,7 +471,8 @@ span.pme-pagerows input.pme-pagerows {
   border-bottom-left-radius: 3px !important;
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
-  background-color: rgba(240,240,240,.9) !important;
+  // background-color: rgba(240,240,240,.9) !important;
+  background-color: var(--color-primary-element-light) !important;
   cursor: default;
   text-align:right;
   margin-right:0px;
