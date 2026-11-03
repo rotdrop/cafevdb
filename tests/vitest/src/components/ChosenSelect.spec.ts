@@ -160,6 +160,18 @@ describe('ChosenSelect automatic direction', () => {
 });
 
 describe('ChosenSelect', () => {
+  it('reserves one action slot only for non-clearable single selects', async () => {
+    const wrapper = render();
+    expect(wrapper.classes()).toContain('chosen-select--single-no-clear');
+    await wrapper.setProps({ allowSingleDeselect: true });
+    expect(wrapper.classes()).not.toContain('chosen-select--single-no-clear');
+    await wrapper.setProps({ multiple: true, allowSingleDeselect: false });
+    expect(wrapper.classes()).not.toContain('chosen-select--single-no-clear');
+    wrapper.vm.setState({ options, label: 'Comparison', multiple: false });
+    await flushPromises();
+    expect(wrapper.classes()).toContain('chosen-select--single-no-clear');
+  });
+
   it('selects a single value and emits the native-shaped value', async () => {
     const wrapper = render();
     await choose(wrapper, 'Violin');

@@ -5,7 +5,10 @@
 <template>
   <div ref="root"
        class="chosen-select"
-       :class="{ 'chosen-select--dropup': dropup }"
+       :class="{
+         'chosen-select--dropup': dropup,
+         'chosen-select--single-no-clear': !state.multiple && !state.allowSingleDeselect,
+       }"
   >
     <label class="chosen-select__label" :for="selectId">{{ state.label }}</label>
     <NcSelect :modelValue="selectedChoices"
@@ -271,6 +274,10 @@ defineExpose({ setState, getValue, open, close, focus } satisfies ChosenSelectCo
   :deep(.v-select) {
     width: 100%;
     min-width: 0;
+  }
+
+  &--single-no-clear :deep(.nc-select.v-select.select.vs--single .vs__selected) {
+    padding-inline-end: var(--default-clickable-area);
   }
 
   &--dropup :deep(.vs__dropdown-menu) {
