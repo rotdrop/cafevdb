@@ -16,7 +16,7 @@
               :multiple="state.multiple"
               :inputId="selectId"
               :inputLabel="state.label"
-              :placeholder="state.placeholder"
+              :placeholder="state.multiple ? undefined : state.placeholder"
               :disabled="blocked"
               :clearable="!!state.multiple || !!state.allowSingleDeselect"
               :searchable="searchable"

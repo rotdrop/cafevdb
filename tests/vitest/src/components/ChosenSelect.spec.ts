@@ -160,6 +160,12 @@ describe('ChosenSelect automatic direction', () => {
 });
 
 describe('ChosenSelect', () => {
+  it('keeps the label without repeating it as a search placeholder', () => {
+    const wrapper = render({ multiple: true, label: 'Filter', placeholder: 'Filter' });
+    expect(wrapper.get('.select__label').text()).toBe('Filter');
+    expect(wrapper.get('.vs__search').attributes('placeholder') || '').toBe('');
+  });
+
   it('reserves one action slot only for non-clearable single selects', async () => {
     const wrapper = render();
     expect(wrapper.classes()).toContain('chosen-select--single-no-clear');
