@@ -839,6 +839,11 @@ defineExpose({
     padding-inline-end: var(--default-clickable-area);
   }
 
+  &--single-no-clear {
+    display: flex;
+    align-items: stretch;
+  }
+
   &--dropup :deep(.vs__dropdown-menu) {
     top: auto;
     bottom: 100%;
