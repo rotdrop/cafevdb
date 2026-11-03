@@ -1389,6 +1389,29 @@ table.pme-main {
     }
   }
 
+  .pme-filter-select-controls .chosen-vue-select-control .nc-select.v-select.select.vs--multiple {
+    --default-clickable-area: 40px;
+
+    .vs__dropdown-toggle {
+      box-sizing: border-box;
+      min-height: 40px;
+      padding-block: 2px;
+    }
+
+    .vs__selected-options {
+      align-items: center;
+    }
+
+    .vs__selected {
+      min-height: 28px;
+    }
+
+    .vs__search {
+      min-height: 28px;
+      height: 28px !important;
+    }
+  }
+
   div.pme-filter-negate {
     flex: 0 0 40px;
   }
