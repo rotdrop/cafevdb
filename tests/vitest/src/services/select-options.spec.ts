@@ -4,7 +4,7 @@
 import axios from '@nextcloud/axios';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { addressBookSelectOptions, selectedFreeFormContacts } from '~/src/services/address-book-select.ts';
-import { appendSelectOption, readSelectOptions, selectedOptionData } from '~/src/services/select-options.ts';
+import { appendSelectOption, orderSelectOptions, readSelectOptions, selectedOptionData } from '~/src/services/select-options.ts';
 
 vi.mock('@nextcloud/axios', () => ({ default: { post: vi.fn() } }));
 vi.mock('~/src/toolkit/util/generate-url.ts', () => ({
@@ -85,6 +85,37 @@ describe('shared select option data', () => {
       { value: 'person@example.org', text: 'Person <person@example.org>', html: 'Person &lt;person@example.org&gt;' },
     ]);
     expect(selectedFreeFormContacts(select, values)).toEqual([{ value: 'free@example.org', text: 'Free', html: 'Free' }]);
+  });
+
+  it('orders interleaved optgroups without losing option identity or group metadata', () => {
+    const select = makeSelect();
+    select.querySelector('optgroup')!.id = 'people';
+    const anotherPerson = new Option('Another', 'another@example.org');
+    select.querySelector('optgroup')!.append(anotherPerson);
+    const originalOptions = Array.from(select.options);
+    originalOptions.forEach((option) => { option.selected = true; });
+    const values = ['another@example.org', 'free@example.org', 'person@example.org'];
+    orderSelectOptions(select, values);
+    expect(Array.from(select.selectedOptions, (option) => option.value)).toEqual(values);
+    expect(Array.from(select.options)).toEqual([anotherPerson, originalOptions[2], originalOptions[0]]);
+    expect(select.querySelectorAll('optgroup')).toHaveLength(3);
+    expect(select.querySelectorAll('#people')).toHaveLength(1);
+    expect(readSelectOptions(select)).toMatchObject({
+      groups: [
+        { value: '0', label: 'People', disabled: false },
+        { value: 'free-form', label: 'Form Input', disabled: false },
+      ],
+      options: [
+        { value: 'another@example.org', groups: ['0'] },
+        { value: 'free@example.org', groups: ['free-form'] },
+        { value: 'person@example.org', groups: ['0'] },
+      ],
+    });
+    orderSelectOptions(select, [...values].reverse());
+    expect(Array.from(select.selectedOptions, (option) => option.value)).toEqual([...values].reverse());
+    expect(readSelectOptions(select).groups).toHaveLength(2);
+    appendSelectOption(select, { value: 'new@example.org', label: 'New', groups: ['free-form'] }, []);
+    expect(readSelectOptions(select).options.at(-2)).toMatchObject({ value: 'new@example.org', groups: ['free-form'] });
   });
 });
 
