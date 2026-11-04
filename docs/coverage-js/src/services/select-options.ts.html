@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/36</span>
+                <span class='fraction'>37/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.32% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>28/31</span>
+                <span class='fraction'>32/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/33</span>
+                <span class='fraction'>35/35</span>
             </div>
         
             
@@ -118,7 +118,9 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,21 +132,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">154x</span>
-<span class="cline-any cline-yes">154x</span>
-<span class="cline-any cline-yes">154x</span>
-<span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">164x</span>
+<span class="cline-any cline-yes">164x</span>
+<span class="cline-any cline-yes">164x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">291x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">164x</span>
+<span class="cline-any cline-yes">311x</span>
+<span class="cline-any cline-yes">298x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">154x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">164x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -176,7 +180,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import type { PmeSelectGroup, PmeSelectOption } from '../types/pme-select.ts';
+import type { VueSelectGroup, VueSelectOption } from '../types/vue-select.ts';
 &nbsp;
 const plainTitle = (title: string) =&gt; {
   const template = document.createElement('template');
@@ -185,24 +189,26 @@ const plainTitle = (title: string) =&gt; {
 };
 &nbsp;
 export const readSelectOptions = (select: HTMLSelectElement) =&gt; {
-  const groups: PmeSelectGroup[] = [];
+  const groups: VueSelectGroup[] = [];
   const ids = new Map&lt;HTMLOptGroupElement, string&gt;();
   for (const [index, group] of Array.from(select.querySelectorAll&lt;HTMLOptGroupElement&gt;(':scope &gt; optgroup')).entries()) {
     const value = group.dataset.groupId || (group.classList.contains('free-form') ? 'free-form' : String(index));
     ids.set(group, value);
     groups.push({ value, label: group.label, disabled: group.disabled });
   }
-  const options = Array.from(select.options, (option): PmeSelectOption =&gt; ({
-    value: option.value,
-    label: option.label || option.textContent || option.value,
-    groups: option.parentElement instanceof HTMLOptGroupElement ? [ids.get(option.parentElement)!] : [],
-    disabled: option.disabled,
-    title: option.title ? plainTitle(option.title) : undefined,
-  }));
+  const options = Array.from(select.options)
+    .filter((option) =&gt; option.value !== '' || option.label !== '' || (option.textContent ?? <span class="branch-1 cbranch-no" title="branch not covered" >'') !== '</span>')
+    .map((option): VueSelectOption =&gt; ({
+      value: option.value,
+      label: option.label || option.textContent || option.value,
+      groups: option.parentElement instanceof HTMLOptGroupElement ? [ids.get(option.parentElement)!] : [],
+      disabled: option.disabled,
+      title: option.title ? plainTitle(option.title) : undefined,
+    }));
   return { options, groups };
 };
 &nbsp;
-export const appendSelectOption = (select: HTMLSelectElement, option: PmeSelectOption, groups: PmeSelectGroup[]) =&gt; {
+export const appendSelectOption = (select: HTMLSelectElement, option: VueSelectOption, groups: VueSelectGroup[]) =&gt; {
   const nativeOption = new Option(option.label, option.value);
   nativeOption.disabled = option.disabled ?? false;
   nativeOption.title = option.title ?? '';
@@ -235,7 +241,7 @@ export const selectedOptionData = (select: HTMLSelectElement, values: string[]) 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-03T20:37:15.768Z
+                at 2026-11-04T01:19:51.014Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

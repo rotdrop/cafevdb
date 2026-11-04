@@ -403,7 +403,17 @@
 <a name='L338'></a><a href='#L338'>338</a>
 <a name='L339'></a><a href='#L339'>339</a>
 <a name='L340'></a><a href='#L340'>340</a>
-<a name='L341'></a><a href='#L341'>341</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -504,6 +514,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">79x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -576,8 +594,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-yes">100x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -747,12 +765,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 &nbsp;
-import type { ChosenSelectComponentProps, ChosenSelectControls, ChosenSelectValue } from '../types/chosen-select.ts';
+import type { VueSelectComponentProps, VueSelectControls, VueSelectValue } from '../types/vue-select.ts';
 import type { MountableComponent } from './mountable-components.ts';
 &nbsp;
 import { awaitEmit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
-import { CHOSEN_SELECT } from '../mountable-component-names.ts';
+import { VUE_SELECT } from '../mountable-component-names.ts';
 import { readSelectOptions } from './select-options.ts';
 &nbsp;
 export interface ChosenAdapterOptions extends Chosen.Options {
@@ -774,7 +793,7 @@ export class ChosenService {
   private readonly originalHidden: string|null;
   private readonly originalRequired: boolean;
   private required: boolean;
-  private component?: MountableComponent&lt;typeof CHOSEN_SELECT&gt;&amp;ChosenSelectControls;
+  private component?: MountableComponent&lt;typeof VUE_SELECT&gt;&amp;VueSelectControls;
   private destroyed = false;
   private locked = false;
   private pendingOpen = false;
@@ -794,13 +813,13 @@ export class ChosenService {
     this.labels = Array.from(select.labels ?? <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>;
     this.wasConnected = select.isConnected;
     this.element = document.createElement('div');
-    this.element.className = 'chosen-container chosen-vue-select-control';
-    this.element.classList.add(select.multiple ? 'chosen-container-multi' : 'chosen-container-single');
+    this.element.className = `${appName}-vue-select-control`;
+    this.element.classList.add(select.multiple ? `${appName}-vue-select-control--multiple` : `${appName}-vue-select-control--single`);
     if (options.inherit_select_classes) {
       select.classList.forEach((name) =&gt; this.element.classList.add(name));
     }
     <span class="missing-if-branch" title="else path not taken" >E</span>if (select.id) {
-      this.element.id = `${select.id}_chosen`;
+      this.element.id = `${select.id}-vue-select-control`;
     }
     this.element.style.display = 'inline-block';
     this.element.style.verticalAlign = 'middle';
@@ -836,7 +855,7 @@ export class ChosenService {
     return bySelect.get(select) ?? new ChosenService(select, options);
   }
 &nbsp;
-  private props(): ChosenSelectComponentProps {
+  private props(): VueSelectComponentProps {
     const { options, groups } = readSelectOptions(this.select);
     return {
       options,
@@ -845,19 +864,27 @@ export class ChosenService {
       label: this.select.getAttribute('aria-label')
         || Array.from(this.select.labels ?? <span class="branch-1 cbranch-no" title="branch not covered" >[], (l</span>abel) =&gt; label.textContent?.trim()).filter(Boolean).join(' ')
         || <span class="branch-2 cbranch-no" title="branch not covered" >this.select.dataset.placeholder || <span class="branch-3 cbranch-no" title="branch not covered" >t</span>his.select.title || <span class="branch-4 cbranch-no" title="branch not covered" >t</span>his.select.name || <span class="branch-5 cbranch-no" title="branch not covered" >t</span>his.select.id,</span>
-      inputId: this.select.id ? `${this.select.id}-chosen-input` : <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span>
+      inputId: this.select.id ? `${this.select.id}-vue-select-input` : <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span>
       placeholder: this.select.dataset.placeholder || '',
       multiple: this.select.multiple,
       disabled: this.isDisabled,
       readonly: this.isLocked,
       required: this.required,
+      hideSelected: true,
+      removeOnBackspace: false,
+      nativeOrder: true,
+      blankPlaceholder: true,
+      retainMissingValues: false,
+      searchValues: false,
+      labelOutside: false,
+      multiplePlaceholder: false,
       allowSingleDeselect: this.options.allow_single_deselect ?? false,
       disableSearch: this.options.disable_search ?? false,
       disableSearchThreshold: this.options.disable_search_threshold ?? 0,
       noResultsText: this.options.no_results_text,
-      dropup: this.options.dropup ?? (this.select.classList.contains('chosen-dropup')
+      dropup: this.options.dropup ?? (this.select.classList.contains(`${appName}-vue-select--up`)
         ? true
-        : this.select.classList.contains('chosen-auto') ? 'auto' : false),
+        : this.select.classList.contains(`${appName}-vue-select--auto`) ? 'auto' : false),
       onChange: this.handleComponentChange,
       onOpen: () =&gt; {
         this.opened = true;
@@ -872,9 +899,9 @@ export class ChosenService {
 &nbsp;
   private async mountComponent() {
     const component = await awaitEmit(GET_VUE_COMPONENT, {
-      name: CHOSEN_SELECT,
+      name: VUE_SELECT,
       propsData: this.props(),
-    }) as MountableComponent&lt;typeof CHOSEN_SELECT&gt;&amp;ChosenSelectControls;
+    }) as MountableComponent&lt;typeof VUE_SELECT&gt;&amp;VueSelectControls;
     if (this.destroyed) {
       component.destroy();
       return;
@@ -890,7 +917,7 @@ export class ChosenService {
     }
   }
 &nbsp;
-  private readonly handleComponentChange = (value: ChosenSelectValue) =&gt; {
+  private readonly handleComponentChange = (value: VueSelectValue) =&gt; {
     if (this.isDisabled || this.isLocked) {
       this.refresh();
       return;
@@ -915,12 +942,12 @@ export class ChosenService {
     }
   };
 &nbsp;
-  getValue(): ChosenSelectValue {
+  getValue(): VueSelectValue {
     const values = Array.from(this.select.selectedOptions, (option) =&gt; option.value);
     return this.select.multiple ? values : values[0] ?? null;
   }
 &nbsp;
-  setValue(value: ChosenSelectValue, silent = false) {
+  setValue(value: VueSelectValue, silent = false) {
     const previous = JSON.stringify(this.getValue());
     const values = value === null ? [] : Array.isArray(value) ? <span class="branch-0 cbranch-no" title="branch not covered" >value : [</span>value];
     const selected = !this.select.multiple &amp;&amp; values.length === 0 &amp;&amp; this.select.options[0]?.value === ''
@@ -952,7 +979,7 @@ export class ChosenService {
 <span class="cstat-no" title="statement not covered" >      this.select.required = false;</span>
     }
     this.component?.setState(this.props());
-    this.element.classList.toggle('chosen-disabled', this.isDisabled || this.isLocked);
+    this.element.classList.toggle(`${appName}-vue-select-control--disabled`, this.isDisabled || this.isLocked);
     this.options.onUpdate?.();
   }
 &nbsp;
@@ -1050,7 +1077,7 @@ export class ChosenService {
 export const getMountedChosen = (select: HTMLSelectElement) =&gt; bySelect.get(select);
 &nbsp;
 /**
- * Mount one native select, or the `.chosen` selects in a container.
+ * Mount one native select, or the app-prefixed Vue selects in a container.
  *
  * @param target Select, containing element, or CSS selector.
  * @param options Legacy Chosen options applied to matching selects.
@@ -1059,7 +1086,7 @@ export const mountChosen = async (target: HTMLElement|string, options: ChosenAda
   const targets = typeof target === 'string' ? <span class="branch-0 cbranch-no" title="branch not covered" >[...document.querySelectorAll&lt;HTMLElement&gt;(target)] : [</span>target];
   const selects = [...new Set(targets.flatMap((element) =&gt; element instanceof HTMLSelectElement
     ? [element]
-    : [...element.querySelectorAll&lt;HTMLSelectElement&gt;('select.chosen')]))];
+    : [...element.querySelectorAll&lt;HTMLSelectElement&gt;(`select.${appName}-vue-select`)]))];
   const created: ChosenService[] = [];
   const services = selects.map((select) =&gt; {
     const existing = getMountedChosen(select);
@@ -1090,7 +1117,7 @@ subscribe(LEGACY_PAGE_CLEANUP, () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-03T20:37:15.768Z
+                at 2026-11-04T01:19:51.014Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
