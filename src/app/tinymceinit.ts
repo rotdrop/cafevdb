@@ -36,6 +36,22 @@ import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/
 import { appName } from '../config.ts';
 import $ from './jquery.ts';
 
+// jQuery also uses this hook when serializing forms.
+const textareaValueHook = $.valHooks.textarea;
+$.valHooks.textarea = {
+  ...textareaValueHook,
+  get(element: HTMLTextAreaElement) {
+    const editor = element.id ? tinyMCE.get(element.id) : null;
+    if (editor?.initialized && editor.getElement() === element) {
+      return editor.getContent();
+    }
+    if (textareaValueHook && 'get' in textareaValueHook) {
+      return textareaValueHook.get?.(element);
+    }
+    return undefined;
+  },
+};
+
 declare global {
   interface Window {
     globalState: {
