@@ -280,7 +280,7 @@ DW_APP_CONFIG_PATCH = patches/
 $(DW_APP_CONFIG): node_modules
 	if ! [ -f $(DW_APP_CONFIG) ]; then\
  cd $(ABSSRCDIR);\
- patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.1.patch;\
+ patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.2.patch;\
 fi
 
 WEBPACK_DEPS =\
