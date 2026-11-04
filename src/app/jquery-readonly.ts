@@ -25,6 +25,7 @@
  * @module
  */
 
+import { getMountedDualListbox } from '../services/mountable-dual-listbox.ts';
 import generateId from './generate-id.ts';
 import $, { isJQuerySelect } from './jquery.ts';
 import { isVanilla as isSelectVanilla, refreshWidgetProperties, widget as selectWidget, vueSelectActive } from './select-utils.ts';
@@ -127,6 +128,13 @@ const overrideProp: VanillaPropertyFunction = function<T extends HTMLElement>(
           vanillaProp.call($optionPlaceholder, property, optionDisabled);
         }
       } else if (isJQuerySelect($this)) {
+        const dualListbox = getMountedDualListbox($this[0]);
+        if (dualListbox) {
+          // @ts-expect-error 2554 Why???
+          vanillaProp.call($this, property, value);
+          dualListbox.refresh();
+          return;
+        }
         if (vueSelectActive($this)) {
           // @ts-expect-error 2554 Why???
           vanillaProp.call($this, property, value);
@@ -253,6 +261,11 @@ $.fn.readonly = function(state?: boolean|string) {
       $this.removeAttr('readonly');
     }
     if (isJQuerySelect($this)) {
+      const dualListbox = getMountedDualListbox($this[0]);
+      if (dualListbox) {
+        dualListbox.refresh();
+        return;
+      }
       if (vueSelectActive($this)) {
         refreshWidgetProperties($this);
         selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);

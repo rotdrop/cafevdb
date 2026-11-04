@@ -1,0 +1,202 @@
+<!--
+ - SPDX-FileCopyrightText: 2026 Claus-Justus Heine
+ - SPDX-License-Identifier: AGPL-3.0-or-later
+ -->
+<template>
+  <div class="dual-listbox" :style="{ '--dual-listbox-pane-width': paneWidth }">
+    <div v-for="(pane, index) in panes" :key="index" class="dual-listbox__pane">
+      <label :for="`${inputId}-${index}`">{{ pane.label }}</label>
+      <div class="dual-listbox__filter">
+        <TextFieldWithTrailingButton v-model="filters[index]"
+                                     type="search"
+                                     trailingButton="clear"
+                                     hint=""
+                                     aria-live="polite"
+                                     :label="pane.info"
+                                     :aria-label="`${t(appName, 'Filter')}: ${pane.label}`"
+                                     :placeholder="t(appName, 'Filter')"
+                                     :trailingButtonLabel="t(appName, 'show all')"
+                                     :disabled="locked"
+        >
+          <template #icon>
+            <SearchIcon :size="20" />
+          </template>
+        </TextFieldWithTrailingButton>
+      </div>
+      <span class="dual-listbox__status" role="status" aria-atomic="true">
+        {{ pane.label }}: {{ pane.status }}
+      </span>
+      <button type="button"
+              class="dual-listbox__move-all"
+              :disabled="locked || !pane.options.some(option => !option.disabled)"
+              @click="move(pane.options, index === 0)"
+      >
+        {{ index === 0 ? t(appName, 'Select all') : t(appName, 'Remove all') }}
+      </button>
+      <select :id="`${inputId}-${index}`"
+              multiple
+              size="12"
+              :disabled="locked"
+              :title="t(appName, 'Click on the names to move the respective person to the other box')"
+              @change.stop="moveSelection($event, index === 0)"
+      >
+        <option v-for="option in pane.options"
+                :key="option.value"
+                :value="option.value"
+                :disabled="option.disabled"
+                :title="option.title"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { DualListboxControls, DualListboxOption, DualListboxProps } from '../types/dual-listbox.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import { computed, ref, useId, watch } from 'vue'
+import TextFieldWithTrailingButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithTrailingButton.vue'
+import SearchIcon from 'vue-material-design-icons/Magnify.vue'
+import { appName } from '../config.ts'
+
+const props = defineProps<DualListboxProps>()
+const emit = defineEmits<{
+  'update:modelValue': [values: string[]]
+  change: [values: string[]]
+}>()
+const suppliedState = ref<DualListboxProps>()
+const state = computed(() => suppliedState.value ?? props)
+const uid = useId()
+const inputId = computed(() => state.value.inputId || `dual-listbox-${uid}`)
+const filters = ref(['', ''])
+const locked = computed(() => state.value.disabled || state.value.readonly)
+const paneWidth = computed(() => `${Math.min(50, state.value.options.reduce((length, option) => Math.max(length, option.label.length), 40))}ch`)
+const panes = computed(() => [
+  t(appName, 'Remaining Recipients'),
+  t(appName, 'Selected Recipients'),
+].map((label, index) => {
+  const options = state.value.options.filter((option) => state.value.modelValue.includes(option.value) === (index === 1))
+  const query = filters.value[index]!.toLocaleLowerCase()
+  const filteredOptions = options.filter((option) => option.label.toLocaleLowerCase().includes(query))
+  const info = !options.length
+    ? t(appName, 'Empty list')
+    : query
+      ? `${t(appName, 'Filtered')} ${filteredOptions.length} ${t(appName, 'from')} ${options.length}`
+      : t(appName, 'Filter')
+  return {
+    label,
+    info,
+    status: !options.length || query ? info : String(options.length),
+    options: filteredOptions,
+  }
+}))
+
+const move = (options: DualListboxOption[], selected: boolean) => {
+  if (locked.value) {
+    return
+  }
+  const values = new Set(state.value.modelValue)
+  for (const option of options) {
+    if (!option.disabled) {
+      if (selected) {
+        values.add(option.value)
+      } else {
+        values.delete(option.value)
+      }
+    }
+  }
+  const next = state.value.options.filter((option) => values.has(option.value)).map((option) => option.value)
+  if (next.length === state.value.modelValue.length && next.every((value) => state.value.modelValue.includes(value))) {
+    return
+  }
+  suppliedState.value = { ...state.value, modelValue: next }
+  emit('update:modelValue', next)
+  emit('change', next)
+}
+const moveSelection = (event: Event, selected: boolean) => {
+  const select = event.target as HTMLSelectElement
+  const values = new Set(Array.from(select.selectedOptions, (option) => option.value))
+  select.selectedIndex = -1
+  move(state.value.options.filter((option) => values.has(option.value)), selected)
+}
+const setState = (newState: DualListboxProps) => {
+  suppliedState.value = newState
+}
+watch(() => ({ ...props }), () => {
+  suppliedState.value = undefined
+}, { deep: true })
+defineExpose({ setState } satisfies DualListboxControls)
+</script>
+
+<style scoped lang="scss">
+.dual-listbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+
+.dual-listbox__pane {
+  display: flex;
+  flex: 1 1 var(--dual-listbox-pane-width);
+  flex-direction: column;
+  width: var(--dual-listbox-pane-width);
+  min-width: 0;
+
+  > label, .dual-listbox__filter {
+    margin-bottom: 4px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    min-height: 200px;
+    margin: 0;
+    box-sizing: border-box;
+    background: var(--color-main-background);
+    color: var(--color-main-text);
+    border: 2px solid var(--color-border-maxcontrast);
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+
+    &:hover:not(:focus-visible) {
+      clip-path: inset(0 -8px -8px);
+    }
+  }
+}
+
+.dual-listbox__filter {
+  min-width: 0;
+}
+
+.dual-listbox__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dual-listbox__move-all {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 0 !important;
+  box-sizing: border-box;
+  border: 2px solid var(--color-border-maxcontrast);
+  border-bottom: 0;
+  border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+
+  &:disabled {
+    border-color: var(--color-border-maxcontrast);
+  }
+}
+</style>

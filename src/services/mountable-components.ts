@@ -60,6 +60,9 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
     if (!vueComponents[event.name as string]) {
       let vueComponent: Component;
       switch (event.name) {
+        case MountableComponents.DUAL_LISTBOX:
+          vueComponent = (await import('../components/DualListbox.vue')).default;
+          break;
         case MountableComponents.DOKU_WIKI_WRAPPER:
           vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
           break;
