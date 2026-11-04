@@ -26,7 +26,7 @@ import {
   LEGACY_PAGE_CLEANUP,
 } from '../event-bus-events.ts';
 import { VUE_SELECT } from '../mountable-component-names.ts';
-import { appendSelectOption, readSelectOptions } from './select-options.ts';
+import { appendSelectOption, orderSelectOptions, readSelectOptions } from './select-options.ts';
 
 export interface SelectizeAdapterOptions {
   options?: VueSelectOption[];
@@ -61,7 +61,6 @@ const adapterBySelect = new WeakMap<HTMLSelectElement, SelectizeService>();
  * source for PHP form submission and legacy change listeners.
  */
 export class SelectizeService {
-  private readonly originalName: string|null;
   private readonly originalRequired: boolean;
   private required: boolean;
   private readonly originalHidden: string|null;
@@ -84,7 +83,6 @@ export class SelectizeService {
     options: SelectizeAdapterOptions,
   ) {
     this.selectizeOptions = options;
-    this.originalName = select.getAttribute('name');
     this.originalRequired = select.required;
     this.required = select.required;
     this.originalHidden = select.getAttribute('hidden');
@@ -250,7 +248,6 @@ export class SelectizeService {
     this.select.addEventListener('change', this.handleNativeChange);
     this.select.hidden = true;
     this.select.required = false;
-    this.select.removeAttribute('name');
 
     this.component.mount(this.mountPoint);
     const { options, groups } = this.optionData();
@@ -301,33 +298,15 @@ export class SelectizeService {
       if (normalized.length === 0) {
         this.select.selectedIndex = -1;
       }
-      this.writeFormValues(normalized);
+      if (this.select.multiple) {
+        orderSelectOptions(this.select, normalized);
+      }
       if (dispatchChange && changed) {
         this.selectizeOptions.onChange?.(this.getValue());
         this.select.dispatchEvent(new Event('change', { bubbles: true }));
       }
     } finally {
       this.updatingNativeSelect = false;
-    }
-  }
-
-  private writeFormValues(values: string[]) {
-    if (!this.component) {
-      return;
-    }
-    this.mountHost.querySelectorAll('[data-pme-select-value]').forEach((input) => input.remove());
-    if (this.originalName === null) {
-      return;
-    }
-    const disabled = this.component?.isDisabled ?? this.pendingDisabled ?? this.select.disabled;
-    for (const value of values) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = this.originalName;
-      input.value = value;
-      input.disabled = disabled;
-      input.dataset.pmeSelectValue = '';
-      this.mountHost.appendChild(input);
     }
   }
 
@@ -389,7 +368,6 @@ export class SelectizeService {
     } else {
       this.component?.unlock();
     }
-    this.writeFormValues(this.previousValue);
   }
 
   /** Visible host for legacy styling, tooltips, and validation feedback. */
@@ -422,19 +400,19 @@ export class SelectizeService {
   }
 
   disable() {
+    this.select.disabled = true;
     if (!this.component) {
       this.pendingDisabled = true;
     }
     this.component?.disable();
-    this.writeFormValues(this.previousValue);
   }
 
   enable() {
+    this.select.disabled = false;
     if (!this.component) {
       this.pendingDisabled = false;
     }
     this.component?.enable();
-    this.writeFormValues(this.previousValue);
   }
 
   get isLocked() {
@@ -463,11 +441,6 @@ export class SelectizeService {
       this.select.setAttribute('hidden', this.originalHidden);
     }
     this.select.required = this.originalRequired;
-    if (this.originalName === null) {
-      this.select.removeAttribute('name');
-    } else {
-      this.select.setAttribute('name', this.originalName);
-    }
     if (this.originalAriaHidden === null) {
       this.select.removeAttribute('aria-hidden');
     } else {

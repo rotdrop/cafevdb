@@ -250,7 +250,11 @@ describe('mountSelectize', () => {
       </form>
     `);
     const select = container.querySelector('select')!;
-    const changes = vi.fn();
+    const changes = vi.fn((event: Event) => {
+      expect(event.target).toBe(select);
+      expect($(event.target as HTMLSelectElement).attr('name')).toBe('instrument');
+      expect($(event.target as HTMLSelectElement).val()).toBe('violin');
+    });
     select.addEventListener('change', changes);
     const [instance] = await mountSelectize(select);
 
@@ -258,7 +262,8 @@ describe('mountSelectize', () => {
     expect(instance.getValue()).toBe('viola');
     expect(select.hidden).toBe(true);
     expect(select.required).toBe(false);
-    expect(select.hasAttribute('name')).toBe(false);
+    expect(select.name).toBe('instrument');
+    expect(container.querySelector('input[type="hidden"]')).toBeNull();
     expect(mountables[0].props).toMatchObject({
       inputId: 'instrument-vue-select',
       label: 'instrument',
@@ -353,9 +358,9 @@ describe('mountSelectize', () => {
       expect(SelectUtils.selected($select)).toEqual(['b', 'a']);
       expect(SelectUtils.children($select)).toHaveLength(2);
       expect(SelectUtils.options($select)).toHaveLength(3);
-      expect(SelectUtils.optionValues($select)).toEqual(['a', 'b']);
+      expect(SelectUtils.optionValues($select)).toEqual(['b', 'a']);
       expect(SelectUtils.optionByValue($select, 'b').text()).toBe('Beta');
-      expect(SelectUtils.selectedOptions($select).map((_, option) => option.value).get()).toEqual(['a', 'b']);
+      expect(SelectUtils.selectedOptions($select).map((_, option) => option.value).get()).toEqual(['b', 'a']);
       SelectUtils.deselectAll($select);
       expect(SelectUtils.selected($select)).toEqual([]);
       expect(SelectUtils.selectedOptions($select)).toHaveLength(0);
@@ -387,8 +392,8 @@ describe('mountSelectize', () => {
       SelectUtils.optionByValue($select, 'a').prop('disabled', true);
       SelectUtils.refreshWidget($select);
       expect(mountables[0].setOptions).toHaveBeenLastCalledWith([
-        { value: 'a', label: 'Alpha', groups: ['0'], disabled: true },
         { value: 'b', label: 'Updated', groups: ['0'], disabled: false },
+        { value: 'a', label: 'Alpha', groups: ['0'], disabled: true },
         { value: 'c', label: 'Gamma', groups: [], disabled: true },
       ], [{ value: '0', label: 'Group', disabled: false }]);
       SelectUtils.replaceOptions($select, '<option value="d" selected>Delta</option>');
@@ -477,7 +482,7 @@ describe('mountSelectize', () => {
       persist: true,
     });
     expect(select.hidden).toBe(true);
-    expect(select.name).toBe('');
+    expect(select.name).toBe('instruments[]');
   });
 
   it('merges explicit configuration over data attributes and adapts remote creation fields', async () => {
@@ -603,22 +608,88 @@ describe('mountSelectize', () => {
     expect(mountables[0].focus).toHaveBeenCalledOnce();
   });
 
-  it('restores the original select and submits ordered hidden values on destroy', async () => {
+  it('submits ordered native values and restores the original select on destroy', async () => {
     const container = makeSelect('<form><select class="cafevdb-vue-select--ordered" name="instrument[]" multiple required><option value="a">A</option><option value="b">B</option></select></form>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
     instance.setValue(['b', 'a']);
+    expect(select.name).toBe('instrument[]');
+    expect(Array.from(select.selectedOptions, (option) => option.value)).toEqual(['b', 'a']);
+    expect(container.querySelector('input[type="hidden"]')).toBeNull();
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
     instance.disable();
+    expect(select.disabled).toBe(true);
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual([]);
     instance.enable();
+    expect(select.disabled).toBe(false);
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
     instance.destroy();
     expect(select.hidden).toBe(false);
     expect(select.required).toBe(true);
     expect(select.name).toBe('instrument[]');
+    expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
     expect(container.querySelector('.cafevdb-vue-select-control')).toBeNull();
     expect(container.querySelector('input[type="hidden"]')).toBeNull();
+  });
+
+  it('preserves ordered submission across optgroups, native changes, refresh, and cleanup', async () => {
+    const container = makeSelect(`
+      <form><select name="recipients[to][]" multiple class="cafevdb-vue-select--ordered">
+        <optgroup label="People">
+          <option value="a">A</option><option value="b">B</option>
+        </optgroup>
+        <optgroup class="free-form" label="Form Input"><option value="c">C</option></optgroup>
+        <optgroup label="Unavailable" disabled><option value="d">D</option></optgroup>
+        <option value="e" disabled>E</option>
+      </select></form>
+    `);
+    const form = container.querySelector('form')!;
+    const select = container.querySelector('select')!;
+    const [service] = await mountSelectize(select);
+    const changes = vi.fn((event: Event) => {
+      expect(event.target).toBe(select);
+      expect($(select).attr('name')!.matchAll(/([^[]+)\[([^\]]+)\]/g).next().value?.slice(1)).toEqual(['recipients', 'to']);
+      expect($(select).val()).toEqual(['b', 'c', 'a']);
+      expect(new FormData(form).getAll(select.name)).toEqual(['b', 'c', 'a']);
+    });
+    form.addEventListener('change', changes);
+    mountables[0].setValue(['b', 'c', 'a']);
+    expect(changes).toHaveBeenCalledOnce();
+    expect(service.getValue()).toEqual(['b', 'c', 'a']);
+    expect(select.querySelector('option[value="d"]')!.parentElement!.hasAttribute('disabled')).toBe(true);
+    expect(select.querySelector('option[value="e"]')!.hasAttribute('disabled')).toBe(true);
+    expect(form.querySelector('input[type="hidden"]')).toBeNull();
+    service.refresh();
+    expect(service.getValue()).toEqual(['b', 'c', 'a']);
+    expect(mountables[0].setOptions.mock.lastCall?.[1]).toHaveLength(3);
+    form.removeEventListener('change', changes);
+    $(select).val(['c', 'a']);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(service.getValue()).toEqual(['c', 'a']);
+    service.destroy();
+    expect(new FormData(form).getAll(select.name)).toEqual(['c', 'a']);
+  });
+
+  it('uses the native name and form association, including changes made while mounted', async () => {
+    const container = makeSelect(`
+      <form id="external"></form>
+      <select form="external" name="field" class="cafevdb-vue-select--ordered">
+        <option value="a">A</option><option value="b">B</option>
+      </select>
+    `);
+    const form = container.querySelector('form')!;
+    const select = container.querySelector('select')!;
+    const [service] = await mountSelectize(select);
+    service.setValue('b');
+    expect(new FormData(form).get('field')).toBe('b');
+    select.name = 'renamed';
+    expect(new FormData(form).get('renamed')).toBe('b');
+    expect(new FormData(form).has('field')).toBe(false);
+    select.removeAttribute('name');
+    service.setValue('a');
+    expect([...new FormData(form)]).toEqual([]);
+    service.destroy();
+    expect(select.hasAttribute('name')).toBe(false);
   });
 
   it('restores the select when malformed option configuration fails before mounting', async () => {

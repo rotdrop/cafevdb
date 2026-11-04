@@ -100,7 +100,7 @@ form-submission semantics:
 
 | Entry point | Native marker | Form submission and defaults |
 | --- | --- | --- |
-| `mountSelectize` in `services/mountable-select.ts` | `cafevdb-vue-select--ordered` | Ordered hidden inputs; selection order, creation, and sorting configuration |
+| `mountSelectize` in `services/mountable-select.ts` | `cafevdb-vue-select--ordered` | Original native select; options rearranged into selection order, creation, and sorting configuration |
 | `mountChosen` in `services/mountable-chosen.ts`, or `.chosen()` | `cafevdb-vue-select` | Original native select; native option order, hidden selected choices, no Backspace removal |
 
 Both accept a select, a container, or a selector and expose value, refresh,
@@ -108,6 +108,12 @@ required, readonly/disabled, focus, and destruction controls. The Vue
 mountable-component provider must already be registered. Native `change`
 listeners see current form values synchronously. `select-utils.ts` works with
 either adapter. Cleanup restores the native control.
+
+The ordered adapter keeps the original select's `name` and updates its selected
+options before dispatching `change`; it does not add hidden inputs. Native options
+are rearranged to preserve selection/drag-and-drop order in form submission,
+including after cleanup. Interleaved optgroups are split into consecutive
+segments with the same stable group ID, label, and disabled state.
 
 The ordered adapter reads `data-vue-select-options` (explicit mount options
 override it) and `data-initial-values`. Existing `drag_drop` plugin configuration
