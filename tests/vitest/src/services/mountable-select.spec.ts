@@ -138,6 +138,17 @@ afterEach(() => {
 });
 
 describe('mountSelectize', () => {
+  it.each([
+    { classes: '', expected: false },
+    { classes: 'cafevdb-vue-select--up', expected: true },
+    { classes: 'cafevdb-vue-select--auto', expected: 'auto' },
+    { classes: 'cafevdb-vue-select--auto cafevdb-vue-select--up', expected: true },
+  ])('passes dropup=$expected from native select classes "$classes"', async ({ classes, expected }) => {
+    const container = makeSelect(`<select class="cafevdb-vue-select--ordered ${classes}" multiple><option value="a">A</option></select>`);
+    await mountSelectize(container);
+    expect(mountables[0].props.dropup).toBe(expected);
+  });
+
   it('shows move buttons by default for sortable selects', async () => {
     const container = makeSelect('<select class="cafevdb-vue-select--ordered" multiple><option value="a">A</option></select>');
     await mountSelectize(container, { plugins: ['drag_drop'] });

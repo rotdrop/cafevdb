@@ -133,6 +133,7 @@ The old `chosen-container`, `selectize-control`, `pme-select`, and
 Native configuration classes are `cafevdb-vue-select--up` (force up),
 `cafevdb-vue-select--auto` (automatic direction), and
 `cafevdb-vue-select--width-auto` (native-adapter automatic width).
+Place these classes on the original `<select>`, not its surrounding elements.
 Explicit native-adapter `dropup` options override direction classes; up wins
 over auto when both are present. `no-vue-select` excludes a field from PME's
 automatic native-adapter initialization. The effective component direction
