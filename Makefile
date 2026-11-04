@@ -8,6 +8,7 @@ SRCDIR = .
 ABSSRCDIR = $(CURDIR)
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
 include $(DEV_LIB_DIR)/makefile/setup.mk
+include $(DEV_LIB_DIR)/makefile/l10n.mk
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
 SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
 SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
