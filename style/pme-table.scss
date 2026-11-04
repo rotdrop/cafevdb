@@ -1151,6 +1151,8 @@ form.pme-form {
   }
 
   .pme-filter-controls {
+    $comparison-select-width: 4.5em;
+
     display: flex;
     align-items: center;
     gap: 4px;
@@ -1196,9 +1198,13 @@ form.pme-form {
 
     > select.pme-filter-comp,
     > .#{$appName}-vue-select-control.pme-filter-comp {
-      flex: 0 0 4.5em;
-      width: 4.5em;
-      min-width: 4.5em;
+      flex: 0 0 $comparison-select-width;
+      width: $comparison-select-width;
+      min-width: $comparison-select-width;
+    }
+
+    > .#{$appName}-vue-select-control.pme-filter-comp {
+      --vs-dropdown-min-width: #{$comparison-select-width};
     }
 
     > select.pme-filter-comp {
