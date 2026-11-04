@@ -689,7 +689,7 @@ GROUP BY t.id';
           'project-instruments',
           'tooltip-top',
           'select-wide',
-          'selectize',
+          $this->appName() . '-vue-select--ordered',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
@@ -752,7 +752,7 @@ GROUP BY t.id';
             'no-search',
             'instrument-voice',
             'select-wide',
-            'selectize',
+            $this->appName() . '-vue-select--ordered',
           ],
         ],
         'display|CAP' => [
@@ -974,14 +974,14 @@ GROUP BY t.id';
         'postfix' => [
           'musician-instruments',
           'tooltip-top',
-          'no-chosen',
-          'selectize',
+          'no-vue-select',
+          $this->appName() . '-vue-select--ordered',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
       'display|ACP' => [
         'attributes' => [
-          'data-selectize-options' => [
+          'data-vue-select-options' => [
             'create' => false,
             'plugins' => [ 'drag_drop', ],
           ],
@@ -1016,7 +1016,7 @@ GROUP BY t.id';
       $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
-        'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
+        'css'     => [ 'postfix' => [ $this->appName() . '-vue-select--ordered', 'no-vue-select', ], ],
         'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
         'default' => null,
         'select'  => 'M',
@@ -1286,7 +1286,7 @@ GROUP BY t.id';
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
-        'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
+        'css'      => [ 'postfix' => [ 'musician-address', 'country', $this->appName() . '-vue-select--up', CssClasses::ALLOW_EMPTY, ], ],
         'values2'     => $countries,
         'valueGroups' => $countryGroups,
       ]);
@@ -1341,7 +1341,7 @@ GROUP BY t.id';
       [
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('Language'),
-        'css'      => [ 'postfix' => [ 'musician-language', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
+        'css'      => [ 'postfix' => [ 'musician-language', $this->appName() . '-vue-select--up', CssClasses::ALLOW_EMPTY, ], ],
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => 'Deutschland',

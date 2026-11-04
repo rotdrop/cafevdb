@@ -4,12 +4,12 @@
  */
 
 import type { VueWrapper } from '@vue/test-utils';
-import type { PmeSelectComponentProps, PmeSelectOption, PmeSelectValue } from '~/src/types/pme-select.ts';
+import type { VueSelectComponentProps, VueSelectOption, VueSelectValue } from '~/src/types/vue-select.ts';
 
 import axios from '@nextcloud/axios';
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import PmeSelect from '~/src/components/PmeSelect.vue';
+import VueSelect from '~/src/components/VueSelect.vue';
 
 vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
 vi.mock('~/src/util/console.ts', () => ({
@@ -41,8 +41,8 @@ const emailCreation = {
 };
 
 const wrappers: VueWrapper[] = [];
-const render = (props: Partial<PmeSelectComponentProps> & { 'onUpdate:modelValue'?: (value: PmeSelectValue) => void } = {}) => {
-  const wrapper = mount(PmeSelect, {
+const render = (props: Partial<VueSelectComponentProps> & { 'onUpdate:modelValue'?: (value: VueSelectValue) => void } = {}) => {
+  const wrapper = mount(VueSelect, {
     attachTo: document.body,
     props: { options, groups, label: 'Instruments', ...props },
   });
@@ -69,7 +69,77 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('PmeSelect', () => {
+describe('VueSelect', () => {
+  it('combines hidden selections and upward opening with creation and sorting', async () => {
+    const wrapper = render({
+      multiple: true,
+      sortable: true,
+      hideSelected: true,
+      dropup: true,
+      create: true,
+      modelValue: ['violin'],
+      name: 'instruments[]',
+    });
+    await open(wrapper);
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
+    expect(wrapper.findAll('[role="option"]').some((option) => option.text() === 'Violin')).toBe(false);
+    expect(await wrapper.vm.createItem('Cello')).toBe(true);
+    wrapper.vm.moveItem(1, -1);
+    await flushPromises();
+    expect(wrapper.vm.getValue()).toEqual(['Cello', 'violin']);
+    expect(wrapper.findAll<HTMLInputElement>('input[type="hidden"]').map((input) => input.element.value)).toEqual(['Cello', 'violin']);
+    expect(wrapper.emitted('create')).toEqual([[{ value: 'Cello', label: 'Cello' }]]);
+    wrapper.vm.close();
+    await flushPromises();
+    expect(wrapper.get('[role="combobox"]').attributes('aria-expanded')).toBe('false');
+  });
+
+  it('can change native ordering without losing sorting controls', async () => {
+    const wrapper = render({ multiple: true, modelValue: ['flute', 'violin'] });
+    await wrapper.setProps({ nativeOrder: true });
+    expect(wrapper.vm.getValue()).toEqual(['violin', 'flute']);
+    await wrapper.setProps({ sortable: true });
+    wrapper.vm.moveItem(1, -1);
+    expect(wrapper.vm.getValue()).toEqual(['flute', 'violin']);
+    expect(wrapper.emitted('change')).toEqual([[['flute', 'violin']]]);
+  });
+
+  it('replaces state and cancels creation without applying stale results', async () => {
+    let finish!: (option: VueSelectOption) => void;
+    const wrapper = render({
+      create: { resolve: () => new Promise<VueSelectOption>((resolve) => { finish = resolve; }) },
+      required: true,
+    });
+    const pending = wrapper.vm.createItem('new');
+    wrapper.vm.setOptions([{ value: 'temporary', label: 'Temporary' }]);
+    wrapper.vm.setRequired(false);
+    wrapper.vm.setState({
+      options: [{ value: 'replacement', label: 'Replacement' }],
+      label: 'New state',
+      modelValue: 'replacement',
+      required: true,
+      disabled: true,
+      create: false,
+      dropup: true,
+    });
+    finish({ value: 'stale', label: 'Stale' });
+    expect(await pending).toBe(false);
+    await flushPromises();
+    expect(wrapper.vm.getValue()).toBe('replacement');
+    expect(wrapper.vm.getOptions()).toEqual([{ value: 'replacement', label: 'Replacement' }]);
+    expect(wrapper.vm.isDisabled).toBe(true);
+    expect(wrapper.emitted('change')).toBeUndefined();
+    expect(wrapper.emitted('create')).toBeUndefined();
+  });
+
+  it('clears omitted state values instead of restoring the initial model', async () => {
+    const wrapper = render({ modelValue: 'violin' });
+    wrapper.vm.setState({ options, label: 'New state' });
+    await flushPromises();
+    expect(wrapper.vm.getValue()).toBeNull();
+    expect(wrapper.emitted('change')).toBeUndefined();
+  });
+
   it.each([false, true])('provides a visible input label when multiple is %s', (multiple) => {
     const wrapper = render({ multiple });
     const input = wrapper.get<HTMLInputElement>('input[role="combobox"]').element;
@@ -92,16 +162,19 @@ describe('PmeSelect', () => {
   it('uses the upstream single-selection class without adding multi-selection buttons', () => {
     const wrapper = render({ modelValue: 'violin' });
     expect(wrapper.get('[data-value="violin"]').classes()).toContain('vs__selected');
-    expect(wrapper.find('.pme-select__move').exists()).toBe(false);
+    expect(wrapper.find('.cafevdb-vue-select__move').exists()).toBe(false);
     expect(wrapper.find('button[aria-label="Remove Violin"]').exists()).toBe(false);
   });
 
-  it('preserves selectable blank options and their empty value', async () => {
-    const wrapper = render({ options: [{ value: '', label: '' }, ...options], modelValue: 'violin' });
+  it.each([false, true])('omits completely empty options when multiple=%s', async (multiple) => {
+    const wrapper = render({ options: [{ value: '', label: '' }, ...options], multiple });
     await open(wrapper);
-    const blank = wrapper.findAll('[role="option"]').find((option) => option.text() === '');
-    expect(blank).toBeDefined();
-    await blank!.trigger('click');
+    expect(wrapper.findAll('[role="option"]').some((option) => option.text() === '')).toBe(false);
+  });
+
+  it('preserves named options with an empty value', async () => {
+    const wrapper = render({ options: [{ value: '', label: 'None' }, ...options], modelValue: 'violin' });
+    await choose(wrapper, 'None');
     expect(wrapper.vm.getValue()).toBe('');
     expect(wrapper.emitted('change')?.at(-1)).toEqual(['']);
   });
@@ -190,10 +263,10 @@ describe('PmeSelect', () => {
   it('marks selected dropdown options separately from group headings and disabled options', async () => {
     const wrapper = render({ multiple: true, modelValue: ['violin'] });
     await open(wrapper);
-    expect(wrapper.findAll('.pme-select__option--selected').map((option) => option.text())).toEqual(['Violin']);
-    expect(wrapper.findAll('.pme-select__group').map((group) => group.text())).toEqual(['Strings', 'Winds']);
+    expect(wrapper.findAll('.cafevdb-vue-select__option--selected').map((option) => option.text())).toEqual(['Violin']);
+    expect(wrapper.findAll('.cafevdb-vue-select__group').map((group) => group.text())).toEqual(['Strings', 'Winds']);
     await choose(wrapper, 'Viola');
-    expect(wrapper.findAll('.pme-select__option--selected').map((option) => option.text())).toEqual(['Violin', 'Viola']);
+    expect(wrapper.findAll('.cafevdb-vue-select__option--selected').map((option) => option.text())).toEqual(['Violin', 'Viola']);
   });
 
   it('removes individual selections and prevents emptying not-empty fields', async () => {
@@ -241,22 +314,22 @@ describe('PmeSelect', () => {
 
   it('always shows move buttons by default and allows focus-only buttons', async () => {
     const wrapper = render({ multiple: true, sortable: true, modelValue: ['violin', 'viola'] });
-    expect(wrapper.find('.pme-select__selected--move-on-focus').exists()).toBe(false);
-    expect(wrapper.findAll('.pme-select__move')).toHaveLength(4);
+    expect(wrapper.find('.cafevdb-vue-select__selected--move-on-focus').exists()).toBe(false);
+    expect(wrapper.findAll('.cafevdb-vue-select__move')).toHaveLength(4);
     await wrapper.setProps({ showMoveButtons: 'focus' });
-    expect(wrapper.findAll('.pme-select__selected--move-on-focus')).toHaveLength(2);
+    expect(wrapper.findAll('.cafevdb-vue-select__selected--move-on-focus')).toHaveLength(2);
     const button = wrapper.get<HTMLButtonElement>('button[aria-label="Move Violin later"]');
     expect(button.element.tabIndex).toBe(0);
     button.element.focus();
     expect(document.activeElement).toBe(button.element);
     await wrapper.setProps({ showMoveButtons: true });
-    expect(wrapper.find('.pme-select__selected--move-on-focus').exists()).toBe(false);
-    expect(wrapper.findAll('.pme-select__move')).toHaveLength(4);
+    expect(wrapper.find('.cafevdb-vue-select__selected--move-on-focus').exists()).toBe(false);
+    expect(wrapper.findAll('.cafevdb-vue-select__move')).toHaveLength(4);
   });
 
   it('can remove move buttons without disabling drag and drop or remove buttons', async () => {
     const wrapper = render({ multiple: true, sortable: true, showMoveButtons: false, modelValue: ['violin', 'viola'] });
-    expect(wrapper.find('.pme-select__move').exists()).toBe(false);
+    expect(wrapper.find('.cafevdb-vue-select__move').exists()).toBe(false);
     expect(wrapper.findAll('button[aria-label^="Remove "]')).toHaveLength(2);
     expect(wrapper.get('[data-value="viola"]').attributes('draggable')).toBe('true');
     await wrapper.get('[data-value="viola"]').trigger('dragstart', { dataTransfer: { setData: vi.fn() } });
@@ -373,8 +446,8 @@ describe('PmeSelect', () => {
   });
 
   it('cancels asynchronous resolvers without applying their stale result', async () => {
-    let finish!: (option: PmeSelectOption) => void;
-    const resolve = vi.fn((_input: string, _signal: AbortSignal) => new Promise<PmeSelectOption>((done) => { finish = done; }));
+    let finish!: (option: VueSelectOption) => void;
+    const resolve = vi.fn((_input: string, _signal: AbortSignal) => new Promise<VueSelectOption>((done) => { finish = done; }));
     const wrapper = render({ create: { resolve } });
     const pending = wrapper.vm.createItem('new');
     wrapper.vm.setValue('violin');

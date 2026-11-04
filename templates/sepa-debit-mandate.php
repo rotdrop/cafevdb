@@ -218,7 +218,7 @@ function u(string $arg):int {
             </label>
             <?php if (count($projectOptions) > 1) { ?>
             <select name="mandateProjectId"
-                    class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value  ?> selectize"
+                    class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value  ?> <?= $appName ?>-vue-select--ordered"
                     placeholder="<?php p($l->t('Select a Project')); ?>"
                     <?php ($mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('disabled'); ?>
                     <?php ($mandateBinding == Binding::ONLY_FOR_PROJECT) && u('required'); ?>

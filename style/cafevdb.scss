@@ -179,11 +179,11 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
  *
  */
 
-.chosen-container.#{$appName}-menu {
+.#{$appName}-vue-select-control.#{$appName}-menu {
   font-weight:bold;
   vertical-align:middle;
 
-} /* .chosen-container.#{$appName}-menu */
+} /* .#{$appName}-vue-select-control.#{$appName}-menu */
 
 /*******************************************************************************
  *
@@ -201,15 +201,15 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
     padding: 0;
     overflow: visible;
 
-    .selectize-control, .selectize-input.items {
+    .#{$appName}-vue-select-control {
       min-height:4.4em;
       width: 100%;
     }
 
-    .pme-vue-select-control {
+    .#{$appName}-vue-select-control {
       display: block;
 
-      .pme-select .nc-select.v-select.select {
+      .#{$appName}-vue-select .nc-select.v-select.select {
         margin: 0;
 
         .vs__dropdown-toggle {

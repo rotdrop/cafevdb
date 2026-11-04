@@ -3,14 +3,19 @@
  */
 
 import type { VueWrapper } from '@vue/test-utils';
-import type { ChosenSelectComponentProps } from '~/src/types/chosen-select.ts';
+import type { VueSelectComponentProps } from '~/src/types/vue-select.ts';
 
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h, ref } from 'vue';
-import ChosenSelect from '~/src/components/ChosenSelect.vue';
+import VueSelect from '~/src/components/VueSelect.vue';
 
 vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
+vi.mock('~/src/util/console.ts', () => ({
+  default: class {
+    error = vi.fn();
+  },
+}));
 
 const options = [
   { value: '', label: '' },
@@ -25,9 +30,23 @@ const groups = [
   { value: 'retired', label: 'Retired group', disabled: true },
 ];
 const wrappers: VueWrapper[] = [];
-const render = (props: Partial<ChosenSelectComponentProps> = {}) => {
-  const componentProps: ChosenSelectComponentProps = { options, groups, label: 'Instrument', ...props };
-  const wrapper = mount(ChosenSelect, {
+const render = (props: Partial<VueSelectComponentProps> = {}) => {
+  const componentProps: VueSelectComponentProps = {
+    options,
+    groups,
+    label: 'Instrument',
+    hideSelected: true,
+    removeOnBackspace: false,
+    nativeOrder: true,
+    blankPlaceholder: true,
+    retainMissingValues: false,
+    searchValues: false,
+    labelOutside: false,
+    multiplePlaceholder: false,
+    allowSingleDeselect: false,
+    ...props,
+  };
+  const wrapper = mount(VueSelect, {
     attachTo: document.body,
     props: componentProps,
   });
@@ -51,7 +70,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('ChosenSelect automatic direction', () => {
+describe('VueSelect automatic direction', () => {
   const geometry = (top: number, height = 200) => {
     const layout = { top, height };
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: HTMLElement) {
@@ -76,35 +95,35 @@ describe('ChosenSelect automatic direction', () => {
   ])('$reason', async ({ top, height, up }) => {
     geometry(top, height);
     const wrapper = render({ dropup: 'auto' });
-    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--dropup');
     await open(wrapper);
-    expect(wrapper.classes().includes('chosen-select--dropup')).toBe(up);
+    expect(wrapper.classes().includes('cafevdb-vue-select--dropup')).toBe(up);
   });
 
   it.each([undefined, false, true])('preserves fixed direction %s regardless of available space', async (dropup) => {
     geometry(dropup ? 0 : window.innerHeight - 50);
     const wrapper = render({ dropup });
     await open(wrapper);
-    expect(wrapper.classes().includes('chosen-select--dropup')).toBe(!!dropup);
+    expect(wrapper.classes().includes('cafevdb-vue-select--dropup')).toBe(!!dropup);
   });
 
   it('updates while open on viewport resize, ancestor scroll, and filtering', async () => {
     const layout = geometry(window.innerHeight - 100);
     const wrapper = render({ dropup: 'auto' });
     await open(wrapper);
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     layout.top = 100;
     window.dispatchEvent(new Event('resize'));
     await flushPromises();
-    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--dropup');
     layout.top = window.innerHeight - 100;
     wrapper.element.parentElement!.dispatchEvent(new Event('scroll'));
     await flushPromises();
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     layout.height = 20;
     await wrapper.get('input[role="combobox"]').setValue('violin');
     await flushPromises();
-    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--dropup');
   });
 
   it('measures clipped ancestor content rather than only the viewport', async () => {
@@ -120,7 +139,7 @@ describe('ChosenSelect automatic direction', () => {
     expect(getComputedStyle(container).overflowY).toBe('auto');
     expect(container.clientHeight).toBe(300);
     await open(wrapper);
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     container.style.overflowY = '';
   });
 
@@ -136,11 +155,11 @@ describe('ChosenSelect automatic direction', () => {
     });
     const wrapper = render({ dropup: 'auto' });
     await open(wrapper);
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     layout.height = 10;
     update();
     await flushPromises();
-    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--dropup');
     wrapper.vm.close();
     await flushPromises();
     expect(disconnect).toHaveBeenCalled();
@@ -148,9 +167,9 @@ describe('ChosenSelect automatic direction', () => {
     layout.height = 200;
     window.dispatchEvent(new Event('resize'));
     await flushPromises();
-    expect(wrapper.classes()).not.toContain('chosen-select--dropup');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--dropup');
     await open(wrapper);
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     const removeListener = vi.spyOn(window, 'removeEventListener');
     wrapper.unmount();
     wrappers.splice(wrappers.indexOf(wrapper), 1);
@@ -159,7 +178,14 @@ describe('ChosenSelect automatic direction', () => {
   });
 });
 
-describe('ChosenSelect', () => {
+describe('VueSelect native-order configuration', () => {
+  it('keeps new selections in native option order', async () => {
+    const wrapper = render({ multiple: true, modelValue: ['flute'] });
+    await choose(wrapper, 'Violin');
+    expect(wrapper.vm.getValue()).toEqual(['violin', 'flute']);
+    expect(wrapper.emitted('change')).toEqual([[['violin', 'flute']]]);
+  });
+
   it('keeps the label without repeating it as a search placeholder', () => {
     const wrapper = render({ multiple: true, label: 'Filter', placeholder: 'Filter' });
     expect(wrapper.get('.select__label').text()).toBe('Filter');
@@ -168,14 +194,14 @@ describe('ChosenSelect', () => {
 
   it('reserves one action slot only for non-clearable single selects', async () => {
     const wrapper = render();
-    expect(wrapper.classes()).toContain('chosen-select--single-no-clear');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--single-no-clear');
     await wrapper.setProps({ allowSingleDeselect: true });
-    expect(wrapper.classes()).not.toContain('chosen-select--single-no-clear');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--single-no-clear');
     await wrapper.setProps({ multiple: true, allowSingleDeselect: false });
-    expect(wrapper.classes()).not.toContain('chosen-select--single-no-clear');
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--single-no-clear');
     wrapper.vm.setState({ options, label: 'Comparison', multiple: false });
     await flushPromises();
-    expect(wrapper.classes()).toContain('chosen-select--single-no-clear');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--single-no-clear');
   });
 
   it('selects a single value and emits the native-shaped value', async () => {
@@ -201,7 +227,7 @@ describe('ChosenSelect', () => {
     expect(wrapper.vm.getValue()).toEqual(['violin', 'viola']);
     await open(wrapper);
     expect(wrapper.findAll('[role="option"]').some((option) => option.text() === 'Violin')).toBe(false);
-    await wrapper.get('button.vs__deselect').trigger('mousedown');
+    await wrapper.get('button.vs__deselect').trigger('click');
     expect(wrapper.vm.getValue()).toEqual(['viola']);
   });
 
@@ -227,6 +253,7 @@ describe('ChosenSelect', () => {
 
   it.each([{ disableSearch: true }, { disableSearchThreshold: 10 }])('disables search with %j', async (props) => {
     const wrapper = render(props);
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--not-searchable');
     await open(wrapper);
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(true);
     expect(wrapper.findAll('[role="option"]').length).toBeGreaterThan(1);
@@ -234,7 +261,16 @@ describe('ChosenSelect', () => {
 
   it('keeps search for multiple selects below the threshold', () => {
     const wrapper = render({ multiple: true, disableSearchThreshold: 10 });
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--not-searchable');
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(false);
+  });
+
+  it('updates the non-searchable layout when searching is enabled', async () => {
+    const wrapper = render({ disableSearch: true });
+    await wrapper.setProps({ disableSearch: false });
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--not-searchable');
+    expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(false);
+    await open(wrapper);
   });
 
   it('does not delete selected values with Backspace', async () => {
@@ -267,7 +303,7 @@ describe('ChosenSelect', () => {
     const value = ref<string|null>(null);
     const changed = vi.fn();
     const wrapper = mount({
-      setup: () => () => h(ChosenSelect, { options, label: 'Instrument', required: true, modelValue: value.value, onChange: changed }),
+      setup: () => () => h(VueSelect, { options, label: 'Instrument', required: true, modelValue: value.value, onChange: changed }),
     }, { attachTo: document.body });
     wrappers.push(wrapper);
     const input = wrapper.get<HTMLInputElement>('input[role="combobox"]').element;
@@ -306,7 +342,7 @@ describe('ChosenSelect', () => {
     await open(wrapper);
     expect(wrapper.vm.getValue()).toBe('new');
     expect(wrapper.findAll('[role="option"]').map((option) => option.text())).toEqual(['New']);
-    expect(wrapper.classes()).toContain('chosen-select--dropup');
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--dropup');
     expect(wrapper.emitted('change')).toBeUndefined();
   });
 

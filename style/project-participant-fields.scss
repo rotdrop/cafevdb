@@ -402,7 +402,7 @@
         tr.data-type {
         }
         td.pme-value {
-          .chosen-container {
+          .#{$appName}-vue-select-control {
             box-sizing:border-box;
             min-width:50%;
           }

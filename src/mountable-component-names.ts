@@ -25,26 +25,23 @@
  * @module
  */
 
-import type { ChosenSelectComponentProps } from './types/chosen-select.ts';
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 import type { PmeExportMenuComponentProps } from './types/pme-export-menu.ts';
 import type { PmeNavigationSelectComponentProps } from './types/pme-navigation-select.ts';
-import type { PmeSelectComponentProps } from './types/pme-select.ts';
+import type { VueSelectComponentProps } from './types/vue-select.ts';
 
-export const CHOSEN_SELECT = 'ChosenSelect';
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
 export const PME_NAVIGATION_SELECT = 'PmeNavigationSelect';
 export const PME_EXPORT_MENU = 'PmeExportMenu';
-export const PME_SELECT = 'PmeSelect';
+export const VUE_SELECT = 'VueSelect';
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
 export const PROJECT_PAYMENT_ACTIONS_MENU = 'ProjectPaymentsActionsMenu';
 export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMenu';
 
 export interface ComponentProps {
-  [CHOSEN_SELECT]: ChosenSelectComponentProps;
   [DOKU_WIKI_WRAPPER]: {
     wikiPage?: string;
     query?: Record<string, string>;
@@ -84,7 +81,7 @@ export interface ComponentProps {
   };
   [PME_NAVIGATION_SELECT]: PmeNavigationSelectComponentProps;
   [PME_EXPORT_MENU]: PmeExportMenuComponentProps;
-  [PME_SELECT]: PmeSelectComponentProps;
+  [VUE_SELECT]: VueSelectComponentProps;
   [PROJECT_ACTIONS_MENU]: {
     entityId: number;
     projectName?: string;

@@ -116,7 +116,7 @@ $amountCheckFailure: PageRenderer.$amountCheckFailureCssClass;
       }
     }
     &copy, &add, &copyadd, &change {
-      td.composite-payment-id .chosen-container {
+      td.composite-payment-id .#{$appName}-vue-select-control {
         max-width: 40em;
       }
     }
