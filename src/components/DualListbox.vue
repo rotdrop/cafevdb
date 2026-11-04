@@ -159,6 +159,10 @@ defineExpose({ setState } satisfies DualListboxControls)
     color: var(--color-main-text);
     border: 2px solid var(--color-border-maxcontrast);
     border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+
+    &:hover:not(:focus-visible) {
+      clip-path: inset(0 -8px -8px);
+    }
   }
 }
 
@@ -173,6 +177,7 @@ defineExpose({ setState } satisfies DualListboxControls)
 .dual-listbox__move-all {
   width: 100%;
   margin: 0;
+  margin-bottom: 0 !important;
   box-sizing: border-box;
   border: 2px solid var(--color-border-maxcontrast);
   border-bottom: 0;
