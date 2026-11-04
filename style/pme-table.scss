@@ -1222,7 +1222,6 @@ form.pme-form {
     }
 
     > .#{$appName}-vue-select-control.pme-filter-comp .nc-select.v-select.select {
-      --default-clickable-area: 40px;
       margin-block: 0;
 
       .vs__dropdown-toggle {

@@ -149,6 +149,10 @@ multi-selects, while keeping validation messages below the control.
 The comparison pair uses the core text-input border colors and background
 halo. Hovering or focusing either field, or opening the dropdown, highlights
 the whole pair; the select toggle does not draw an additional border or outline.
+Non-searchable selects retain their input for combobox focus, keyboard controls,
+and required validation. Single-select inputs in this mode have no search
+padding and are constrained to the control width so their hit area cannot
+extend beyond a narrow comparison select.
 
 PME navigation and export actions remain separate components:
 [`PmeNavigationSelect`](pme-navigation-select.md) and

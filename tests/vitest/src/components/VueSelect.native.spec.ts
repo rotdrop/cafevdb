@@ -253,6 +253,7 @@ describe('VueSelect native-order configuration', () => {
 
   it.each([{ disableSearch: true }, { disableSearchThreshold: 10 }])('disables search with %j', async (props) => {
     const wrapper = render(props);
+    expect(wrapper.classes()).toContain('cafevdb-vue-select--not-searchable');
     await open(wrapper);
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(true);
     expect(wrapper.findAll('[role="option"]').length).toBeGreaterThan(1);
@@ -260,7 +261,16 @@ describe('VueSelect native-order configuration', () => {
 
   it('keeps search for multiple selects below the threshold', () => {
     const wrapper = render({ multiple: true, disableSearchThreshold: 10 });
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--not-searchable');
     expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(false);
+  });
+
+  it('updates the non-searchable layout when searching is enabled', async () => {
+    const wrapper = render({ disableSearch: true });
+    await wrapper.setProps({ disableSearch: false });
+    expect(wrapper.classes()).not.toContain('cafevdb-vue-select--not-searchable');
+    expect(wrapper.get<HTMLInputElement>('input[role="combobox"]').element.readOnly).toBe(false);
+    await open(wrapper);
   });
 
   it('does not delete selected values with Backspace', async () => {

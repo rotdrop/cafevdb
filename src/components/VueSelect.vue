@@ -6,6 +6,7 @@
   <div ref="root"
        :class="[`${appName}-vue-select`, state.rootClass, {
          [`${appName}-vue-select--dropup`]: dropup,
+         [`${appName}-vue-select--not-searchable`]: !searchable,
          [`${appName}-vue-select--single-no-clear`]: !state.multiple && !state.allowSingleDeselect,
        }]"
        :aria-busy="creating"
@@ -750,6 +751,14 @@ defineExpose({
 
   :deep(.nc-select.v-select.select.vs--single:has(.vs__clear) .vs__search) {
     padding-inline-end: calc(2 * var(--default-clickable-area)) !important;
+  }
+
+  &--not-searchable :deep(.nc-select.v-select.select.vs--single .vs__search) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: 0 !important;
   }
 
   :deep(.nc-select.v-select.select.vs--single .#{$appName}-vue-select__selected) {
