@@ -76,7 +76,7 @@ const uid = useId()
 const inputId = computed(() => state.value.inputId || `dual-listbox-${uid}`)
 const filters = ref(['', ''])
 const locked = computed(() => state.value.disabled || state.value.readonly)
-const paneWidth = computed(() => `${state.value.options.reduce((length, option) => Math.max(length, option.label.length), 40)}ch`)
+const paneWidth = computed(() => `${Math.min(50, state.value.options.reduce((length, option) => Math.max(length, option.label.length), 40))}ch`)
 const panes = computed(() => [
   t(appName, 'Remaining Recipients'),
   t(appName, 'Selected Recipients'),
