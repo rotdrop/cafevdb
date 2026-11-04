@@ -61,7 +61,7 @@
     "@types/deep-equal": "^1.0.4",
     "@types/imagesloaded": "^4.1.7",
     "@types/jquery": "^3.0.0",
-    "@types/jqueryui": "^1.12.24",
+    "@types/jqueryui": "^1.12.25",
     "@types/luxon": "^3.7.1",
     "@types/object-hash": "^3.0.6",
     "@types/popper.js": "^1.10.1",
