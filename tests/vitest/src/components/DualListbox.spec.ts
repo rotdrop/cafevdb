@@ -2,16 +2,21 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import type * as NextcloudL10n from '@nextcloud/l10n';
 import type { VueWrapper } from '@vue/test-utils';
 import type { DualListboxProps } from '~/src/types/dual-listbox.ts';
 
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick, reactive } from 'vue';
+import TextFieldWithTrailingButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithTrailingButton.vue';
 import DualListbox from '~/src/components/DualListbox.vue';
 
 vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
-vi.mock('@nextcloud/l10n', () => ({ translate: (_app: string, text: string) => text }));
+vi.mock('@nextcloud/l10n', async (importOriginal) => ({
+  ...await importOriginal<typeof NextcloudL10n>(),
+  translate: (_app: string, text: string) => text,
+}));
 
 const options = [
   { value: 'a', label: 'Alice' },
@@ -34,6 +39,20 @@ const labels = (wrapper: Pick<VueWrapper, 'findAll'>, pane: number) =>
 afterEach(() => wrappers.splice(0).forEach((wrapper) => wrapper.unmount()));
 
 describe('DualListbox', () => {
+  it('uses shared clearable filter fields with leading search icons', () => {
+    const wrapper = render();
+    const fields = wrapper.findAllComponents(TextFieldWithTrailingButton);
+    expect(fields).toHaveLength(2);
+    for (const [index, field] of fields.entries()) {
+      expect(field.props()).toMatchObject({ trailingButton: 'clear' });
+      expect(field.find('.input-field__icon .magnify-icon').exists()).toBe(true);
+      expect(field.get('input').attributes('type')).toBe('search');
+      expect(field.get('input').attributes('aria-label')).toBe(
+        `Filter: ${index === 0 ? 'Remaining Recipients' : 'Selected Recipients'}`,
+      );
+    }
+  });
+
   it('splits the original options and labels both lists', () => {
     const wrapper = render({ inputId: 'recipients' });
     expect(labels(wrapper, 0)).toEqual(['Alice', 'Bob', 'Disabled']);

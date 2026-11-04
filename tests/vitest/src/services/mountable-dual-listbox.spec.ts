@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import type * as NextcloudL10n from '@nextcloud/l10n';
 import type { DualListboxComponentProps, DualListboxProps } from '~/src/types/dual-listbox.ts';
 
 import { mount } from '@vue/test-utils';
@@ -26,7 +27,10 @@ vi.mock('~/src/event-bus-events.ts', () => ({
   LEGACY_PAGE_CLEANUP: 'cleanup',
 }));
 vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
-vi.mock('@nextcloud/l10n', () => ({ translate: (_app: string, text: string) => text }));
+vi.mock('@nextcloud/l10n', async (importOriginal) => ({
+  ...await importOriginal<typeof NextcloudL10n>(),
+  translate: (_app: string, text: string) => text,
+}));
 vi.mock('~/src/app/select-utils.ts', () => ({
   isVanilla: () => true,
   vueSelectActive: () => false,

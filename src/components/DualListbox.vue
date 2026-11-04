@@ -7,15 +7,19 @@
     <div v-for="(pane, index) in panes" :key="index" class="dual-listbox__pane">
       <label :for="`${inputId}-${index}`">{{ pane.label }}</label>
       <div class="dual-listbox__filter">
-        <input v-model="filters[index]"
-               type="search"
-               :aria-label="`${t(appName, 'Filter')}: ${pane.label}`"
-               :placeholder="t(appName, 'Filter')"
-               :disabled="locked"
+        <TextFieldWithTrailingButton v-model="filters[index]"
+                                     type="search"
+                                     trailingButton="clear"
+                                     hint=""
+                                     :aria-label="`${t(appName, 'Filter')}: ${pane.label}`"
+                                     :placeholder="t(appName, 'Filter')"
+                                     :trailingButtonLabel="t(appName, 'show all')"
+                                     :disabled="locked"
         >
-        <button type="button" :disabled="locked || !filters[index]" @click="filters[index] = ''">
-          {{ t(appName, 'show all') }}
-        </button>
+          <template #icon>
+            <SearchIcon :size="20" />
+          </template>
+        </TextFieldWithTrailingButton>
       </div>
       <div class="dual-listbox__info" aria-live="polite">
         <template v-if="!pane.total">
@@ -57,6 +61,8 @@ import type { DualListboxControls, DualListboxOption, DualListboxProps } from '.
 
 import { translate as t } from '@nextcloud/l10n'
 import { computed, ref, useId, watch } from 'vue'
+import TextFieldWithTrailingButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithTrailingButton.vue'
+import SearchIcon from 'vue-material-design-icons/Magnify.vue'
 import { appName } from '../config.ts'
 
 const props = defineProps<DualListboxProps>()
@@ -150,14 +156,7 @@ defineExpose({ setState } satisfies DualListboxControls)
 }
 
 .dual-listbox__filter {
-  display: flex;
-  gap: 4px;
-
-  input {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-  }
+  min-width: 0;
 }
 
 .dual-listbox__info {

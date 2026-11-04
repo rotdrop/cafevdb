@@ -7,6 +7,8 @@ provider.
 The two lists show remaining and selected recipients. Choosing names moves them
 immediately to the other list (keyboard and multiple selection are supported).
 Each list has an independent, case-insensitive text filter and a clear button.
+Filters use the shared `TextFieldWithTrailingButton` with its `clear` variant
+and a leading search icon.
 Select all / Remove all move only the visible, enabled options. Filtered counts
 and empty-list messages use the existing translation strings.
 
