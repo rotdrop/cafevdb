@@ -141,7 +141,10 @@ defineExpose({ setState } satisfies DualListboxControls)
   flex-direction: column;
   width: var(--dual-listbox-pane-width);
   min-width: 0;
-  gap: 4px;
+
+  > label, .dual-listbox__filter, .dual-listbox__info {
+    margin-bottom: 4px;
+  }
 
   label {
     font-weight: bold;
@@ -150,10 +153,12 @@ defineExpose({ setState } satisfies DualListboxControls)
   select {
     width: 100%;
     min-height: 200px;
+    margin: 0;
+    box-sizing: border-box;
     background: var(--color-main-background);
     color: var(--color-main-text);
     border: 2px solid var(--color-border-maxcontrast);
-    border-radius: var(--border-radius-large);
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
   }
 }
 
@@ -167,5 +172,10 @@ defineExpose({ setState } satisfies DualListboxControls)
 
 .dual-listbox__move-all {
   width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--color-border-maxcontrast);
+  border-bottom: 0;
+  border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
 }
 </style>
