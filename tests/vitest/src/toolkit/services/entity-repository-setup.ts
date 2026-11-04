@@ -45,8 +45,27 @@ export const entities = {
 export const generateEntities = async (names: EntityNames[] = [...entityNames], depth: number = 2) => {
   for (const entityName of names) {
     const inputFile = `${inputFilePrefix}${entityName}.json`;
-    spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, TEST_ARTIFACTS, inputFile, '' + depth]);
-    const dtoJSON = fs.readFileSync(path.join(TEST_ARTIFACTS, inputFile));
+    fs.mkdirSync(TEST_ARTIFACTS, { recursive: true, mode: 0o700 });
+    const outputDir = fs.mkdtempSync(path.join(TEST_ARTIFACTS, `${inputFilePrefix}${entityName}-`));
+    let dtoJSON: Buffer;
+    try {
+      const result = spawnSync(
+        path.join(__dirname, 'generate-entity-repository-response.php'),
+        [entityName, outputDir, inputFile, '' + depth],
+        { encoding: 'utf8' },
+      );
+      if (result.error) {
+        throw result.error;
+      }
+      if (result.status !== 0) {
+        throw new Error(
+          `Failed to generate ${inputFile} (exit code ${result.status}, signal ${result.signal}): ${result.stderr}`,
+        );
+      }
+      dtoJSON = fs.readFileSync(path.join(outputDir, inputFile));
+    } finally {
+      fs.rmSync(outputDir, { recursive: true, force: true });
+    }
     dtos[entityName] = JSON.parse(dtoJSON.toString()); //  as OCSResponse<EntityResponse<typeof entityName> >;
     const entityRepository = (dtos[entityName] as OCSResponse<EntityResponse<typeof entityName>>).ocs.data.repositories[entityName];
     for (const [identifier, entityDto] of Object.entries(entityRepository) as ObjectEntries<typeof entityRepository>) {
