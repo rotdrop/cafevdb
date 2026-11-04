@@ -182,5 +182,9 @@ defineExpose({ setState } satisfies DualListboxControls)
   border: 2px solid var(--color-border-maxcontrast);
   border-bottom: 0;
   border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+
+  &:disabled {
+    border-color: var(--color-border-maxcontrast);
+  }
 }
 </style>
