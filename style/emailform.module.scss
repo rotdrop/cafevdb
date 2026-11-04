@@ -381,10 +381,8 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
             label {
             }
-            .chosen-container {
+            .#{$appName}-vue-select-control {
               width:100% !important;
-            }
-            .selectize-control {
               min-width:100%;
             }
           }
@@ -396,7 +394,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
             label {
             }
-            .chosen-container {
+            .#{$appName}-vue-select-control {
               width:100% !important;
             }
 
@@ -404,7 +402,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
               display:inline-block;
               text-align:left;
               width: 100%;
-              .selectize-control {
+              .#{$appName}-vue-select-control {
                 min-width:100%;
               }
             }
@@ -672,7 +670,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
                 display:table-row;
               }
               td.content {
-                .selectize-control {
+                .#{$appName}-vue-select-control {
                   flex-grow: 1;
                   // max-width: 85%;
                 }
@@ -794,13 +792,13 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
           .stored-messages-choose {
             --drop-down-min-width: 0px;
             --drop-down-margin: 3px;
-            .pme-vue-select-control .pme-select {
+            .#{$appName}-vue-select-control .#{$appName}-vue-select {
               min-width: 0;
             }
             .select-container > * {
               margin-right: var(--drop-down-margin);
             }
-            .chosen-container, .selectize-control {
+            .#{$appName}-vue-select-control {
               flex-shrink:10;
               flex-basis:100%;
               max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));

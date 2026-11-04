@@ -1162,7 +1162,7 @@ async function pmeTableDialogOpen<T extends PageTemplateValue>(tableDialogOption
                   });
                   break;
                 case 'tabChange':
-                  installInputChosen(containerSel, 'chosen-invisible');
+                  installInputChosen(containerSel, `${appName}-vue-select--invisible`);
                   resizeHandler();
                   break;
                 case 'layoutChange':
@@ -1587,8 +1587,8 @@ const installFilterChosen = function(containerSel: string|JQuery) {
   });
 
   const dblClickSel =
-    `td.${pmeFilter} ul.chosen-choices li.search-field input[type="text"]`
-      + `, td.${pmeFilter} div.chosen-container`
+    `td.${pmeFilter} .${appName}-vue-select__input`
+      + `, td.${pmeFilter} div.${appName}-vue-select-control`
       + `, td.${pmeFilter} input[type="text"]`;
   $container.off('dblclick', dblClickSel);
   $container.on('dblclick', dblClickSel, function(event) {
@@ -1601,7 +1601,7 @@ const installFilterChosen = function(containerSel: string|JQuery) {
     $container.find('td.' + pmeFilter + ' input.' + pmeToken('query')).trigger('click');
   });
 
-  $container.find('td.' + pmeFilter + ' div.chosen-container').each(function() {
+  $container.find('td.' + pmeFilter + ` div.${appName}-vue-select-control`).each(function() {
     const $chosen = $(this);
     const selectTitle = $chosen.prev('select').attr('title');
     $chosen.attr('title', selectTitle || PHPMyEdit.filterSelectChosenTitle);
@@ -1615,7 +1615,7 @@ const installFilterChosen = function(containerSel: string|JQuery) {
  *
  * @param [onlyClass] TBD.
  */
-async function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 'selectize') {
+async function installInputSelectize(containerSel: string|JQuery, onlyClass: string = `${appName}-vue-select--ordered`) {
   const $container = pmeContainer(containerSel);
   const selectElements = ($container.find(pmeSelectInputSelector + '.' + onlyClass) as JQuery<HTMLSelectElement>).toArray();
   const services = await Promise.all(selectElements.map(async (select) => {
@@ -1637,7 +1637,7 @@ async function installInputSelectize(containerSel: string|JQuery, onlyClass: str
       return undefined;
     }
 
-    const $widget = $(select).next('.pme-vue-select-control');
+    const $widget = $(select).next(`.${appName}-vue-select-control`);
     const toolTip = select.title || select.dataset.originalTitle;
     if (toolTip) {
       $widget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
@@ -1688,8 +1688,8 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
   // Then the general stuff
   $container.find(pmeSelectInputSelector).each(function() {
     const self = $(this);
-    if (self.hasClass('no-chosen')
-      || self.hasClass('selectize')
+    if (self.hasClass('no-vue-select')
+      || self.hasClass(`${appName}-vue-select--ordered`)
       || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
       return;
     }
@@ -1708,12 +1708,12 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
     if (self.hasClass(ALLOW_EMPTY)) {
       chosenOptions.width = (this.offsetWidth + PHPMyEdit.singleDeselectOffset) + 'px';
       if (!self.is(':visible')) {
-        self.addClass('chosen-invisible'); // kludge, correct later
+        self.addClass(`${appName}-vue-select--invisible`); // kludge, correct later
       } else {
-        self.removeClass('chosen-invisible');
+        self.removeClass(`${appName}-vue-select--invisible`);
       }
     }
-    if (self.hasClass('chosen-width-auto')) {
+    if (self.hasClass(`${appName}-vue-select--width-auto`)) {
       chosenOptions.width = 'auto';
     }
     console.debug('add chosen');
@@ -1721,7 +1721,7 @@ function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
   });
 
   // Set title explicitly
-  $container.find('td.' + pmeInput + ' div.chosen-container, td.' + pmeValue + ' div.chosen-container')
+  $container.find('td.' + pmeInput + ` div.${appName}-vue-select-control, td.` + pmeValue + ` div.${appName}-vue-select-control`)
     .filter('[title=""],[title^="***DEBUG***"]')
     .each(function() {
       $(this).attr('title', PHPMyEdit.inputSelectChosenTitle);
@@ -1796,7 +1796,7 @@ function installTabHandler(containerSel: string|JQuery, changeCallback: () => vo
       let reattachChosen = false;
       const pfx = (tabClasses.includes('tab-all')) ? '' : 'td.' + tabClasses.join('.');
       const selector = pmeClassSelectors(
-        `${pfx} div.chosen-container`,
+        `${pfx} div.${appName}-vue-select-control`,
         ['input', 'filter', 'filter-comp'],
       );
       $form.find(selector).each(function() {
@@ -2029,7 +2029,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
 
   noSubmitHandlers = !!noSubmitHandlers;
 
-  $container.find('tr.' + pmeToken('navigation') + '.' + pmeToken('down')).find('select, select + .chosen-container').addClass('chosen-dropup');
+  $container.find('tr.' + pmeToken('navigation') + '.' + pmeToken('down')).find(`select, select + .${appName}-vue-select-control`).addClass(`${appName}-vue-select--up`);
 
   // Disable page-rows and goto submits, just not necessary
   $container.find('input.' + pmePageRows).on('click', function(event) {
@@ -2081,7 +2081,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
     const tabClass = form.find('input[name="' + pmeSys('cur_tab') + '"]').val();
     const pfx = 'tbody tr td' + (!tabClass || tabClass === 'all' ? '' : '.tab-' + tabClass);
     const selector = pmeClassSelectors(
-      `${pfx} div.chosen-container`,
+      `${pfx} div.${appName}-vue-select-control`,
       ['filter', 'filter-comp'],
     );
     $table.find(selector).each(function() {

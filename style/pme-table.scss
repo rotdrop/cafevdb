@@ -352,10 +352,10 @@ tr.pme-navigation {
 }
 
 tr.pme-navigation {
-  td.pme-buttons span .chosen-container {
+  td.pme-buttons span .#{$appName}-vue-select-control {
     height:28px;
 
-    &.chosen-container-multi {
+    &.#{$appName}-vue-select-control--multiple {
       height:28px;
     }
   }
@@ -401,7 +401,7 @@ span.pme-pagerows input.pme-pagerows {
  *
  */
 
-td.chosen-hidden div.chosen-container,
+td.#{$appName}-vue-select--hidden .#{$appName}-vue-select-control,
 td.select-hidden select {
     display: none;
 }
@@ -1125,7 +1125,7 @@ table.pme-main {
     }
   }
 
-  div.pme-filter div.chosen-container {
+  div.pme-filter .#{$appName}-vue-select-control {
     box-sizing: border-box;
   }
 
@@ -1151,22 +1151,27 @@ form.pme-form {
   }
 
   .pme-filter-controls {
+    $comparison-select-width: 4.5em;
+
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: 4px;
 
-    &:has(> select.pme-filter-comp) {
+    &:has(> select.pme-filter-comp, > .#{$appName}-vue-select-control.pme-filter-comp) {
+      gap: 0;
       border-radius: var(--border-radius-element);
-      box-shadow: 0 0 0 1px var(--color-border-maxcontrast);
+      box-shadow: 0 0 0 2px var(--color-border-maxcontrast);
       transition: box-shadow var(--animation-quick, 100ms) ease;
 
       &:hover,
       &:focus-within,
       &:has(.vs--open) {
-        box-shadow: 0 0 0 2px var(--color-primary-element);
+        box-shadow: 0 0 0 2px var(--color-main-text),
+          0 0 0 4px var(--color-main-background);
       }
 
       > select.pme-filter-comp,
+      > .#{$appName}-vue-select-control.pme-filter-comp,
       > input[type="text"].pme-filter {
         border: 0;
         outline: none;
@@ -1179,6 +1184,12 @@ form.pme-form {
         border-inline-end: 1px solid var(--color-border-maxcontrast);
       }
 
+      > .#{$appName}-vue-select-control.pme-filter-comp .vs__dropdown-toggle {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-inline-end: 1px solid var(--color-border-maxcontrast) !important;
+      }
+
       > input[type="text"].pme-filter {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
@@ -1186,10 +1197,14 @@ form.pme-form {
     }
 
     > select.pme-filter-comp,
-    > .chosen-vue-select-control.pme-filter-comp {
-      flex: 0 1 auto;
-      width: 4.5em;
-      min-width: 4.5em;
+    > .#{$appName}-vue-select-control.pme-filter-comp {
+      flex: 0 0 $comparison-select-width;
+      width: $comparison-select-width;
+      min-width: $comparison-select-width;
+    }
+
+    > .#{$appName}-vue-select-control.pme-filter-comp {
+      --vs-dropdown-min-width: #{$comparison-select-width};
     }
 
     > select.pme-filter-comp {
@@ -1206,8 +1221,7 @@ form.pme-form {
       margin-block: 0;
     }
 
-    > .chosen-vue-select-control.pme-filter-comp .nc-select.v-select.select {
-      --default-clickable-area: 40px;
+    > .#{$appName}-vue-select-control.pme-filter-comp .nc-select.v-select.select {
       margin-block: 0;
 
       .vs__dropdown-toggle {
@@ -1220,9 +1234,18 @@ form.pme-form {
         box-shadow: none !important;
       }
 
-      &.vs--open .vs__dropdown-toggle {
-        border-end-start-radius: 0;
-        border-end-end-radius: 0;
+      &.vs--single,
+      &.vs--single:hover,
+      &.vs--single.vs--open {
+        .vs__dropdown-toggle {
+          // The comparison select and text input share the outer focus ring.
+          border: var(--border-width-input-focused, 2px) solid transparent !important;
+          border-inline-end: 1px solid var(--color-border-maxcontrast) !important;
+          border-start-end-radius: 0;
+          border-end-end-radius: 0;
+          box-shadow: none !important;
+          outline: none !important;
+        }
       }
 
       .vs__selected-options {
@@ -1257,26 +1280,37 @@ table.pme-main {
     }
   }
 
-  .pme-filter-select-controls .chosen-vue-select-control .nc-select.v-select.select.vs--multiple {
-    --default-clickable-area: 40px;
+  .pme-filter-select-controls .#{$appName}-vue-select-control {
+    display: block;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
 
-    .vs__dropdown-toggle {
-      box-sizing: border-box;
-      min-height: 40px;
-      padding-block: 2px;
+    .#{$appName}-vue-select {
+      width: 100%;
+      min-width: 0;
     }
 
-    .vs__selected-options {
-      align-items: center;
-    }
+    .nc-select.v-select.select.vs--multiple {
+      .vs__dropdown-toggle {
+        box-sizing: border-box;
+        min-height: 40px;
+        padding-block: 2px;
+      }
 
-    .vs__selected {
-      min-height: 28px;
-    }
+      .vs__selected-options {
+        align-items: center;
+      }
 
-    .vs__search {
-      min-height: 28px;
-      height: 28px !important;
+      .vs__selected {
+        min-height: 28px;
+      }
+
+      .vs__search {
+        min-height: 28px;
+        height: 28px !important;
+      }
     }
   }
 
@@ -1582,7 +1616,7 @@ form.pme-form {
 
     /* Hacks for some select stylers. The unhacked select is left as is. */
     &.select-wide {
-      .chosen-container, .selectize-control {
+      .#{$appName}-vue-select-control {
         min-width:50%;
         width:auto;
       }

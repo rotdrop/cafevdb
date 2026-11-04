@@ -7,66 +7,49 @@
  */
 
 import type {
-  PmeSelectComponentProps,
-  PmeSelectCreateOptions,
-  PmeSelectGroup,
-  PmeSelectOption,
-  PmeSelectValue,
-} from '../types/pme-select.ts';
+  VueSelectComponentProps,
+  VueSelectControls,
+  VueSelectCreateOptions,
+  VueSelectGroup,
+  VueSelectOption,
+  VueSelectValue,
+} from '../types/vue-select.ts';
 import type { MountableComponent } from './mountable-components.ts';
 
 import {
   awaitEmit,
   subscribe,
 } from '@rotdrop/async-nextcloud-event-bus';
+import { appName } from '../config.ts';
 import {
   GET_VUE_COMPONENT,
   LEGACY_PAGE_CLEANUP,
 } from '../event-bus-events.ts';
-import { PME_SELECT } from '../mountable-component-names.ts';
-import { appendSelectOption, readSelectOptions } from './select-options.ts';
+import { VUE_SELECT } from '../mountable-component-names.ts';
+import { appendSelectOption, orderSelectOptions, readSelectOptions } from './select-options.ts';
 
 export interface SelectizeAdapterOptions {
-  options?: PmeSelectOption[];
+  options?: VueSelectOption[];
   items?: Array<string|number>;
   plugins?: Array<string|{ name?: string }>;
   valueField?: string;
   labelField?: string;
-  create?: boolean|PmeSelectCreateOptions;
+  create?: boolean|VueSelectCreateOptions;
   createOnBlur?: boolean;
   persist?: boolean;
   hideSelected?: boolean;
   openOnFocus?: boolean;
   lockOptgroupOrder?: boolean;
   delimiter?: string;
-  onChange?: (value: PmeSelectValue) => void;
+  onChange?: (value: VueSelectValue) => void;
   onOpen?: () => void;
   onClose?: () => void;
-  onCreate?: (option: PmeSelectOption) => void;
-  groups?: PmeSelectGroup[];
+  onCreate?: (option: VueSelectOption) => void;
+  groups?: VueSelectGroup[];
   closeAfterSelect?: boolean;
   restoreOnBackspace?: boolean;
-  showMoveButtons?: PmeSelectComponentProps['showMoveButtons'];
+  showMoveButtons?: VueSelectComponentProps['showMoveButtons'];
 }
-
-type ExposedSelect = {
-  setRequired(value: boolean): void;
-  getValue(): PmeSelectValue;
-  getOptions(): PmeSelectOption[];
-  setValue(value: PmeSelectValue, silent?: boolean): void;
-  setOptions(options: PmeSelectOption[], groups?: PmeSelectGroup[]): void;
-  clear(silent?: boolean): void;
-  moveItem(index: number, offset: number): void;
-  createItem(input: string): Promise<boolean>;
-  focus(): void;
-  lock(): void;
-  unlock(): void;
-  disable(): void;
-  enable(): void;
-  isLocked: boolean;
-  isDisabled: boolean;
-  creating: boolean;
-};
 
 const adapterInstances = new Set<SelectizeService>();
 const adapterBySelect = new WeakMap<HTMLSelectElement, SelectizeService>();
@@ -78,14 +61,13 @@ const adapterBySelect = new WeakMap<HTMLSelectElement, SelectizeService>();
  * source for PHP form submission and legacy change listeners.
  */
 export class SelectizeService {
-  private readonly originalName: string|null;
   private readonly originalRequired: boolean;
   private required: boolean;
   private readonly originalHidden: string|null;
   private readonly originalAriaHidden: string|null;
   private readonly mountHost: HTMLElement;
   private readonly mountPoint: HTMLElement;
-  private component?: MountableComponent<typeof PME_SELECT>&ExposedSelect;
+  private component?: MountableComponent<typeof VUE_SELECT>&VueSelectControls;
   private previousValue: string[];
   private destroyed = false;
   private updatingNativeSelect = false;
@@ -101,7 +83,6 @@ export class SelectizeService {
     options: SelectizeAdapterOptions,
   ) {
     this.selectizeOptions = options;
-    this.originalName = select.getAttribute('name');
     this.originalRequired = select.required;
     this.required = select.required;
     this.originalHidden = select.getAttribute('hidden');
@@ -114,7 +95,7 @@ export class SelectizeService {
     };
 
     this.mountHost = document.createElement('span');
-    this.mountHost.className = 'selectize-control pme-vue-select-control';
+    this.mountHost.className = `${appName}-vue-select-control`;
     this.mountHost.title = select.title || select.dataset.originalTitle || '';
     this.mountPoint = document.createElement('span');
     this.mountHost.appendChild(this.mountPoint);
@@ -194,7 +175,7 @@ export class SelectizeService {
     };
   }
 
-  private getComponentProps(): PmeSelectComponentProps {
+  private getComponentProps(): VueSelectComponentProps {
     const { options, groups } = this.optionData();
     const config = this.selectizeOptions;
     const plugins = config.plugins ?? [];
@@ -209,7 +190,7 @@ export class SelectizeService {
         || this.select.name
         || '',
       rootClass: Array.from(this.select.classList)
-        .filter((name) => !['selectize', 'no-chosen', 'not-empty'].includes(name))
+        .filter((name) => ![`${appName}-vue-select--ordered`, 'no-vue-select', 'not-empty'].includes(name))
         .join(' '),
       inputId: this.select.id ? `${this.select.id}-vue-select` : undefined,
 
@@ -221,6 +202,10 @@ export class SelectizeService {
       notEmpty: this.select.classList.contains('not-empty'),
       sortable: plugins.some((plugin) => (typeof plugin === 'string' ? plugin : plugin.name) === 'drag_drop'),
       showMoveButtons: config.showMoveButtons ?? true,
+      hideSelected: config.hideSelected ?? false,
+      dropup: this.select.classList.contains(`${appName}-vue-select--up`)
+        ? true
+        : this.select.classList.contains(`${appName}-vue-select--auto`) ? 'auto' : false,
       create: this.getCreateOptions(),
       createOnBlur: config.createOnBlur ?? false,
       persist: config.persist ?? false,
@@ -233,7 +218,7 @@ export class SelectizeService {
     };
   }
 
-  private readonly handleComponentChange = (value: PmeSelectValue) => {
+  private readonly handleComponentChange = (value: VueSelectValue) => {
     const values = value === null ? [] : Array.isArray(value) ? value : [value];
     for (const option of this.component?.getOptions() ?? []) {
       if (values.includes(option.value) && !this.findOption(option.value)) {
@@ -249,10 +234,10 @@ export class SelectizeService {
   private async mountComponent() {
     const propsData = this.getComponentProps();
     const component = await awaitEmit(GET_VUE_COMPONENT, {
-      name: PME_SELECT,
+      name: VUE_SELECT,
       propsData,
     });
-    this.component = component as MountableComponent<typeof PME_SELECT>&ExposedSelect;
+    this.component = component as MountableComponent<typeof VUE_SELECT>&VueSelectControls;
     if (this.destroyed) {
       this.component.unmount();
       this.component.destroy();
@@ -263,7 +248,6 @@ export class SelectizeService {
     this.select.addEventListener('change', this.handleNativeChange);
     this.select.hidden = true;
     this.select.required = false;
-    this.select.removeAttribute('name');
 
     this.component.mount(this.mountPoint);
     const { options, groups } = this.optionData();
@@ -314,7 +298,9 @@ export class SelectizeService {
       if (normalized.length === 0) {
         this.select.selectedIndex = -1;
       }
-      this.writeFormValues(normalized);
+      if (this.select.multiple) {
+        orderSelectOptions(this.select, normalized);
+      }
       if (dispatchChange && changed) {
         this.selectizeOptions.onChange?.(this.getValue());
         this.select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -324,27 +310,7 @@ export class SelectizeService {
     }
   }
 
-  private writeFormValues(values: string[]) {
-    if (!this.component) {
-      return;
-    }
-    this.mountHost.querySelectorAll('[data-pme-select-value]').forEach((input) => input.remove());
-    if (this.originalName === null) {
-      return;
-    }
-    const disabled = this.component?.isDisabled ?? this.pendingDisabled ?? this.select.disabled;
-    for (const value of values) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = this.originalName;
-      input.value = value;
-      input.disabled = disabled;
-      input.dataset.pmeSelectValue = '';
-      this.mountHost.appendChild(input);
-    }
-  }
-
-  private applyValue(value: PmeSelectValue, silent: boolean, updateComponent: boolean) {
+  private applyValue(value: VueSelectValue, silent: boolean, updateComponent: boolean) {
     const values = value === null ? [] : Array.isArray(value) ? value : [value];
     const normalized = this.normalizeValues(this.select.multiple ? values : values.slice(0, 1));
     if (updateComponent) {
@@ -364,7 +330,7 @@ export class SelectizeService {
    * @param value Values to select.
    * @param silent Suppress native change notifications.
    */
-  setValue(value: PmeSelectValue, silent = false) {
+  setValue(value: VueSelectValue, silent = false) {
     this.applyValue(value, silent, true);
   }
 
@@ -402,7 +368,6 @@ export class SelectizeService {
     } else {
       this.component?.unlock();
     }
-    this.writeFormValues(this.previousValue);
   }
 
   /** Visible host for legacy styling, tooltips, and validation feedback. */
@@ -435,19 +400,19 @@ export class SelectizeService {
   }
 
   disable() {
+    this.select.disabled = true;
     if (!this.component) {
       this.pendingDisabled = true;
     }
     this.component?.disable();
-    this.writeFormValues(this.previousValue);
   }
 
   enable() {
+    this.select.disabled = false;
     if (!this.component) {
       this.pendingDisabled = false;
     }
     this.component?.enable();
-    this.writeFormValues(this.previousValue);
   }
 
   get isLocked() {
@@ -476,11 +441,6 @@ export class SelectizeService {
       this.select.setAttribute('hidden', this.originalHidden);
     }
     this.select.required = this.originalRequired;
-    if (this.originalName === null) {
-      this.select.removeAttribute('name');
-    } else {
-      this.select.setAttribute('name', this.originalName);
-    }
     if (this.originalAriaHidden === null) {
       this.select.removeAttribute('aria-hidden');
     } else {
@@ -494,13 +454,13 @@ export class SelectizeService {
 export const getMountedSelectize = (select: HTMLSelectElement) => adapterBySelect.get(select);
 
 const parseSelectizeOptions = (select: HTMLSelectElement): SelectizeAdapterOptions => {
-  const raw = select.dataset.selectizeOptions;
+  const raw = select.dataset.vueSelectOptions;
   if (!raw) {
     return {};
   }
   const parsed: unknown = JSON.parse(raw);
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-    throw new TypeError('The PME selectize-options data attribute must contain an object.');
+    throw new TypeError('The PME vue-select-options data attribute must contain an object.');
   }
   return parsed as SelectizeAdapterOptions;
 };
@@ -513,7 +473,7 @@ const findSelects = (target: HTMLElement|string) => {
     if (element instanceof HTMLSelectElement) {
       return [element];
     }
-    return Array.from(element.querySelectorAll<HTMLSelectElement>('select.selectize'));
+    return Array.from(element.querySelectorAll<HTMLSelectElement>(`select.${appName}-vue-select--ordered`));
   });
 };
 
@@ -521,7 +481,7 @@ const findSelects = (target: HTMLElement|string) => {
  * Mount Vue select widgets for matching PME `<select>` elements.
  *
  * A selector can identify select elements directly or a container with
- * `.selectize` selects. Explicit options override the element's JSON data
+ * `.${appName}-vue-select--ordered` selects. Explicit options override the element's JSON data
  * attribute. The returned instances expose value, refresh, lock, and destroy
  * controls; no jQuery objects or plugins are installed.
  *

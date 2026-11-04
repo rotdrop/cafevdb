@@ -25,6 +25,7 @@
  * @module
  */
 
+import { appName } from '../config.ts';
 import { getMountedChosen } from '../services/mountable-chosen.ts';
 import { getMountedSelectize } from '../services/mountable-select.ts';
 import jQuery from './jquery.ts';
@@ -275,7 +276,7 @@ const getWidget = function($select: JQuery<HTMLSelectElement>) {
 };
 
 const getSelectFromWidget = function($widget: JQuery) {
-  if ($widget.hasClass('pme-vue-select-control') || $widget.hasClass('chosen-container')) {
+  if ($widget.hasClass(`${appName}-vue-select-control`)) {
     const $element = $widget.prev();
     return $element.is('select') ? $element : $();
   } else if ($widget.is('select')) {

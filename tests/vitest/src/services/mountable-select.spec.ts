@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import type { PmeSelectComponentProps, PmeSelectValue } from '~/src/types/pme-select.ts';
+import type { VueSelectComponentProps, VueSelectValue } from '~/src/types/vue-select.ts';
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import $ from '~/src/app/jquery.ts';
@@ -13,15 +13,15 @@ import '~/src/app/jquery-readonly.ts';
 
 interface FakeMountable {
   setRequired: ReturnType<typeof vi.fn>;
-  props: PmeSelectComponentProps;
+  props: VueSelectComponentProps;
   element?: HTMLElement;
   parent?: HTMLElement;
   mount(element: HTMLElement): void;
   unmount(): void;
   destroy(): void;
-  getValue(): PmeSelectValue;
-  getOptions(): PmeSelectComponentProps['options'];
-  setValue(value: PmeSelectValue, silent?: boolean): void;
+  getValue(): VueSelectValue;
+  getOptions(): VueSelectComponentProps['options'];
+  setValue(value: VueSelectValue, silent?: boolean): void;
   setOptions: ReturnType<typeof vi.fn>;
   clear: ReturnType<typeof vi.fn>;
   moveItem: ReturnType<typeof vi.fn>;
@@ -39,7 +39,7 @@ interface FakeMountable {
 const mountables: FakeMountable[] = [];
 const { subscriptions, createComponent } = vi.hoisted(() => ({
   subscriptions: new Map<string, () => void>(),
-  createComponent: vi.fn<(props: PmeSelectComponentProps) => FakeMountable>(),
+  createComponent: vi.fn<(props: VueSelectComponentProps) => FakeMountable>(),
 }));
 
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
@@ -50,7 +50,7 @@ vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
       callback();
     });
   },
-  awaitEmit: async (_event: string, payload: { propsData: PmeSelectComponentProps }) =>
+  awaitEmit: async (_event: string, payload: { propsData: VueSelectComponentProps }) =>
     createComponent(payload.propsData),
 }));
 
@@ -62,10 +62,10 @@ vi.mock('~/src/services/mountable-chosen.ts', () => ({
   getMountedChosen: () => undefined,
 }));
 vi.mock('~/src/mountable-component-names.ts', () => ({
-  PME_SELECT: 'PmeSelect',
+  VUE_SELECT: 'VueSelect',
 }));
 
-function createMountable(props: PmeSelectComponentProps): FakeMountable {
+function createMountable(props: VueSelectComponentProps): FakeMountable {
   let selected = props.modelValue ?? null;
   const instance: FakeMountable = {
     setRequired: vi.fn(),
@@ -77,7 +77,7 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
       this.parent = element.parentElement!;
       element.remove();
       const widget = document.createElement('span');
-      widget.className = 'pme-select';
+      widget.className = 'cafevdb-vue-select';
       this.parent.replaceChildren(widget);
     },
     unmount() {
@@ -88,7 +88,7 @@ function createMountable(props: PmeSelectComponentProps): FakeMountable {
     destroy() {},
     getValue: () => selected,
     getOptions: () => props.options,
-    setValue(value: PmeSelectValue, silent = false) {
+    setValue(value: VueSelectValue, silent = false) {
       selected = value;
       if (!silent) {
         props.onChange?.(value);
@@ -142,20 +142,31 @@ afterEach(() => {
 });
 
 describe('mountSelectize', () => {
+  it.each([
+    { classes: '', expected: false },
+    { classes: 'cafevdb-vue-select--up', expected: true },
+    { classes: 'cafevdb-vue-select--auto', expected: 'auto' },
+    { classes: 'cafevdb-vue-select--auto cafevdb-vue-select--up', expected: true },
+  ])('passes dropup=$expected from native select classes "$classes"', async ({ classes, expected }) => {
+    const container = makeSelect(`<select class="cafevdb-vue-select--ordered ${classes}" multiple><option value="a">A</option></select>`);
+    await mountSelectize(container);
+    expect(mountables[0].props.dropup).toBe(expected);
+  });
+
   it('shows move buttons by default for sortable selects', async () => {
-    const container = makeSelect('<select class="selectize" multiple><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" multiple><option value="a">A</option></select>');
     await mountSelectize(container, { plugins: ['drag_drop'] });
     expect(mountables[0].props).toMatchObject({ sortable: true, showMoveButtons: true });
   });
 
   it.each([true, false, 'focus'] as const)('passes showMoveButtons=%s independently of sorting', async (showMoveButtons) => {
-    const container = makeSelect('<select class="selectize" multiple><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" multiple><option value="a">A</option></select>');
     await mountSelectize(container, { plugins: ['drag_drop'], showMoveButtons });
     expect(mountables[0].props).toMatchObject({ sortable: true, showMoveButtons });
   });
 
   it('updates callback-visible values before notification and native change handlers', async () => {
-    const container = makeSelect('<form><select name="field" class="selectize"><option value="a">A</option><option value="b">B</option></select></form>');
+    const container = makeSelect('<form><select name="field" class="cafevdb-vue-select--ordered"><option value="a">A</option><option value="b">B</option></select></form>');
     const select = container.querySelector('select')!;
     const form = container.querySelector('form')!;
     const events: string[] = [];
@@ -174,7 +185,7 @@ describe('mountSelectize', () => {
   });
 
   it('mirrors validated free-form contacts into their native optgroup', async () => {
-    const container = makeSelect('<select class="selectize" multiple></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" multiple></select>');
     const select = container.querySelector('select')!;
     const [service] = await mountSelectize(select, {
       persist: true,
@@ -194,7 +205,7 @@ describe('mountSelectize', () => {
   });
 
   it('preserves pending and dynamic required overrides', async () => {
-    const container = makeSelect('<select class="selectize" required><option>A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" required><option>A</option></select>');
     const select = container.querySelector('select')!;
     const scope = mountedSelectScope(container);
     const pending = scope.mount(select);
@@ -209,7 +220,7 @@ describe('mountSelectize', () => {
   });
 
   it('destroys scoped pending mounts before replacing their container', async () => {
-    const container = makeSelect('<select class="selectize" name="field"><option>A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" name="field"><option>A</option></select>');
     const select = container.querySelector('select')!;
     const pending = mountedSelectScope(container).mount(select);
     destroyMountedSelects(container);
@@ -221,7 +232,7 @@ describe('mountSelectize', () => {
   });
 
   it('does not dispose a replacement scope when an old scope is destroyed twice', async () => {
-    const container = makeSelect('<select class="selectize"><option>A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered"><option>A</option></select>');
     const old = mountedSelectScope(container);
     await old.mount(container.querySelector('select')!);
     old.destroy();
@@ -234,7 +245,7 @@ describe('mountSelectize', () => {
   it('mounts a native select through the Vue event bus and preserves form values', async () => {
     const container = makeSelect(`
       <form>
-        <select id="instrument" name="instrument" class="pme-input selectize not-empty">
+        <select id="instrument" name="instrument" class="pme-input cafevdb-vue-select--ordered not-empty">
           <optgroup label="Strings" data-group-id="4">
             <option value="violin">Violin</option>
             <option value="viola" selected>Viola</option>
@@ -243,7 +254,11 @@ describe('mountSelectize', () => {
       </form>
     `);
     const select = container.querySelector('select')!;
-    const changes = vi.fn();
+    const changes = vi.fn((event: Event) => {
+      expect(event.target).toBe(select);
+      expect($(event.target as HTMLSelectElement).attr('name')).toBe('instrument');
+      expect($(event.target as HTMLSelectElement).val()).toBe('violin');
+    });
     select.addEventListener('change', changes);
     const [instance] = await mountSelectize(select);
 
@@ -251,7 +266,8 @@ describe('mountSelectize', () => {
     expect(instance.getValue()).toBe('viola');
     expect(select.hidden).toBe(true);
     expect(select.required).toBe(false);
-    expect(select.hasAttribute('name')).toBe(false);
+    expect(select.name).toBe('instrument');
+    expect(container.querySelector('input[type="hidden"]')).toBeNull();
     expect(mountables[0].props).toMatchObject({
       inputId: 'instrument-vue-select',
       label: 'instrument',
@@ -282,7 +298,7 @@ describe('mountSelectize', () => {
   describe('select-utils with Vue-backed selects', () => {
     const makeForm = (multiple = true) => {
       const container = makeSelect(`
-          <form><select class="selectize" name="field${multiple ? '[]' : ''}" ${multiple ? 'multiple' : ''}>
+          <form><select class="cafevdb-vue-select--ordered" name="field${multiple ? '[]' : ''}" ${multiple ? 'multiple' : ''}>
             <optgroup label="Group"><option value="a">Alpha</option><option value="b">Beta</option></optgroup>
             <option value="c" disabled>Gamma</option>
           </select></form>
@@ -346,9 +362,9 @@ describe('mountSelectize', () => {
       expect(SelectUtils.selected($select)).toEqual(['b', 'a']);
       expect(SelectUtils.children($select)).toHaveLength(2);
       expect(SelectUtils.options($select)).toHaveLength(3);
-      expect(SelectUtils.optionValues($select)).toEqual(['a', 'b']);
+      expect(SelectUtils.optionValues($select)).toEqual(['b', 'a']);
       expect(SelectUtils.optionByValue($select, 'b').text()).toBe('Beta');
-      expect(SelectUtils.selectedOptions($select).map((_, option) => option.value).get()).toEqual(['a', 'b']);
+      expect(SelectUtils.selectedOptions($select).map((_, option) => option.value).get()).toEqual(['b', 'a']);
       SelectUtils.deselectAll($select);
       expect(SelectUtils.selected($select)).toEqual([]);
       expect(SelectUtils.selectedOptions($select)).toHaveLength(0);
@@ -380,8 +396,8 @@ describe('mountSelectize', () => {
       SelectUtils.optionByValue($select, 'a').prop('disabled', true);
       SelectUtils.refreshWidget($select);
       expect(mountables[0].setOptions).toHaveBeenLastCalledWith([
-        { value: 'a', label: 'Alpha', groups: ['0'], disabled: true },
         { value: 'b', label: 'Updated', groups: ['0'], disabled: false },
+        { value: 'a', label: 'Alpha', groups: ['0'], disabled: true },
         { value: 'c', label: 'Gamma', groups: [], disabled: true },
       ], [{ value: '0', label: 'Group', disabled: false }]);
       SelectUtils.replaceOptions($select, '<option value="d" selected>Delta</option>');
@@ -453,9 +469,9 @@ describe('mountSelectize', () => {
 
   it('reads legacy data attributes, converts option values, and maps plugin settings', async () => {
     const container = makeSelect(`
-      <select class="selectize" multiple name="instruments[]"
+      <select class="cafevdb-vue-select--ordered" multiple name="instruments[]"
         data-initial-values="[2,1]"
-        data-selectize-options='{"create":false,"plugins":["drag_drop"],"persist":true,"lockOptgroupOrder":true}'>
+        data-vue-select-options='{"create":false,"plugins":["drag_drop"],"persist":true,"lockOptgroupOrder":true}'>
         <option value="1">One</option>
         <option value="2">Two</option>
       </select>
@@ -470,12 +486,12 @@ describe('mountSelectize', () => {
       persist: true,
     });
     expect(select.hidden).toBe(true);
-    expect(select.name).toBe('');
+    expect(select.name).toBe('instruments[]');
   });
 
   it('merges explicit configuration over data attributes and adapts remote creation fields', async () => {
     const container = makeSelect(`
-      <select class="selectize" data-selectize-options='{"create":false,"valueField":"name","labelField":"label","createOnBlur":false}'>
+      <select class="cafevdb-vue-select--ordered" data-vue-select-options='{"create":false,"valueField":"name","labelField":"label","createOnBlur":false}'>
         <option value="1">One</option>
       </select>
     `);
@@ -500,9 +516,9 @@ describe('mountSelectize', () => {
 
   it('mounts each matching select under a selector and ignores unrelated selects', async () => {
     const container = makeSelect(`
-      <select class="selectize"><option value="a">A</option></select>
+      <select class="cafevdb-vue-select--ordered"><option value="a">A</option></select>
       <select><option value="b">B</option></select>
-      <div class="nested"><select class="selectize"><option value="c">C</option></select></div>
+      <div class="nested"><select class="cafevdb-vue-select--ordered"><option value="c">C</option></select></div>
     `);
     const instances = await mountSelectize(container);
     expect(instances).toHaveLength(2);
@@ -512,7 +528,7 @@ describe('mountSelectize', () => {
   });
 
   it('does not mount an element twice', async () => {
-    const container = makeSelect('<select class="selectize"><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered"><option value="a">A</option></select>');
     const select = container.querySelector('select')!;
     const [first] = await mountSelectize(select);
     const [second] = await mountSelectize(select);
@@ -521,7 +537,7 @@ describe('mountSelectize', () => {
   });
 
   it('deduplicates concurrent mount requests for the same select', async () => {
-    const container = makeSelect('<select class="selectize"><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered"><option value="a">A</option></select>');
     const select = container.querySelector('select')!;
     const [first, second] = await Promise.all([
       mountSelectize(select),
@@ -532,7 +548,7 @@ describe('mountSelectize', () => {
   });
 
   it('refreshes native options and synchronizes external native selection changes', async () => {
-    const container = makeSelect('<select class="selectize"><option value="a" selected>A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered"><option value="a" selected>A</option></select>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
     const newOption = document.createElement('option');
@@ -567,7 +583,7 @@ describe('mountSelectize', () => {
   });
 
   it('exposes control methods and dispatches native change for programmatic value updates', async () => {
-    const container = makeSelect('<select class="selectize" multiple><option value="a">A</option><option value="b">B</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" multiple><option value="a">A</option><option value="b">B</option></select>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
     mountables[0].lock.mockClear();
@@ -596,41 +612,107 @@ describe('mountSelectize', () => {
     expect(mountables[0].focus).toHaveBeenCalledOnce();
   });
 
-  it('restores the original select and submits ordered hidden values on destroy', async () => {
-    const container = makeSelect('<form><select class="selectize" name="instrument[]" multiple required><option value="a">A</option><option value="b">B</option></select></form>');
+  it('submits ordered native values and restores the original select on destroy', async () => {
+    const container = makeSelect('<form><select class="cafevdb-vue-select--ordered" name="instrument[]" multiple required><option value="a">A</option><option value="b">B</option></select></form>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
     instance.setValue(['b', 'a']);
+    expect(select.name).toBe('instrument[]');
+    expect(Array.from(select.selectedOptions, (option) => option.value)).toEqual(['b', 'a']);
+    expect(container.querySelector('input[type="hidden"]')).toBeNull();
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
     instance.disable();
+    expect(select.disabled).toBe(true);
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual([]);
     instance.enable();
+    expect(select.disabled).toBe(false);
     expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
     instance.destroy();
     expect(select.hidden).toBe(false);
     expect(select.required).toBe(true);
     expect(select.name).toBe('instrument[]');
-    expect(container.querySelector('.pme-vue-select-control')).toBeNull();
+    expect(new FormData(container.querySelector('form')!).getAll('instrument[]')).toEqual(['b', 'a']);
+    expect(container.querySelector('.cafevdb-vue-select-control')).toBeNull();
     expect(container.querySelector('input[type="hidden"]')).toBeNull();
   });
 
+  it('preserves ordered submission across optgroups, native changes, refresh, and cleanup', async () => {
+    const container = makeSelect(`
+      <form><select name="recipients[to][]" multiple class="cafevdb-vue-select--ordered">
+        <optgroup label="People">
+          <option value="a">A</option><option value="b">B</option>
+        </optgroup>
+        <optgroup class="free-form" label="Form Input"><option value="c">C</option></optgroup>
+        <optgroup label="Unavailable" disabled><option value="d">D</option></optgroup>
+        <option value="e" disabled>E</option>
+      </select></form>
+    `);
+    const form = container.querySelector('form')!;
+    const select = container.querySelector('select')!;
+    const [service] = await mountSelectize(select);
+    const changes = vi.fn((event: Event) => {
+      expect(event.target).toBe(select);
+      expect($(select).attr('name')!.matchAll(/([^[]+)\[([^\]]+)\]/g).next().value?.slice(1)).toEqual(['recipients', 'to']);
+      expect($(select).val()).toEqual(['b', 'c', 'a']);
+      expect(new FormData(form).getAll(select.name)).toEqual(['b', 'c', 'a']);
+    });
+    form.addEventListener('change', changes);
+    mountables[0].setValue(['b', 'c', 'a']);
+    expect(changes).toHaveBeenCalledOnce();
+    expect(service.getValue()).toEqual(['b', 'c', 'a']);
+    expect(select.querySelector('option[value="d"]')!.parentElement!.hasAttribute('disabled')).toBe(true);
+    expect(select.querySelector('option[value="e"]')!.hasAttribute('disabled')).toBe(true);
+    expect(form.querySelector('input[type="hidden"]')).toBeNull();
+    service.refresh();
+    expect(service.getValue()).toEqual(['b', 'c', 'a']);
+    expect(mountables[0].setOptions.mock.lastCall?.[1]).toHaveLength(3);
+    form.removeEventListener('change', changes);
+    $(select).val(['c', 'a']);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(service.getValue()).toEqual(['c', 'a']);
+    service.destroy();
+    expect(new FormData(form).getAll(select.name)).toEqual(['c', 'a']);
+  });
+
+  it('uses the native name and form association, including changes made while mounted', async () => {
+    const container = makeSelect(`
+      <form id="external"></form>
+      <select form="external" name="field" class="cafevdb-vue-select--ordered">
+        <option value="a">A</option><option value="b">B</option>
+      </select>
+    `);
+    const form = container.querySelector('form')!;
+    const select = container.querySelector('select')!;
+    const [service] = await mountSelectize(select);
+    service.setValue('b');
+    expect(new FormData(form).get('field')).toBe('b');
+    select.name = 'renamed';
+    expect(new FormData(form).get('renamed')).toBe('b');
+    expect(new FormData(form).has('field')).toBe(false);
+    select.removeAttribute('name');
+    service.setValue('a');
+    expect([...new FormData(form)]).toEqual([]);
+    service.destroy();
+    expect(select.hasAttribute('name')).toBe(false);
+  });
+
   it('restores the select when malformed option configuration fails before mounting', async () => {
-    const container = makeSelect('<select class="selectize" required name="field" data-selectize-options="[]"><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered" required name="field" data-vue-select-options="[]"><option value="a">A</option></select>');
     const select = container.querySelector('select')!;
     await expect(mountSelectize(select)).rejects.toThrow('must contain an object');
     expect(select.hidden).toBe(false);
     expect(select.required).toBe(true);
     expect(select.name).toBe('field');
-    expect(container.querySelector('.pme-vue-select-control')).toBeNull();
+    expect(container.querySelector('.cafevdb-vue-select-control')).toBeNull();
   });
 
   it('cleans up mounted services on legacy page cleanup', async () => {
-    const container = makeSelect('<select class="selectize"><option value="a">A</option></select>');
+    const container = makeSelect('<select class="cafevdb-vue-select--ordered"><option value="a">A</option></select>');
     const select = container.querySelector('select')!;
     const [instance] = await mountSelectize(select);
     await subscriptions.get('cleanup')?.();
     expect(select.hidden).toBe(false);
     expect(instance.getValue()).toBe('a');
-    expect(container.querySelector('.pme-vue-select-control')).toBeNull();
+    expect(container.querySelector('.cafevdb-vue-select-control')).toBeNull();
   });
 });

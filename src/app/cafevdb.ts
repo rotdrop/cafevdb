@@ -219,7 +219,7 @@ const toolTipSelectors: ToolTipSpec[] = [
       'option',
       'button',
       '#upload',
-      'input:not([type=hidden], .selectize-input-element)',
+      `input:not([type=hidden], .${appName}-vue-select__input)`,
       'textarea',
     ].join(','),
     options: { placement: 'right' },
@@ -239,7 +239,7 @@ const toolTipSelectors: ToolTipSpec[] = [
   // top
   {
     selector: [
-      'div.chosen-container',
+      `div.${appName}-vue-select-control`,
       'label',
       '.displayName .action:not(.delete)',
       '.password .action:not(.delete)',

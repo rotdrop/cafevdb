@@ -20,11 +20,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+@use './variables.scss' as *;
+
 .__jquery-readonly-active__ {
   /* pointer-events: none; */
   opacity: 0.5;
 }
-.chosen-container.__jquery-readonly-active__ {
+.#{$appName}-vue-select-control.__jquery-readonly-active__ {
   .__jquery-readonly-active__ {
     opacity: unset;
   }

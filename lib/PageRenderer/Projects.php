@@ -334,14 +334,14 @@ class Projects extends PMETableViewBase
       'select'   => 'D',
       'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
-      'css'      => ['postfix' => [ 'tooltip-right', 'selectize', 'no-chosen', 'not-empty' ], ],
+      'css'      => ['postfix' => [ 'tooltip-right', $this->appName() . '-vue-select--ordered', 'no-vue-select', 'not-empty' ], ],
       'values2'  => ProjectType::getL10NValues($this->l),
       'default'  => ProjectType::TEMPORARY,
       'sort'     => true,
       'align'    => 'center',
       'display' => [
         'attributes' => [
-          'data-selectize-options' => [
+          'data-vue-select-options' => [
             'lockOptgroupOrder' => true,
           ],
         ],
@@ -367,7 +367,7 @@ class Projects extends PMETableViewBase
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>',
           'attributes' => [
-            'data-selectize-options' => [
+            'data-vue-select-options' => [
               'lockOptgroupOrder' => true,
             ],
           ],
@@ -387,7 +387,7 @@ class Projects extends PMETableViewBase
           ,
           'postfix' => '</div>',
           'attributes' => [
-            'data-selectize-options' => [
+            'data-vue-select-options' => [
               'lockOptgroupOrder' => true,
             ],
           ],
@@ -403,13 +403,13 @@ class Projects extends PMETableViewBase
 />
 </div>',
           'attributes' => [
-            'data-selectize-options' => [
+            'data-vue-select-options' => [
               'lockOptgroupOrder' => true,
             ],
           ],
         ],
         'tooltip' => $this->toolTipsService[$this->tooltipSlug('instrumentation')],
-        'css'         => ['postfix' => [ 'tooltip-top', 'selectize', 'no-chosen' ], ],
+        'css'         => ['postfix' => [ 'tooltip-top', $this->appName() . '-vue-select--ordered', 'no-vue-select' ], ],
         'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
         'values|ACP' => [

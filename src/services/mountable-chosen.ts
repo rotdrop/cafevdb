@@ -2,12 +2,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import type { ChosenSelectComponentProps, ChosenSelectControls, ChosenSelectValue } from '../types/chosen-select.ts';
+import type { VueSelectComponentProps, VueSelectControls, VueSelectValue } from '../types/vue-select.ts';
 import type { MountableComponent } from './mountable-components.ts';
 
 import { awaitEmit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
-import { CHOSEN_SELECT } from '../mountable-component-names.ts';
+import { VUE_SELECT } from '../mountable-component-names.ts';
 import { readSelectOptions } from './select-options.ts';
 
 export interface ChosenAdapterOptions extends Chosen.Options {
@@ -29,7 +30,7 @@ export class ChosenService {
   private readonly originalHidden: string|null;
   private readonly originalRequired: boolean;
   private required: boolean;
-  private component?: MountableComponent<typeof CHOSEN_SELECT>&ChosenSelectControls;
+  private component?: MountableComponent<typeof VUE_SELECT>&VueSelectControls;
   private destroyed = false;
   private locked = false;
   private pendingOpen = false;
@@ -49,13 +50,13 @@ export class ChosenService {
     this.labels = Array.from(select.labels ?? []);
     this.wasConnected = select.isConnected;
     this.element = document.createElement('div');
-    this.element.className = 'chosen-container chosen-vue-select-control';
-    this.element.classList.add(select.multiple ? 'chosen-container-multi' : 'chosen-container-single');
+    this.element.className = `${appName}-vue-select-control`;
+    this.element.classList.add(select.multiple ? `${appName}-vue-select-control--multiple` : `${appName}-vue-select-control--single`);
     if (options.inherit_select_classes) {
       select.classList.forEach((name) => this.element.classList.add(name));
     }
     if (select.id) {
-      this.element.id = `${select.id}_chosen`;
+      this.element.id = `${select.id}-vue-select-control`;
     }
     this.element.style.display = 'inline-block';
     this.element.style.verticalAlign = 'middle';
@@ -91,7 +92,7 @@ export class ChosenService {
     return bySelect.get(select) ?? new ChosenService(select, options);
   }
 
-  private props(): ChosenSelectComponentProps {
+  private props(): VueSelectComponentProps {
     const { options, groups } = readSelectOptions(this.select);
     return {
       options,
@@ -100,19 +101,27 @@ export class ChosenService {
       label: this.select.getAttribute('aria-label')
         || Array.from(this.select.labels ?? [], (label) => label.textContent?.trim()).filter(Boolean).join(' ')
         || this.select.dataset.placeholder || this.select.title || this.select.name || this.select.id,
-      inputId: this.select.id ? `${this.select.id}-chosen-input` : undefined,
+      inputId: this.select.id ? `${this.select.id}-vue-select-input` : undefined,
       placeholder: this.select.dataset.placeholder || '',
       multiple: this.select.multiple,
       disabled: this.isDisabled,
       readonly: this.isLocked,
       required: this.required,
+      hideSelected: true,
+      removeOnBackspace: false,
+      nativeOrder: true,
+      blankPlaceholder: true,
+      retainMissingValues: false,
+      searchValues: false,
+      labelOutside: false,
+      multiplePlaceholder: false,
       allowSingleDeselect: this.options.allow_single_deselect ?? false,
       disableSearch: this.options.disable_search ?? false,
       disableSearchThreshold: this.options.disable_search_threshold ?? 0,
       noResultsText: this.options.no_results_text,
-      dropup: this.options.dropup ?? (this.select.classList.contains('chosen-dropup')
+      dropup: this.options.dropup ?? (this.select.classList.contains(`${appName}-vue-select--up`)
         ? true
-        : this.select.classList.contains('chosen-auto') ? 'auto' : false),
+        : this.select.classList.contains(`${appName}-vue-select--auto`) ? 'auto' : false),
       onChange: this.handleComponentChange,
       onOpen: () => {
         this.opened = true;
@@ -127,9 +136,9 @@ export class ChosenService {
 
   private async mountComponent() {
     const component = await awaitEmit(GET_VUE_COMPONENT, {
-      name: CHOSEN_SELECT,
+      name: VUE_SELECT,
       propsData: this.props(),
-    }) as MountableComponent<typeof CHOSEN_SELECT>&ChosenSelectControls;
+    }) as MountableComponent<typeof VUE_SELECT>&VueSelectControls;
     if (this.destroyed) {
       component.destroy();
       return;
@@ -145,7 +154,7 @@ export class ChosenService {
     }
   }
 
-  private readonly handleComponentChange = (value: ChosenSelectValue) => {
+  private readonly handleComponentChange = (value: VueSelectValue) => {
     if (this.isDisabled || this.isLocked) {
       this.refresh();
       return;
@@ -170,12 +179,12 @@ export class ChosenService {
     }
   };
 
-  getValue(): ChosenSelectValue {
+  getValue(): VueSelectValue {
     const values = Array.from(this.select.selectedOptions, (option) => option.value);
     return this.select.multiple ? values : values[0] ?? null;
   }
 
-  setValue(value: ChosenSelectValue, silent = false) {
+  setValue(value: VueSelectValue, silent = false) {
     const previous = JSON.stringify(this.getValue());
     const values = value === null ? [] : Array.isArray(value) ? value : [value];
     const selected = !this.select.multiple && values.length === 0 && this.select.options[0]?.value === ''
@@ -207,7 +216,7 @@ export class ChosenService {
       this.select.required = false;
     }
     this.component?.setState(this.props());
-    this.element.classList.toggle('chosen-disabled', this.isDisabled || this.isLocked);
+    this.element.classList.toggle(`${appName}-vue-select-control--disabled`, this.isDisabled || this.isLocked);
     this.options.onUpdate?.();
   }
 
@@ -305,7 +314,7 @@ export class ChosenService {
 export const getMountedChosen = (select: HTMLSelectElement) => bySelect.get(select);
 
 /**
- * Mount one native select, or the `.chosen` selects in a container.
+ * Mount one native select, or the app-prefixed Vue selects in a container.
  *
  * @param target Select, containing element, or CSS selector.
  * @param options Legacy Chosen options applied to matching selects.
@@ -314,7 +323,7 @@ export const mountChosen = async (target: HTMLElement|string, options: ChosenAda
   const targets = typeof target === 'string' ? [...document.querySelectorAll<HTMLElement>(target)] : [target];
   const selects = [...new Set(targets.flatMap((element) => element instanceof HTMLSelectElement
     ? [element]
-    : [...element.querySelectorAll<HTMLSelectElement>('select.chosen')]))];
+    : [...element.querySelectorAll<HTMLSelectElement>(`select.${appName}-vue-select`)]))];
   const created: ChosenService[] = [];
   const services = selects.map((select) => {
     const existing = getMountedChosen(select);

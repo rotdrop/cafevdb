@@ -79,8 +79,6 @@ interface JQuery<TElement = HTMLElement> {
   lockUnlock(argument?: LockUnlockCommands|Partial<LockUnlockOptions>, value?: null|undefined|boolean|string): JQuery<TElement>;
   octemplate<T extends Record<string, unknown>>(vars: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>;
   avatar(user: string, size: number): void;
-  tinymce(): undefined|Editor;
-  tinymce(options: RawEditorOptions): Promise<Editor[]>;
 }
 
 interface JQueryStatic {
