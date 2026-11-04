@@ -166,12 +166,15 @@ describe('VueSelect', () => {
     expect(wrapper.find('button[aria-label="Remove Violin"]').exists()).toBe(false);
   });
 
-  it('preserves selectable blank options and their empty value', async () => {
-    const wrapper = render({ options: [{ value: '', label: '' }, ...options], modelValue: 'violin' });
+  it.each([false, true])('omits completely empty options when multiple=%s', async (multiple) => {
+    const wrapper = render({ options: [{ value: '', label: '' }, ...options], multiple });
     await open(wrapper);
-    const blank = wrapper.findAll('[role="option"]').find((option) => option.text() === '');
-    expect(blank).toBeDefined();
-    await blank!.trigger('click');
+    expect(wrapper.findAll('[role="option"]').some((option) => option.text() === '')).toBe(false);
+  });
+
+  it('preserves named options with an empty value', async () => {
+    const wrapper = render({ options: [{ value: '', label: 'None' }, ...options], modelValue: 'violin' });
+    await choose(wrapper, 'None');
     expect(wrapper.vm.getValue()).toBe('');
     expect(wrapper.emitted('change')?.at(-1)).toEqual(['']);
   });

@@ -277,7 +277,7 @@ const choices = computed(() => {
   const words = searchable.value ? searchableText(search.value).trim().split(/\s+/).filter(Boolean) : []
   const matching = options.value.filter((option) =>
     (!state.value.hideSelected || !state.value.multiple || !selectedValues.value.includes(option.value))
-    && (!state.value.blankPlaceholder || state.value.multiple || option.value !== '' || option.label !== '')
+    && (option.value !== '' || option.label !== '')
     && words.every((word) => searchableText(`${option.label} ${state.value.searchValues ? option.value : ''}`).includes(word)))
   const result: Choice[] = []
   const knownGroups = new Set(groups.value.map((group) => group.value))

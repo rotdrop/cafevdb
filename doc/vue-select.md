@@ -21,6 +21,10 @@ Shared types live in `src/types/vue-select.ts`.
 
 Values are strings, ordered string arrays for multiple selects, or `null`.
 Options support `value`, `label`, `groups`, `disabled`, and plain-text `title`.
+Completely empty options are omitted from the dropdown. Native placeholder
+options with no value, label, or text remain in the original select for
+deselection and form submission, but are not passed to Vue. Named options
+with an empty value remain selectable.
 Groups support `value`, `label`, and `disabled`. Search is case- and
 diacritic-insensitive and matches every query word. Group headings cannot be
 selected; an option may belong to multiple groups.

@@ -26,6 +26,28 @@ const makeSelect = () => {
 };
 
 describe('shared select option data', () => {
+  it.each([false, true])('omits empty placeholders without altering native options when multiple=%s', (multiple) => {
+    const select = document.createElement('select');
+    select.multiple = multiple;
+    select.innerHTML = `
+      <option value="" selected></option>
+      <option value="" label="None"></option>
+      <option value="">All</option>
+      <option value="0"></option>
+      <optgroup label="Group"><option value=""></option><option value="a">A</option></optgroup>
+    `;
+    const { options } = readSelectOptions(select);
+    expect(options.map(({ value, label }) => ({ value, label }))).toEqual([
+      { value: '', label: 'None' },
+      { value: '', label: 'All' },
+      { value: '0', label: '0' },
+      { value: 'a', label: 'A' },
+    ]);
+    expect(select.options).toHaveLength(6);
+    expect(select.options[0].selected).toBe(true);
+    expect(select.options[0].value).toBe('');
+  });
+
   it('preserves stable group IDs and converts HTML tooltip metadata to plain multiline text', () => {
     const select = makeSelect();
     select.options[0].title = 'Subject: A &amp; B<br/>Created yesterday';

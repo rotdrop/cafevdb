@@ -315,7 +315,10 @@ describe('legacy chosen bridge', () => {
     expect(select.form!.checkValidity()).toBe(true);
     $select.val('').trigger('chosen:updated');
     await flushPromises();
-    expect(wrapper!.vm.getValue()).toBe('');
+    expect(wrapper!.vm.getValue()).toBeNull();
+    expect(service.getValue()).toBe('');
+    expect(new FormData(select.form!).get('field')).toBe('');
+    expect(select.options[0].selected).toBe(true);
     expect(select.form!.checkValidity()).toBe(false);
     service.destroy();
     expect(select.required).toBe(true);

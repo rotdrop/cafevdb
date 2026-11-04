@@ -17,13 +17,15 @@ export const readSelectOptions = (select: HTMLSelectElement) => {
     ids.set(group, value);
     groups.push({ value, label: group.label, disabled: group.disabled });
   }
-  const options = Array.from(select.options, (option): VueSelectOption => ({
-    value: option.value,
-    label: option.label || option.textContent || option.value,
-    groups: option.parentElement instanceof HTMLOptGroupElement ? [ids.get(option.parentElement)!] : [],
-    disabled: option.disabled,
-    title: option.title ? plainTitle(option.title) : undefined,
-  }));
+  const options = Array.from(select.options)
+    .filter((option) => option.value !== '' || option.label !== '' || (option.textContent ?? '') !== '')
+    .map((option): VueSelectOption => ({
+      value: option.value,
+      label: option.label || option.textContent || option.value,
+      groups: option.parentElement instanceof HTMLOptGroupElement ? [ids.get(option.parentElement)!] : [],
+      disabled: option.disabled,
+      title: option.title ? plainTitle(option.title) : undefined,
+    }));
   return { options, groups };
 };
 
