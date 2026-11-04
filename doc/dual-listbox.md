@@ -13,7 +13,9 @@ Each pane's preferred width uses the longest recipient label across both lists,
 with a minimum of `40ch`. Moving recipients does not change this width; panes
 still shrink and wrap on narrow screens.
 Select all / Remove all move only the visible, enabled options. Filtered counts
-and empty-list messages use the existing translation strings.
+and empty-list messages appear as the search-field labels, using the existing
+translation strings. Each pane also has a persistent, visually hidden
+`role="status"` region announcing its name and count or filter/empty status.
 
 `DualListboxService.mount(select).ready` mounts the component beside a native
 multiple select. The native select remains authoritative for form serialization;

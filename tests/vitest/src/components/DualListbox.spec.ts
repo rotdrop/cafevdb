@@ -39,8 +39,31 @@ const labels = (wrapper: Pick<VueWrapper, 'findAll'>, pane: number) =>
 afterEach(() => wrappers.splice(0).forEach((wrapper) => wrapper.unmount()));
 
 describe('DualListbox', () => {
+  it('updates persistent polite status regions for filtering, transfers and refreshed options', async () => {
+    const wrapper = render();
+    const statuses = wrapper.findAll('[role="status"]');
+    expect(statuses).toHaveLength(2);
+    expect(statuses.map((status) => status.text())).toEqual([
+      'Remaining Recipients: 3',
+      'Selected Recipients: 2',
+    ]);
+    expect(statuses[0]!.attributes('aria-atomic')).toBe('true');
+    await wrapper.findAll('input')[0]!.setValue('alice');
+    expect(statuses[0]!.text()).toBe('Remaining Recipients: Filtered 1 from 3');
+    await wrapper.findAll('select')[0]!.setValue(['a']);
+    expect(statuses[0]!.text()).toBe('Remaining Recipients: Filtered 0 from 2');
+    expect(statuses[1]!.text()).toBe('Selected Recipients: 3');
+    wrapper.vm.setState({ options: [], modelValue: [] });
+    await nextTick();
+    expect(statuses.map((status) => status.text())).toEqual([
+      'Remaining Recipients: Empty list',
+      'Selected Recipients: Empty list',
+    ]);
+    expect(wrapper.findAll('[role="status"]')[0]!.element).toBe(statuses[0]!.element);
+  });
+
   it('sizes both panes from the longest label without changing width on transfers', async () => {
-    const label = 'A sufficiently long recipient name and email address';
+    const label = 'A long recipient name and email address here';
     const wrapper = render({ options: [{ value: 'long', label }], modelValue: [] });
     const width = () => wrapper.get('.dual-listbox').attributes('style');
     expect(width()).toContain(`--dual-listbox-pane-width: ${label.length}ch`);
@@ -91,7 +114,9 @@ describe('DualListbox', () => {
     await wrapper.findAll('input')[1]!.setValue('car');
     expect(labels(wrapper, 0)).toEqual(['Alice']);
     expect(labels(wrapper, 1)).toEqual(['Carol']);
-    expect(wrapper.findAll('.dual-listbox__info')[0]!.text()).toBe('Filtered 1 from 3');
+    expect(wrapper.findAll('.dual-listbox__filter')[0]!.get('label').text()).toBe('Filtered 1 from 3');
+    expect(wrapper.find('.dual-listbox__info').exists()).toBe(false);
+    expect(wrapper.get('.dual-listbox__filter input').attributes('aria-live')).toBe('polite');
     await wrapper.findAll('.dual-listbox__move-all')[0]!.trigger('click');
     expect(wrapper.emitted('change')?.at(-1)).toEqual([['a', 'c', 'e']]);
     await wrapper.findAll('.dual-listbox__move-all')[1]!.trigger('click');
@@ -99,6 +124,7 @@ describe('DualListbox', () => {
     await wrapper.findAll('.dual-listbox__filter button')[0]!.trigger('click');
     expect(labels(wrapper, 0)).toEqual(['Bob', 'Carol', 'Disabled']);
     expect(wrapper.findAll('input')[1]!.element.value).toBe('car');
+    expect(wrapper.findAll('.dual-listbox__filter')[0]!.get('label').text()).toBe('Filter');
   });
 
   it('treats filter punctuation as text, not a regular expression', async () => {
@@ -114,7 +140,7 @@ describe('DualListbox', () => {
     expect(wrapper.findAll('.dual-listbox__move-all')[1]!.attributes('disabled')).toBeDefined();
     wrapper.vm.setState({ options, modelValue: [] });
     await nextTick();
-    expect(wrapper.findAll('.dual-listbox__info')[1]!.text()).toBe('Empty list');
+    expect(wrapper.findAll('.dual-listbox__filter')[1]!.get('label').text()).toBe('Empty list');
   });
 
   it.each(['readonly', 'disabled'] as const)('locks all controls when %s', async (property) => {

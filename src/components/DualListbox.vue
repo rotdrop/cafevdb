@@ -11,6 +11,8 @@
                                      type="search"
                                      trailingButton="clear"
                                      hint=""
+                                     aria-live="polite"
+                                     :label="pane.info"
                                      :aria-label="`${t(appName, 'Filter')}: ${pane.label}`"
                                      :placeholder="t(appName, 'Filter')"
                                      :trailingButtonLabel="t(appName, 'show all')"
@@ -21,14 +23,9 @@
           </template>
         </TextFieldWithTrailingButton>
       </div>
-      <div class="dual-listbox__info" aria-live="polite">
-        <template v-if="!pane.total">
-          {{ t(appName, 'Empty list') }}
-        </template>
-        <template v-else-if="filters[index]">
-          {{ t(appName, 'Filtered') }} {{ pane.options.length }} {{ t(appName, 'from') }} {{ pane.total }}
-        </template>
-      </div>
+      <span class="dual-listbox__status" role="status" aria-atomic="true">
+        {{ pane.label }}: {{ pane.status }}
+      </span>
       <button type="button"
               class="dual-listbox__move-all"
               :disabled="locked || !pane.options.some(option => !option.disabled)"
@@ -83,10 +80,17 @@ const panes = computed(() => [
 ].map((label, index) => {
   const options = state.value.options.filter((option) => state.value.modelValue.includes(option.value) === (index === 1))
   const query = filters.value[index]!.toLocaleLowerCase()
+  const filteredOptions = options.filter((option) => option.label.toLocaleLowerCase().includes(query))
+  const info = !options.length
+    ? t(appName, 'Empty list')
+    : query
+      ? `${t(appName, 'Filtered')} ${filteredOptions.length} ${t(appName, 'from')} ${options.length}`
+      : t(appName, 'Filter')
   return {
     label,
-    total: options.length,
-    options: options.filter((option) => option.label.toLocaleLowerCase().includes(query)),
+    info,
+    status: !options.length || query ? info : String(options.length),
+    options: filteredOptions,
   }
 }))
 
@@ -142,7 +146,7 @@ defineExpose({ setState } satisfies DualListboxControls)
   width: var(--dual-listbox-pane-width);
   min-width: 0;
 
-  > label, .dual-listbox__filter, .dual-listbox__info {
+  > label, .dual-listbox__filter {
     margin-bottom: 4px;
   }
 
@@ -170,8 +174,16 @@ defineExpose({ setState } satisfies DualListboxControls)
   min-width: 0;
 }
 
-.dual-listbox__info {
-  min-height: 1.5em;
+.dual-listbox__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .dual-listbox__move-all {
