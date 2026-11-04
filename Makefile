@@ -17,8 +17,6 @@ APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
 BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
-PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
-TS_PHP_SOURCE_DIRS = lib vendor-wrapped/rotdrop/nextcloud-app-toolkit/src
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -165,66 +163,11 @@ dev-setup-php: pre-build composer.lock namespace-wrapper
 .PHONY: dev-setup-php
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
+SCOPED_VENDOR_LINK_DIRS = 3rdparty vendor
+include $(DEV_LIB_DIR)/makefile/namespace-wrapper.mk
 
 $(PHING) $(PHPUNIT): composer.lock
 	if ! [ -x $@ ]; then $(COMPOSER) bin phpunit install; else touch $@; fi
-
-#@private
-php-scoper-install: $(PHP_SCOPER)
-.PHONY: php-scoper-install
-
-$(PHP_SCOPER): composer.lock
-	if ! [ -x $@ ]; then $(COMPOSER) bin php-scoper install; else touch $@; fi
-
-WRAPPER_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/wrapper-build-hash 2> /dev/null || echo)
-WRAPPER_GIT_BUILD_HASH = $(shell { $(WRAPPER_GIT_DEPENDENCIES:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
-
-ifneq ($(WRAPPER_PREV_BUILD_HASH), $(WRAPPER_GIT_BUILD_HASH))
-.PHONY: wrapper-build-hash
-endif
-wrapper-build-hash:
-	@echo "GIT dependencies of PHP-Scoper have changed, need to rebuild the wrapper"
-	@echo "OLD HASH $(WRAPPER_PREV_BUILD_HASH)"
-	@echo "NEW HASH $(WRAPPER_GIT_BUILD_HASH)"
-	echo $(WRAPPER_GIT_BUILD_HASH) > wrapper-build-hash
-
-composer-wrapped.lock: composer-wrapped.json
-	rm -f composer-wrapped.lock
-
-$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
-	mkdir -p $(BUILDDIR)
-	ln -fs ../3rdparty $(BUILDDIR)
-	ln -fs ../vendor $(BUILDDIR)
-	rm -rf $(BUILDDIR)/vendor-wrapped
-	ln -sfn ../dev-scripts/lib/patches $(BUILDDIR)/composer-patches
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
-
-$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json $(MAKEFILE_DEP)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
-
-#@private
-.PHONY: composer-wrapped-suggest
-composer-wrapped-suggest:
-	@echo -e "\n*** Wrapped Composer Suggestions ***\n"
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) suggest --all
-
-composer-suggest: composer-wrapped-suggest
-
-vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
-	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
-# scoper does not handle symlinks
-	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
-# scoper does not preserve executable bits
-	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
-# scoper does not rewrite the composer autoload maps, regenerate them
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
-	$(call apply-scoped-autoload-patch,vendor-wrapped)
-
-vendor-wrapped/autoload.php: vendor-wrapped
-
-.PHONY: namespace-wrapper
-namespace-wrapper: vendor-wrapped/autoload.php
 
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
 	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
@@ -311,7 +254,7 @@ clean: ## Tidy up local environment
 #@@ Same as clean but also removes dependencies installed by composer, bower and npm
 distclean: clean
 	rm -rf vendor
-	rm -rf vendor-wrapped
+	rm -rf $(SCOPED_VENDOR_DIR)
 	rm -rf vendor-bin/*/vendor
 	rm -rf node_modules
 	rm -rf 3rdparty/tinymce/*
@@ -601,11 +544,11 @@ appstore: $(BUILDDIR)/core-exclude
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
-verifydb: $(ABSSRCDIR)/vendor-wrapped
+verifydb: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
 	$(ORM_CLI) orm:clear-cache:metadata; $(ORM_CLI) orm:validate-schema; $(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: updatesql
-updatesql: $(ABSSRCDIR)/vendor-wrapped
+updatesql: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
 	$(ORM_CLI) orm:clear-cache:metadata; $(ORM_CLI) orm:schema-tool:update --dump-sql
 
 PHPUNIT_OUTPUT=$(BUILDDIR)/artifacts/tests/phpunit
