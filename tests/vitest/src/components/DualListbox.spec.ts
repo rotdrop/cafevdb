@@ -39,6 +39,18 @@ const labels = (wrapper: Pick<VueWrapper, 'findAll'>, pane: number) =>
 afterEach(() => wrappers.splice(0).forEach((wrapper) => wrapper.unmount()));
 
 describe('DualListbox', () => {
+  it('sizes both panes from the longest label without changing width on transfers', async () => {
+    const label = 'A sufficiently long recipient name and email address';
+    const wrapper = render({ options: [{ value: 'long', label }], modelValue: [] });
+    const width = () => wrapper.get('.dual-listbox').attributes('style');
+    expect(width()).toContain(`--dual-listbox-pane-width: ${label.length}ch`);
+    await wrapper.findAll('select')[0]!.setValue(['long']);
+    expect(width()).toContain(`--dual-listbox-pane-width: ${label.length}ch`);
+    wrapper.vm.setState({ options: [{ value: 'short', label: 'Short' }], modelValue: [] });
+    await nextTick();
+    expect(width()).toContain('--dual-listbox-pane-width: 40ch');
+  });
+
   it('uses shared clearable filter fields with leading search icons', () => {
     const wrapper = render();
     const fields = wrapper.findAllComponents(TextFieldWithTrailingButton);

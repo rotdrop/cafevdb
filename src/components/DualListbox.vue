@@ -3,7 +3,7 @@
  - SPDX-License-Identifier: AGPL-3.0-or-later
  -->
 <template>
-  <div class="dual-listbox">
+  <div class="dual-listbox" :style="{ '--dual-listbox-pane-width': paneWidth }">
     <div v-for="(pane, index) in panes" :key="index" class="dual-listbox__pane">
       <label :for="`${inputId}-${index}`">{{ pane.label }}</label>
       <div class="dual-listbox__filter">
@@ -76,6 +76,7 @@ const uid = useId()
 const inputId = computed(() => state.value.inputId || `dual-listbox-${uid}`)
 const filters = ref(['', ''])
 const locked = computed(() => state.value.disabled || state.value.readonly)
+const paneWidth = computed(() => `${state.value.options.reduce((length, option) => Math.max(length, option.label.length), 40)}ch`)
 const panes = computed(() => [
   t(appName, 'Remaining Recipients'),
   t(appName, 'Selected Recipients'),
@@ -136,8 +137,9 @@ defineExpose({ setState } satisfies DualListboxControls)
 
 .dual-listbox__pane {
   display: flex;
-  flex: 1 1 240px;
+  flex: 1 1 var(--dual-listbox-pane-width);
   flex-direction: column;
+  width: var(--dual-listbox-pane-width);
   min-width: 0;
   gap: 4px;
 

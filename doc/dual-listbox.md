@@ -9,6 +9,9 @@ immediately to the other list (keyboard and multiple selection are supported).
 Each list has an independent, case-insensitive text filter and a clear button.
 Filters use the shared `TextFieldWithTrailingButton` with its `clear` variant
 and a leading search icon.
+Each pane's preferred width uses the longest recipient label across both lists,
+with a minimum of `40ch`. Moving recipients does not change this width; panes
+still shrink and wrap on narrow screens.
 Select all / Remove all move only the visible, enabled options. Filtered counts
 and empty-list messages use the existing translation strings.
 
