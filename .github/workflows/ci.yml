@@ -60,8 +60,8 @@ jobs:
             | sudo tee /etc/apt/sources.list.d/mariadb.list
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends mariadb-server mariadb-client
-          # PHPUnit uses a private server; keep the system server for app type generation.
-          sudo systemctl enable --now mariadb
+          # PHPUnit manages a private server; frontend metadata generation is offline.
+          sudo systemctl disable --now mariadb
           for b in mariadb-install-db mariadbd-safe mariadb mariadb-dump; do
             command -v "$b" || { echo "missing $b"; exit 1; }
           done
@@ -104,32 +104,6 @@ jobs:
         working-directory: server/apps/${{ env.APP_NAME }}
         run: make phpunit PHPCOVERAGE='-d xdebug.mode=coverage'
 
-      - name: Configure app database and apply migrations
-        working-directory: server
-        run: |
-          db_password="$(openssl rand -hex 24)"
-          cafevdb_user="cafevdb-ci"
-          cafevdb_group="cafevdb_ci"
-          user_password="$(openssl rand -hex 24)"
-          sudo mariadb <<SQL
-          CREATE DATABASE cafevdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-          CREATE USER 'cafevdb'@'%' IDENTIFIED BY '${db_password}';
-          GRANT ALL PRIVILEGES ON cafevdb.* TO 'cafevdb'@'%';
-          SQL
-          php occ group:add "${cafevdb_group}"
-          OC_PASS="${user_password}" php occ user:add --password-from-env "${cafevdb_user}"
-          php occ group:adduser "${cafevdb_group}" "${cafevdb_user}"
-          php occ config:app:set "${APP_NAME}" dbname --value=cafevdb
-          php occ config:app:set "${APP_NAME}" dbuser --value=cafevdb
-          php occ config:app:set "${APP_NAME}" dbpassword --value="${db_password}"
-          php occ config:app:set "${APP_NAME}" dbserver --value=127.0.0.1
-          php occ config:app:set "${APP_NAME}" userGroup --value="${cafevdb_group}"
-          password_file="apps/${APP_NAME}/.clipassword"
-          printf %s "${user_password}" > "$password_file"
-          chmod 600 "$password_file"
-          php occ "${APP_NAME}:database:migrate" -v \
-            --user="${cafevdb_user}" --password-file="${password_file}"
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -146,7 +120,7 @@ jobs:
 
       - name: Run Vitest suite
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: CAFEVDB_USER=cafevdb-ci make jstest
+        run: make jstest
 
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v4
@@ -162,16 +136,19 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/vitest/coverage/
           if-no-files-found: error
 
-      # Type generation needs the installed Nextcloud server, app database and user.
+      # Type generation needs Nextcloud (SQLite), but no app database or user.
       # Upload coverage first: npm-build clears the build directory.
       - name: Full build
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: CAFEVDB_USER=cafevdb-ci make dev-setup npm-build
+        run: |
+          test ! -e .clipassword
+          ! systemctl is-active --quiet mariadb
+          make dev-setup npm-build
 
-      - name: Remove test credentials and caches
+      - name: Remove test caches
         if: always()
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: rm -rf .clipassword .phpunit.result.cache .phpunit.cache
+        run: rm -rf .phpunit.result.cache .phpunit.cache
 
       - name: make realclean after a full build
         working-directory: server/apps/${{ env.APP_NAME }}

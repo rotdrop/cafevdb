@@ -30,6 +30,20 @@ Features include
 The orchestra data-base is held separate from the cloud database and
 is based on Doctrine/ORM.
 
+Frontend builds
+---------------
+
+`make build` generates PHP-derived TypeScript types and entity metadata before
+building the production frontend assets. It requires an installed Nextcloud
+instance and its own database (SQLite is sufficient), but not the orchestra
+MySQL/MariaDB database, a CafeVDB user, or `.clipassword`.
+
+The app-local converter uses `11.7.0-MariaDB` as a representative DBAL platform
+without opening the application connection. Encryption operations are disabled
+and bound-event application subscribers are isolated in this metadata-only
+process. Normal requests and the ORM CLI retain encryption, connection probing,
+server-version detection and connection initialization.
+
 Email template substitutions
 ----------------------------
 
