@@ -258,6 +258,7 @@ distclean: clean
 
 #@@ Really delete everything but the bare source files
 realclean: distclean
+	rm -rf .vite
 	rm -f composer*.lock
 	rm -f vendor-bin/*/composer.lock
 	rm -f composer.json
