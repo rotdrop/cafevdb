@@ -186,6 +186,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterNotificationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\WordSplitterService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\Database\BankTransactionsStorage::class)]
