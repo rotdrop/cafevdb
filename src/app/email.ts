@@ -40,6 +40,7 @@ import type {
 import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
 import type { SelectizeAdapterOptions } from '../services/mountable-select.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { VueSelectValue } from '../types/vue-select.ts';
 import type { UploadFile } from './file-upload.ts';
 
 import { translate as t } from '@nextcloud/l10n';
@@ -76,6 +77,12 @@ import {
   EnumPostTag,
   RecipientsFilterCgiKeys,
 } from '../../build/ts-types/php-modules/EmailForm.ts';
+import {
+  DRAFT_EMAIL_MESSAGE_SELECTOR,
+  SENT_EMAIL_MESSAGE_SELECTOR,
+  STORED_MESSAGES_CHOICES_CONTAINER,
+  TEMPLATE_EMAIL_MESSAGE_SELECTOR,
+} from '../../build/ts-types/php-modules/EmailForm/ComposerCssClasses.ts';
 import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
 import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
 import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
@@ -754,9 +761,9 @@ const emailFormCompositionHandlers = (
   const $donationReceiptId = $formData.find(`input[name="${ComposerCgiKeys.DONATION_RECEIPT_ID}"]`);
   const $invoiceId = $formData.find(`input[name="${ComposerCgiKeys.INVOICE_ID}"]`);
   const $debugOutput = $form.find('#emailformdebug');
-  const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector') as JQuery<HTMLSelectElement>;
-  const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector') as JQuery<HTMLSelectElement>;
-  const $sentEmailsSelector = $fieldset.find('select.sent.email-message-selector') as JQuery<HTMLSelectElement>;
+  const $templateEmailsSelector = $fieldset.find(`select.${TEMPLATE_EMAIL_MESSAGE_SELECTOR}`) as JQuery<HTMLSelectElement>;
+  const $draftEmailsSelector = $fieldset.find(`select.${DRAFT_EMAIL_MESSAGE_SELECTOR}`) as JQuery<HTMLSelectElement>;
+  const $sentEmailsSelector = $fieldset.find(`select.${SENT_EMAIL_MESSAGE_SELECTOR}`) as JQuery<HTMLSelectElement>;
   const $saveAsTemplate = $fieldset.find('#check-save-as-template');
   const $draftAutoSave = $fieldset.find('#check-draft-auto-save');
   const $discloseRecipients = $fieldset.find('#check-disclosed-recipients');
@@ -771,10 +778,22 @@ const emailFormCompositionHandlers = (
 
   WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
+  const toggleSelectClass = (
+    $select: JQuery<HTMLSelectElement>,
+    cssClass: string,
+    value?: VueSelectValue|boolean,
+  ) => {
+    value = !!value;
+    SelectUtils
+      .widget($select)
+      .toggleClass(cssClass, value)
+      .closest(`.${STORED_MESSAGES_CHOICES_CONTAINER}`).toggleClass(cssClass, value);
+  };
+
   const messageSelectorOptions = ($select: JQuery<HTMLSelectElement>): SelectizeAdapterOptions => ({
-    onOpen: () => { SelectUtils.widget($select).addClass(dropdownOpenCssClass); },
-    onClose: () => { SelectUtils.widget($select).removeClass(dropdownOpenCssClass); },
-    onChange: (value) => { SelectUtils.widget($select).toggleClass(loadingCssClass, !!value); },
+    onOpen: () => toggleSelectClass($select, dropdownOpenCssClass, true),
+    onClose: () => toggleSelectClass($select, dropdownOpenCssClass, false),
+    onChange: (value) => toggleSelectClass($select, loadingCssClass, value),
     closeAfterSelect: true,
   });
 
@@ -789,7 +808,7 @@ const emailFormCompositionHandlers = (
       $templateEmailsSelector.data('unpersisted')[option.value] = true;
     },
   });
-  SelectUtils.widget($templateEmailsSelector).toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
+  toggleSelectClass($templateEmailsSelector, expandedCssClass, $saveAsTemplate.is(':checked'));
   mountEmailSelect($draftEmailsSelector, messageSelectorOptions($draftEmailsSelector));
   mountEmailSelect($sentEmailsSelector, messageSelectorOptions($sentEmailsSelector));
 
@@ -1010,7 +1029,7 @@ const emailFormCompositionHandlers = (
                 WysiwygEditor.updateEditor($messageText, requestData.messageText!);
                 $fieldset.find('input.email-subject').val(requestData.subject!);
 
-                $templateEmailsSelector.next().removeClass(loadingCssClass);
+                toggleSelectClass($templateEmailsSelector, loadingCssClass, false);
                 break;
               }
               case 'draft': {
@@ -1573,7 +1592,7 @@ const emailFormCompositionHandlers = (
   $saveAsTemplate
     .off('change')
     .on('change', function() {
-      $templateEmailsSelector.next().toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
+      toggleSelectClass($templateEmailsSelector, expandedCssClass, $saveAsTemplate.is(':checked'));
       return false;
     });
 
@@ -1742,7 +1761,7 @@ const emailFormCompositionHandlers = (
           projectName: projectName(),
         });
       } else {
-        $templateEmailsSelector.next().removeClass(loadingCssClass);
+        toggleSelectClass($templateEmailsSelector, loadingCssClass, false);
         $this.removeData('ignoreChange');
       }
 

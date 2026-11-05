@@ -91,7 +91,7 @@ import '../legacy/nextcloud/jquery/octemplate.js';
 import 'jquery-ui/themes/base/autocomplete.css';
 import 'musicians.scss';
 import 'sepa-bank-accounts.scss';
-import { disabledCssClass } from 'variables.module.scss';
+import { disabledCssClass, expandedCssClass } from 'variables.module.scss';
 
 type CANCELLED_STATUS = 'cancelled';
 type ErrorTextStatus = JQuery.Ajax.ErrorTextStatus|CANCELLED_STATUS;
@@ -176,7 +176,7 @@ const contactValidation = function(container?: string|JQuery) {
       .off('click')
       .on('click', function() {
         const $this = $(this);
-        $this.closest('td').toggleClass('expanded');
+        $this.closest('td').toggleClass(expandedCssClass);
         return false;
       });
   }

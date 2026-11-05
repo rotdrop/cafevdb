@@ -32,4 +32,12 @@ class ComposerCssClasses
 {
   public const EMPTY_SELECTION = 'empty-selection';
   public const NO_ATTACHMENTS = 'no-attachments';
+  public const STORED_MESSAGES = 'stored-messages';
+  public const STORED_MESSAGES_CHOICES = self::STORED_MESSAGES . '-choices';
+  public const STORED_MESSAGES_STORAGE = self::STORED_MESSAGES . '-storage';
+  public const STORED_MESSAGES_CHOICES_CONTAINER = self::STORED_MESSAGES_CHOICES . '-container';
+  public const EMAIL_MESSAGE_SELECTOR = 'email-message-selector';
+  public const TEMPLATE_EMAIL_MESSAGE_SELECTOR = 'template-' . self::EMAIL_MESSAGE_SELECTOR;
+  public const DRAFT_EMAIL_MESSAGE_SELECTOR = 'draft-' . self::EMAIL_MESSAGE_SELECTOR;
+  public const SENT_EMAIL_MESSAGE_SELECTOR = 'sent-' . self::EMAIL_MESSAGE_SELECTOR;
 }

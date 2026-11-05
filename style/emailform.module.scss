@@ -726,7 +726,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
             vertical-align:top;
           }
 
-          tr.stored-messages {
+          tr.#{$storedMessagesCssClass} {
             td {
               padding-bottom: 0.5em;
             }
@@ -739,7 +739,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
 
           td.email-address.input input.address-book-emails,
-          td.stored-messages-storage input.submit,
+          td.#{$storedMessagesStorageCssClass} input.submit,
           td.email-from input[type=button] {
             background-repeat:no-repeat;
             background-size: #{$iconSize} #{$iconSize};
@@ -754,7 +754,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
             background-image: var(--icon-settings-dark);
           }
 
-          td.stored-messages-storage {
+          td.#{$storedMessagesStorageCssClass} {
             text-align:right;
 
             .button-container > * {
@@ -789,27 +789,36 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
             }
           } /* td.stored-messages-storage */
 
-          .stored-messages-choose {
+          td.#{$storedMessagesChoicesCssClass} {
             --drop-down-min-width: 0px;
-            --drop-down-margin: 3px;
-            .#{$appName}-vue-select-control .#{$appName}-vue-select {
-              min-width: 0;
-            }
-            .select-container > * {
-              margin-right: var(--drop-down-margin);
-            }
-            .#{$appName}-vue-select-control {
-              flex-shrink:10;
-              flex-basis:100%;
-              max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
-              min-width: var(--drop-down-min-width); /* in order to have something left ... */
-              width:0!important;
-              &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
-                flex-grow:10;
-                flex-shrink:0;
+            --drop-down-container-padding: 2px;
+            .#{$storedMessagesChoicesContainerCssClass} {
+              .#{$appName}-vue-select-control {
+                padding: var(--drop-down-container-padding);
+                // margin-right: var(--drop-down-margin);
+                flex-shrink:10;
+                flex-basis:100%;
+                // max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
+                min-width: var(--drop-down-min-width); /* in order to have something left ... */
+                width:0!important;
+                &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
+                  flex-grow:10;
+                  flex-shrink:0;
+                }
+                &:not(.#{$dropdownOpenCssClass}) {
+                  overflow: hidden;
+                }
+                .#{$appName}-vue-select {
+                  min-width: 0;
+                }
               }
-              &:not(.#{$dropdownOpenCssClass}) {
-                overflow: hidden;
+              &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
+                .#{$appName}-vue-select-control {
+                  &:not(.#{$dropdownOpenCssClass}, .#{$loadingCssClass}, .#{$expandedCssClass}) {
+                    padding: var(--drop-down-container-padding) 0;
+                    flex: 0 10 0px;
+                  }
+                }
               }
             }
           }

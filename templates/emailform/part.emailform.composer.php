@@ -54,51 +54,51 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
 
 ?>
 
-<fieldset id="cafevdb-email-composition-fieldset" class="email-composition page">
-  <!-- <legend id="cafevdb-email-form-legend"><?php echo $l->t('Compose Em@il'); ?></legend> -->
+<fieldset id="<?= $appName ?>-email-composition-fieldset" class="email-composition page">
+  <!-- <legend id="<?= $appName ?>-email-form-legend"><?php echo $l->t('Compose Em@il'); ?></legend> -->
   <?php echo PageNavigation::persistentCGI(Composer::POST_TAG, $composerFormData); ?>
-  <table class="cafevdb-email-composition-form">
+  <table class="<?= $appName ?>-email-composition-form">
     <tr class="column-layout">
       <td class="first"></td>
       <td class="second"></td>
       <td class="third"></td>
     </tr>
-    <tr class="stored-messages">
-      <td colspan="2" class="stored-messages-choose stored-messages">
-        <span class="select-container flex-container flex-center flex-justify-full">
+    <tr class="<?= ComposerCssClasses::STORED_MESSAGES ?>">
+      <td colspan="2" class="<?= ComposerCssClasses::STORED_MESSAGES_CHOICES ?>">
+        <span class="<?= ComposerCssClasses::STORED_MESSAGES_CHOICES_CONTAINER ?> flex-container flex-center flex-justify-full">
           <select size="<?php echo count($templateEmails); ?>"
-                  class="template email-message-selector"
+                  class="<?= ComposerCssClasses::TEMPLATE_EMAIL_MESSAGE_SELECTOR ?>"
                   title="<?php echo $toolTips['emailform:storage:select:templates']; ?>"
                   data-placeholder="<?php echo $l->t("Templates"); ?>"
                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR ?>]"
-                  id="cafevdb-template-messages-selector"
+                  id="<?= $appName ?>-template-messages-selector"
           >
             <option></option>
             <?php echo $this->inc('emailform/part.template-email-options', []); ?>
           </select>
           <select size="<?php echo count($draftEmails); ?>"
-                  class="draft email-message-selector"
+                  class="<?= ComposerCssClasses::DRAFT_EMAIL_MESSAGE_SELECTOR ?>"
                   title="<?php echo $toolTips['emailform:storage:select:drafts']; ?>"
                   data-placeholder="<?php echo $l->t("Drafts"); ?>"
                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DRAFT_MESSAGES_SELECTOR ?>]"
-                  id="cafevdb-draft-messages-selector"
+                  id="<?= $appName ?>-draft-messages-selector"
           >
             <option></option>
             <?php echo $this->inc('emailform/part.draft-email-options', []); ?>
           </select>
-          <select class="sent email-message-selector"
-                  size="<?php echo count($sentEmails); ?>"
+          <select size="<?php echo count($sentEmails); ?>"
+                  class="<?= ComposerCssClasses::SENT_EMAIL_MESSAGE_SELECTOR ?>"
                   title="<?php echo $toolTips['emailform:storage:select:sent']; ?>"
                   data-placeholder="<?php p($l->t('Reply To')); ?>"
                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SENT_MESSAGES_SELECTOR ?>]"
-                  id="cafevdb-sent-messages-selector"
+                  id="<?= $appName ?>-sent-messages-selector"
           >
             <option></option>
             <?php echo $this->inc('emailform/part.sent-email-options', []); ?>
           </select>
         </span>
       </td>
-      <td class="stored-messages-storage stored-messages">
+      <td class="<?= ComposerCssClasses::STORED_MESSAGES_STORAGE ?>">
         <span class="button-container flex-container flex-center">
           <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template flex-container flex-center">
             <input type="checkbox"
@@ -439,7 +439,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
     </tr>
   </table>
   <!-- various data fields ... -->
-  <fieldset id="cafevdb-email-form-attachments" class="attachments">
+  <fieldset id="<?= $appName ?>-email-form-attachments" class="attachments">
     <input type="hidden"
            name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FILE_ATTACHMENTS ?>]"
            value="<?php echo htmlspecialchars($_[Composer::POST_TAG][ComposerCgiKeys::FILE_ATTACHMENTS]); ?>"
