@@ -264,6 +264,7 @@ realclean: distclean
 	rm -f stamp.composer-core-versions
 	rm -f *.html
 	rm -f stats.json
+	rm -f build-flavour
 	rm -rf js/*
 	rm -rf css/*
 	rm -f *-stamp

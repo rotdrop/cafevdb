@@ -146,9 +146,7 @@ jobs:
 
       - name: Run Vitest suite
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: |
-          trap 'rm -f .clipassword' EXIT
-          CAFEVDB_USER=cafevdb-ci make jstest
+        run: CAFEVDB_USER=cafevdb-ci make jstest
 
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v4
@@ -164,10 +162,32 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/vitest/coverage/
           if-no-files-found: error
 
+      # Type generation needs the installed Nextcloud server, app database and user.
+      # Upload coverage first: npm-build clears the build directory.
+      - name: Full build
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: CAFEVDB_USER=cafevdb-ci make dev-setup npm-build
+
+      - name: Remove test credentials and caches
+        if: always()
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: rm -rf .clipassword .phpunit.result.cache .phpunit.cache
+
+      - name: make realclean after a full build
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          make realclean
+          git status --porcelain --ignored
+          [ -z "$(git status --porcelain --ignored)" ] || { echo "realclean left build artifacts"; exit 1; }
+
+      - name: make realclean is idempotent after a build
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          make realclean
+          [ -z "$(git status --porcelain --ignored)" ]
+
   realclean:
     runs-on: ubuntu-latest
-    env:
-      PHP_VERSION: '8.5'
     steps:
       - name: Use https for submodules
         run: git config --global url."https://github.com/".insteadOf "git@github.com:"
@@ -180,15 +200,6 @@ jobs:
       - name: Install xpath
         run: sudo apt-get install -y --no-install-recommends libxml-xpath-perl
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
       - name: make realclean on a bare checkout
         run: |
           make realclean
@@ -200,20 +211,6 @@ jobs:
           before="$(git status --porcelain --ignored)"
           make realclean
           [ "$before" = "$(git status --porcelain --ignored)" ]
-
-      - name: Full build
-        run: make dev-setup npm-build
-
-      - name: make realclean after a full build
-        run: |
-          make realclean
-          git status --porcelain --ignored
-          [ -z "$(git status --porcelain --ignored)" ] || { echo "realclean left build artifacts"; exit 1; }
-
-      - name: make realclean is idempotent after a build
-        run: |
-          make realclean
-          [ -z "$(git status --porcelain --ignored)" ]
 
   publish-coverage:
     if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
