@@ -22,8 +22,12 @@
 
 namespace OCA\RotDrop\Tests;
 
+use OCA\RotDrop\Tests\Toolkit\DTO\AbstractDTO;
+
+require_once __DIR__ . '/bootstrap.php';
+
 /** Database access parameters. */
-class DatabaseConfig extends \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\DTO\AbstractDTO
+class DatabaseConfig extends AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
