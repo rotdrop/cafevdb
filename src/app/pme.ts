@@ -31,7 +31,7 @@
  */
 
 import type { MountableComponent } from '../services/mountable-components.ts';
-import type { SelectizeService } from '../services/mountable-select.ts';
+import type { SelectizeService } from '../services/mountable-selectize.ts';
 import type {
   PageTemplateValue,
   TableDialogCallbackData,
@@ -58,7 +58,7 @@ import {
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import { mountPmeNavigation, refreshPmeNavigation } from '../services/mountable-pme-navigation.ts';
-import { mountSelectize } from '../services/mountable-select.ts';
+import { mountSelectize } from '../services/mountable-selectize.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import clear from '../util/clear-object.ts';
 import { close as closeActionMenus } from './action-menu.ts';

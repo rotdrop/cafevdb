@@ -121,7 +121,7 @@ function createMountable(props: VueSelectComponentProps): FakeMountable {
 
 createComponent.mockImplementation(createMountable);
 
-import { getMountedSelectize, mountSelectize } from '~/src/services/mountable-select.ts';
+import { getMountedSelectize, mountSelectize } from '~/src/services/mountable-selectize.ts';
 import { destroyMountedSelects, mountedSelectScope } from '~/src/services/mounted-select-scope.ts';
 
 const makeSelect = (html: string) => {

@@ -31,7 +31,7 @@ import {
 import $ from '~/src/app/jquery.ts';
 import * as SelectUtils from '~/src/app/select-utils.ts';
 
-vi.mock('~/src/services/mountable-select.ts', () => ({
+vi.mock('~/src/services/mountable-selectize.ts', () => ({
   getMountedSelectize: () => undefined,
 }));
 vi.mock('~/src/services/mountable-chosen.ts', () => ({

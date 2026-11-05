@@ -100,7 +100,7 @@ form-submission semantics:
 
 | Entry point | Native marker | Form submission and defaults |
 | --- | --- | --- |
-| `mountSelectize` in `services/mountable-select.ts` | `cafevdb-vue-select--ordered` | Original native select; options rearranged into selection order, creation, and sorting configuration |
+| `mountSelectize` in `services/mountable-selectize.ts` | `cafevdb-vue-select--ordered` | Original native select; options rearranged into selection order, creation, and sorting configuration |
 | `mountChosen` in `services/mountable-chosen.ts`, or `.chosen()` | `cafevdb-vue-select` | Original native select; native option order, hidden selected choices, no Backspace removal |
 
 Both accept a select, a container, or a selector and expose value, refresh,

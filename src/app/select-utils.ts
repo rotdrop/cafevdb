@@ -27,7 +27,7 @@
 
 import { appName } from '../config.ts';
 import { getMountedChosen } from '../services/mountable-chosen.ts';
-import { getMountedSelectize } from '../services/mountable-select.ts';
+import { getMountedSelectize } from '../services/mountable-selectize.ts';
 import jQuery from './jquery.ts';
 
 import 'select-utils.scss';

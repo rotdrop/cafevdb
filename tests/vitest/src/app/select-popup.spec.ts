@@ -13,7 +13,7 @@ vi.mock('~/src/config.ts', () => ({ appName: 'cafevdb' }));
 vi.mock('~/src/app/cafevdb.ts', () => ({ toolTipsInit: vi.fn() }));
 vi.mock('~/src/app/notification.ts', () => ({ show: vi.fn() }));
 vi.mock('~/src/app/jquery-extensions.ts', () => ({}));
-vi.mock('~/src/services/mountable-select.ts', () => ({
+vi.mock('~/src/services/mountable-selectize.ts', () => ({
   getMountedSelectize: () => ({ getValue: mocks.getValue }),
 }));
 vi.mock('~/src/services/mounted-select-scope.ts', () => ({

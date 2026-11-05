@@ -38,7 +38,7 @@ import type {
   ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
-import type { SelectizeAdapterOptions } from '../services/mountable-select.ts';
+import type { SelectizeAdapterOptions } from '../services/mountable-selectize.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { VueSelectValue } from '../types/vue-select.ts';
 import type { UploadFile } from './file-upload.ts';
@@ -93,7 +93,7 @@ import {
 } from '../event-bus-events.ts';
 import { addressBookSelectOptions, selectedFreeFormContacts } from '../services/address-book-select.ts';
 import { DualListboxService, getMountedDualListbox } from '../services/mountable-dual-listbox.ts';
-import { getMountedSelectize } from '../services/mountable-select.ts';
+import { getMountedSelectize } from '../services/mountable-selectize.ts';
 import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import { asKey } from '../toolkit/types/type-traits.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';

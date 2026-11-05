@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import type { SelectizeAdapterOptions } from './mountable-select.ts';
+import type { SelectizeAdapterOptions } from './mountable-selectize.ts';
 
 import { createRemoteSelectOption } from './select-option-creation.ts';
 import { selectedOptionData } from './select-options.ts';
