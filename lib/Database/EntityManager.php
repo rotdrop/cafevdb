@@ -238,6 +238,7 @@ class EntityManager extends AbstractEntityManager
     protected string $appName,
     protected IConfig $cloudConfig,
     protected IUserConfig $cloudUserConfig,
+    private ?string $databaseServerVersion = null,
   ) {
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = [];
@@ -311,7 +312,7 @@ class EntityManager extends AbstractEntityManager
     if (!$this->showSoftDeleted) {
       $this->setFilterEnabled(self::SOFT_DELETEABLE_FILTER);
     }
-    if ($this->connected()) {
+    if ($this->databaseServerVersion !== null || $this->connected()) {
       $this->registerTypes();
     } else {
       $this->logError('NOT CONNECTED');
@@ -518,6 +519,9 @@ class EntityManager extends AbstractEntityManager
       'driver' => 'pdo_mysql',
       'wrapperClass' => Connection::class,
     ];
+    if ($this->databaseServerVersion !== null) {
+      $driverParams['serverVersion'] = $this->databaseServerVersion;
+    }
     $charSetParams = [
       'collate' => Constants::FULL_COLLATION,
       'charset' => Constants::CHARACTER_SET,

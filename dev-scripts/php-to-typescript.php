@@ -48,6 +48,12 @@ use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DatabaseEntityCollector;
 use OCA\RotDrop\DevScripts\PhpToTypeScript\Collectors\DTOCollector;
+use OCA\CAFEVDB\AppInfo\Application;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable\Transformer\TransformerInterface;
 
 // store output of different transformers in different files
 
@@ -63,24 +69,67 @@ $scopedNamespaces = [
   \Ramsey\Uuid::class,
 ];
 
-// Bootstrap the entity manager in the current process, mimicking what
-// orm-cmd.php does.
-$createEntityManager = function() use ($appDir): object {
-  $cafevDbUser = getenv('CAFEVDB_USER');
-  if ($cafevDbUser === false) {
-    $cafevDbUser = posix_getpwuid(posix_getuid())['name'];
-  }
-  $cafevDbPassword = @file_get_contents($appDir . '/.clipassword');
-  if (empty($cafevDbPassword)) {
-    throw new UnexpectedValueException('Unable to obtain database credentials from ' . $appDir . '/.clipassword');
-  }
+// These overrides belong only to this metadata-generation process, never to
+// the runtime container. No user keys, credentials or application SQL are needed.
+$metadataConnection = null;
+$createEntityManager = function() use (&$metadataConnection): object {
+  \OCP\Server::get(Application::class);
+  $appContainer = \OC::$server->getRegisteredAppContainer(Application::getAppName());
+  $appContainer->registerParameter('databaseServerVersion', '11.7.0-MariaDB');
+  $appContainer->registerService(EncryptionService::class, fn() => new class extends EncryptionService {
+    /** {@inheritdoc} */
+    public function __construct()
+    {
+    }
 
-  $user = \OC::$server->get(\OCP\IUserManager::class)->get($cafevDbUser);
-  \OC::$server->get(\OCP\IUserSession::class)->setUser($user);
-  \OC::$server->get(\OCA\CAFEVDB\Service\EncryptionService::class)->bind($cafevDbUser, $cafevDbPassword);
+    /** {@inheritdoc} */
+    public function bound(): bool
+    {
+      return true;
+    }
 
-  $entityManager = \OCP\Server::get(\OCA\CAFEVDB\Database\EntityManager::class);
+    /** {@inheritdoc} */
+    public function getConfigValue(string $key, mixed $default = null, bool $ignoreLock = false)
+    {
+      return $default;
+    }
+
+    /** {@inheritdoc} */
+    public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null): mixed
+    {
+      return $default;
+    }
+  });
+  $appContainer->registerService(Encryption::class, fn() => new class implements TransformerInterface {
+    /** {@inheritdoc} */
+    public function transform(?string $value, mixed &$context = null): mixed
+    {
+      throw new LogicException('Encryption is unavailable during metadata generation.');
+    }
+
+    /** {@inheritdoc} */
+    public function reverseTransform(?string $value, mixed &$context = null): mixed
+    {
+      throw new LogicException('Decryption is unavailable during metadata generation.');
+    }
+
+    /** {@inheritdoc} */
+    public function isCachable(): bool
+    {
+      return false;
+    }
+  });
+  // EntityManagerBoundEvent subscribers may initialize repositories or storage.
+  // Keep their application-state work out of the metadata-only process.
+  $appContainer->registerService(\OCP\EventDispatcher\IEventDispatcher::class, fn($container) => new \OC\EventDispatcher\EventDispatcher(
+    new \Symfony\Component\EventDispatcher\EventDispatcher,
+    $container,
+    $container->get(\Psr\Log\LoggerInterface::class),
+  ));
+
+  $entityManager = $appContainer->get(EntityManager::class);
   $entityManager->decorateClassMetadata(false);
+  $metadataConnection = $entityManager->getConnection();
 
   return $entityManager;
 };
@@ -105,6 +154,9 @@ try {
     input: new \Symfony\Component\Console\Input\ArgvInput,
     output: \OCP\Server::get(ConsoleOutput::class),
   );
+  if ($metadataConnection?->isConnected()) {
+    throw new LogicException('Metadata generation opened the application database connection.');
+  }
 } catch (Throwable $t) {
   fwrite(STDERR, 'Dependency injection not set up: ' . $t->getMessage() . PHP_EOL . print_r($t->getTrace(), true) . PHP_EOL);
   exit(1);
