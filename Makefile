@@ -207,7 +207,6 @@ $(ABSSRCDIR)/node_modules/tinymce/package.json: package-lock.json
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
 JS_FILES = \
  $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")
- $(shell find $(ABSSRCDIR)/3rdparty/rotdrop -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
 NPM_INIT_DEPS =\
