@@ -64,7 +64,6 @@ NAMESPACE_WRAPPER_DIRS =\
  lib/Database/Doctrine\
  lib/Database/Legacy
 NAMESPACE_WRAPPER_FILES =\
- config/cli-config.php\
  lib/Common/Uuid.php\
  lib/Controller/ImagesController.php\
  lib/Controller/ProjectParticipantFieldsController.php\
@@ -207,7 +206,7 @@ $(ABSSRCDIR)/node_modules/tinymce/package.json: package-lock.json
 
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
 JS_FILES = \
- $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts") \
+ $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")
  $(shell find $(ABSSRCDIR)/3rdparty/rotdrop -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
