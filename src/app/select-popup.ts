@@ -25,11 +25,11 @@
  * @module
  */
 
-import type { SelectizeAdapterOptions } from '../services/mountable-select.ts';
+import type { SelectizeAdapterOptions } from '../services/mountable-selectize.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
-import { getMountedSelectize } from '../services/mountable-select.ts';
+import { getMountedSelectize } from '../services/mountable-selectize.ts';
 import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import { selectedOptionData } from '../services/select-options.ts';
 import { toolTipsInit } from './cafevdb.ts';

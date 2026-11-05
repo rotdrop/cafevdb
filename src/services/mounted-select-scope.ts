@@ -1,10 +1,10 @@
 /**
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import type { SelectizeAdapterOptions, SelectizeService } from './mountable-select.ts';
+import type { SelectizeAdapterOptions, SelectizeService } from './mountable-selectize.ts';
 
 import { getMountedDualListbox } from './mountable-dual-listbox.ts';
-import { getMountedSelectize, mountSelectize } from './mountable-select.ts';
+import { getMountedSelectize, mountSelectize } from './mountable-selectize.ts';
 
 const scopes = new WeakMap<HTMLElement, MountedSelectScope>();
 

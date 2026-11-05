@@ -69,7 +69,7 @@ import {
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
-import { getMountedSelectize } from '../services/mountable-select.ts';
+import { getMountedSelectize } from '../services/mountable-selectize.ts';
 import { destroyMountedSelects, mountedSelectScope } from '../services/mounted-select-scope.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 // import * as Email from './email.ts';
