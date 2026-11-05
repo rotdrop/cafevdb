@@ -165,8 +165,14 @@ include $(DEV_LIB_DIR)/makefile/composer.mk
 SCOPED_VENDOR_LINK_DIRS = 3rdparty vendor
 include $(DEV_LIB_DIR)/makefile/namespace-wrapper.mk
 
-$(PHING) $(PHPUNIT): composer.lock
-	if ! [ -x $@ ]; then $(COMPOSER) bin phpunit install; else touch $@; fi
+PHPUNIT_COMPOSER_JSON = $(ABSSRCDIR)/vendor-bin/phpunit/composer.json
+PHPUNIT_COMPOSER_LOCK = $(wildcard $(ABSSRCDIR)/vendor-bin/phpunit/composer.lock)
+$(PHING) $(PHPUNIT): composer.lock $(PHPUNIT_COMPOSER_JSON) $(PHPUNIT_COMPOSER_LOCK)
+	if [ ! -f $(ABSSRCDIR)/vendor-bin/phpunit/composer.lock ] || [ $(PHPUNIT_COMPOSER_JSON) -nt $(ABSSRCDIR)/vendor-bin/phpunit/composer.lock ]; then \
+	  $(COMPOSER) bin phpunit update && touch $@; \
+	else \
+	  $(COMPOSER) bin phpunit install && touch $@; \
+	fi
 
 namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
 	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\

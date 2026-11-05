@@ -29,6 +29,7 @@ date_default_timezone_set('UTC');
 putenv('TEST_DONT_LOAD_APPS=1');
 require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
+require_once __DIR__ . "/../../vendor-bin/phpunit/vendor/autoload.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 
