@@ -43,7 +43,7 @@ class PersonalFormTest extends TestCase
   protected function setUp():void
   {
     $this->form = (new ReflectionClass(PersonalForm::class))->newInstanceWithoutConstructor();
-    $l10n = $this->createMock(IL10N::class);
+    $l10n = $this->createStub(IL10N::class);
     $l10n->method('t')->willReturnCallback(fn(string $text) => $text);
     (new ReflectionProperty(PersonalForm::class, 'l'))->setValue($this->form, $l10n);
   }
@@ -69,7 +69,8 @@ class PersonalFormTest extends TestCase
   public function testMissingRegionNamesRetainSelectableRegionCodes():void
   {
     $geoCodingService = $this->createMock(GeoCodingService::class);
-    $geoCodingService->method('getRegionNames')->willReturn(null);
+    $geoCodingService->expects($this->once())->method('getRegionNames')
+      ->with('DE')->willReturn(null);
     (new ReflectionProperty(PersonalForm::class, 'geoCodingService'))->setValue($this->form, $geoCodingService);
 
     $options = (new ReflectionMethod(PersonalForm::class, 'bankHolidayOptions'))->invoke($this->form, 'de_DE');
