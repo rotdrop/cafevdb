@@ -262,7 +262,6 @@ realclean: distclean
 	rm -f vendor-bin/*/composer.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
-	rm -f package-lock.json
 	rm -f *.html
 	rm -f stats.json
 	rm -rf js/*

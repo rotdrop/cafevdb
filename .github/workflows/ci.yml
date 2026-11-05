@@ -164,6 +164,57 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}/build/artifacts/tests/vitest/coverage/
           if-no-files-found: error
 
+  realclean:
+    runs-on: ubuntu-latest
+    env:
+      PHP_VERSION: '8.5'
+    steps:
+      - name: Use https for submodules
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Checkout app
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install xpath
+        run: sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: make realclean on a bare checkout
+        run: |
+          make realclean
+          git status --porcelain --ignored
+          [ -z "$(git status --porcelain)" ] || { echo "realclean modified tracked files"; exit 1; }
+
+      - name: make realclean is idempotent
+        run: |
+          before="$(git status --porcelain --ignored)"
+          make realclean
+          [ "$before" = "$(git status --porcelain --ignored)" ]
+
+      - name: Full build
+        run: make dev-setup npm-build
+
+      - name: make realclean after a full build
+        run: |
+          make realclean
+          git status --porcelain --ignored
+          [ -z "$(git status --porcelain --ignored)" ] || { echo "realclean left build artifacts"; exit 1; }
+
+      - name: make realclean is idempotent after a build
+        run: |
+          make realclean
+          [ -z "$(git status --porcelain --ignored)" ]
+
   publish-coverage:
     if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
     needs: phpunit
