@@ -106,4 +106,9 @@
     <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
     <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
   </rule>
+
+  <arg name="extensions" value="php"/>
+  <exclude-pattern>lib/Service/IMAP/*</exclude-pattern>
+  <exclude-pattern>lib/Legacy/PhpMyEdit/*</exclude-pattern>
+  <exclude-pattern>lib/Database/Doctrine/ORM/Proxies/*</exclude-pattern>
 </ruleset>
