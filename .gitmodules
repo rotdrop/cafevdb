@@ -3,27 +3,27 @@
 	url = https://github.com/mrdor44/MakeHelp.git
 [submodule "3rdparty/mediamonks-doctrine-extensions"]
 	path = 3rdparty/mediamonks-doctrine-extensions
-	url = git@github.com:rotdrop/mediamonks-doctrine-extensions.git
+	url = https://github.com/rotdrop/mediamonks-doctrine-extensions.git
 	branch = feature/gedmo-dev
 [submodule "3rdparty/doctrine-on-update-extension"]
 	path = 3rdparty/doctrine-on-update-extension
-	url = git@github.com:rotdrop/doctrine-on-update-extension.git
+	url = https://github.com/rotdrop/doctrine-on-update-extension.git
 [submodule "3rdparty/gedmo-doctrine-extensions"]
 	path = 3rdparty/gedmo-doctrine-extensions
-	url = git@github.com:rotdrop/DoctrineExtensions.git
+	url = https://github.com/rotdrop/DoctrineExtensions.git
 [submodule "3rdparty/doctrine-orm"]
 	path = 3rdparty/doctrine-orm
-	url = git@github.com:rotdrop/orm.git
+	url = https://github.com/rotdrop/orm.git
 [submodule "3rdparty/opentbs"]
 	path = 3rdparty/opentbs
-	url = git@github.com:rotdrop/opentbs.git
+	url = https://github.com/rotdrop/opentbs.git
 [submodule "3rdparty/vuejs-router"]
 	path = 3rdparty/vuejs-router
-	url = git@github.com:rotdrop/vuejs-router.git
+	url = https://github.com/rotdrop/vuejs-router.git
 	branch = production/cafevdb
 [submodule "python/compound-word-splitting"]
 	path = python/compound-word-splitting
-	url = git@github.com:rotdrop/python-microservice-german-word-splitting.git
+	url = https://github.com/rotdrop/python-microservice-german-word-splitting.git
 [submodule "dev-scripts/lib"]
 	path = dev-scripts/lib
-	url = git@github.com:rotdrop/nextcloud-app-build-system.git
+	url = https://github.com/rotdrop/nextcloud-app-build-system.git

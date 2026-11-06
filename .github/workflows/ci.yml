@@ -21,9 +21,6 @@ jobs:
       PHP_VERSION: '8.5'
       MARIADB_MAJOR: '12'
     steps:
-      - name: Use https for submodules
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
-
       - name: Checkout modified Nextcloud server
         uses: actions/checkout@v4
         with:
@@ -145,6 +142,12 @@ jobs:
           ! systemctl is-active --quiet mariadb
           make dev-setup npm-build
 
+      # Exercises the shared appstore target, also needs the Nextcloud
+      # server for the type generation and the cloud's 3rdparty/ directory.
+      - name: Build unsigned app-store archive
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: make appstore APPSTORE_SIGN=0
+
       - name: Remove test caches
         if: always()
         working-directory: server/apps/${{ env.APP_NAME }}
@@ -166,9 +169,6 @@ jobs:
   realclean:
     runs-on: ubuntu-latest
     steps:
-      - name: Use https for submodules
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
-
       - name: Checkout app
         uses: actions/checkout@v4
         with:
