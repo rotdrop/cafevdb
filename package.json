@@ -8,6 +8,7 @@
   "scripts": {
     "build": "vite --mode production build",
     "dev": "vite --mode development build",
+    "lint": "eslint src --quiet || [ $? -eq 1 ]",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
     "generate-typedoc": "typedoc --options doc/typedoc/typedoc.mjs",
     "postinstall": "patch-package",
