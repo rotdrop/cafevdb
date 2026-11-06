@@ -72,7 +72,7 @@ interface JQuery<TElement = HTMLElement> {
   tooltip: Tooltip.jQueryInterface;
   hasVerticalScrollbar: () => boolean;
   elements: () => [number, TElement][];
-  fileupload(options: Record<string, unknown>|'option', option?: string, value?: unknown): JQuery<TElement>;
+  fileupload(options: Record<string, unknown>|'option'|'destroy', option?: string, value?: unknown): JQuery<TElement>;
   iFrameResize(options: iframeResizer.IFrameOptions): JQuery<TElement>;
   datetimepicker(argument: 'destroy'|Record<string, unknown>, ...rest: unknown): JQuery<TElement>;
   readonly(state?: boolean|string): JQuery<TElement>;

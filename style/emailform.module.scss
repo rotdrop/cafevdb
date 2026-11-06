@@ -37,7 +37,8 @@ $editCssClass: edit;
 $showSelectableCssClass: show-selectable;
 $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
-.ui-widget.ui-dialog.emailform.#{$appNameTag} {
+.ui-widget.ui-dialog.emailform.#{$appNameTag},
+.emailform-envelope.#{$appNameTag} {
   overflow:hidden;
   max-height: calc(100vh - var(--header-height));
   padding:0;
@@ -436,7 +437,7 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
         div#emailformdebug {
           height:auto;
-          width:65em;
+          width:min(100%, 65em);
           max-width:65em;
           overflow:auto;
 

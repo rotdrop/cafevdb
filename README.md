@@ -44,6 +44,19 @@ and bound-event application subscribers are isolated in this metadata-only
 process. Normal requests and the ORM CLI retain encryption, connection probing,
 server-version detection and connection initialization.
 
+Outgoing email form
+-------------------
+
+The outgoing email form uses a viewport-sized Vue envelope mounted through the
+component event bus. Minimize leaves the form and its auto-save timer alive;
+restore returns to the same message. The injected PHP markup, jQuery tabs,
+editor, attachments, previews and controller contracts remain legacy-owned.
+Closing from the preview returns to composition; closing from composition uses
+the existing cancel and draft-cleanup flow. Sending, loading a message and
+uploading attachments block the envelope controls until the operation completes.
+Removing the containing legacy view also tears down the envelope and its
+legacy widgets, after any protected operation finishes.
+
 Email template substitutions
 ----------------------------
 
