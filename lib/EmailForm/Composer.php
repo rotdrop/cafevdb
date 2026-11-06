@@ -268,7 +268,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     ],
   ];
   // @todo Fix the prefix, make it more automatic
-  const EMAIL_PREVIEW_SELECTOR = '.ui-dialog.emailform #emailformdialog div#emailformwrapper form#cafevdb-email-form div#emailformdebug div#cafevdb-email-preview .email-body.reset-css';
+  const EMAIL_PREVIEW_SELECTOR = '.emailform #emailformdialog div#emailformwrapper form#cafevdb-email-form div#emailformdebug div#cafevdb-email-preview .email-body.reset-css';
   const DEFAULT_HTML_STYLES = [
     'transaction-parts' => '<style>
 [CSSPREFIX]table.transaction-parts.nothing-received-yet .cell.details {

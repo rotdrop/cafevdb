@@ -26,12 +26,14 @@
  */
 
 import type { DualListboxComponentProps } from './types/dual-listbox.ts';
+import type { EmailFormEnvelopeProps } from './types/email-form-envelope.ts';
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 import type { PmeExportMenuComponentProps } from './types/pme-export-menu.ts';
 import type { PmeNavigationSelectComponentProps } from './types/pme-navigation-select.ts';
 import type { VueSelectComponentProps } from './types/vue-select.ts';
 
 export const DUAL_LISTBOX = 'DualListbox';
+export const EMAIL_FORM_ENVELOPE = 'EmailFormEnvelope';
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const DONATION_RECEIPTS_ACTION_MENU = 'DonationReceiptsActionMenu';
 export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
@@ -45,6 +47,7 @@ export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMen
 
 export interface ComponentProps {
   [DUAL_LISTBOX]: DualListboxComponentProps;
+  [EMAIL_FORM_ENVELOPE]: EmailFormEnvelopeProps;
   [DOKU_WIKI_WRAPPER]: {
     wikiPage?: string;
     query?: Record<string, string>;
