@@ -71,4 +71,8 @@
   <rule ref="rulesets/unusedcode.xml">
     <exclude name="UnusedFormalParameter"/>
   </rule>
+
+  <exclude-pattern>*/lib/Service/IMAP/*</exclude-pattern>
+  <exclude-pattern>*/lib/Legacy/PhpMyEdit/*</exclude-pattern>
+  <exclude-pattern>*/lib/Database/Doctrine/ORM/Proxies/*</exclude-pattern>
 </ruleset>

@@ -4,106 +4,78 @@
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
 # @copyright Claus-Justus Heine 2020-2026
 #
+# Thin wrapper around the shared Makefile of the build-system submodule
+# dev-scripts/lib, only the app-specific settings and rules live here.
+#
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
-include $(DEV_LIB_DIR)/makefile/setup.mk
-include $(DEV_LIB_DIR)/makefile/l10n.mk
-DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
-SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
-SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
-APPSTORE_BUILD_DIR = $(BUILDDIR)/artifacts/appstore
-APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
-BASH=$(shell which bash 2> /dev/null)
+
+BASH = $(shell which bash 2> /dev/null)
 SHELL := $(BASH)
-PHP = $(shell which php 2> /dev/null) # allow override
-SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
-COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
-ifeq (, $(COMPOSER_SYSTEM))
-COMPOSER = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
-else
-COMPOSER = $(COMPOSER_SYSTEM)
-endif
-COMPOSER_OPTIONS=--prefer-dist
-#
-NPM = $(shell which npm 2> /dev/null)
-BUNDLER_CONFIG = vite.config.ts
-OCC = $(ABSSRCDIR)/../../occ
-ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
-WGET = $(shell which wget 2> /dev/null)
+
+ORM_CLI = $(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 TINYMCE_VERSION = 7
-#
-PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
-# PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
+
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
-PHPCS = $(ABSSRCDIR)/vendor-bin/phpcs/vendor/bin/phpcs
-PHPMD = $(ABSSRCDIR)/vendor-bin/phpmd/vendor/bin/phpmd
-#
-EMACS = $(shell which emacs 2> /dev/null)
 
-MAKEFILE_DEP = Makefile
-
-###############################################################################
-#
-# Some composer packages must be wrapped into a different namespace to
-# avoid conflicts with the ambient cloud software, notably
-# Doctrine/ORM and all related packages.
-#
-
-WRAPPER_NAMESPACE = OCA\\$(APP_NAMESPACE)\\$(WRAPPER_NAMESPACE_POSTFIX)
-
-# hash dependencies which occasionally are hacked
+# The Doctrine/ORM stack and related packages are wrapped into the
+# app-specific namespace, git dependencies which are occasionally hacked
+# trigger a rebuild of the wrapper.
 WRAPPER_GIT_DEPENDENCIES =\
  3rdparty/doctrine-orm\
  3rdparty/gedmo-doctrine-extensions\
  3rdparty/mediamonks-doctrine-extensions\
  3rdparty/doctrine-on-update-extension
+SCOPED_VENDOR_LINK_DIRS = 3rdparty vendor
+# keep the dev-dependencies, composer-patches is one of them
+SCOPED_COMPOSER_UPDATE_OPTIONS =
 
-NAMESPACE_WRAPPER_DIRS =\
- lib/Database/Doctrine\
- lib/Database/Legacy
-NAMESPACE_WRAPPER_FILES =\
- lib/Common/Uuid.php\
- lib/Controller/ImagesController.php\
- lib/Controller/ProjectParticipantFieldsController.php\
- lib/Controller/SepaDebitMandatesController.php\
- lib/Database/Connection.php\
- lib/Database/EntityManager.php\
- lib/PageRenderer/ProjectParticipantFields.php\
- lib/Service/Finance/DoNothingReceivablesGenerator.php\
- lib/Service/Finance/IRecurringReceivablesGenerator.php\
- lib/Service/Finance/SepaBulkTransactionService.php\
- lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php\
- lib/Service/Finance/PeriodicReceivablesGenerator.php\
- lib/Service/Finance/FinanceService.php\
- lib/Service/ContactsService.php\
- lib/Service/GeoCodingService.php\
- lib/Traits/EntityManagerTrait.php
+# tinymce and the language packs are downloaded with wget
+APP_REQUIRED_TOOLS = WGET
 
-# The complete list of affected files
-NAMESPACE_WRAPPER_VICTIMS = $(foreach dir,$(NAMESPACE_WRAPPER_DIRS),$(shell find $(dir) -name '*.php'))\
- $(NAMESPACE_WRAPPER_FILES)
+APP_PHP_DIRS = lib
 
-# list of namespaces to wrap
-WRAPPED_NAMESPACES =\
- Acelaya\\Doctrine\
- Carbon\
- Doctrine\
- DoctrineExtensions\
- CJH\\Doctrine\\Extensions\
- Gedmo\
- MediaMonks\\Doctrine\
- MyCLabs\\Enum\
- Oro\\DBAL\
- Oro\\ORM\
- Ramsey\\Uuid\
- Ramsey\\Uuid\\Doctrine
+APP_DEV_SETUP_DEPS = ts-app-config package-lock.json
 
-#
-#
-#
-###############################################################################
+# Everything the bundler needs in addition to the shared dependencies,
+# DW_APP_CONFIG is defined below.
+CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss" 2> /dev/null)
+DW_APP_CONFIG = node_modules/@rotdrop/nextcloud-app-dokuwiki/build/ts-types/app-config.ts
+BUNDLER_DEPS =\
+ tinymce\
+ $(CSS_FILES)\
+ $(SCSS_APP_CONFIG)\
+ scss-variables\
+ $(DW_APP_CONFIG)
+
+APP_MOSTLYCLEAN_DEPS = tinymce-clean package-lock-restore
+# hash files left behind by the PHP-Scoper and the doc builds
+APP_MOSTLYCLEAN_FILES = app-git-build-hash wrapper-build-hash
+
+APPSTORE_FILES =\
+ appinfo\
+ css\
+ js\
+ img\
+ l10n\
+ lib\
+ python\
+ vendor\
+ $(SCOPED_VENDOR_DIR)\
+ CHANGELOG.md\
+ LICENSE\
+ README.md
+APPSTORE_COPY_HOOK = appstore-core-exclude
+
+include $(DEV_LIB_DIR)/makefile/app.mk
+
+MAKEFILE_DEP = Makefile
+
+DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
+SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
+SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
 
 PHPDOC = /opt/phpDocumentor/bin/phpdoc
 export PHPDOC_PLANTUML_BIN = $(shell which plantuml 2> /dev/null)
@@ -120,50 +92,19 @@ PHPDOC_TEMPLATE =
 
 #--template=responsive-twig
 
-MAKE_HELP_DIR = $(SRCDIR)/dev-scripts/MakeHelp
-include $(MAKE_HELP_DIR)/MakeHelp.mk
-
-all: help
-
 #@private
-pre-build: php-scoper-install
-#	git submodule update --init
-#	$(OCC) maintenance:mode --on
-.PHONY: pre-build
+dev-setup-php: composer namespace-wrapper
+.PHONY: dev-setup-php
 
 #@private
 post-build:
-#	$(OCC) maintenance:mode --off
-	chmod g+rw $(ABSSRCDIR)/../../config/config.php
 	@if [ $$(npm list --parseable pinia|wc -l) -gt 1 ]; then\
  echo -e "\nMultiple different versions of pinia are installed, this is likely to crash at runtime!\n" 1>&2;\
  exit 1;\
 fi
 .PHONY: post-build
 
-#@@ Fetches the PHP and JS dependencies and compiles the JS.
-#@ If no composer.json is present, the composer step is skipped, if no
-#@ package.json or js/package.json is present, the npm step is skipped
-build: dev-setup npm-build post-build
-.PHONY: build
-
-#@@ Fetches the PHP and JS dependencies and compiles the JS.
-#@ If no composer.json is present, the composer step is skipped, if no
-#@ package.json or js/package.json is present, the npm step is skipped
-dev: dev-setup npm-dev post-build
-.PHONY: dev
-
-#@private
-dev-setup: dev-setup-php package-lock.json
-.PHONY: dev-setup
-
-#@private
-dev-setup-php: pre-build composer.lock namespace-wrapper
-.PHONY: dev-setup-php
-
-include $(DEV_LIB_DIR)/makefile/composer.mk
-SCOPED_VENDOR_LINK_DIRS = 3rdparty vendor
-include $(DEV_LIB_DIR)/makefile/namespace-wrapper.mk
+build dev: post-build
 
 PHPUNIT_COMPOSER_JSON = $(ABSSRCDIR)/vendor-bin/phpunit/composer.json
 PHPUNIT_COMPOSER_LOCK = $(wildcard $(ABSSRCDIR)/vendor-bin/phpunit/composer.lock)
@@ -173,23 +114,6 @@ $(PHING) $(PHPUNIT): composer.lock $(PHPUNIT_COMPOSER_JSON) $(PHPUNIT_COMPOSER_L
 	else \
 	  $(COMPOSER) bin phpunit install && touch $@; \
 	fi
-
-namespace-wrapper-patch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
- -e 's/use $(NS)/use $(WRAPPER_NAMESPACE)\\$(NS)/g'\
- -e 's/([( ])\\$(NS)/\1\\$(WRAPPER_NAMESPACE)\\$(NS)/g'\
-}\
- $(NAMESPACE_WRAPPER_VICTIMS)
-
-namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
-	@sed -E -i ${foreach NS,$(WRAPPED_NAMESPACES),\
- -e 's/use $(WRAPPER_NAMESPACE)\\$(NS)/use $(NS)/g'\
- -e 's/([( ])\\$(WRAPPER_NAMESPACE)\\$(NS)/\1\\$(NS)/g'\
-}\
- $(NAMESPACE_WRAPPER_VICTIMS)
-
-include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
-include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
 # Copy from node_modules/ to 3rdparty/tinymce/
 .PHONY: tinymce
@@ -210,86 +134,52 @@ done
 
 $(ABSSRCDIR)/node_modules/tinymce/package.json: package-lock.json
 
-CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
-JS_FILES = \
- $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")
-L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
+#@private
+tinymce-clean:
+	rm -rf $(ABSSRCDIR)/3rdparty/tinymce/*
+.PHONY: tinymce-clean
 
-NPM_INIT_DEPS =\
- $(MAKEFILE_DEP) package-lock.json package.json $(BUNDLER_CONFIG) eslint.config.mjs
+# The tracked lock file is rewritten by "npm update" during the build.
+#@private
+package-lock-restore:
+	if git -C $(ABSSRCDIR) ls-files --error-unmatch package-lock.json > /dev/null 2>&1; then\
+ git -C $(ABSSRCDIR) checkout -- package-lock.json;\
+ fi
+.PHONY: package-lock-restore
 
-DW_APP_CONFIG = node_modules/@rotdrop/nextcloud-app-dokuwiki/build/ts-types/app-config.ts
-DW_APP_CONFIG_PATCH = patches/
-
+# Third-party patch, applied if the generated file is missing
 $(DW_APP_CONFIG): node_modules
 	if ! [ -f $(DW_APP_CONFIG) ]; then\
  cd $(ABSSRCDIR);\
  patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.2.patch;\
 fi
 
-WEBPACK_DEPS =\
- $(NPM_INIT_DEPS)\
- tinymce\
- $(CSS_FILES)\
- $(JS_FILES)\
- $(L10N_FILES)\
- $(TS_APP_CONFIG)\
- $(SCSS_APP_CONFIG)\
- ts-types-files\
- scss-variables\
- $(DW_APP_CONFIG)
-
-include $(DEV_LIB_DIR)/makefile/npm.mk
-
 #@@ Regenerates the app-calendar patch from the installed npm package.
 fabricate-app-calendar-patch:
 	$(BASH) $(ABSSRCDIR)/dev-scripts/fabricate-app-calendar-patch.sh
 .PHONY: fabricate-app-calendar-patch
 
-#@@ Removes build files
-clean: ## Tidy up local environment
-	rm -rf $(BUILDDIR)
-.PHONY: clean
+# Packages which are provided by the cloud itself are removed from the
+# archive, this needs the cloud's 3rdparty/ directory.
+CLOUD_3RDPARTY_DIR = $(ABSSRCDIR)/../../3rdparty
 
-#@@ Same as clean but also removes dependencies installed by composer, bower and npm
-distclean: clean
-	rm -rf vendor
-	rm -rf $(SCOPED_VENDOR_DIR)
-	rm -rf vendor-bin/*/vendor
-	rm -rf node_modules
-	rm -rf 3rdparty/tinymce/*
-.PHONY: distclean
-
-#@@ Really delete everything but the bare source files
-realclean: distclean
-	rm -rf .vite
-	rm -f composer*.lock
-	rm -f vendor-bin/*/composer.lock
-	rm -f composer.json
-	rm -f stamp.composer-core-versions
-	rm -f *.html
-	rm -f stats.json
-	rm -f build-flavour
-	rm -rf js/*
-	rm -rf css/*
-	rm -f *-stamp
-	rm -f *hash*
-.PHONY: realclean
+#@private
+appstore-core-exclude:
+	mkdir -p $(APPSTORE_SIGN_DIR)/$(APP_NAME)/3rdparty
+	$(RSYNC) -a -L $(APPSTORE_BLACKLISTED:%=--exclude '%') 3rdparty/tinymce $(APPSTORE_SIGN_DIR)/$(APP_NAME)/3rdparty
+	$(SILENT)if [ -d "$(CLOUD_3RDPARTY_DIR)" ]; then\
+ ( cd $(CLOUD_3RDPARTY_DIR); find . -mindepth 2 -maxdepth 2 -type d )\
+ | while read DIR; do rm -rf "$(APPSTORE_SIGN_DIR)/$(APP_NAME)/vendor/$${DIR#./}"; done;\
+else\
+ echo "No cloud 3rdparty/ directory, not excluding cloud packages from the archive." 1>&2;\
+fi
+.PHONY: appstore-core-exclude
 
 # Builds the source and appstore package
 .PHONY: dist
 dist:
 	make source
 	make appstore
-
-$(BUILDDIR)/core-exclude:
-	@mkdir -p $(BUILDDIR)
-	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(APP_NAME)/vendor/|g' -e 's|$$|/*|g' > $@
-
-.PHONY: cleanup
-cleanup: $(BUILDDIR)/core-exclude
-	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
-	$(COMPOSER) dump-autoload
 
 APP_BUILD_HASH = app-git-build-hash
 APP_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/$(APP_BUILD_HASH) 2> /dev/null || echo)
@@ -472,31 +362,6 @@ $(TSDOC_HTML)/index.html: doc/typedoc/typedoc.mjs $(APP_BUILD_HASH) $(WEBPACK_DE
 #
 ###############################################################################
 
-$(PHPCS): vendor-bin/phpcs/composer.json
-	$(COMPOSER) install --working-dir=vendor-bin/phpcs --no-interaction --no-progress
-
-PHP_LINT_EXCLUDES=lib/Service/IMAP/*,lib/Legacy/PhpMyEdit/*,lib/Database/Doctrine/ORM/Proxies/*
-PHPCS_IGNORE=$(PHP_LINT_EXCLUDES)
-PHPCS_OPTIONS=--standard=.phpcs.xml --extensions=php --runtime-set ignore_warnings_on_exit 1 --ignore='$(PHPCS_IGNORE)'
-
-.PHONY: phpcs
-phpcs: $(PHPCS)
-	$(PHPCS) $(PHPCS_OPTIONS) lib/
-
-.PHONY: phpcs-errors
-phpcs-errors: $(PHPCS)
-	$(PHPCS) $(PHPCS_OPTIONS) -n lib/|grep FILE:|awk '{ print $$2; }'
-
-$(PHPMD): vendor-bin/phpmd/composer.json
-	$(COMPOSER) install --working-dir=vendor-bin/phpmd --no-interaction --no-progress
-
-PHP_LINT_COMMA := ,
-PHPMD_EXCLUDES=$(foreach path,$(subst $(PHP_LINT_COMMA), ,$(PHP_LINT_EXCLUDES)),--exclude '*/$(path)')
-
-.PHONY: phpmd
-phpmd: $(PHPMD)
-	$(PHPMD) lib/ --format text --ruleset .phpmd.xml --suffixes php $(PHPMD_EXCLUDES) --threads 1 --no-cache
-
 # Builds the source package
 .PHONY: source
 source:
@@ -511,38 +376,6 @@ source:
 	--exclude="../$(APP_NAME)/js/*.log" \
         ../$(APP_NAME)
 
-# Builds the source package for the app store, ignores php and js tests
-.PHONY: appstore
-appstore: $(BUILDDIR)/core-exclude
-	$(COMPOSER) update --no-dev $(COMPOSER_OPTIONS)
-	ls -l vendor
-	rm -rf $(APPSTORE_BUILD_DIR)
-	mkdir -p $(APPSTORE_BUILD_DIR)
-	tar cvzf $(APPSTORE_PACKAGE_NAME).tar.gz \
- --exclude-vcs \
- --exclude="../$(APP_NAME)/dev-scripts" \
- --exclude="../$(APP_NAME)/build" \
- --exclude="../$(APP_NAME)/tests" \
- --exclude="../$(APP_NAME)/Makefile" \
- --exclude="../$(APP_NAME)/*.log" \
- --exclude="../$(APP_NAME)/phpunit*xml" \
- --exclude="../$(APP_NAME)/composer.*" \
- --exclude="../$(APP_NAME)/js/node_modules" \
- --exclude="../$(APP_NAME)/js/tests" \
- --exclude="../$(APP_NAME)/js/test" \
- --exclude="../$(APP_NAME)/js/package.json" \
- --exclude="../$(APP_NAME)/js/bower.json" \
- --exclude="../$(APP_NAME)/js/karma.*" \
- --exclude="../$(APP_NAME)/js/protractor.*" \
- --exclude="../$(APP_NAME)/package.json" \
- --exclude="../$(APP_NAME)/bower.json" \
- --exclude="../$(APP_NAME)/karma.*" \
- --exclude="../$(APP_NAME)/protractor\.*" \
- --exclude="../$(APP_NAME)/.*" \
- --exclude="../$(APP_NAME)/js/.*" \
- --exclude-from="$(BUILDDIR)/core-exclude" \
- ../$(APP_NAME)
-	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
@@ -598,18 +431,6 @@ run-jstest:
 jstest: dev-setup ts-app-config ts-types-files run-jstest post-build
 .PHONY: jstest
 
-#@private
-run-tide:
-	$(EMACS) --batch --file $(SRCDIR)/src/vue-app.ts  -l $(DEV_LIB_DIR)/scripts/tide-project-errors.el|tee tide-errors.log
-.PHONY: run-tide
-
-#@@ Runs the Emacs Tide IDE in batch mode and diagnoses TypeScript errors.
-tide: dev-setup ts-app-config ts-types-files run-tide post-build
-.PHONY: tide
-
-#@@ Runs integration test for PHP and TypeScript code
-test: phpunit tide jstest
-.PHONY: test
 
 .PHONY: l10n
 l10n: translationfiles/update.sh translationfiles/templates/cafevdb.pot
