@@ -1,5 +1,12 @@
 # Patches
 
+The npm `postinstall` hook applies patches after installation. The `prebuild`
+and `predev` hooks reapply them immediately before Vite, after the shared
+Makefile has finished installing or updating dependencies. Patch failures stop
+the build rather than bundling unpatched packages.
+Run the build-order regression tests with
+`node --test tests/scripts/npm-patches.test.mjs`.
+
 ## @nextcloud/app-calendar
 
 After installing the npm dependencies, regenerate the patch manually with:

@@ -6,7 +6,9 @@
   "author": "Claus-Justus Heine <himself@claus-justus-heine.de>",
   "type": "module",
   "scripts": {
+    "prebuild": "node_modules/.bin/patch-package --error-on-fail",
     "build": "vite --mode production build",
+    "predev": "node_modules/.bin/patch-package --error-on-fail",
     "dev": "vite --mode development build",
     "lint": "eslint src --quiet || [ $? -eq 1 ]",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
