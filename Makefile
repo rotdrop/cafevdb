@@ -50,7 +50,7 @@ BUNDLER_DEPS =\
  scss-variables\
  $(DW_APP_CONFIG)
 
-APP_MOSTLYCLEAN_DEPS = tinymce-clean package-lock-restore
+APP_MOSTLYCLEAN_DEPS = tinymce-clean
 # hash files left behind by the PHP-Scoper and the doc builds
 APP_MOSTLYCLEAN_FILES = app-git-build-hash wrapper-build-hash
 
@@ -138,14 +138,6 @@ $(ABSSRCDIR)/node_modules/tinymce/package.json: package-lock.json
 tinymce-clean:
 	rm -rf $(ABSSRCDIR)/3rdparty/tinymce/*
 .PHONY: tinymce-clean
-
-# The tracked lock file is rewritten by "npm update" during the build.
-#@private
-package-lock-restore:
-	if git -C $(ABSSRCDIR) ls-files --error-unmatch package-lock.json > /dev/null 2>&1; then\
- git -C $(ABSSRCDIR) checkout -- package-lock.json;\
- fi
-.PHONY: package-lock-restore
 
 # Third-party patch, applied if the generated file is missing
 $(DW_APP_CONFIG): node_modules
