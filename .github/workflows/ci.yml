@@ -2,7 +2,7 @@
 #
 # Basic checks via the shared CI workflow of the build system: eslint,
 # php -l, realclean check and a full build of the unsigned app archive.
-# The server-based PHPUnit and Vitest suites live in phpunit.yml.
+# The server-based PHPUnit and Vitest suites live in phpunit-vitest.yml.
 name: CI
 
 on:

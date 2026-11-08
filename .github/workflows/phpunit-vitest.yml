@@ -1,4 +1,4 @@
-name: PHPUnit
+name: PHPUnit + Vitest
 
 on:
   push:
@@ -152,19 +152,6 @@ jobs:
         if: always()
         working-directory: server/apps/${{ env.APP_NAME }}
         run: rm -rf .phpunit.result.cache .phpunit.cache
-
-      - name: make realclean after a full build
-        working-directory: server/apps/${{ env.APP_NAME }}
-        run: |
-          make realclean
-          git status --porcelain --ignored
-          [ -z "$(git status --porcelain --ignored)" ] || { echo "realclean left build artifacts"; exit 1; }
-
-      - name: make realclean is idempotent after a build
-        working-directory: server/apps/${{ env.APP_NAME }}
-        run: |
-          make realclean
-          [ -z "$(git status --porcelain --ignored)" ]
 
   publish-coverage:
     if: github.event_name == 'push' && github.ref == 'refs/heads/nextcloud35'
