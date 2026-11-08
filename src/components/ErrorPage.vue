@@ -201,6 +201,22 @@
                       :useMarkdown="true"
                       :arguments="substitutions"
           />
+          <template v-if="githubPreview.enabled">
+            <h6>{{ t(appName, 'Public GitHub Issue') }}</h6>
+            <div>
+              {{ t(appName, 'The report is additionally published as issue in a public GitHub repository. Personal data has been removed automatically as far as possible, you are identified only by a pseudonym. Please check the text below, it is exactly what will be published.') }}
+            </div>
+            <hr>
+            <NcRichText v-if="githubPreview.markdown"
+                        class="problem-report-preview problem-report-github-preview"
+                        :text="githubPreview.markdown"
+                        :autolink="false"
+                        :useMarkdown="true"
+            />
+            <div v-else-if="githubPreview.error" class="problem-report-github-error">
+              {{ githubPreview.error }}
+            </div>
+          </template>
         </template>
       </NcListItem>
     </ul>
@@ -439,6 +455,39 @@ loadTranslations('logreader')
     logger.error('Unable to fetch logreader translations', e)
     translationsLoaded.value = true // still open untranslated
   })
+
+const githubPreview = ref<{ enabled: boolean, markdown: string, error: string }>({ enabled: false, markdown: '', error: '' })
+let githubPreviewTimer: ReturnType<typeof setTimeout>|undefined
+
+const loadGithubPreview = async () => {
+  if (!showProblemReport.value) {
+    return
+  }
+  try {
+    const response = await axios.post<{ enabled: boolean, markdown: string }>(
+      generateAppUrl(reportEndPoint + '/github-preview'),
+      {
+        user: currentUser,
+        userComment: userComment.value.trim(),
+        errorHtml: htmlStringForReport.value,
+        errorData: serializedError,
+      },
+    )
+    githubPreview.value = { enabled: response.data.enabled, markdown: response.data.markdown, error: '' }
+  } catch (e) {
+    logger.error('Unable to fetch the GitHub issue preview', e)
+    githubPreview.value = {
+      enabled: true,
+      markdown: '',
+      error: t(appName, 'Unable to generate the preview of the GitHub issue.'),
+    }
+  }
+}
+
+watch([showProblemReport, userComment, systemErrorString], () => {
+  clearTimeout(githubPreviewTimer)
+  githubPreviewTimer = setTimeout(loadGithubPreview, 500)
+}, { immediate: true })
 
 const submittedUserComments: Record<string, string> = {}
 

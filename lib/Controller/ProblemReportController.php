@@ -47,6 +47,7 @@ class ProblemReportController extends Controller
   use \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const END_POINT = 'a/problem-report';
+  public const GITHUB_PREVIEW_END_POINT = self::END_POINT . '/github-preview';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -95,5 +96,39 @@ class ProblemReportController extends Controller
     }
 
     return new DTO\MessagesResponse(messages: $result)->response($status);
+  }
+
+  /**
+   * Generate the sanitized markdown which would be published as GitHub issue.
+   *
+   * @param array $user The user reporting the error [ 'uid' => UID, 'displayName' => DISPLAY_NAME ].
+   *
+   * @param array $errorData The raw error data caught by the frontend code.
+   *
+   * @param null|string $errorHtml Relevant parts of the Nextcloud exception page.
+   *
+   * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
+   *
+   * @return Http\DataResponse With keys "enabled" (bool) and "markdown" (string).
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::GITHUB_PREVIEW_END_POINT)]
+  #[Attributes\NoGroupMemberRequired]
+  public function githubPreview(
+    array $user,
+    array $errorData,
+    ?string $errorHtml,
+    ?string $userComment,
+  ): Http\DataResponse {
+    try {
+      $markdown = $this->reportService->previewGithub($user, $errorData, $errorHtml, $userComment);
+    } catch (\Throwable $t) {
+      $this->logException($t, 'Unable to generate the GitHub preview.');
+      return new Http\DataResponse(
+        [ 'messages' => [ $this->l->t('Unable to generate the preview of the GitHub issue.') ] ],
+        Http::STATUS_SERVICE_UNAVAILABLE,
+      );
+    }
+    return new Http\DataResponse([ 'enabled' => $markdown !== null, 'markdown' => $markdown ?? '' ]);
   }
 }

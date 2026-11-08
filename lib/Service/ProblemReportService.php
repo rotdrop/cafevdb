@@ -434,6 +434,70 @@ class ProblemReportService
       );
     }
 
+    $report = $this->prepareGithubReport($user, $userData, $errorData, $errorHtml, $userComment);
+
+    $result = $this->githubService->report($report['fingerprint'], $report['title'], $report['body'], $report['comment']);
+
+    return $result['created']
+      ? $this->l->t('Your problem report has been submitted as GitHub issue %s.', $result['url'])
+      : $this->l->t('The problem has already been reported, your report has been added to the existing GitHub issue %s.', $result['url']);
+  }
+
+  /**
+   * Generate the markdown which would be published at GitHub for the given
+   * problem report, without submitting anything.
+   *
+   * @param array $userData The user reporting the error [ 'uid' => UID, 'displayName' => DISPLAY_NAME ].
+   *
+   * @param array $errorData The raw error data caught by the frontend code.
+   *
+   * @param null|string $errorHtml Relevant parts of the Nextcloud exception page.
+   *
+   * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
+   *
+   * @return null|string The markdown preview or null if GitHub is not configured.
+   */
+  public function previewGithub(
+    array $userData,
+    array $errorData,
+    ?string $errorHtml,
+    ?string $userComment,
+  ): ?string {
+    if (!$this->githubService->isConfigured()) {
+      return null;
+    }
+    /** @var IUser $user */
+    $user = $this->userSession->getUser();
+    if (empty($user) || $user->getUID() !== ($userData['uid'] ?? null)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The submitted user-id differs from what the server thinks is the currently logged in user.'),
+      );
+    }
+    $report = $this->prepareGithubReport($user, $userData, $errorData, $errorHtml, $userComment);
+    return '# ' . $report['title'] . "\n\n" . $report['body']
+      . "\n\n---\n\n**" . $this->l->t('Comment') . "**\n\n" . $report['comment'];
+  }
+
+  /**
+   * @param IUser $user
+   *
+   * @param array $userData
+   *
+   * @param array $errorData
+   *
+   * @param null|string $errorHtml
+   *
+   * @param null|string $userComment
+   *
+   * @return array{title:string, body:string, comment:string, fingerprint:string}
+   */
+  private function prepareGithubReport(
+    IUser $user,
+    array $userData,
+    array $errorData,
+    ?string $errorHtml,
+    ?string $userComment,
+  ): array {
     $uid = (string)$userData['uid'];
     $pseudonym = $this->pseudonymize($uid);
     $literals = $this->sanitizationLiterals($user, $userData, $pseudonym);
@@ -459,11 +523,7 @@ class ProblemReportService
       $comment .= "\n\n" . $this->sanitizer->quote($cleanComment);
     }
 
-    $result = $this->githubService->report($fingerprint, $title, $body, $comment);
-
-    return $result['created']
-      ? $this->l->t('Your problem report has been submitted as GitHub issue %s.', $result['url'])
-      : $this->l->t('The problem has already been reported, your report has been added to the existing GitHub issue %s.', $result['url']);
+    return [ 'title' => $title, 'body' => $body, 'comment' => $comment, 'fingerprint' => $fingerprint ];
   }
 
   /**
