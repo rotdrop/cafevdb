@@ -87,7 +87,7 @@ jobs:
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
           # app Makefile builds vendor/ and the namespace-wrapped vendor-wrapped/
-          make dev-setup-php
+          make dev-setup
 
       - name: Verify namespace-wrapped Doctrine
         working-directory: server/apps/${{ env.APP_NAME }}

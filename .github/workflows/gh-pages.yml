@@ -108,11 +108,11 @@ jobs:
 
       - name: Install app PHP dependencies
         working-directory: server/apps/${{ env.APP_NAME }}
-        run: make dev-setup-php
+        run: make dev-setup
 
       - name: Install members app PHP dependencies
         working-directory: server/apps/${{ env.MEMBERS_APP_NAME }}
-        run: make dev-setup-php
+        run: make dev-setup
 
       - name: Enable apps
         working-directory: server
