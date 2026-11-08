@@ -17,8 +17,9 @@ SHELL := $(BASH)
 ORM_CLI = $(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 TINYMCE_VERSION = 7
 
-PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
-PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
+PHPDOC_SETTINGS = --setting guides.enabled=true
+PHPDOC_GRAPHS = false
+PHPDOC_PREREQ_TARGET = dev-setup
 
 # The Doctrine/ORM stack and related packages are wrapped into the
 # app-specific namespace, git dependencies which are occasionally hacked
@@ -69,28 +70,19 @@ APPSTORE_FILES =\
  README.md
 APPSTORE_COPY_HOOK = appstore-core-exclude
 
-include $(DEV_LIB_DIR)/makefile/app.mk
-
 MAKEFILE_DEP = Makefile
+
+# Needed before the include of phpdoc.mk as it is used in a prerequisite list.
+APP_BUILD_HASH = app-git-build-hash
+
+include $(DEV_LIB_DIR)/makefile/app.mk
+include $(DEV_LIB_DIR)/makefile/phpunit.mk
+PHPUNIT_ARGS += --stop-on-failure --stop-on-error
+include $(DEV_LIB_DIR)/makefile/phpdoc.mk
 
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
 SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
 SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
-
-PHPDOC = /opt/phpDocumentor/bin/phpdoc
-export PHPDOC_PLANTUML_BIN = $(shell which plantuml 2> /dev/null)
-# The default of phpdoc -Playout=smetana errors out
-export PHPDOC_PLANTUML_ARGUMENTS =
-# The plantuml default layout engine dot takes a huge amount of time,
-# more than 2 hours ...
-export PHPDOC_PLANTUML_TIMEOUT_SECONDS = 14400
-# ... we therefore disable graphs by default.
-PHPDOC_GRAPHS ?= false
-PHPDOC_TEMPLATE =
-#--template=clean
-#--template=clean --template=xml
-
-#--template=responsive-twig
 
 #@private
 post-build:
@@ -169,7 +161,6 @@ dist:
 	make source
 	make appstore
 
-APP_BUILD_HASH = app-git-build-hash
 APP_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/$(APP_BUILD_HASH) 2> /dev/null || echo)
 APP_GIT_BUILD_HASH = $(shell { $(ABSSRCDIR:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
 
@@ -273,36 +264,9 @@ gh-pages: $(GH_PAGES_PHPDOC_HTML)/index.html $(GH_PAGES_DOXYGEN_HTML)/index.html
  git commit -m "Update API docs"; \
  git push
 
-PHPDOC_HTML = $(DOC_BUILD_DIR)/phpdoc/
-
 $(GH_PAGES_PHPDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(PHPDOC_HTML)/index.html
 	mkdir -p $(GH_PAGES_PHPDOC_HTML)
 	cp -a $(PHPDOC_HTML)/. $(GH_PAGES_PHPDOC_HTML)/.
-
-#@@ Run phpDocumentor
-phpdoc: $(PHPDOC_HTML)/index.html
-.PHONY: phpdoc
-
-# The directory arguments must be relative paths, otherwise funny things
-# are happening.
-#@private
-$(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
-	$(MAKE) dev-setup
-	rm -rf $(PHPDOC_HTML)
-	mkdir -p $(PHPDOC_HTML)
-	$(PHPDOC) run \
- $(PHPDOC_TEMPLATE) \
- -d $(SRCDIR)/lib \
- -d $(SRCDIR)/tests/phpunit \
- --defaultpackagename $(APP_NAME) \
- --force \
- --parseprivate \
- --visibility api,public,protected,private,internal \
- --sourcecode \
- --setting graphs.enabled=$(PHPDOC_GRAPHS) \
- --setting guides.enabled=true \
- --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
- -t $(PHPDOC_HTML)
 
 DOXYGEN_HTML = $(DOC_BUILD_DIR)/doxygen/html/
 
@@ -365,50 +329,19 @@ source:
         ../$(APP_NAME)
 
 
+.PHONY: orm-clear-cache
+#@private
+orm-clear-cache: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
+	$(ORM_CLI) orm:clear-cache:metadata
+
 .PHONY: verifydb
-verifydb: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
-	$(ORM_CLI) orm:clear-cache:metadata; $(ORM_CLI) orm:validate-schema; $(ORM_CLI) orm:schema-tool:update --dump-sql
+verifydb: orm-clear-cache $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
+	$(ORM_CLI) orm:validate-schema
+	$(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: updatesql
-updatesql: $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
-	$(ORM_CLI) orm:clear-cache:metadata; $(ORM_CLI) orm:schema-tool:update --dump-sql
-
-PHPUNIT_OUTPUT=$(BUILDDIR)/artifacts/tests/phpunit
-PHPUNIT_JUNIT_LOG=$(PHPUNIT_OUTPUT)/junit-log.xml
-PHPUNIT_JUNIT_LOG_HTML=$(PHPUNIT_OUTPUT)/junit-log
-PHING_BUILD_XML=$(PHPUNIT_OUTPUT)/phing-build.xml
-
-#@@ Runs unit tests for PHP code
-phpunit: dophpunit $(PHPUNIT_JUNIT_LOG_HTML)/index.html
-.PHONY: phpunit
-
-#@@ Post-process junit-log xml file
-phpjunit-log: $(PHPUNIT_JUNIT_LOG_HTML)/index.html
-.PHONY: phpjunit-log
-
-dophpunit: $(PHPUNIT)
-	$(PHP) $(PHPCOVERAGE) $(PHPUNIT)\
- -c phpunit.xml\
- --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
- --log-junit $(PHPUNIT_JUNIT_LOG)\
- --display-all-issues --stop-on-failure --stop-on-error
-#	$(PHPUNIT) -c phpunit.integration.xml
-.PHONY: dophpunit
-
-$(PHPUNIT_JUNIT_LOG): # dophpunit
-
-$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phing/phing-build.xml.in $(MAKEFILE_DEP)
-	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
-
-$(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
-	mkdir -p $(PHPUNIT_JUNIT_LOG_HTML)
-	$(PHING) -f $(PHING_BUILD_XML)
-
-#@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line.
-phpunitfilter:
-	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
-	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
-.PHONY: phpunitfilter
+updatesql: orm-clear-cache $(ABSSRCDIR)/$(SCOPED_VENDOR_DIR)
+	$(ORM_CLI) orm:schema-tool:update --dump-sql
 
 #@private
 run-jstest:
