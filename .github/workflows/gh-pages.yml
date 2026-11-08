@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NC_REPO: rotdrop/nextcloud-server
+  NC_REPO: Camerata-Academica-Freibug-e-V/nextcloud-server
   NC_BRANCH: cjh-stable35
   APP_NAME: cafevdb
   MEMBERS_APP_NAME: cafevdbmembers
