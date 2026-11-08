@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Email templates "AllVariables" and "AlleVariablen" listing all available
   substitutions with English and German variable names, grouped by namespace
   and purpose.
+- Problem reports can additionally be submitted as GitHub issues (configurable
+  in the admin settings, together with the email channel). Reports are
+  sanitized, the reporting user is only identified by a pseudonym which is
+  also included in the email report, duplicates are added as comments to the
+  existing issue, and the user sees a preview of the issue before submitting.
+  It is recommended to use a separate, private repository as target and a
+  fine-grained access token limited to "Issues: read/write" on that
+  repository, preferably owned by an organization bot account.
 
 ### Fixed
 
