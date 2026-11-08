@@ -26,6 +26,6 @@ jobs:
       php-versions: '["8.5"]'
       php-lint-dirs: lib appinfo templates
       build-server: true
-      signing-server-repository: rotdrop/nextcloud-server
+      signing-server-repository: Camerata-Academica-Freibug-e-V/nextcloud-server
       signing-server-ref: cjh-stable35
       composer-use-github-api: false
