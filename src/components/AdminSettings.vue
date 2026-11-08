@@ -435,6 +435,25 @@
           </template>
         </TextField>
       </div>
+      <div v-if="config.isAdmin" class="problem-report github">
+        <TextField v-model="settings.problemReportGithubRepository"
+                   type="text"
+                   :label="t(appId, 'GitHub Repository for Problem Reports (owner/name)')"
+                   class="github-repository"
+                   :showTrailingButton="true"
+                   trailingButtonIcon="arrowRight"
+                   @submit="saveSetting('problemReportGithubRepository')"
+        />
+        <TextField v-model="problemReportGithubTokenInput"
+                   type="password"
+                   :label="settings.problemReportGithubToken === 'set' ? t(appId, 'GitHub Access Token (set, enter new value to replace)') : t(appId, 'GitHub Access Token')"
+                   class="github-token"
+                   autocomplete="off"
+                   :showTrailingButton="true"
+                   trailingButtonIcon="arrowRight"
+                   @submit="saveProblemReportGithubToken"
+        />
+      </div>
     </NcSettingsSection>
   </div>
 </template>
@@ -561,6 +580,8 @@ interface AppAdminSettings {
   [SettingsKeys.PROBLEM_REPORT_EMAIL_RECIPIENT_KEY]: string
   [problemReportEmailRecipientVerificationKey]: string
   [problemReportEmailRecipientStatusKey]: string
+  [SettingsKeys.PROBLEM_REPORT_GITHUB_REPOSITORY_KEY]: string
+  [SettingsKeys.PROBLEM_REPORT_GITHUB_TOKEN_KEY]: string
   [SettingsKeys.GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY]: string
   [SettingsKeys.GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY]: string
   [SettingsKeys.GNU_CASH_ACCOUNTS_TREE_DATA_KEY]: string
@@ -629,11 +650,14 @@ const settings: AppAdminSettings = reactive<AppAdminSettings>({
   problemReportEmailRecipient: '',
   problemReportEmailRecipientStatus: '',
   problemReportEmailRecipientVerification: '',
+  problemReportGithubRepository: '',
+  problemReportGithubToken: '',
   userAndGroupBackend: '',
   wikiNameSpace: '',
 })
 
 const problemReportRecipientVerificationInput = ref(false)
+const problemReportGithubTokenInput = ref('')
 
 // const settingsBackup = reactive(<AppAdminSettings>{})
 // const orchestraGroups = reactive(<Record<string, GroupType> >{})
@@ -912,6 +936,12 @@ const saveProblemReportEmailRecipient = async () => {
     getSettingsData([`${key}Verification`, `${key}Status`])
   }
   problemReportRecipientVerificationInput.value = false
+}
+const saveProblemReportGithubToken = async () => {
+  const key = 'problemReportGithubToken'
+  await saveSetting(key, problemReportGithubTokenInput.value)
+  problemReportGithubTokenInput.value = ''
+  getSettingsData([key])
 }
 const saveProblemReportEmailRecipientVerification = async () => {
   const baseKey = 'problemReportEmailRecipient'
