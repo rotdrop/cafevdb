@@ -93,10 +93,6 @@ PHPDOC_TEMPLATE =
 #--template=responsive-twig
 
 #@private
-dev-setup-php: composer namespace-wrapper
-.PHONY: dev-setup-php
-
-#@private
 post-build:
 	@if [ $$(npm list --parseable pinia|wc -l) -gt 1 ]; then\
  echo -e "\nMultiple different versions of pinia are installed, this is likely to crash at runtime!\n" 1>&2;\
@@ -291,7 +287,7 @@ phpdoc: $(PHPDOC_HTML)/index.html
 # are happening.
 #@private
 $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
-	$(MAKE) dev-setup-php
+	$(MAKE) dev-setup
 	rm -rf $(PHPDOC_HTML)
 	mkdir -p $(PHPDOC_HTML)
 	$(PHPDOC) run \
