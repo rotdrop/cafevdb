@@ -203,7 +203,7 @@ $(APP_BUILD_HASH):
 # Test-data for the members companion app
 
 MEMBERS_APP_DIR ?= $(ABSSRCDIR)/../cafevdbmembers
-MEMBERS_REPO_URL ?= https://github.com/rotdrop/cafevdb-members.git
+MEMBERS_REPO_URL ?= https://github.com/Camerata-Academica-Freibug-e-V/cafevdb-members.git
 MEMBERS_BRANCH ?= stable35
 MEMBERS_PUSH ?= 0
 MEMBERS_TEST_DATA_DIR = $(MEMBERS_APP_DIR)/tests/phpunit/data
@@ -274,7 +274,7 @@ $(GH_PAGES_BUILD_DIR):
   git -C "$@" checkout gh-pages;\
   git -C "$@" reset --hard origin/gh-pages;\
 else\
-  git clone --depth 2 -b gh-pages git@github.com:rotdrop/cafevdb.git $@;\
+  git clone --depth 2 -b gh-pages git@github.com:Camerata-Academica-Freibug-e-V/cafevdb.git $@;\
 fi
 
 .PHONY: gh-pages
