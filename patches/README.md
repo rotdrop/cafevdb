@@ -1,9 +1,12 @@
 # Patches
 
 The npm `postinstall` hook applies patches after installation. The `prebuild`
-and `predev` hooks reapply them immediately before Vite, after the shared
-Makefile has finished installing or updating dependencies. Patch failures stop
+and `predev` hooks reapply them immediately before Vite, after dependency
+installation. Patch failures stop
 the build rather than bundling unpatched packages.
+The app's Makefile uses `npm ci` instead of updating dependencies during a
+build, so cleanup does not overwrite local lockfile edits. Run `npm install`
+or `npm update` explicitly when intentionally changing the lockfile.
 Run the build-order regression tests with
 `node --test tests/scripts/npm-patches.test.mjs`.
 

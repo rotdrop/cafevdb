@@ -80,3 +80,48 @@ for (const [flavour, mode] of [['build', 'production'], ['dev', 'development']])
         assert.equal(existsSync(path.join(root, 'js/asset-meta.json')), false)
     })
 }
+
+test('app dependency targets preserve the lockfile through installation and cleanup', (t) => {
+    const root = mkdtempSync(path.join(os.tmpdir(), 'npm-lock-test-'))
+    t.after(() => rmSync(root, { recursive: true, force: true }))
+    write(root, 'package.json', JSON.stringify({ name: 'lock-test', version: '1.0.0' }))
+    write(root, 'vite.config.ts', '')
+    write(root, 'Makefile', '')
+    write(root, 'shared/makefile/app.mk', [
+        `NPM := ${npm}`,
+        'BUNDLER_CONFIG := vite.config.ts',
+        'MAKEFILE_DEP := Makefile',
+        'package-lock.json: package.json',
+        '\t$(NPM) update',
+        'node_modules:',
+        '\t$(NPM) install',
+        'realclean:',
+        '\trm -rf node_modules',
+        '.PHONY: realclean',
+        '',
+    ].join('\n'))
+    const generated = spawnSync(npm, ['install', '--package-lock-only', '--ignore-scripts', '--offline'], { cwd: root, encoding: 'utf8' })
+    assert.equal(generated.status, 0, generated.stdout + generated.stderr)
+    const lockPath = path.join(root, 'package-lock.json')
+    const lock = JSON.parse(readFileSync(lockPath, 'utf8'))
+    lock.localEdit = true
+    const original = JSON.stringify(lock, null, 2) + '\n'
+    writeFileSync(lockPath, original)
+    utimesSync(lockPath, 0, 0)
+
+    const make = (...args) => spawnSync('make', [
+        '-f', path.join(repository, 'Makefile'), `DEV_LIB_DIR=${path.join(root, 'shared')}`, ...args,
+    ], { cwd: root, encoding: 'utf8' })
+    for (const target of ['node_modules', 'realclean', 'node_modules', 'realclean']) {
+        const result = make(target)
+        assert.equal(result.status, 0, result.stdout + result.stderr)
+        assert.equal(readFileSync(lockPath, 'utf8'), original)
+    }
+    write(root, 'package.json', JSON.stringify({
+        name: 'lock-test', version: '1.0.0', dependencies: { missing: '1.0.0' },
+    }))
+    utimesSync(lockPath, 0, 0)
+    const mismatch = make('node_modules')
+    assert.notEqual(mismatch.status, 0, mismatch.stdout + mismatch.stderr)
+    assert.equal(readFileSync(lockPath, 'utf8'), original)
+})

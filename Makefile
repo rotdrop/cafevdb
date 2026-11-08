@@ -71,6 +71,15 @@ APPSTORE_COPY_HOOK = appstore-core-exclude
 
 include $(DEV_LIB_DIR)/makefile/app.mk
 
+# Builds use the tracked lockfile rather than updating it as a side effect.
+package-lock.json: package.json $(BUNDLER_CONFIG) $(MAKEFILE_DEP) $(THIRD_PARTY_NPM_DEPS)
+	$(NPM) ci
+	touch $@
+
+node_modules: package-lock.json
+	@if [ ! -d $@ ]; then $(NPM) ci; fi
+	touch $@
+
 MAKEFILE_DEP = Makefile
 
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
