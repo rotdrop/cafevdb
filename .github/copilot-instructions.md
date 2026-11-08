@@ -3,6 +3,7 @@
 - Never commit or push task changes directly to the repository's default branch, regardless of its name.
 - Before committing, determine the default branch and create a topic branch if currently on it.
 - Open pull requests from the topic branch against the original base branch.
+- Base branches and pull requests must target the repository's remote default branch unless the user explicitly specifies another. Determine it with `gh repo view --json defaultBranchRef`, not from a possibly stale local branch or saved project metadata, and fetch it before branching.
 
 ## Shared PHPUnit helpers
 

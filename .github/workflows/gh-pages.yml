@@ -19,7 +19,7 @@ env:
   NC_BRANCH: cjh-stable35
   APP_NAME: cafevdb
   MEMBERS_APP_NAME: cafevdbmembers
-  MEMBERS_APP_REPO: rotdrop/cafevdb-members
+  MEMBERS_APP_REPO: Camerata-Academica-Freibug-e-V/cafevdb-members
   MEMBERS_APP_BRANCH: stable35
   PHPDOC_VERSION: '3.10.0'
 
