@@ -91,7 +91,7 @@ class WordSplitterService
     private WordSplitterNotificationService $notifications,
   ) {
     $this->appLocale = $appLocale;
-    $this->bin = __DIR__ . '/../../python/compound-word-splitting/venv/german-word-splitter';
+    $this->bin = __DIR__ . '/../../python/german-word-splitter.pyz';
     $configuredSocket = $config->getAppValue($this->appName, 'splitter_socket', '');
     $this->allowSystemSocket = $configuredSocket === '';
     $this->socket = $configuredSocket ?: $this->appDataDir() . '/german-word-splitter.sock';
@@ -287,6 +287,9 @@ class WordSplitterService
   private function startupCommand(): string
   {
     return 'env GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket)
+      . ' GERMAN_WORD_SPLITTER_DICTIONARY='
+      . escapeshellarg(__DIR__ . '/../../python/german_utf8_linux.dic')
+      . ' SHIV_ROOT=' . escapeshellarg($this->appDataDir() . '/word-splitter-cache')
       . ' GERMAN_WORD_SPLITTER_TRANSLITERATION_LOCALES='
       . escapeshellarg(implode(',', $this->installedLocales($this->transliterationLocales)))
       . ' nohup ' . escapeshellarg($this->bin) . ' >/dev/null 2>&1 </dev/null &';

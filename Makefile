@@ -52,8 +52,10 @@ BUNDLER_DEPS =\
  $(DW_APP_CONFIG)
 
 APP_MOSTLYCLEAN_DEPS = tinymce-clean
-# hash files left behind by the PHP-Scoper and the doc builds
-APP_MOSTLYCLEAN_FILES = app-git-build-hash wrapper-build-hash
+# Hash files and generated app-local splitter assets.
+APP_MOSTLYCLEAN_FILES = app-git-build-hash wrapper-build-hash \
+ python/german-word-splitter.pyz python/german-word-splitter.pyz.tmp \
+ python/german_utf8_linux.dic python/german_utf8_linux.dic.tmp
 
 APPSTORE_FILES =\
  appinfo\
@@ -62,7 +64,6 @@ APPSTORE_FILES =\
  img\
  l10n\
  lib\
- python\
  vendor\
  $(SCOPED_VENDOR_DIR)\
  CHANGELOG.md\
@@ -79,6 +80,7 @@ include $(DEV_LIB_DIR)/makefile/app.mk
 include $(DEV_LIB_DIR)/makefile/phpunit.mk
 PHPUNIT_ARGS += --stop-on-failure --stop-on-error
 include $(DEV_LIB_DIR)/makefile/phpdoc.mk
+include $(ABSSRCDIR)/dev-scripts/word-splitter.mk
 
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
 SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
@@ -92,7 +94,7 @@ post-build:
 fi
 .PHONY: post-build
 
-build dev: post-build
+build dev: post-build word-splitter
 
 PHPUNIT_COMPOSER_JSON = $(ABSSRCDIR)/vendor-bin/phpunit/composer.json
 PHPUNIT_COMPOSER_LOCK = $(wildcard $(ABSSRCDIR)/vendor-bin/phpunit/composer.lock)
@@ -144,7 +146,9 @@ fabricate-app-calendar-patch:
 CLOUD_3RDPARTY_DIR = $(ABSSRCDIR)/../../3rdparty
 
 #@private
-appstore-core-exclude:
+appstore-core-exclude: word-splitter
+	mkdir -p $(APPSTORE_SIGN_DIR)/$(APP_NAME)/python
+	$(RSYNC) -a $(SPLITTER_ARCHIVE) $(SPLITTER_DICTIONARY) $(APPSTORE_SIGN_DIR)/$(APP_NAME)/python/
 	mkdir -p $(APPSTORE_SIGN_DIR)/$(APP_NAME)/3rdparty
 	$(RSYNC) -a -L $(APPSTORE_BLACKLISTED:%=--exclude '%') 3rdparty/tinymce $(APPSTORE_SIGN_DIR)/$(APP_NAME)/3rdparty
 	$(SILENT)if [ -d "$(CLOUD_3RDPARTY_DIR)" ]; then\
