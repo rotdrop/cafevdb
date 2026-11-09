@@ -35,9 +35,13 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}
           submodules: recursive
 
-      - name: Install xpath
+      - name: Install xpath and dictionary build tools
         # the Makefile needs the xpath binary to read the app info from info.xml
-        run: sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+        run: sudo apt-get install -y --no-install-recommends libxml-xpath-perl 7zip curl
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
         run: |
@@ -147,6 +151,12 @@ jobs:
       - name: Build unsigned app-store archive
         working-directory: server/apps/${{ env.APP_NAME }}
         run: make appstore APPSTORE_SIGN=0
+
+      - name: Exercise packaged word splitter after relocation
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: |
+          python3.13 tests/scripts/word-splitter-smoke.py \
+            build/artifacts/appstore/${{ env.APP_NAME }}-*.tar.gz
 
       - name: Remove test caches
         if: always()

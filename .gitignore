@@ -41,3 +41,7 @@ dev-scripts/playground/php/*.php
 **/.ac-php-conf.json
 *.log
 .vite
+/python/german-word-splitter.pyz
+/python/german-word-splitter.pyz.tmp
+/python/german_utf8_linux.dic
+/python/german_utf8_linux.dic.tmp

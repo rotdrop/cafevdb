@@ -160,6 +160,16 @@ class WordSplitterServiceTest extends TestCase
       'GERMAN_WORD_SPLITTER_SOCKET=' . escapeshellarg($this->socket),
       $command,
     );
+    $this->assertStringContainsString(
+      'GERMAN_WORD_SPLITTER_DICTIONARY='
+        . escapeshellarg(dirname(__DIR__, 4) . '/lib/Service/../../python/german_utf8_linux.dic'),
+      $command,
+    );
+    $this->assertStringContainsString(
+      'SHIV_ROOT=' . escapeshellarg($this->appDataRoot . '/appdata_word-splitter-test/testapp/word-splitter-cache'),
+      $command,
+    );
+    $this->assertStringContainsString('/python/german-word-splitter.pyz', $command);
   }
 
   public function testSplitUsesRunningSystemServiceWithoutStartingAppService(): void

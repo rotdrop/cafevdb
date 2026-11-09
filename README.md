@@ -44,6 +44,41 @@ and bound-event application subscribers are isolated in this metadata-only
 process. Normal requests and the ORM CLI retain encryption, connection probing,
 server-version detection and connection initialization.
 
+App-local word splitter
+-----------------------
+
+`make build`, `make dev`, and `make appstore` build a Shiv zipapp containing the
+Python splitter and its runtime dependencies, and download its German dictionary.
+They do not require or copy the Python submodule's development virtualenv.
+The app-store archive includes only `python/german-word-splitter.pyz` and
+`python/german_utf8_linux.dic`, not the splitter's source tree, tests, or build tools.
+
+Build prerequisites are Python 3.13 with `venv`/`pip`, `git`, `curl`, `7z`, and
+`iconv`. Initialize `python/compound-word-splitting` first. The splitter can also
+be built without Nextcloud:
+
+```sh
+make -f dev-scripts/word-splitter.mk word-splitter
+```
+
+`SPLITTER_PYTHON` selects the build interpreter (default: `python3.13`). The
+destination server must have that same Python major/minor on the web server's
+`PATH`, compatible native libraries, and the same OS/CPU architecture as the
+build machine: dependencies include native extensions, so this is not a
+universal binary. Python itself is not bundled. Build release archives on the
+oldest supported Linux runtime, and build separately for other architectures.
+No pip install or network access is needed on the destination server.
+
+The app passes the installed dictionary path explicitly and extracts the zipapp
+into a writable cache under its Nextcloud app-data directory; that filesystem
+must permit loading native libraries. Required locales and `iconv` must be
+installed on the server. A usable system-wide splitter is still preferred over
+the bundled service.
+
+To check the packaged executable, dictionary, and both splitting backends after
+relocation, run `python3.13 tests/scripts/word-splitter-smoke.py <appstore.tar.gz>`.
+CI runs this against the unsigned app-store archive.
+
 Email template substitutions
 ----------------------------
 
