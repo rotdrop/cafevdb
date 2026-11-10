@@ -300,6 +300,8 @@ onBeforeUnmount(() => {
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
+    // Keep clear of the app-navigation toggle overlaying the content's start corner.
+    padding-inline-start: calc(var(--default-clickable-area) + 4 * var(--default-grid-baseline, 4px));
     flex-shrink: 0;
     border-bottom: 1px solid var(--color-border);
 
