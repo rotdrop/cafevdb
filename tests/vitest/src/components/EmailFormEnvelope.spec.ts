@@ -52,32 +52,6 @@ afterEach(() => {
 });
 
 describe('EmailFormEnvelope', () => {
-  it.each(['ltr', 'rtl'])('reserves the open navigation width and follows closing and resizing (%s)', async (direction) => {
-    const container = document.createElement('div');
-    container.getBoundingClientRect = () => new DOMRect(8, 50, window.innerWidth - 16, 600);
-    const navigation = document.createElement('div');
-    navigation.className = 'app-navigation';
-    navigation.style.direction = direction;
-    let width = 300;
-    navigation.getBoundingClientRect = () => new DOMRect(8, 50, width, 600);
-    navigation.innerHTML = '<nav id="app-navigation-vue"></nav>';
-    container.append(navigation);
-    document.body.append(container);
-    const { wrapper } = render();
-    const envelope = wrapper.get('section').element as HTMLElement;
-    expect(envelope.style.insetInlineStart).toBe('308px');
-    navigation.classList.add('app-navigation--closed');
-    await flushPromises();
-    expect(envelope.style.insetInlineStart).toBe('0px');
-    navigation.classList.remove('app-navigation--closed');
-    await flushPromises();
-    expect(envelope.style.insetInlineStart).toBe('308px');
-    width = 240;
-    window.dispatchEvent(new Event('resize'));
-    await flushPromises();
-    expect(envelope.style.insetInlineStart).toBe('248px');
-  });
-
   it('provides the connected legacy HTML island and preserves form submission data', () => {
     const { wrapper, onReady } = render();
     const container = wrapper.get('#emailformdialog').element;

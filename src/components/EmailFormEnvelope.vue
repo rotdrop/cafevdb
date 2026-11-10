@@ -7,7 +7,7 @@
              ref="envelope"
              class="emailform-envelope emailform ui-widget ui-front"
              :class="appNameTag"
-             :style="{ zIndex, insetInlineStart: `${navigationOffset}px` }"
+             :style="{ zIndex }"
              role="region"
              :aria-labelledby="appPrefix('email-form-title')"
              :aria-busy="blocked"
@@ -169,26 +169,10 @@ const isDisabled = (tab: EmailFormTab) => tab === 'recipients' && recipientsDisa
 const visible = ref(true)
 const blocked = ref(false)
 const zIndex = ref(100)
-const navigationOffset = ref(0)
 const envelope = useTemplateRef<HTMLElement>('envelope')
 const heading = useTemplateRef<HTMLElement>('heading')
 const legacyHtmlContainer = useTemplateRef<HTMLElement>('legacyHtmlContainer')
 let previousFocus: HTMLElement | null = null
-let navigationObserver: MutationObserver | undefined
-let navigationResizeObserver: ResizeObserver | undefined
-const navigation = document.getElementById('app-navigation-vue')?.closest<HTMLElement>('.app-navigation')
-
-const updateNavigationOffset = () => {
-  if (!navigation || navigation.classList.contains('app-navigation--closed')) {
-    navigationOffset.value = 0
-    return
-  }
-  const container = navigation.parentElement!.getBoundingClientRect()
-  const start = getComputedStyle(navigation).direction === 'rtl' ? window.innerWidth - container.right : container.left
-  navigationOffset.value = Math.max(0, start + navigation.getBoundingClientRect().width)
-}
-
-updateNavigationOffset()
 
 const selectTab = async (tab: EmailFormTab) => {
   if (blocked.value || isDisabled(tab) || activeTab.value === tab) {
@@ -284,13 +268,6 @@ const handleCommand = (command: EmailFormCommand) => {
 }
 
 onMounted(() => {
-  if (navigation) {
-    navigationObserver = new MutationObserver(updateNavigationOffset)
-    navigationObserver.observe(navigation, { attributes: true, attributeFilter: ['class'] })
-    navigationResizeObserver = new ResizeObserver(updateNavigationOffset)
-    navigationResizeObserver.observe(navigation)
-    window.addEventListener('resize', updateNavigationOffset)
-  }
   subscribe(EMAIL_FORM_COMMAND, handleCommand)
   previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
   show()
@@ -298,9 +275,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  navigationObserver?.disconnect()
-  navigationResizeObserver?.disconnect()
-  window.removeEventListener('resize', updateNavigationOffset)
   unsubscribe(EMAIL_FORM_COMMAND, handleCommand)
   emitEvent(EMAIL_FORM_EVENT, { action: 'cleanup', container: legacyHtmlContainer.value! })
   if (previousFocus?.isConnected) {
@@ -312,15 +286,14 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .emailform-envelope {
-  position: fixed;
-  inset: var(--header-height, 50px) 0 0;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   border: 0;
   border-radius: 0;
   background: var(--color-main-background);
   overflow: hidden;
-  transition: inset-inline-start var(--animation-slow, 200ms);
 
   .emailform-envelope-header {
     display: flex;
@@ -389,8 +362,8 @@ onBeforeUnmount(() => {
 }
 
 .emailform-envelope-restore {
-  position: fixed;
-  top: var(--header-height, 50px);
+  position: absolute;
+  top: 0;
   right: 16px;
 }
 </style>
