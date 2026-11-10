@@ -97,6 +97,10 @@ the existing cancel and draft-cleanup flow. Sending, loading a message and
 uploading attachments block the envelope controls until the operation completes.
 Removing the containing legacy view also tears down the envelope and its
 legacy widgets, after any protected operation finishes.
+The panels fill the available envelope width without the old dialog width caps.
+Opening the left app navigation shifts and narrows the envelope to avoid
+overlapping the translucent navigation; the right project-events sidebar
+continues to overlay it.
 
 Email template substitutions
 ----------------------------

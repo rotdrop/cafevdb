@@ -100,8 +100,10 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
         }
 
         fieldset.page {
-          max-width:65em;
-          /* padding-right:1.2em; */
+          box-sizing:border-box;
+          min-width:0;
+          width:100%;
+          max-width:100%;
         }
 
         &:not(.#{projectModeCssClass}) {
@@ -411,8 +413,8 @@ $rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
         div#emailformdebug {
           height:auto;
-          width:min(100%, 65em);
-          max-width:65em;
+          width:100%;
+          max-width:100%;
           overflow:auto;
 
           /*****************************************************************************
