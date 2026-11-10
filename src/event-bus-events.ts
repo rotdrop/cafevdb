@@ -62,6 +62,10 @@ export const SET_SHOW_DISABLED = appEventName('set-show-disabled');
 export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
+/**
+ * Clean up the page being replaced. Mountable widgets outside its container
+ * survive; an omitted payload requests global widget cleanup.
+ */
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PAGE_RELOAD = appEventName('legacy-page-reload');

@@ -85,8 +85,10 @@ export class PmeExportService {
   }
 }
 
-subscribe(LEGACY_PAGE_CLEANUP, () => {
+subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    instance.destroy();
+    if (!event || event.container?.contains(instance.button)) {
+      instance.destroy();
+    }
   }
 });

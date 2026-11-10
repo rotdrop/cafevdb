@@ -342,8 +342,10 @@ export const mountChosen = async (target: HTMLElement|string, options: ChosenAda
   }
 };
 
-subscribe(LEGACY_PAGE_CLEANUP, () => {
+subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    instance.destroy();
+    if (!event || event.container?.contains(instance.select)) {
+      instance.destroy();
+    }
   }
 });

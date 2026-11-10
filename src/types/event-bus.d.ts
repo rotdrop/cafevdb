@@ -109,7 +109,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [GLOBAL_STATE_INITIALIZED]: GlobalState;
     [HISTORY_GO_REQUEST]: { level: number };
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR; message: string; html?: string; closeDetailsLabel?: string };
-    [LEGACY_PAGE_CLEANUP]: undefined;
+    [LEGACY_PAGE_CLEANUP]: { container: HTMLElement|null }|undefined;
     [LEGACY_PAGE_FINALIZE]: undefined;
     [LEGACY_PAGE_RELOAD]: undefined;
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData; template?: string|null; projectId?: number|null; projectName?: string|undefined; keepHistory: boolean };

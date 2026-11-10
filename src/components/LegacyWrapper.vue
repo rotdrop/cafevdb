@@ -89,6 +89,7 @@
     </div>
     <!-- eslint-disable vue/no-v-html  -->
     <div :id="appPrefix('general')"
+         ref="legacyPageContainer"
          :class="{ [appPrefix('general')]: true, loading }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
@@ -266,6 +267,7 @@ let previousHash = null as null|string // reactivity not needed
 // *** former computed properties
 
 const legacyHtmlContainer = useTemplateRef('legacyHtmlContainer')
+const legacyPageContainer = useTemplateRef('legacyPageContainer')
 const wikiManualSection = computed(() => dokuWikiSection([
   appName,
   'documentation',
@@ -421,7 +423,7 @@ const doLoadLegacy = async () => {
     || props.templateParameters.projectId
     || 0
   await appData.setCurrentProject(projectKey)
-  await asyncEmit(LEGACY_PAGE_CLEANUP)
+  await asyncEmit(LEGACY_PAGE_CLEANUP, { container: legacyPageContainer.value })
   logger.debug('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
 
