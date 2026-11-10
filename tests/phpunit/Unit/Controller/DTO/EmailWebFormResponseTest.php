@@ -51,7 +51,13 @@ class EmailWebFormResponseTest extends TestCase
   public function setup(): void
   {
     $this->dto = new TestedDTO(
-      contents: 'contents',
+      recipients: 'recipients',
+      composer: 'composer',
+      formData: 'formData',
+      uploadAction: '/upload',
+      uploadMaxHumanFilesize: '512 MB',
+      requestToken: 'requestToken',
+      wikiNamespace: 'wikiNamespace',
       filterHistory: new DTO\EmailFormRecipientsFilterHistory(historySize: 16, historyPosition: 6),
       projectName: 'projectName',
       projectId: 0,

@@ -83,9 +83,15 @@ Outgoing email form
 -------------------
 
 The outgoing email form uses a viewport-sized Vue envelope mounted through the
-component event bus. Minimize leaves the form and its auto-save timer alive;
-restore returns to the same message. The injected PHP markup, jQuery tabs,
-editor, attachments, previews and controller contracts remain legacy-owned.
+component event bus. Vue owns the tabs and common form structure; the initial
+form endpoint supplies the existing PHP-rendered recipients and composition
+fragments, hidden form data and upload/manual metadata instead of a complete
+outer template. All panels remain mounted inside one form when switching tabs.
+Minimize leaves the form and its auto-save timer alive; restore returns to the
+same message. The editor, attachments and status/preview rendering remain
+legacy-owned. The Vue component never imports the legacy JS asset: typed
+`EMAIL_FORM_COMMAND` and `EMAIL_FORM_EVENT` bus messages coordinate tab changes,
+activation hooks, title, blocking, close and lifecycle cleanup.
 Closing from the preview returns to composition; closing from composition uses
 the existing cancel and draft-cleanup flow. Sending, loading a message and
 uploading attachments block the envelope controls until the operation completes.

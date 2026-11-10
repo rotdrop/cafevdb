@@ -32,6 +32,8 @@ import type { GlobalState } from '../app/globalstate.ts';
 import type { messages } from '../app/notification.ts';
 import type {
   ADD_CONTACTS_TO_PROJECT,
+  EMAIL_FORM_COMMAND,
+  EMAIL_FORM_EVENT,
   EMAIL_POPUP,
   GET_VUE_COMPONENT,
   GLOBAL_STATE_INITIALIZED,
@@ -72,6 +74,7 @@ import type {
 import type { ComponentProps, PropsData } from '../mountable-component-names.ts';
 import type { MountableComponent } from '../services/mountable-components.ts';
 import type { search as searchEntities, SearchArguments as SearchEntitiesArguments } from '../toolkit/services/entity-repository.ts';
+import type { EmailFormCommand, EmailFormEvent } from './email-form-envelope.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
@@ -97,6 +100,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [ADD_CONTACTS_TO_PROJECT]: { projectName: string };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [EMAIL_POPUP]: { projectId?: number; projectName?: string; reopen?: boolean; singleRecipient?: boolean; post?: Record<string, any> };
+    [EMAIL_FORM_COMMAND]: EmailFormCommand;
+    [EMAIL_FORM_EVENT]: EmailFormEvent;
     [GET_VUE_COMPONENT]: {
       name: keyof ComponentProps;
       propsData: PropsData<keyof ComponentProps>;
