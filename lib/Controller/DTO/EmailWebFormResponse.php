@@ -31,7 +31,13 @@ class EmailWebFormResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly string $contents,
+    public readonly string $recipients,
+    public readonly string $composer,
+    public readonly string $formData,
+    public readonly string $uploadAction,
+    public readonly string $uploadMaxHumanFilesize,
+    public readonly string $requestToken,
+    public readonly ?string $wikiNamespace,
     public readonly ?string $projectName,
     public readonly int $projectId,
     public readonly EmailFormRecipientsFilterHistory $filterHistory,
@@ -56,7 +62,13 @@ class EmailWebFormResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DTO\
       $filterHistory = EmailFormRecipientsFilterHistory::fromArray($filterHistory);
     }
     return new self(
-      contents: $contents,
+      recipients: $recipients,
+      composer: $composer,
+      formData: $formData,
+      uploadAction: $uploadAction,
+      uploadMaxHumanFilesize: $uploadMaxHumanFilesize,
+      requestToken: $requestToken,
+      wikiNamespace: $wikiNamespace,
       projectName: $projectName ?: null,
       projectId: $projectId ?: 0,
       filterHistory: $filterHistory,

@@ -100,13 +100,11 @@ require('projects.scss');
  * @param singleRecipient Whether to open the form in single recipient mode.
  */
 const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false, singleRecipient: boolean = false) {
-  const $emailDlg = $('#emailformdialog');
-  if ($emailDlg.dialog('isOpen') === true) {
-    if (reopen === false) {
-      $emailDlg.dialog('moveToTop');
+  if (Email.isEmailFormOpen()) {
+    if (reopen === false || !Email.closeEmailForm()) {
+      Email.showEmailForm();
       return;
     }
-    $emailDlg.dialog('close').remove();
   }
   pageBusyIcon(true);
   return Email.emailFormPopup(post, false, singleRecipient, () => pageBusyIcon(false));

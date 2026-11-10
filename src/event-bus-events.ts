@@ -32,6 +32,8 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 // app events
 export const ADD_CONTACTS_TO_PROJECT = appEventName('add-contacts-to-project');
 export const EMAIL_POPUP = appEventName('email-popup');
+export const EMAIL_FORM_COMMAND = appEventName('email-form-command');
+export const EMAIL_FORM_EVENT = appEventName('email-form-event');
 export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const LEGACY_RECORD_POPUP = appEventName('legacy-record-popup');
 export const PAGE_TEMPLATE_ACTION_MENU = appEventName('page-template-action-menu');

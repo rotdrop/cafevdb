@@ -252,13 +252,17 @@ class EmailFormController extends Controller
       'toolTips' => $this->toolTipsService(),
     ];
 
-    $html = $this->templateResponse(
-      'emailform/form',
-      $templateParameters,
-    )->render();
-
     return new DTO\EmailWebFormResponse(
-      contents: $html,
+      recipients: $this->templateResponse('emailform/part.emailform.recipients', $templateParameters)->render(),
+      composer: $this->templateResponse('emailform/part.emailform.composer', $templateParameters)->render(),
+      formData: PageNavigation::persistentCGI($templateParameters['formData']),
+      uploadAction: $this->urlGenerator->linkToRoute(
+        $this->appName() . '.emailform.attachment',
+        ['source' => AttachmentOrigin::UPLOAD->value],
+      ),
+      uploadMaxHumanFilesize: $templateParameters['uploadMaxHumanFilesize'],
+      requestToken: $templateParameters['requesttoken'],
+      wikiNamespace: $templateParameters[ConfigConstants::WIKI_NAME_SPACE_KEY],
       projectName: $projectName,
       projectId: $projectId,
       filterHistory: $templateParameters['filterHistory'],

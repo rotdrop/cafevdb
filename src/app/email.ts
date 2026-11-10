@@ -38,15 +38,16 @@ import type {
   ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+import type { MountableComponent } from '../services/mountable-components.ts';
 import type { SelectizeAdapterOptions } from '../services/mountable-selectize.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { EmailFormEvent, EmailFormTab } from '../types/email-form-envelope.ts';
 import type { VueSelectValue } from '../types/vue-select.ts';
 import type { UploadFile } from './file-upload.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import { generateOcsUrl } from '@nextcloud/router';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
-import actual from 'actual';
+import { emit as asyncEmit, subscribe as asyncSubscribe, unsubscribe as asyncUnsubscribe, awaitEmit } from '@rotdrop/async-nextcloud-event-bus';
 import {
   EnumEmailFormContactsOperation,
   EnumPersonalSettingsKey,
@@ -88,9 +89,13 @@ import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modul
 import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
 import { FOLDER_TYPE_PROJECT } from '../../build/ts-types/php-modules/Service/ProjectService.ts';
 import {
+  EMAIL_FORM_COMMAND,
+  EMAIL_FORM_EVENT,
+  GET_VUE_COMPONENT,
   LEGACY_UPDATE_EVENTS_SELECTION,
   PROJECT_EVENTS_LISTING,
 } from '../event-bus-events.ts';
+import { EMAIL_FORM_ENVELOPE } from '../mountable-component-names.ts';
 import { addressBookSelectOptions, selectedFreeFormContacts } from '../services/address-book-select.ts';
 import { DualListboxService, getMountedDualListbox } from '../services/mountable-dual-listbox.ts';
 import { getMountedSelectize } from '../services/mountable-selectize.ts';
@@ -105,25 +110,23 @@ import {
 import pageBusyIcon from './busy-icon.ts';
 import { globalState, toolTipsInit } from './cafevdb.ts';
 import debounce from './debounce.ts';
-import * as DialogUtils from './dialog-utils.ts';
 import * as Dialogs from './dialogs.ts';
 import fileDownload from './file-download.ts';
 import fileUploadInit from './file-upload.ts';
 import { appName, appPrefix } from './globals.ts';
 import $ from './jquery.ts';
-import modalizer from './modalizer.ts';
 import { show as notificationShow } from './notification.ts';
-import { data as pmeData, token as pmeToken } from './pme-selectors.ts';
+import { data as pmeData } from './pme-selectors.ts';
 import * as ProgressStatus from './progress-status.ts';
 import { personalRecordDialog as participantRecordDialog } from './project-participants.ts';
 import selectPopup from './select-popup.ts';
 import * as SelectUtils from './select-utils.ts';
 import { setPersonalUrl } from './settings-urls.ts';
 import { urlDecode } from './url-decode.ts';
-import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
 import './jquery-readonly.ts';
+import './user-manual.ts';
 import 'emailform.module.scss';
 import {
   displayCssClass,
@@ -177,8 +180,43 @@ const mountEmailSelect = ($select: JQuery<HTMLSelectElement>, options: Selectize
 const Email = {
   topicUnspecific: 'general',
   active: false,
+  blocked: false,
+  envelope: undefined as MountableComponent<typeof EMAIL_FORM_ENVELOPE>|undefined,
+  activeTab: 'recipients' as EmailFormTab,
+  host: undefined as HTMLElement|undefined,
   autoSaveTimer: null as null|NodeJS.Timeout,
   autoSaveDelete() {},
+};
+
+const showEmailForm = () => asyncEmit(EMAIL_FORM_COMMAND, { action: 'show' });
+const selectEmailTab = (tab: EmailFormTab) => asyncEmit(EMAIL_FORM_COMMAND, { action: 'select-tab', tab });
+const isEmailFormOpen = () => Email.active;
+const destroyEmailForm = () => {
+  Email.envelope?.unmount();
+  Email.envelope?.destroy();
+  Email.host?.remove();
+  Email.envelope = undefined;
+  Email.host = undefined;
+};
+const setEmailFormBlocked = (blocked: boolean) => {
+  Email.blocked = blocked;
+  asyncEmit(EMAIL_FORM_COMMAND, { action: 'blocked', blocked });
+  if (!blocked && Email.host && !Email.host.isConnected) {
+    const host = Email.host;
+    queueMicrotask(() => {
+      if (Email.host === host && !Email.blocked) {
+        destroyEmailForm();
+      }
+    });
+  }
+};
+
+const closeEmailForm = () => {
+  if (Email.blocked || (Email.active && !Email.envelope)) {
+    return false;
+  }
+  destroyEmailForm();
+  return true;
 };
 
 asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
@@ -238,23 +276,8 @@ const cloudAttachment = function(paths: string|string[], callback: () => void = 
  * @param $panelHolder TBD.
  */
 function emailTabResize($dialogWidget: JQuery, $panelHolder: JQuery) {
-  // $panelHolder.css('width', 'auto');
-  // $panelHolder.css('height', 'auto');
-  $panelHolder.css('max-height', 'none'); // reset in order to get auto-configuration
-  const titleOffset = ($dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)!
-                       + $dialogWidget.find('.ui-tabs-nav').outerHeight(true)!);
-  const panelHeight = $panelHolder.outerHeight(true)!;
-  // const panelOffset = panelHeight - $panelHolder.height()!;
-  const dialogHeight = $dialogWidget.height()!;
-  // alert('outer: '+panelHeight+' dialog '+dialogHeight);
-  if (panelHeight > dialogHeight - titleOffset) {
-    $panelHolder.css('max-height', (dialogHeight - titleOffset /* - panelOffset */) + 'px');
-  }
-  // if ($panelHolder.get(0).scrollHeight > $panelHolder.outerHeight(true)) {
-  //   $panelHolder.css('padding-right', '2.4em');
-  // } else {
-  //   $panelHolder.css('padding-right', '');
-  // }
+  const height = Math.max(0, $dialogWidget[0].getBoundingClientRect().bottom - $panelHolder[0].getBoundingClientRect().top);
+  $panelHolder.css({ 'max-height': `${height}px`, 'overflow-y': 'auto' });
 }
 
 const findComposerRequestInput = <E extends HTMLElement, S extends keyof ComposerRequestData, T extends string = 'name'>(
@@ -342,7 +365,7 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
 const emailFormRecipientsSelectControls = ($dialogHolder: JQuery, $fieldset: JQuery<HTMLFieldSetElement>) => {
 
   if (
-    $dialogHolder.tabs('option', 'active') !== 0 // visible?
+    Email.activeTab !== 'recipients'
       || !!getMountedSelectize($fieldset.find<HTMLSelectElement>('#participation-status-filter')[0])
   ) {
     return;
@@ -726,7 +749,7 @@ const emailFormRecipientsHandlers = (
   $panelHolder
     .off('resize.' + appName)
     .on('resize.' + appName, function() {
-      emailTabResize($dialogHolder.dialog('widget'), $panelHolder);
+      emailTabResize($dialogHolder.closest('.emailform-envelope'), $panelHolder);
       return false;
     });
 
@@ -773,7 +796,7 @@ const emailFormCompositionHandlers = (
   const $fileAttachmentsRow = $fieldset.find('tr.file-attachments') as JQuery<HTMLTableRowElement>;
   const $fileAttachmentsSelector = $fileAttachmentsRow.find('select#file-attachments-selector') as JQuery<HTMLSelectElement>;
   const $sendButton = $fieldset.find('input.submit.send') as JQuery<HTMLInputElement>;
-  const $dialogWidget = $dialogHolder.dialog('widget');
+  const $dialogWidget = $dialogHolder.closest('.emailform-envelope');
   const $composerPanel = $('#emailformcomposer');
 
   WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
@@ -1056,7 +1079,7 @@ const emailFormCompositionHandlers = (
                 } else {
                   dlgTitle = t(appName, 'Em@il Form');
                 }
-                $dialogHolder.dialog('option', 'title', dlgTitle);
+                asyncEmit(EMAIL_FORM_COMMAND, { action: 'title', title: dlgTitle });
 
                 // update the "global" project name and id
                 projectId(requestData.projectId);
@@ -1276,16 +1299,16 @@ const emailFormCompositionHandlers = (
                 function(lock: boolean) {
                   if (lock) {
                     pageBusyIcon(true);
-                    $(window).on('beforeunload', function() {
+                    $(window).on('beforeunload.emailform', function() {
                       return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
                     });
-                    $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+                    setEmailFormBlocked(true);
                   } else {
-                    $(window).off('beforeunload');
+                    $(window).off('beforeunload.emailform');
                     if (progressOpen) {
                       progressWrapper.dialog('close');
                     }
-                    $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
+                    setEmailFormBlocked(false);
                     pageBusyIcon(false);
                   }
                 },
@@ -1372,7 +1395,7 @@ const emailFormCompositionHandlers = (
                 $debugOutput.find('.for-dialog').addClass(hiddenCssClass);
 
                 if (previewData) {
-                  $dialogHolder.tabs('option', 'active', 2);
+                  selectEmailTab('status');
                 }
 
                 $.fn.cafevTooltip.remove();
@@ -1420,7 +1443,7 @@ const emailFormCompositionHandlers = (
           previewText += requestData.previewData;
           $debugOutput.html(previewText);
 
-          $dialogHolder.tabs('option', 'active', 2);
+          selectEmailTab('status');
 
           $.fn.cafevTooltip.remove();
 
@@ -1455,7 +1478,7 @@ const emailFormCompositionHandlers = (
         },
       );
       // Close the dialog in any case.
-      $dialogHolder.dialog('close');
+      closeEmailForm();
       return false;
     });
 
@@ -1468,7 +1491,10 @@ const emailFormCompositionHandlers = (
   const autoSaveTimeout = autoSaveSeconds * 1000;
 
   const autoSaveHandler = () => {
-    if (Email.autoSaveTimer) {
+    if (!$fieldset[0].isConnected) {
+      return;
+    }
+    if (Email.autoSaveTimer || !$fieldset[0].isConnected) {
       clearTimeout(Email.autoSaveTimer);
     }
     Email.autoSaveTimer = null;
@@ -1734,11 +1760,11 @@ const emailFormCompositionHandlers = (
           function(lock: boolean) {
             if (lock) {
               pageBusyIcon(true);
-              $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+              setEmailFormBlocked(true);
             } else {
               SelectUtils.deselectAll($draftEmailsSelector);
-              $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-              $dialogHolder.tabs('option', 'disabled', []);
+              setEmailFormBlocked(false);
+              asyncEmit(EMAIL_FORM_COMMAND, { action: 'enable-recipients' });
               pageBusyIcon(false);
             }
           },
@@ -1784,11 +1810,11 @@ const emailFormCompositionHandlers = (
         function(lock: boolean) {
           if (lock) {
             pageBusyIcon(true);
-            $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+            setEmailFormBlocked(true);
           } else {
             SelectUtils.deselectAll($sentEmailsSelector);
-            $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-            $dialogHolder.tabs('option', 'disabled', []);
+            setEmailFormBlocked(false);
+            asyncEmit(EMAIL_FORM_COMMAND, { action: 'enable-recipients' });
             pageBusyIcon(false);
           }
         },
@@ -2128,10 +2154,14 @@ const emailFormCompositionHandlers = (
   // composer tab is active. Mmmh.
   fileUploadInit({
     url: generateEmailFormUrl(`${END_POINT_ATTACHMENT}/${EnumAttachmentOrigin.UPLOAD}`),
+    startCallback: () => setEmailFormBlocked(true),
     doneCallback(json, _index, _container) {
       attachmentFromJSON(json);
     },
-    stopCallback: updateFileAttachments,
+    stopCallback() {
+      setEmailFormBlocked(false);
+      updateFileAttachments();
+    },
     dropZone: undefined, // initially disabled, enabled on tab-switch
     inputSelector: '#attachment_upload_start',
     containerSelector: '#attachment_upload_wrapper',
@@ -2382,7 +2412,7 @@ const emailFormCompositionHandlers = (
  *
  * - selectedEvents: array of ids of events to attach.
  *
- * @param modal TBD, default true.
+ * @param _modal Retained for legacy callers; the envelope fills the app viewport.
  *
  * @param single TBD, default false.
  *
@@ -2390,7 +2420,7 @@ const emailFormCompositionHandlers = (
    error status. If the success arg is undefined then the dialog is
    already open.
  */
-const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single: boolean, afterInit: (success?: boolean) => void = () => {}) => {
+const emailFormPopup = (post: string|JQuery.PlainObject, _modal: boolean, single: boolean, afterInit: (success?: boolean) => void = () => {}) => {
 
   const { promise, resolve, reject } = Promise.withResolvers<boolean>();
 
@@ -2406,7 +2436,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
 
   if (Email.active === true) {
     console.debug('EMAIL ALREADY ACTIVE', Email);
-
+    showEmailForm();
     promiseCallback();
     return promise;
   }
@@ -2414,9 +2444,6 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
   Email.active = true;
   console.debug('EMAIL ACTIVE TRUE', Email);
 
-  if (modal === undefined) {
-    modal = true;
-  }
   if (single === undefined) {
     single = false;
   }
@@ -2428,12 +2455,10 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         promiseCallback(new Error('Error opening email dialog.'));
       });
     })
-    .done(function(data: ResponseData<EmailWebFormResponse>) {
-      const containerId = 'emailformdialog';
-
+    .done(async function(data: ResponseData<EmailWebFormResponse>) {
       if (!ajaxValidateResponse(
         data,
-        ['contents'],
+        ['recipients', 'composer', 'formData', 'uploadAction', 'requestToken', 'uploadMaxHumanFilesize', 'wikiNamespace'],
         () => {
           Email.active = false;
           console.debug('EMAIL ACTIVE FALSE', Email);
@@ -2443,14 +2468,6 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         return;
       }
 
-      const $dialogHolder = $('<div id="' + containerId + '"></div>');
-      $dialogHolder.html(data.contents);
-      $('body').append($dialogHolder);
-
-      const $emailForm = $('form#' + appPrefix('email-form')) as JQuery<HTMLFormElement>;
-      const $recipientsPanel = $dialogHolder.find('div#emailformrecipients');
-      const $composerPanel = $dialogHolder.find('div#emailformcomposer');
-
       let dlgTitle: string;
       if ((data.projectId ?? 0) > 0) {
         dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName! });
@@ -2458,207 +2475,155 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         dlgTitle = t(appName, 'Em@il Form');
       }
 
-      if (modal) {
-        modalizer(true);
-      }
-
-      const position = {
-        my: 'center top',
-        at: 'center bottom',
-        of: '#header',
+      let $dialogHolder: JQuery<HTMLElement>|undefined;
+      let resizeObserver: ResizeObserver|undefined;
+      let removalObserver: MutationObserver|undefined;
+      Email.activeTab = single ? 'composer' : 'recipients';
+      const cleanup = (container: HTMLElement) => {
+        asyncUnsubscribe(EMAIL_FORM_EVENT, handleEnvelopeEvent);
+        resizeObserver?.disconnect();
+        removalObserver?.disconnect();
+        $(window).off('beforeunload.emailform');
+        if (Email.autoSaveTimer) {
+          clearTimeout(Email.autoSaveTimer);
+          Email.autoSaveTimer = null;
+        }
+        Email.autoSaveDelete();
+        Email.autoSaveDelete = () => {};
+        $.fn.cafevTooltip.remove();
+        WysiwygEditor.removeEditor($(container).find(`textarea.${WYSIWYG_EDITOR}`));
+        destroyMountedSelects(container);
+        const $upload = $(container).find('#attachment_upload_start');
+        if ($upload.data('blueimp-fileupload')) {
+          $upload.fileupload('destroy');
+        }
+        $(container).off();
+        Email.active = false;
+        Email.blocked = false;
       };
-
-      $dialogHolder.cafevDialog({
-        title: dlgTitle,
-        position,
-        width: 'auto',
-        height: 'auto',
-        modal: false, // modal,
-        closeOnEscape: false,
-        dialogClass: 'emailform custom-close',
-        resizable: false,
-        draggable: true,
-        open() {
-          $.fn.cafevTooltip.remove();
-          DialogUtils.toBackButton($dialogHolder);
-          DialogUtils.fullScreenButton($dialogHolder, function(_mode, when) {
-            if (when === 'before') {
-              WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
-            }
-            if (when === 'after') {
-              WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
-            }
-          });
-          DialogUtils.customCloseButton($dialogHolder, function(event, _container) {
-            event.stopImmediatePropagation();
-            // with special greetings to Uschi ...
-            const activeTab = $dialogHolder.tabs('option', 'active');
-            if (activeTab >= 2) {
-              Dialogs.notice({
-                title: t(appName, 'You will be transferred back to the "edit-message" view'),
-                content: t(appName, 'You have clicked on the "close"-button while visiting the "preview" tab which normally just would close the email widget. It has been reported that this is an unexpected behaviour of the user interface, therefore you are just "transferred" back to the email-composition tab. Just click on "OK" or close this diablog.'),
-                callback: () => {
-                  $dialogHolder.tabs('option', 'active', 1);
-                },
-                allowHtml: true,
-                dialogClasses: ['maximize-width'],
-              });
-            } else {
-              $dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
-            }
-            // $dialogHolder.dialog('close');
-            return false;
-          });
-          const $dialogWidget = $dialogHolder.dialog('widget');
-
-          // this must come before calling emailFormRecipientsHandlers
-          $dialogHolder.tabs({
-            active: single ? 1 : 0,
-            disabled: single ? [0] : [],
-            heightStyle: 'content',
-            create(_event, ui) {
-              emailTabResize($dialogWidget, ui.panel);
-              return true;
-            },
-            activate(_event, ui) {
-              const newTabId = ui.newTab.attr('id');
-
-              if (newTabId === 'emailformdebug-tab') {
-                // The following is primarily for the debug
-                // output in order to get the scroll-bars right
-                const panel = ui.newPanel;
-                let newHeight = $dialogWidget.height()! -
-                    $dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)!;
-                newHeight -= $('#emailformtabs').outerHeight(true)!;
-                newHeight -= panel.outerHeight(true)! - panel.height()!;
-                panel.height(newHeight);
-              } else {
-                if (newTabId === 'emailformcomposer-tab') {
-                  $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
-                } else {
-                  $('#attachment_upload_start').fileupload('option', 'dropZone', null);
-                  const $recipientsFieldSet = $emailForm.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
-                  emailFormRecipientsSelectControls($dialogHolder, $recipientsFieldSet);
-                }
-
-                // At least in FF there is also a resize event,
-                // but only for the composition window. Don't
-                // know why.
-                emailTabResize($dialogWidget, ui.newPanel);
-              }
-
-              return true;
-            },
-            beforeActivate(event, ui) {
-              // When activating the composition window we
-              // first have to update the email addresses. This
-              // is cosmetics, but this entire thing is DAU
-              // cosmetics stuff
-              const newTabId = ui.newTab.attr('id');
-              const oldTabId = ui.oldTab.attr('id');
-
-              if (oldTabId === 'emailformcomposer-tab' && newTabId !== 'emailformcomposer-tab') {
-                // close TinyMCE overflow button pane
-                const $overflowButton = $emailForm.find('.messagetext button[data-mce-name="overflow-button"].tox-tbtn.tox-tbtn--enabled');
-                $overflowButton.trigger('click');
-              }
-
-              if (newTabId === 'emailformhelp-tab') {
-                event.preventDefault();
-                return true;
-              }
-
-              ui.newPanel.css('max-height', '');
-              ui.newPanel.css('height', 'auto');
-
-              if (oldTabId !== 'emailformrecipients-tab'
-                  || newTabId !== 'emailformcomposer-tab') {
-                return true;
-              }
-
-              updateComposerElements($emailForm, ['to', 'subjectTag']);
-
-              return true;
-            },
-          });
-
-          handleUserManualMenu($dialogHolder);
-
-          const $recipientsFieldSet = $emailForm.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
-          const $composerFieldSet = $emailForm.find('fieldset.email-composition.page') as JQuery<HTMLFieldSetElement>;
-
-          // Fine, now add handlers and AJAX callbacks. We can
-          // probably move some of the code above to the
-          // respective tab-handler.
-          emailFormRecipientsHandlers(
-            $recipientsFieldSet,
-            $emailForm,
-            $dialogHolder,
-            $recipientsPanel,
-          );
-          emailFormCompositionHandlers(
-            $composerFieldSet,
-            $emailForm,
-            $dialogHolder,
-            $composerPanel,
-          );
-
-          // download support
-          $dialogHolder.on('click', 'a.download-link.ajax-download', function() {
-            const $this = $(this);
-            fileDownload($this.attr('href')!, $this.data());
-            return false;
-          });
-
-          // we have to recompute the tab size for the recipients controls
-          emailTabResize($dialogWidget, $recipientsPanel);
-
-          $dialogHolder.dialog('moveToTop');
-          const viewportHeight = actual('height', 'px');
-          const widgetHeight = $dialogWidget.outerHeight()!;
-          const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
-          if (difference > 0) {
-            position.at = `center bottom+${difference}`;
-            console.info('EMAILL DIALOG POSITION', position);
-            $dialogHolder.dialog('option', 'position', position);
+      /**
+       * Coordinate the legacy widgets without importing their asset into Vue.
+       *
+       * @param event Envelope lifecycle or tab transition.
+       */
+      function handleEnvelopeEvent(event: EmailFormEvent) {
+        if (event.action === 'ready') {
+          $dialogHolder = $(event.container);
+          return;
+        }
+        if (event.action === 'cleanup') {
+          cleanup(event.container);
+          return;
+        }
+        if (!$dialogHolder) {
+          return;
+        }
+        const $emailForm = $dialogHolder.find<HTMLFormElement>('form#' + appPrefix('email-form'));
+        if (event.action === 'close') {
+          if (Email.blocked) {
+            return;
           }
-          $dialogWidget
-            .off('resize.' + appName)
-            .on('resize.' + appName, function() {
-              const widgetOffset = $dialogWidget.offset();
-              const viewportHeight = actual('height', 'px');
-              const widgetHeight = $dialogWidget.outerHeight()!;
-              const overflow = widgetHeight + widgetOffset!.top - viewportHeight;
-              if (overflow > 0) {
-                const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
-                position.at = `center bottom+${difference}`;
-                $dialogHolder.dialog('option', 'position', position);
-              }
-              return false;
+          if (Email.activeTab === 'status') {
+            Dialogs.notice({
+              title: t(appName, 'You will be transferred back to the "edit-message" view'),
+              content: t(appName, 'You have clicked on the "close"-button while visiting the "preview" tab which normally just would close the email widget. It has been reported that this is an unexpected behaviour of the user interface, therefore you are just "transferred" back to the email-composition tab. Just click on "OK" or close this diablog.'),
+              callback: () => selectEmailTab('composer'),
+              allowHtml: true,
+              dialogClasses: ['maximize-width'],
             });
-          promiseCallback(true);
-        },
-        close() {
-          console.info('EMAIL CLOSING');
-          if (Email.autoSaveTimer) {
-            clearTimeout(Email.autoSaveTimer);
-            Email.autoSaveTimer = null;
+          } else {
+            $dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
           }
-          Email.autoSaveDelete();
-
-          Email.autoSaveDelete = function() {};
-
-          $.fn.cafevTooltip.remove();
-          WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
-          destroyMountedSelects($dialogHolder[0]);
-          // $dialogHolder.dialog('close');
-          $dialogHolder.dialog('destroy').remove();
-
-          modalizer(false);
-          Email.active = false;
-          console.debug('EMAIL ACTIVE FALSE', Email);
-        },
-      });
+          return;
+        }
+        if (event.action === 'before-tab-change') {
+          if (event.previous === 'composer') {
+            $emailForm.find('.messagetext button[data-mce-name="overflow-button"].tox-tbtn.tox-tbtn--enabled').trigger('click');
+          }
+          if (event.previous === 'recipients' && event.tab === 'composer') {
+            updateComposerElements($emailForm, ['to', 'subjectTag']);
+          }
+          Email.activeTab = event.tab;
+          return;
+        }
+        if (event.action === 'tab-changed') {
+          $dialogHolder.find('#attachment_upload_start').fileupload('option', 'dropZone', event.tab === 'composer' ? $(event.panel) : null);
+          if (event.tab === 'recipients') {
+            emailFormRecipientsSelectControls($dialogHolder, $emailForm.find<HTMLFieldSetElement>('fieldset.email-recipients.page'));
+          }
+          emailTabResize($dialogHolder.closest('.emailform-envelope'), $(event.panel));
+        }
+      }
+      asyncSubscribe(EMAIL_FORM_EVENT, handleEnvelopeEvent);
+      try {
+        Email.envelope = await awaitEmit(GET_VUE_COMPONENT, {
+          name: EMAIL_FORM_ENVELOPE,
+          propsData: {
+            form: data,
+            title: dlgTitle,
+            single,
+          },
+        }) as MountableComponent<typeof EMAIL_FORM_ENVELOPE>;
+        Email.host = document.createElement('div');
+        const mountPoint = document.createElement('div');
+        Email.host.append(mountPoint);
+        const ambient = document.getElementById(appPrefix('general'));
+        if (!ambient) {
+          throw new Error('Missing legacy container for email form.');
+        }
+        ambient.append(Email.host);
+        Email.envelope.mount(mountPoint);
+        if (!$dialogHolder) {
+          throw new Error('Missing mounted email form HTML.');
+        }
+        const $emailForm = $dialogHolder.find<HTMLFormElement>('form#' + appPrefix('email-form'));
+        const $recipientsPanel = $dialogHolder.find('div#emailformrecipients');
+        const $composerPanel = $dialogHolder.find('div#emailformcomposer');
+        const $dialogWidget = $dialogHolder.closest('.emailform-envelope');
+        $.fn.cafevTooltip.remove();
+        emailFormRecipientsHandlers(
+          $emailForm.find<HTMLFieldSetElement>('fieldset.email-recipients.page'),
+          $emailForm,
+          $dialogHolder,
+          $recipientsPanel,
+        );
+        emailFormCompositionHandlers(
+          $emailForm.find<HTMLFieldSetElement>('fieldset.email-composition.page'),
+          $emailForm,
+          $dialogHolder,
+          $composerPanel,
+        );
+        if (single) {
+          $dialogHolder.find('#attachment_upload_start').fileupload('option', 'dropZone', $composerPanel);
+        }
+        $dialogHolder.on('click', 'a.download-link.ajax-download', function() {
+          const $this = $(this);
+          fileDownload($this.attr('href')!, $this.data());
+          return false;
+        });
+        const resize = () => {
+          const panels = { recipients: $recipientsPanel, composer: $composerPanel, status: $dialogHolder!.find('#emailformdebug') };
+          emailTabResize($dialogWidget, panels[Email.activeTab]);
+        };
+        resizeObserver = new ResizeObserver(resize);
+        resizeObserver.observe($dialogWidget[0]);
+        const host = Email.host;
+        removalObserver = new MutationObserver(() => {
+          if (!host.isConnected) {
+            closeEmailForm();
+          }
+        });
+        removalObserver.observe(document.documentElement, { childList: true, subtree: true });
+        resize();
+        promiseCallback(true);
+      } catch (error) {
+        closeEmailForm();
+        asyncUnsubscribe(EMAIL_FORM_EVENT, handleEnvelopeEvent);
+        Email.active = false;
+        console.error('Unable to initialize email form.', error);
+        notificationShow(t(appName, 'Unable to initialize the email form.'), { timeout: 15 });
+        promiseCallback(error instanceof Error ? error : new Error('Unable to initialize email form.'));
+      }
     });
   return promise;
 };
@@ -2667,6 +2632,9 @@ const documentReady = function() {
 };
 
 export {
+  closeEmailForm,
   documentReady,
   emailFormPopup,
+  isEmailFormOpen,
+  showEmailForm,
 };

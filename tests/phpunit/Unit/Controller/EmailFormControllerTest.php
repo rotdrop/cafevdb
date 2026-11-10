@@ -517,7 +517,12 @@ class EmailFormControllerTest extends TestCase
     $this->assertInstanceOf(DTO\EmailWebFormResponse::class, $data);
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($data->recipients, LIBXML_PEDANTIC));
+    $this->assertNotNull($domDoc->getElementById('cafevdb-email-recipients-fieldset'));
+    $this->assertEquals(true, $domDoc->loadHTML($data->composer, LIBXML_PEDANTIC));
+    $this->assertNotNull($domDoc->getElementById('cafevdb-email-composition-fieldset'));
+    $this->assertStringContainsString('name="requesttoken"', $data->formData);
+    $this->assertStringNotContainsString('emailformtabs', $data->recipients . $data->composer);
     $this->assertEquals(0, $data->projectId);
     $this->assertEquals(null, $data->projectName);
     $this->assertInstanceOf(DTO\EmailFormRecipientsFilterHistory::class, $data->filterHistory);
@@ -540,7 +545,7 @@ class EmailFormControllerTest extends TestCase
     $this->assertInstanceOf(DTO\EmailWebFormResponse::class, $data);
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($data->recipients . $data->composer, LIBXML_PEDANTIC));
     $this->assertEquals($this->project->getId(), $data->projectId);
     $this->assertEquals($this->project->getName(), $data->projectName);
     $this->assertInstanceOf(DTO\EmailFormRecipientsFilterHistory::class, $data->filterHistory);
@@ -601,7 +606,7 @@ class EmailFormControllerTest extends TestCase
       invoiceId: $invoice->getId(),
     );
     $this->assertSame(Http::STATUS_OK, $response->getStatus());
-    $this->assertStringContainsString('name="invoiceId"', $response->getData()->contents);
+    $this->assertStringContainsString('name="invoiceId"', $response->getData()->formData);
 
     $composer = $this->appContainer->get(EmailForm\Composer::class);
     $filter = $composer->getRecipientsFilter();

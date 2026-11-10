@@ -79,6 +79,30 @@ To check the packaged executable, dictionary, and both splitting backends after
 relocation, run `python3.13 tests/scripts/word-splitter-smoke.py <appstore.tar.gz>`.
 CI runs this against the unsigned app-store archive.
 
+Outgoing email form
+-------------------
+
+The outgoing email form uses a Vue envelope filling the legacy content area,
+mounted through the component event bus. Vue owns the tabs and common form
+structure; the initial form endpoint supplies the existing PHP-rendered
+recipients and composition fragments, hidden form data and upload/manual
+metadata instead of a complete
+outer template. All panels remain mounted inside one form when switching tabs.
+Minimize leaves the form and its auto-save timer alive; restore returns to the
+same message. The editor, attachments and status/preview rendering remain
+legacy-owned. The Vue component never imports the legacy JS asset: typed
+`EMAIL_FORM_COMMAND` and `EMAIL_FORM_EVENT` bus messages coordinate tab changes,
+activation hooks, title, blocking, close and lifecycle cleanup.
+Closing from the preview returns to composition; closing from composition uses
+the existing cancel and draft-cleanup flow. Sending, loading a message and
+uploading attachments block the envelope controls until the operation completes.
+Removing the containing legacy view also tears down the envelope and its
+legacy widgets, after any protected operation finishes.
+The panels fill the available envelope width without the old dialog width caps.
+The envelope and restore button are absolutely positioned within the existing
+legacy content container. Its flex layout determines their available space,
+including sidebar changes, without navigation observers or manual offsets.
+
 Email template substitutions
 ----------------------------
 
