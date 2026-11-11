@@ -208,8 +208,10 @@ export const refreshPmeNavigation = (container: ParentNode) => {
   }
 };
 
-subscribe(LEGACY_PAGE_CLEANUP, () => {
+subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    instance.destroy();
+    if (!event || event.containers.some((container) => container.contains(instance.select))) {
+      instance.destroy();
+    }
   }
 });

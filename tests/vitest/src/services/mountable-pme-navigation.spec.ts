@@ -12,11 +12,11 @@ import {
 } from '~/src/services/mountable-pme-navigation.ts';
 
 const { callbacks, requestComponent } = vi.hoisted(() => ({
-  callbacks: [] as Array<() => void>,
+  callbacks: [] as Array<(event?: { containers: HTMLElement[] }) => void>,
   requestComponent: vi.fn(),
 }));
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
-  subscribe: (_name: string, callback: () => void) => callbacks.push(callback),
+  subscribe: (_name: string, callback: (event?: { containers: HTMLElement[] }) => void) => callbacks.push(callback),
   awaitEmit: (_name: string, payload: { name: string; propsData: PmeNavigationSelectComponentProps }) =>
     requestComponent(payload.name, payload.propsData),
 }));
@@ -62,6 +62,22 @@ afterEach(() => {
 });
 
 describe('mountPmeNavigation', () => {
+  it('only destroys controls inside the page being replaced', async () => {
+    const page = makeForm();
+    const persistent = makeForm();
+    await mountPmeNavigation(page.form, 'select');
+    const [persistentService] = await mountPmeNavigation(persistent.form, 'select');
+    callbacks.forEach((callback) => callback({ containers: [] }));
+    expect(getMountedPmeNavigation(page.select)).toBeDefined();
+    callbacks.forEach((callback) => callback({ containers: [page.form] }));
+    expect(getMountedPmeNavigation(page.select)).toBeUndefined();
+    expect(page.select.style.display).toBe('');
+    expect(getMountedPmeNavigation(persistent.select)).toBe(persistentService);
+    expect(persistent.select.style.display).toBe('none');
+    callbacks.forEach((callback) => callback({ containers: [persistent.form] }));
+    expect(getMountedPmeNavigation(persistent.select)).toBeUndefined();
+  });
+
   it('replaces the caption button and select by one component', async () => {
     const { form, button, select } = makeForm();
     const [service] = await mountPmeNavigation(form, 'select.pme-pagerows', { searchThreshold: 10 });

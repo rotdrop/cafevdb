@@ -86,6 +86,7 @@
           {{ t(appName, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
+      <EmailFormRestoreButton />
     </div>
     <!-- eslint-disable vue/no-v-html  -->
     <div :id="appPrefix('general')"
@@ -93,7 +94,11 @@
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
-        <div :id="pagePrefix + 'header'" :class="[pagePrefix + 'header', legacyCssClass]" v-html="legacyHeaderHtml" />
+        <div :id="pagePrefix + 'header'"
+             ref="legacyHeaderContainer"
+             :class="[pagePrefix + 'header', legacyCssClass]"
+             v-html="legacyHeaderHtml"
+        />
       </div>
       <div :id="pagePrefix + 'container'" :class="[pagePrefix + 'container', legacyCssClass]">
         <!-- used to have something with 100% height for scrollbars -->
@@ -162,6 +167,7 @@ import HomeIcon from 'vue-material-design-icons/Home.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
+import EmailFormRestoreButton from './EmailFormRestoreButton.vue'
 import ErrorPageModal from './ErrorPageModal.vue'
 import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
 import {
@@ -265,7 +271,8 @@ let previousHash = null as null|string // reactivity not needed
 
 // *** former computed properties
 
-const legacyHtmlContainer = useTemplateRef('legacyHtmlContainer')
+const legacyHtmlContainer = useTemplateRef<HTMLElement>('legacyHtmlContainer')
+const legacyHeaderContainer = useTemplateRef<HTMLElement>('legacyHeaderContainer')
 const wikiManualSection = computed(() => dokuWikiSection([
   appName,
   'documentation',
@@ -421,7 +428,11 @@ const doLoadLegacy = async () => {
     || props.templateParameters.projectId
     || 0
   await appData.setCurrentProject(projectKey)
-  await asyncEmit(LEGACY_PAGE_CLEANUP)
+  // The persistent email envelope also lives under "general", outside these HTML islands.
+  await asyncEmit(LEGACY_PAGE_CLEANUP, {
+    containers: [legacyHeaderContainer.value, legacyHtmlContainer.value]
+      .filter((container): container is HTMLElement => container !== null),
+  })
   logger.debug('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
 
@@ -753,6 +764,10 @@ defineExpose({
   flex-shrink: 10;
 }
 ##{$appName}-top-navigation {
+  --#{$appName}-toolbar-separator-color: var(--color-border);
+  --#{$appName}-toolbar-separator-height: 30px;
+  --#{$appName}-toolbar-separator-border-width: 1px;
+  --#{$appName}-toolbar-separator-margin-inline: 8px;
   position: absolute;
   right: 0;
   top: 0;
@@ -760,11 +775,9 @@ defineExpose({
   height: var(--#{$appName}-top-padding);
   padding-right: calc( 0.5 * (var(--cafevdb-top-padding) - var(--default-clickable-area)));
   .buttonseparator {
-    background: #000;
-    height: 30px;
-    width: 2px;
-    opacity: 0.5;
-    margin: 0 3px;
+    border-inline-start: var(--#{$appName}-toolbar-separator-border-width) solid var(--#{$appName}-toolbar-separator-color);
+    height: var(--#{$appName}-toolbar-separator-height);
+    margin-inline: var(--#{$appName}-toolbar-separator-margin-inline);
   }
   .spacer {
     width: 2px;

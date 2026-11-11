@@ -6,6 +6,8 @@ import type axiosFileDownload from '~/src/toolkit/util/axios-file-download.ts';
 
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import NcActions from '@nextcloud/vue/components/NcActions';
+import NcPopover from '@nextcloud/vue/components/NcPopover';
 import PmeExportMenu from '~/src/components/PmeExportMenu.vue';
 
 const { download, notify, emit, post, saveFile } = vi.hoisted(() => ({
@@ -37,11 +39,23 @@ const render = (disabled = false) => {
     props: { form, disabled },
   });
   wrappers.push(wrapper);
+  const popover = wrapper.getComponent(NcPopover);
+  const originalAfterShow = popover.vm.afterShow;
+  popover.vm.afterShow = async () => {
+    await originalAfterShow.call(popover.vm);
+    // jsdom has no CSS transitions; finish Floating Vue's show frames before simulating transitionend.
+    await vi.waitFor(() => expect(
+      popover.vm.getPopoverContentElement().classList.contains('v-popper__popper--show-to'),
+    ).toBe(true));
+    popover.vm.getPopoverContentElement().dispatchEvent(new Event('transitionend'));
+  };
   return { wrapper, form };
 };
 const activate = async (wrapper: ReturnType<typeof render>['wrapper'], name = 'CSV Export') => {
+  const actions = wrapper.getComponent(NcActions);
+  const openedCount = actions.emitted('opened')?.length ?? 0;
   await wrapper.get('button').trigger('click');
-  await flushPromises();
+  await vi.waitFor(() => expect(actions.emitted('opened')).toHaveLength(openedCount + 1));
   await vi.waitFor(() => expect(document.querySelectorAll('[role="menuitem"]')).toHaveLength(2));
   const button = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'))
     .find((button) => button.textContent?.includes(name))!;
