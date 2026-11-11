@@ -5466,7 +5466,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $tmpFile = $this->appStorage->newTemporaryFile(AppStorage::DRAFTS_FOLDER);
 
-      $tmpFilePath = AppStorage::PATH_SEP .AppStorage::DRAFTS_FOLDER .AppStorage::PATH_SEP . $tmpFile->getName();
+      $tmpFilePath = Constants::PATH_SEP . AppStorage::DRAFTS_FOLDER . Constants::PATH_SEP . $tmpFile->getName();
 
       $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD : AttachmentOrigin::CLOUD;
 
