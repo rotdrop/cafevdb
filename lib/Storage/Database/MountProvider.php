@@ -34,7 +34,6 @@ use OCP\Files\Config\IMountProvider;
 use OCP\Files\FileInfo;
 use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
-use OCP\IUserSession;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -44,6 +43,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions\MissingProjectsFolderException;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MountAuthenticationService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -68,7 +68,7 @@ class MountProvider implements IMountProvider
     protected EntityManager $entityManager,
     private AuthorizationService $authorizationService,
     private Factory $storageFactory,
-    private IUserSession $userSession,
+    private MountAuthenticationService $mountAuthenticationService,
   ) {
     $this->l = $this->l10n();
   }
@@ -100,13 +100,13 @@ class MountProvider implements IMountProvider
   {
     $userId = $user->getUID();
 
-    if (!$this->userSession->isLoggedIn()) {
-      $this->logDebug('No one is logged in.');
+    if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
+      $this->logDebug('User is not authorized: ' . $userId);
       return [];
     }
 
-    if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
-      $this->logDebug('User is not authorized: ' . $userId);
+    if (!$this->mountAuthenticationService->authenticate($user)) {
+      $this->logDebug('No authenticated credentials for user ' . $userId);
       return [];
     }
 
