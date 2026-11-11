@@ -764,11 +764,10 @@ defineExpose({
   flex-shrink: 10;
 }
 ##{$appName}-top-navigation {
-  --#{$appName}-toolbar-separator-color: #000;
-  --#{$appName}-toolbar-separator-opacity: 0.5;
+  --#{$appName}-toolbar-separator-color: var(--color-border);
   --#{$appName}-toolbar-separator-height: 30px;
-  --#{$appName}-toolbar-separator-width: 2px;
-  --#{$appName}-toolbar-separator-margin: 0 3px;
+  --#{$appName}-toolbar-separator-border-width: 1px;
+  --#{$appName}-toolbar-separator-margin-inline: 8px;
   position: absolute;
   right: 0;
   top: 0;
@@ -776,11 +775,9 @@ defineExpose({
   height: var(--#{$appName}-top-padding);
   padding-right: calc( 0.5 * (var(--cafevdb-top-padding) - var(--default-clickable-area)));
   .buttonseparator {
-    background: var(--#{$appName}-toolbar-separator-color);
+    border-inline-start: var(--#{$appName}-toolbar-separator-border-width) solid var(--#{$appName}-toolbar-separator-color);
     height: var(--#{$appName}-toolbar-separator-height);
-    width: var(--#{$appName}-toolbar-separator-width);
-    opacity: var(--#{$appName}-toolbar-separator-opacity);
-    margin: var(--#{$appName}-toolbar-separator-margin);
+    margin-inline: var(--#{$appName}-toolbar-separator-margin-inline);
   }
   .spacer {
     width: 2px;

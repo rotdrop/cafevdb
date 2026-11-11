@@ -33,10 +33,8 @@ const restore = () => emit(EMAIL_FORM_COMMAND, { action: 'show' })
 
 <style scoped lang="scss">
 .buttonseparator {
-  background: var(--cafevdb-toolbar-separator-color);
+  border-inline-start: var(--cafevdb-toolbar-separator-border-width) solid var(--cafevdb-toolbar-separator-color);
   height: var(--cafevdb-toolbar-separator-height);
-  width: var(--cafevdb-toolbar-separator-width);
-  opacity: var(--cafevdb-toolbar-separator-opacity);
-  margin: var(--cafevdb-toolbar-separator-margin);
+  margin-inline: var(--cafevdb-toolbar-separator-margin-inline);
 }
 </style>
