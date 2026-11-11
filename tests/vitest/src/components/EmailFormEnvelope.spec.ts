@@ -7,6 +7,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from 'vue';
 import EmailFormEnvelope from '~/src/components/EmailFormEnvelope.vue';
+import EmailFormRestoreButton from '~/src/components/EmailFormRestoreButton.vue';
 import { emailForm } from '../../fixtures/email-form.ts';
 import { EMAIL_FORM_COMMAND, EMAIL_FORM_EVENT, WIKI_POPUP } from '~/src/event-bus-events.ts';
 
@@ -34,13 +35,14 @@ const render = (single = false) => {
       single,
     },
   });
-  wrappers.push(wrapper);
+  const toolbar = mount(EmailFormRestoreButton, { attachTo: document.body });
+  wrappers.push(wrapper, toolbar);
   const controls = {
     setTitle: (title: string) => emit(EMAIL_FORM_COMMAND, { action: 'title', title }),
     setBlocked: (blocked: boolean) => emit(EMAIL_FORM_COMMAND, { action: 'blocked', blocked }),
     show: () => emit(EMAIL_FORM_COMMAND, { action: 'show' }),
   };
-  return { wrapper, controls, onReady, onClose, onCleanup };
+  return { wrapper, toolbar, controls, onReady, onClose, onCleanup };
 };
 
 afterEach(() => {
@@ -83,19 +85,41 @@ describe('EmailFormEnvelope', () => {
   });
 
   it('minimizes and restores without recreating the editor or cleaning up the form', async () => {
-    const { wrapper, controls, onCleanup } = render();
+    const { wrapper, toolbar, controls, onCleanup } = render();
     const container = wrapper.get('#emailformdialog').element;
+    expect(toolbar.find('button').exists()).toBe(false);
     await wrapper.get('button[aria-label="Minimize"]').trigger('click');
     expect(wrapper.get('section').isVisible()).toBe(false);
-    expect(wrapper.get('.emailform-envelope-restore').text()).toBe('Email for project');
+    expect(wrapper.find('.emailform-envelope-restore').exists()).toBe(false);
+    expect(toolbar.get('button').attributes('aria-label')).toBe('Restore Email for project');
     expect(onCleanup).not.toHaveBeenCalled();
-    await wrapper.get('.emailform-envelope-restore').trigger('click');
+    await toolbar.get('button').trigger('click');
     expect(wrapper.get('section').isVisible()).toBe(true);
+    expect(toolbar.find('button').exists()).toBe(false);
     expect(wrapper.get('#emailformdialog').element).toBe(container);
     await wrapper.get('button[aria-label="Minimize"]').trigger('click');
     controls.show();
     await flushPromises();
     expect(wrapper.get('section').isVisible()).toBe(true);
+  });
+
+  it('retains the restore action across toolbar remounts and removes it when the envelope closes', async () => {
+    const { wrapper, toolbar, controls } = render();
+    await wrapper.get('button[aria-label="Minimize"]').trigger('click');
+    controls.setTitle('Draft with a long title');
+    await flushPromises();
+    expect(toolbar.get('button').attributes('title')).toBe('Restore Draft with a long title');
+    expect(toolbar.get('button').text()).toBe('');
+    toolbar.unmount();
+    const replacement = mount(EmailFormRestoreButton, { attachTo: document.body });
+    wrappers.push(replacement);
+    expect(replacement.get('button').attributes('aria-label')).toBe('Restore Draft with a long title');
+    await replacement.get('button').trigger('click');
+    expect(wrapper.get('section').isVisible()).toBe(true);
+    await wrapper.get('button[aria-label="Minimize"]').trigger('click');
+    wrapper.unmount();
+    await flushPromises();
+    expect(replacement.find('button').exists()).toBe(false);
   });
 
   it('blocks closing, minimizing and legacy input during a protected operation', async () => {

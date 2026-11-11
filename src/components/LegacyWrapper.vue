@@ -86,6 +86,7 @@
           {{ t(appName, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
+      <EmailFormRestoreButton />
     </div>
     <!-- eslint-disable vue/no-v-html  -->
     <div :id="appPrefix('general')"
@@ -166,6 +167,7 @@ import HomeIcon from 'vue-material-design-icons/Home.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
+import EmailFormRestoreButton from './EmailFormRestoreButton.vue'
 import ErrorPageModal from './ErrorPageModal.vue'
 import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
 import {

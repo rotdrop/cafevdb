@@ -131,13 +131,6 @@
         </div>
       </div>
     </section>
-    <NcButton v-if="!visible"
-              class="emailform-envelope-restore"
-              :style="{ zIndex }"
-              @click="show"
-    >
-      {{ title }}
-    </NcButton>
   </div>
 </template>
 
@@ -148,11 +141,12 @@ import { translate as t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import { NcActionButton, NcActions, NcButton } from '@nextcloud/vue'
 import { emit as emitEvent, subscribe, unsubscribe } from '@rotdrop/async-nextcloud-event-bus'
-import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MinimizeIcon from 'vue-material-design-icons/WindowMinimize.vue'
 import { appName, appNameTag, appPrefix } from '../config.ts'
 import { EMAIL_FORM_COMMAND, EMAIL_FORM_EVENT, WIKI_POPUP } from '../event-bus-events.ts'
+import { setMinimizedEmailFormTitle } from '../services/email-form-state.ts'
 
 const props = defineProps<EmailFormEnvelopeProps>()
 
@@ -168,6 +162,7 @@ const panelId = (tab: EmailFormTab) => tab === 'status' ? 'emailformdebug' : `em
 const isDisabled = (tab: EmailFormTab) => tab === 'recipients' && recipientsDisabled.value
 const visible = ref(true)
 const blocked = ref(false)
+watchEffect(() => setMinimizedEmailFormTitle(visible.value ? null : title.value))
 const zIndex = ref(100)
 const envelope = useTemplateRef<HTMLElement>('envelope')
 const heading = useTemplateRef<HTMLElement>('heading')
@@ -275,6 +270,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  setMinimizedEmailFormTitle(null)
   unsubscribe(EMAIL_FORM_COMMAND, handleCommand)
   emitEvent(EMAIL_FORM_EVENT, { action: 'cleanup', container: legacyHtmlContainer.value! })
   if (previousFocus?.isConnected) {
@@ -363,9 +359,4 @@ onBeforeUnmount(() => {
   }
 }
 
-.emailform-envelope-restore {
-  position: absolute;
-  top: 0;
-  right: 16px;
-}
 </style>
