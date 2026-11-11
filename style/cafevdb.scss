@@ -88,8 +88,8 @@ div.#{$appName}-#{$pageTag} {
     background-color:inherit;
     opacity:1.0;
     width:100%;
-    height:44px;
-    padding-left:44px;
+    height: var(--#{$appName}-top-padding); // 44px;
+    padding-left: var(--#{$appName}-top-padding); // 44px;
     overflow:hidden;
     /* border-bottom:1px solid #777;*/
   }
@@ -120,7 +120,7 @@ div.#{$appName}-#{$pageTag} {
   }
 
   &-body-inner {
-    padding-top:1ex;
+    padding-top: var(--#{$appName}-legacy-page-separator-padding);
     height:100%;
   }
 }

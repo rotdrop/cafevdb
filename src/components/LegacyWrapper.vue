@@ -759,12 +759,13 @@ defineExpose({
   height: 100%;
   min-height: 100%;
   max-height: 100%;
-  --#{$appName}-top-padding: 44px;
+  --#{$appName}-legacy-page-separator-padding: calc(0.5 * var(--app-navigation-padding));
+  --#{$appName}-top-padding: calc(var(--default-clickable-area) + var(--app-navigation-padding) + var(--#{$appName}-legacy-page-separator-padding)); // 44px;
   width: 100%;
   flex-shrink: 10;
 }
 ##{$appName}-top-navigation {
-  --#{$appName}-toolbar-separator-color: var(--color-border);
+  --#{$appName}-toolbar-separator-color: var(--color-border-dark);
   --#{$appName}-toolbar-separator-height: 30px;
   --#{$appName}-toolbar-separator-border-width: 1px;
   --#{$appName}-toolbar-separator-margin-inline: 8px;
@@ -773,7 +774,8 @@ defineExpose({
   top: 0;
   z-index: 100;
   height: var(--#{$appName}-top-padding);
-  padding-right: calc( 0.5 * (var(--cafevdb-top-padding) - var(--default-clickable-area)));
+  padding-right: calc( 0.5 * (var(--#{$appName}-top-padding) - var(--default-clickable-area)));
+  align-items: center;
   .buttonseparator {
     border-inline-start: var(--#{$appName}-toolbar-separator-border-width) solid var(--#{$appName}-toolbar-separator-color);
     height: var(--#{$appName}-toolbar-separator-height);
@@ -781,6 +783,9 @@ defineExpose({
   }
   .spacer {
     width: 2px;
+  }
+  > * {
+    height: var(--default-clickable-area);
   }
 }
 .#{$appName}-general {
