@@ -12,11 +12,11 @@ import {
 } from '~/src/services/mountable-pme-navigation.ts';
 
 const { callbacks, requestComponent } = vi.hoisted(() => ({
-  callbacks: [] as Array<(event?: { container: HTMLElement|null }) => void>,
+  callbacks: [] as Array<(event?: { containers: HTMLElement[] }) => void>,
   requestComponent: vi.fn(),
 }));
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
-  subscribe: (_name: string, callback: (event?: { container: HTMLElement|null }) => void) => callbacks.push(callback),
+  subscribe: (_name: string, callback: (event?: { containers: HTMLElement[] }) => void) => callbacks.push(callback),
   awaitEmit: (_name: string, payload: { name: string; propsData: PmeNavigationSelectComponentProps }) =>
     requestComponent(payload.name, payload.propsData),
 }));
@@ -67,14 +67,14 @@ describe('mountPmeNavigation', () => {
     const persistent = makeForm();
     await mountPmeNavigation(page.form, 'select');
     const [persistentService] = await mountPmeNavigation(persistent.form, 'select');
-    callbacks.forEach((callback) => callback({ container: null }));
+    callbacks.forEach((callback) => callback({ containers: [] }));
     expect(getMountedPmeNavigation(page.select)).toBeDefined();
-    callbacks.forEach((callback) => callback({ container: page.form }));
+    callbacks.forEach((callback) => callback({ containers: [page.form] }));
     expect(getMountedPmeNavigation(page.select)).toBeUndefined();
     expect(page.select.style.display).toBe('');
     expect(getMountedPmeNavigation(persistent.select)).toBe(persistentService);
     expect(persistent.select.style.display).toBe('none');
-    callbacks.forEach((callback) => callback({ container: persistent.form }));
+    callbacks.forEach((callback) => callback({ containers: [persistent.form] }));
     expect(getMountedPmeNavigation(persistent.select)).toBeUndefined();
   });
 

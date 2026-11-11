@@ -512,7 +512,7 @@ export const mountSelectize = async (
 
 subscribe(LEGACY_PAGE_CLEANUP, async (event) => {
   await Promise.all([...adapterInstances].map(async (instance) => {
-    if (!event || event.container?.contains(instance.select)) {
+    if (!event || event.containers.some((container) => container.contains(instance.select))) {
       instance.destroy();
     }
   }));

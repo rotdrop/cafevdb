@@ -62,9 +62,12 @@ describe('mountable email form', () => {
     provideMountableComponents(createApp({}));
     const host = document.createElement('div');
     const mountPoint = document.createElement('div');
-    const page = document.createElement('div');
+    const ambient = document.createElement('div');
+    const header = document.createElement('header');
+    const body = document.createElement('main');
     host.append(mountPoint);
-    document.body.append(host, page);
+    ambient.append(header, body, host);
+    document.body.append(ambient);
     subscribe(EMAIL_FORM_EVENT, (event) => {
       if (event.action === 'cleanup') {
         destroyMountedSelects(event.container);
@@ -76,7 +79,7 @@ describe('mountable email form', () => {
     }) as MountableComponent<'EmailFormEnvelope'>;
     envelope.mount(mountPoint);
     await flushPromises();
-    const form = host.querySelector('form')!;
+    const form = host.querySelector<HTMLElement>('#emailformcomposer')!;
     const makeSelect = (container: HTMLElement) => {
       const select = document.createElement('select');
       select.multiple = true;
@@ -89,11 +92,11 @@ describe('mountable email form', () => {
     const widget = emailSelect.nextElementSibling;
     // Both header and body controls belong to the replaceable page.
     for (let navigation = 0; navigation < 2; ++navigation) {
-      page.innerHTML = '<header></header><main></main>';
-      const pageSelects = [makeSelect(page.querySelector('header')!), makeSelect(page.querySelector('main')!)];
+      const pageSelects = [makeSelect(header), makeSelect(body)];
       await Promise.all(pageSelects.map(mount));
-      await emit(LEGACY_PAGE_CLEANUP, { container: page });
-      page.replaceChildren();
+      await emit(LEGACY_PAGE_CLEANUP, { containers: [header, body] });
+      header.replaceChildren();
+      body.replaceChildren();
       await flushPromises();
       expect(pageSelects.map(get)).toEqual([undefined, undefined]);
       expect(pageSelects.map(hidden)).toEqual([false, false]);

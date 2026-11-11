@@ -149,7 +149,7 @@ export const getMountedDualListbox = (select: HTMLSelectElement) => bySelect.get
 
 subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    if (!event || event.container?.contains(instance.select)) {
+    if (!event || event.containers.some((container) => container.contains(instance.select))) {
       instance.destroy();
     }
   }

@@ -87,7 +87,7 @@ export class PmeExportService {
 
 subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    if (!event || event.container?.contains(instance.button)) {
+    if (!event || event.containers.some((container) => container.contains(instance.button))) {
       instance.destroy();
     }
   }

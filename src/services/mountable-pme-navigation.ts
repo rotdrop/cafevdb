@@ -210,7 +210,7 @@ export const refreshPmeNavigation = (container: ParentNode) => {
 
 subscribe(LEGACY_PAGE_CLEANUP, (event) => {
   for (const instance of instances) {
-    if (!event || event.container?.contains(instance.select)) {
+    if (!event || event.containers.some((container) => container.contains(instance.select))) {
       instance.destroy();
     }
   }

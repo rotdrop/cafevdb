@@ -89,12 +89,15 @@
     </div>
     <!-- eslint-disable vue/no-v-html  -->
     <div :id="appPrefix('general')"
-         ref="legacyPageContainer"
          :class="{ [appPrefix('general')]: true, loading }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
-        <div :id="pagePrefix + 'header'" :class="[pagePrefix + 'header', legacyCssClass]" v-html="legacyHeaderHtml" />
+        <div :id="pagePrefix + 'header'"
+             ref="legacyHeaderContainer"
+             :class="[pagePrefix + 'header', legacyCssClass]"
+             v-html="legacyHeaderHtml"
+        />
       </div>
       <div :id="pagePrefix + 'container'" :class="[pagePrefix + 'container', legacyCssClass]">
         <!-- used to have something with 100% height for scrollbars -->
@@ -266,8 +269,8 @@ let previousHash = null as null|string // reactivity not needed
 
 // *** former computed properties
 
-const legacyHtmlContainer = useTemplateRef('legacyHtmlContainer')
-const legacyPageContainer = useTemplateRef('legacyPageContainer')
+const legacyHtmlContainer = useTemplateRef<HTMLElement>('legacyHtmlContainer')
+const legacyHeaderContainer = useTemplateRef<HTMLElement>('legacyHeaderContainer')
 const wikiManualSection = computed(() => dokuWikiSection([
   appName,
   'documentation',
@@ -423,7 +426,11 @@ const doLoadLegacy = async () => {
     || props.templateParameters.projectId
     || 0
   await appData.setCurrentProject(projectKey)
-  await asyncEmit(LEGACY_PAGE_CLEANUP, { container: legacyPageContainer.value })
+  // The persistent email envelope also lives under "general", outside these HTML islands.
+  await asyncEmit(LEGACY_PAGE_CLEANUP, {
+    containers: [legacyHeaderContainer.value, legacyHtmlContainer.value]
+      .filter((container): container is HTMLElement => container !== null),
+  })
   logger.debug('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
 

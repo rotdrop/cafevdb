@@ -63,8 +63,8 @@ export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
 /**
- * Clean up the page being replaced. Mountable widgets outside its container
- * survive; an omitted payload requests global widget cleanup.
+ * Clean up the HTML islands being replaced. Mountable widgets outside these
+ * containers survive; an omitted payload requests global widget cleanup.
  */
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');

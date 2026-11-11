@@ -9,11 +9,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PmeExportService } from '~/src/services/mountable-pme-export.ts';
 
 const { cleanup, request } = vi.hoisted(() => ({
-  cleanup: [] as Array<(event?: { container: HTMLElement|null }) => void>,
+  cleanup: [] as Array<(event?: { containers: HTMLElement[] }) => void>,
   request: vi.fn(),
 }));
 vi.mock('@rotdrop/async-nextcloud-event-bus', () => ({
-  subscribe: (_name: string, callback: (event?: { container: HTMLElement|null }) => void) => cleanup.push(callback),
+  subscribe: (_name: string, callback: (event?: { containers: HTMLElement[] }) => void) => cleanup.push(callback),
   awaitEmit: (_name: string, payload: { name: string; propsData: PmeExportMenuComponentProps }) => request(payload),
 }));
 vi.mock('~/src/event-bus-events.ts', () => ({
@@ -51,8 +51,8 @@ describe('PmeExportService', () => {
     request.mockReturnValue(pending.promise);
     const pageService = PmeExportService.create(button);
     const persistentService = PmeExportService.create(persistentButton);
-    cleanup.forEach((callback) => callback({ container: null }));
-    cleanup.forEach((callback) => callback({ container: page }));
+    cleanup.forEach((callback) => callback({ containers: [] }));
+    cleanup.forEach((callback) => callback({ containers: [page] }));
     const instance = createComponent();
     pending.resolve(instance);
     await Promise.all([pageService.ready, persistentService.ready]);
@@ -60,7 +60,7 @@ describe('PmeExportService', () => {
     expect(instance.mount).toHaveBeenCalledOnce();
     expect(button.style.display).toBe('');
     expect(persistentButton.style.display).toBe('none');
-    cleanup.forEach((callback) => callback({ container: persistentForm }));
+    cleanup.forEach((callback) => callback({ containers: [persistentForm] }));
     expect(instance.unmount).toHaveBeenCalledOnce();
     expect(persistentButton.style.display).toBe('');
   });
