@@ -35,9 +35,9 @@ use OCP\AppFramework\OCS;
 use OCP\IRequest;
 use OC\AppFramework\Middleware\OCSMiddleware;
 
-use OCA\RotDrop\Tests\DatabaseProvider;
-
 use OCA\CAFEVDB\Controller\EntityRepositoryController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
+use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -137,6 +137,8 @@ class EntityRepositoryControllerTest extends TestCase
 
   private OCSMiddleware $ocsMiddleware;
 
+  private EntityManager $metadataEntityManager;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
@@ -220,19 +222,28 @@ class EntityRepositoryControllerTest extends TestCase
 
      $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
-    /** @var DatabaseProvider $databaseProvider */
-    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
-
-    if (!$databaseProvider->getDatabaseConfig()) {
-      $databaseProvider->startServer();
-    }
-
-    // Meta-data ATM does not work without database connection
-    $realEntityManager = $mockProvider->getEntityManager();
-    // $realEntityManager->persist($this->project);
+    // As in php-to-typescript.php, a fixed platform avoids database discovery.
+    $this->metadataEntityManager = new EntityManager(
+      deprecationLogger: $this->appContainer->get(DeprecationLogger::class),
+      sqlLogger: new CloudLogger(
+        encryptionService: $mockProvider->getEncryptionService(),
+        eventDispatcher: $mockProvider->getEventDispatcher(),
+        logger: $mockProvider->getLoggerInterface(),
+        l: $mockProvider->getL10N(),
+      ),
+      encryptionService: $mockProvider->getEncryptionService(),
+      l: $mockProvider->getL10N(),
+      request: $this->request,
+      appContainer: $this->appContainer,
+      logger: $mockProvider->getLoggerInterface(),
+      appName: $mockProvider->appName,
+      cloudConfig: $mockProvider->getCloudConfig(),
+      cloudUserConfig: $mockProvider->getCloudUserConfig(),
+      databaseServerVersion: '11.7.0-MariaDB',
+    );
 
     $entitySerializer = new EntitySerializer(
-      entityManager: $realEntityManager,
+      entityManager: $this->metadataEntityManager,
       l: $mockProvider->getL10N(),
       logger: $mockProvider->getLoggerInterface(),
     );
@@ -300,6 +311,8 @@ class EntityRepositoryControllerTest extends TestCase
         throw $e;
       }
       $response = $this->ocsMiddleware->afterException($this->entityRepositoryController, 'getEntities', $e);
+    } finally {
+      $this->assertFalse($this->metadataEntityManager->getConnection()->isConnected());
     }
     return json_decode($response->render(), associative: true);
   }

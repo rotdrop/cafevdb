@@ -44,6 +44,11 @@ and bound-event application subscribers are isolated in this metadata-only
 process. Normal requests and the ORM CLI retain encryption, connection probing,
 server-version detection and connection initialization.
 
+`EntityRepositoryControllerTest` and the Vitest entity-response generators
+likewise use an explicit MariaDB platform for serialization metadata. Their
+repositories and entities are in-memory fixtures; they do not start an orchestra
+database server and check that serialization leaves the connection unopened.
+
 App-local word splitter
 -----------------------
 
@@ -150,4 +155,4 @@ driver and DQL lexer, and CI verifies attribute metadata, SQLite schema
 creation, and DQL execution against the wrapped ORM.
 
 --
-cH
+cjh
