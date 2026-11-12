@@ -46,7 +46,7 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\DT
     /** @var string[] */
     public readonly array $messages = [],
   ) {
-    $this->expires = CarbonImmutable::instance($expires);
+    $this->expires = $expires !== null ? CarbonImmutable::instance($expires) : null;
   }
 
   /**
