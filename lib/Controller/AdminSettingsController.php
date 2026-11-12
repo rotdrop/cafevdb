@@ -65,14 +65,17 @@ class AdminSettingsController extends Controller
    */
   public const DELEGATABLE_POST_REQUESTS =
     AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY
-    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY
-    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX
-    . '|' . AdminSettings::WIKI_NAME_SPACE_KEY
+    . '|' . AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY
     . '|' . AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY
     . '|' . AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY
-    . '|' . AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX
+    . '|' . AdminSettings::PROBLEM_REPORT_GITHUB_REPOSITORY_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_GITHUB_TOKEN_KEY
+    . '|' . AdminSettings::WIKI_NAME_SPACE_KEY
     . '|' . FontService::DEFAULT_OFFICE_FONT_CONFIG
-    . '|' . self::POST_REQUEST_FONT_CACHE;
+    . '|' . self::POST_REQUEST_FONT_CACHE
+    ;
 
   public const FONT_CACHE_UPDATE = 'update'; // scan for new entries
   public const FONT_CACHE_RESCAN = 'rescan'; // == purge + update

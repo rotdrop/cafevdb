@@ -435,7 +435,7 @@
           </template>
         </TextField>
       </div>
-      <div v-if="config.isAdmin" class="problem-report github">
+      <div v-if="config.isSubAdmin" class="problem-report github">
         <TextField v-model="settings.problemReportGithubRepository"
                    type="text"
                    :label="t(appId, 'GitHub Repository for Problem Reports (owner/name)')"
