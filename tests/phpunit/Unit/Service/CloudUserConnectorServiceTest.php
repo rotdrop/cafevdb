@@ -35,6 +35,7 @@ use OCP\IConfig;
 use OCA\RotDrop\Tests\DatabaseProvider;
 use OCA\RotDrop\Tests\EnumDatabasePurpose;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -299,9 +300,87 @@ class CloudUserConnectorServiceTest extends TestCase
 
     $this->cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);
     $this->cloudUserConnectorService->updateMusicianPersonalizedViews($cloudConnectorDatabase);
+    $this->assertPersonalizedStorageViews($cloudConnectorDatabase);
     $this->cloudUserConnectorService->removeMusicianPersonalizedViews($cloudConnectorDatabase);
     $this->cloudUserConnectorService->removeUserSqlViews($cloudConnectorDatabase);
 
     $this->unapplyMigrations();
+  }
+
+  /**
+   * @param string $cloudConnectorDatabase
+   *
+   * @return void
+   */
+  private function assertPersonalizedStorageViews(string $cloudConnectorDatabase): void
+  {
+    $connection = $this->getEntityManager()->getConnection();
+    $connection->beginTransaction();
+    try {
+      $connection->executeStatement(
+        'INSERT INTO Musicians (id, first_name, sur_name, uuid) VALUES
+          (1, "First", "Owner", UNHEX("00000000000000000000000000000001")),
+          (2, "Second", "Owner", UNHEX("00000000000000000000000000000002")),
+          (3, "Third", "Owner", UNHEX("00000000000000000000000000000003"))',
+      );
+      $connection->executeStatement(
+        'INSERT INTO MusicianRowAccessTokens (musician_id, user_id, access_token_hash) VALUES
+          (1, "first-owner", "first-token"), (2, "second-owner", "second-token"),
+          (3, "third-owner", "third-token")',
+      );
+      $connection->executeStatement(
+        'INSERT INTO Files (id, mime_type, type) VALUES
+          (1, "text/plain", "encrypted"), (2, "text/plain", "encrypted"),
+          (3, "text/plain", "encrypted")',
+      );
+      $connection->executeStatement(
+        'INSERT INTO EncryptedFileOwners (musician_id, encrypted_file_id) VALUES
+          (1, 1), (1, 2), (2, 3)',
+      );
+      $connection->executeStatement(
+        'INSERT INTO DatabaseStorageDirEntries (id, name, type, parent_id, file_id) VALUES
+          (1, "shared-root", "folder", NULL, NULL),
+          (2, "parent", "folder", 1, NULL),
+          (3, "nested-parent", "folder", 2, NULL),
+          (4, "first-file", "file", 3, 1),
+          (5, "second-file", "file", 3, 2),
+          (6, "other-file", "file", 3, 3),
+          (7, "empty-sibling", "folder", 2, NULL),
+          (10, "other-root", "folder", NULL, NULL),
+          (11, "other-parent", "folder", 10, NULL),
+          (12, "other-file", "file", 11, 3),
+          (20, "empty-root", "folder", NULL, NULL),
+          (30, "authorized-root", "folder", NULL, NULL),
+          (31, "second-file", "file", 30, 2)',
+      );
+      $connection->executeStatement(
+        'INSERT INTO DatabaseStorages (id, storage_id, root_id) VALUES
+          (1, "shared", 1), (2, "other", 10), (3, "empty", 20), (4, "authorized", 30)',
+      );
+
+      foreach ([
+        ['first-owner', 'first-token', [1, 2, 3, 4, 5, 30, 31], [1, 4]],
+        ['second-owner', 'second-token', [1, 2, 3, 6, 10, 11, 12], [1, 2]],
+        ['third-owner', 'third-token', [], []],
+        ['first-owner', 'wrong-token', [], []],
+        [null, null, [], []],
+      ] as [$userId, $token, $entryIds, $storageIds]) {
+        $connection->executeStatement('SET @' . Constants::SQL_CLOUD_USER_ID . ' = ?', [$userId]);
+        $connection->executeStatement('SET @' . Constants::SQL_ROW_ACCESS_TOKEN . ' = ?', [$token]);
+        foreach ([
+          'DatabaseStorageDirEntries' => $entryIds,
+          'DatabaseStorages' => $storageIds,
+        ] as $table => $expectedIds) {
+          $actualIds = $connection->executeQuery(
+            'SELECT id FROM ' . $cloudConnectorDatabase . '.Personalized' . $table . 'View ORDER BY id',
+          )->fetchFirstColumn();
+          $this->assertSame($expectedIds, array_map('intval', $actualIds));
+        }
+      }
+    } finally {
+      $connection->executeStatement('SET @' . Constants::SQL_CLOUD_USER_ID . ' = NULL');
+      $connection->executeStatement('SET @' . Constants::SQL_ROW_ACCESS_TOKEN . ' = NULL');
+      $connection->rollBack();
+    }
   }
 }
