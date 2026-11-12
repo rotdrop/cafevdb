@@ -454,7 +454,18 @@
                    @submit="saveProblemReportGithubToken"
         />
       </div>
+      <p>
+        {{ t(appId, 'Generate an artificial error, then submit its problem report to test the configured reporting methods.') }}
+      </p>
+      <NcButton class="test-problem-report" @click="generateTestError">
+        {{ t(appId, 'Generate Test Error') }}
+      </NcButton>
     </NcSettingsSection>
+    <ErrorPageModal v-if="testError"
+                    :show="true"
+                    :error="testError"
+                    @update:show="testError = null"
+    />
   </div>
 </template>
 
@@ -476,6 +487,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 import {
   NcActionButton,
   NcActions,
+  NcButton,
   NcListItem,
   NcProgressBar,
   NcSettingsSection,
@@ -500,6 +512,7 @@ import IconChooseGnuCashAccountsData from 'vue-material-design-icons/File.vue'
 import IconEmailVerificationPending from 'vue-material-design-icons/Help.vue'
 // import IconCancel from 'vue-material-design-icons/Cancel.vue'
 import IconResendVerificationCode from 'vue-material-design-icons/Sync.vue'
+import ErrorPageModal from './ErrorPageModal.vue'
 import SelectMusicians from './SelectMusicians.vue'
 import SelectProjects from './SelectProjects.vue'
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
@@ -518,6 +531,7 @@ import * as SettingsKeys from '../../build/ts-types/php-modules/Settings/Admin.t
 import { appName as appId } from '../config.ts'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
+import { AppError } from '../toolkit/types/errors.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
 import dialogConfirm from '../toolkit/util/dialog-confirm.ts'
 import { generateOcsUrl as generateAppOcsUrl, generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
@@ -658,6 +672,15 @@ const settings: AppAdminSettings = reactive<AppAdminSettings>({
 
 const problemReportRecipientVerificationInput = ref(false)
 const problemReportGithubTokenInput = ref('')
+const testError = ref<AppError|null>(null)
+
+const generateTestError = () => {
+  testError.value = new AppError(
+    { component: COMPONENT_NAME },
+    t(appId, 'Artificial error for testing problem reports.'),
+    { cause: new Error('This error was generated deliberately from the admin settings to test the configured problem reporting methods.') },
+  )
+}
 
 // const settingsBackup = reactive(<AppAdminSettings>{})
 // const orchestraGroups = reactive(<Record<string, GroupType> >{})

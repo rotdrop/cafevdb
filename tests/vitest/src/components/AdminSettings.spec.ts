@@ -37,6 +37,9 @@ import {
   // createLocalVue,
 } from '@vue/test-utils';
 import AdminSettings from '~/src/components/AdminSettings.vue';
+import ErrorPageModal from '~/src/components/ErrorPageModal.vue';
+import { AppError } from '~/src/toolkit/types/errors.ts';
+import { loadState } from '@nextcloud/initial-state';
 import { AUTHORIZATION_GROUP_SUFFIXES, INITIAL_STATE_SECTION } from '~/build/ts-types/php-modules/Settings/Admin.ts';
 import { appName } from '~/src/config.ts';
 
@@ -112,5 +115,40 @@ describe('AdminSettings component', () => {
       },
     });
     expect(wrapper.vm).toBeTruthy();
+    expect(wrapper.find('.test-problem-report').exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it('opens a reportable artificial error for group admins and can generate a fresh error after closing', async () => {
+    const initialState = loadState<AdminInitialState>(appName, INITIAL_STATE_SECTION);
+    vi.mocked(loadState).mockReturnValueOnce({ ...initialState, isSubAdmin: true });
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+    const wrapper = mount(AdminSettings, {
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+        stubs: { ErrorPageModal: true },
+      },
+    });
+    expect(wrapper.findComponent(ErrorPageModal).exists()).toBe(false);
+    await wrapper.get('.test-problem-report').trigger('click');
+
+    const modal = wrapper.getComponent(ErrorPageModal);
+    const error = modal.props('error');
+    expect(error).toBeInstanceOf(AppError);
+    expect(error.message).toBe('Artificial error for testing problem reports.');
+    expect(error.cause).toBeInstanceOf(Error);
+    expect(error.stack).toBeTruthy();
+    expect(error.cause).toHaveProperty('stack');
+
+    modal.vm.$emit('update:show', false);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findComponent(ErrorPageModal).exists()).toBe(false);
+
+    await wrapper.get('.test-problem-report').trigger('click');
+    expect(wrapper.getComponent(ErrorPageModal).props('error')).not.toBe(error);
+    wrapper.unmount();
   });
 });
