@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use RuntimeException;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\Stub;
@@ -43,6 +45,7 @@ use OCA\CAFEVDB\Service\ProblemReportGithubService;
 
 /** Test the GitHub channel of the problem reports. */
 #[Attributes\CoversClass(ProblemReportGithubService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Exceptions\EnduserNotificationException::class)]
 class ProblemReportGithubServiceTest extends TestCase
 {
   private const REPOSITORY = 'owner/repo';
@@ -185,7 +188,7 @@ class ProblemReportGithubServiceTest extends TestCase
     $this->known = [ 'id' => 3, 'issue_number' => 5, 'issue_url' => 'https://github.com/owner/repo/issues/5' ];
     $this->client->method('post')->willReturnCallback(function(string $url) {
       if (str_ends_with($url, '/issues/5/comments')) {
-        throw new \RuntimeException('gone', 404);
+        throw new RuntimeException('gone', 404);
       }
       return $this->response(str_ends_with($url, '/issues') ? [ 'html_url' => 'https://github.com/owner/repo/issues/9', 'number' => 9 ] : []);
     });
@@ -199,7 +202,7 @@ class ProblemReportGithubServiceTest extends TestCase
   /** @return void */
   public function testFailureDoesNotLeakToken(): void
   {
-    $this->client->method('post')->willThrowException(new \RuntimeException('Bearer ' . self::TOKEN, 401));
+    $this->client->method('post')->willThrowException(new RuntimeException('Bearer ' . self::TOKEN, 401));
     $this->expectException(EnduserNotificationException::class);
     $this->expectExceptionMessageMatches('/401/');
     $this->service()->report('fp', 'title', 'body', 'comment');
