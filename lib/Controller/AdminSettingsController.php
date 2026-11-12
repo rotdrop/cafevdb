@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Service\FontService;
+use OCA\CAFEVDB\Service\ProblemReportGithubService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -64,14 +65,17 @@ class AdminSettingsController extends Controller
    */
   public const DELEGATABLE_POST_REQUESTS =
     AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY
-    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY
-    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX
-    . '|' . AdminSettings::WIKI_NAME_SPACE_KEY
+    . '|' . AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY
     . '|' . AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY
     . '|' . AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY
-    . '|' . AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX
+    . '|' . AdminSettings::PROBLEM_REPORT_GITHUB_REPOSITORY_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_GITHUB_TOKEN_KEY
+    . '|' . AdminSettings::WIKI_NAME_SPACE_KEY
     . '|' . FontService::DEFAULT_OFFICE_FONT_CONFIG
-    . '|' . self::POST_REQUEST_FONT_CACHE;
+    . '|' . self::POST_REQUEST_FONT_CACHE
+    ;
 
   public const FONT_CACHE_UPDATE = 'update'; // scan for new entries
   public const FONT_CACHE_RESCAN = 'rescan'; // == purge + update
@@ -84,6 +88,7 @@ class AdminSettingsController extends Controller
     private EmailAddressService $emailAddressService,
     private GnuCashConnectorService $gnuCashConnectorService,
     private ProblemReportService $problemReportService,
+    private ProblemReportGithubService $problemReportGithubService,
     private WikiRPC $wikiRPC,
     protected ConfigService $configService,
   ) {
@@ -127,6 +132,13 @@ class AdminSettingsController extends Controller
           // TRANSLATORS: status of verification of problem report email address
           $this->l->t($value = 'failed');
         }
+        break;
+      case AdminSettings::PROBLEM_REPORT_GITHUB_REPOSITORY_KEY:
+        $value = $this->problemReportGithubService->getRepository();
+        break;
+      case AdminSettings::PROBLEM_REPORT_GITHUB_TOKEN_KEY:
+        // never expose the token itself, just tell if it is set
+        $value = $this->problemReportGithubService->hasToken() ? 'set' : '';
         break;
       case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
         $value = $this->getAppValue(ConfigConstants::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
@@ -290,6 +302,44 @@ Please enter the confirmation code contained in the email into the admin-setting
           value: $value,
           messages: new DTO\PermanentTransientMessages(
             transient: $this->l->t('Setting the problem report email verification code to "%s".', [$value]),
+          ),
+        )->response();
+
+      case AdminSettings::PROBLEM_REPORT_GITHUB_REPOSITORY_KEY:
+        $value = trim((string)$value);
+        if ($value !== '' && !preg_match(ProblemReportGithubService::REPOSITORY_PATTERN, $value)) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('The GitHub repository must be specified as "owner/name", got "%s".', $value),
+          );
+        }
+        if ($value !== '' && $this->problemReportGithubService->hasToken()) {
+          $this->problemReportGithubService->verifyStored($value);
+        }
+        if ($value === '') {
+          $this->deleteAppValue($parameter);
+        } else {
+          $this->setAppValue($parameter, $value);
+        }
+        return new DTO\AdminSettingsResponse(
+          value: $value,
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting the GitHub repository for problem reports to "%s".', $value),
+          ),
+        )->response();
+
+      case AdminSettings::PROBLEM_REPORT_GITHUB_TOKEN_KEY:
+        $token = trim((string)$value);
+        $repository = $this->problemReportGithubService->getRepository();
+        if ($token !== '' && $repository !== '') {
+          $this->problemReportGithubService->verify($repository, $token);
+        }
+        $this->problemReportGithubService->storeToken($token);
+        return new DTO\AdminSettingsResponse(
+          value: $token === '' ? '' : 'set',
+          messages: new DTO\PermanentTransientMessages(
+            transient: $token === ''
+              ? $this->l->t('The GitHub access token for problem reports has been removed.')
+              : $this->l->t('The GitHub access token for problem reports has been stored.'),
           ),
         )->response();
 
