@@ -505,7 +505,11 @@ class MountProvider implements IMountProvider
       if ($t instanceof StorageNotAvailableException) {
         throw $t;
       }
-      throw new StorageNotAvailableException('Unable to restore cached CafeVDB mounts.', 0, $t);
+      throw new StorageNotAvailableException(
+        'Unable to restore cached CafeVDB mounts.',
+        StorageNotAvailableException::STATUS_ERROR,
+        $t instanceof \Exception ? $t : null,
+      );
     }
 
     return $mounts;
