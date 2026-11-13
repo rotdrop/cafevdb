@@ -18,6 +18,7 @@ use OCP\Files\IRootFolder;
 use OCP\IUserSession;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use SensitiveParameter;
 
 /** Store credentials in the format consumed by WOPI mount authentication. */
 class WopiTokenService
@@ -41,7 +42,7 @@ class WopiTokenService
    *
    * @return void
    */
-  public function provideCredentials(#[\SensitiveParameter] string $accessToken): void
+  public function provideCredentials(#[SensitiveParameter] string $accessToken): void
   {
     $user = $this->userSession->getUser();
     if ($user === null || !$this->userSession->isLoggedIn()
