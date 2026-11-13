@@ -357,6 +357,6 @@ jstest: dev-setup ts-app-config ts-types-files run-jstest post-build
 .PHONY: jstest
 
 
-.PHONY: l10n
-l10n: translationfiles/update.sh translationfiles/templates/cafevdb.pot
-	translationfiles/update.sh
+# .PHONY: l10n
+# l10n: translationfiles/update.sh translationfiles/templates/cafevdb.pot
+# 	translationfiles/update.sh
