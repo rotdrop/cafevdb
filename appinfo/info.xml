@@ -67,6 +67,7 @@
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
     <command>OCA\CAFEVDB\Command\TooltipsList</command>
     <command>OCA\CAFEVDB\Command\UpdateGeoCodingCache</command>
+    <command>OCA\CAFEVDB\Command\UserRecrypt</command>
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
   </commands>
   <background-jobs>

@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Command;
 use OCP\Console\ExitCode;
 use OCP\Console\IInput;
 use OCP\Console\IOutput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Wrapped\OCA\RotDrop\Toolkit\Traits\AuthenticatedCommandTrait as ToolkitTrait;
@@ -44,12 +46,12 @@ trait AuthenticatedCommandTrait
    *
    * @see execute()
    */
-  protected function authenticate(IInput $input, IOutput $output): int
+  protected function authenticate(InputInterface|IInput $input, OutputInterface|IOutput $output): int
   {
     if ($this->toolkitAuthenticate($input, $output) === 0) {
       $this->entityManager = $this->appContainer->get(EntityManager::class);
-      return ExitCode::Success;
+      return ExitCode::Success->value;
     }
-    return ExitCode::Failure;
+    return ExitCode::Failure->value;
   }
 }
