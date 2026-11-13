@@ -48,6 +48,7 @@ class ProblemReportControllerTest extends TestCase
 
   private const CONTROLLER_CLASS = Controller\ProblemReportController::class;
   private const EXPECTED_ROUTES = [
+    'githubpreview',
     'post',
   ];
 

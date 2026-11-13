@@ -1489,6 +1489,7 @@ class ProjectService
   public function generateProjectWikiPage(int $projectId, string $projectName):void
   {
     $page = $this->l->t(
+      /* xgettext: no-email-check */
       '====== Project %s ======
 
 ===== Forword =====

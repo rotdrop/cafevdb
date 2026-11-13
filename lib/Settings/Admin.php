@@ -73,6 +73,9 @@ class Admin implements IDelegatedSettings
   const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
   const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
   const PROBLEM_REPORT_EMAIL_RECIPIENT_KEY = 'problemReportEmailRecipient';
+  const PROBLEM_REPORT_GITHUB_REPOSITORY_KEY = 'problemReportGithubRepository';
+  const PROBLEM_REPORT_GITHUB_TOKEN_KEY = 'problemReportGithubToken';
+  const PROBLEM_REPORT_PSEUDONYM_SALT_KEY = 'problemReportPseudonymSalt';
   const SETTINGS_PROPERTIES = 'settingsProperties';
   const SHARED_FOLDER_KEY = 'sharedFolder';
   const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';

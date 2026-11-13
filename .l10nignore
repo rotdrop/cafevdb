@@ -14,3 +14,19 @@ tests/
 vite.config.ts
 .vite/
 python/
+# Review candidates only: file basenames not referenced in app or other toolkit sources.
+# Dynamic references, service discovery and non-class files require manual review.
+rotdrop/nextcloud-app-toolkit/src/Exceptions/AuthorizationException.php
+rotdrop/nextcloud-app-toolkit/src/Exceptions/SessionStillOpenException.php
+rotdrop/nextcloud-app-toolkit/src/Service/AppPasswordService.php
+rotdrop/nextcloud-app-toolkit/src/Service/MimeTypeService.php
+rotdrop/nextcloud-app-toolkit/src/Service/UserScopeService.php
+rotdrop/nextcloud-app-toolkit/src/Traits/IncludeExcludeTrait.php
+rotdrop/nextcloud-app-toolkit/src/Traits/NodeTrait.php
+# BEGIN generated nextcloud-vue-components exclusions
+node_modules/@rotdrop/nextcloud-vue-components/lib/components/ColorPickerExtension.vue
+node_modules/@rotdrop/nextcloud-vue-components/lib/components/FilePrefixPicker.vue
+node_modules/@rotdrop/nextcloud-vue-components/lib/index.ts
+node_modules/@rotdrop/nextcloud-vue-components/lib/util/color.ts
+node_modules/@rotdrop/nextcloud-vue-components/lib/util/default-palette.ts
+# END generated nextcloud-vue-components exclusions

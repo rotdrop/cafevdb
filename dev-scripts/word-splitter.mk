@@ -2,7 +2,7 @@
 
 ABSSRCDIR ?= $(CURDIR)
 BUILDDIR ?= $(ABSSRCDIR)/build
-SPLITTER_PYTHON ?= python3.13
+SPLITTER_PYTHON ?= python3
 SPLITTER_SOURCE = $(ABSSRCDIR)/python/compound-word-splitting
 SPLITTER_BUILD_DIR = $(abspath $(BUILDDIR))/word-splitter
 SPLITTER_DIST_DIR = $(ABSSRCDIR)/python

@@ -33,6 +33,7 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
+use OCA\CAFEVDB\Service\ProblemReportGithubService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Service\WikiRPC;
@@ -84,6 +85,7 @@ class AdminSettingsControllerTest extends TestCase
       emailAddressService: $this->createStub(EmailAddressService::class),
       gnuCashConnectorService: $this->createStub(GnuCashConnectorService::class),
       problemReportService: $this->createStub(ProblemReportService::class),
+      problemReportGithubService: $this->createStub(ProblemReportGithubService::class),
       wikiRPC: $this->createStub(WikiRPC::class),
     );
   }

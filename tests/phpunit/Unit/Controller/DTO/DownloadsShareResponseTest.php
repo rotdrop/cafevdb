@@ -57,4 +57,16 @@ class DownloadsShareResponseTest extends TestCase
       url: 'SHARE URL',
     );
   }
+
+  public function testFromArrayWithNullExpiry(): void
+  {
+    $dto = TestedDTO::fromArray([
+      'dav' => null,
+      'expires' => null,
+      'path' => null,
+      'url' => null,
+    ]);
+
+    $this->assertNull($dto->expires);
+  }
 }

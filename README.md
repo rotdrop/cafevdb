@@ -59,6 +59,20 @@ and bound-event application subscribers are isolated in this metadata-only
 process. Normal requests and the ORM CLI retain encryption, connection probing,
 server-version detection and connection initialization.
 
+`EntityRepositoryControllerTest` and the Vitest entity-response generators
+likewise use an explicit MariaDB platform for serialization metadata. Their
+repositories and entities are in-memory fixtures; they do not start an orchestra
+database server and check that serialization leaves the connection unopened.
+
+Testing problem reports
+-----------------------
+
+In the admin settings, open **Configure Problem Report Handling** and click
+**Generate Test Error**. Use **report error** in the resulting dialog to preview
+and submit the artificial error through the configured reporting methods.
+Generating the error alone sends no report. Submission uses the real reporting
+destinations, including a public GitHub issue when configured.
+
 App-local word splitter
 -----------------------
 
@@ -165,4 +179,4 @@ driver and DQL lexer, and CI verifies attribute metadata, SQLite schema
 creation, and DQL execution against the wrapped ORM.
 
 --
-cH
+cjh
