@@ -49,6 +49,28 @@ likewise use an explicit MariaDB platform for serialization metadata. Their
 repositories and entities are in-memory fixtures; they do not start an orchestra
 database server and check that serialization leaves the connection unopened.
 
+Office document credentials
+---------------------------
+
+A global response middleware provisions database-mount credentials for successful
+richdocuments `DocumentController::token()`, `index()`, and
+`createFromTemplate()` responses. It uses the returned token to load the
+authoritative WOPI record, checks filesystem authorization and matching local
+user identities, and only stores credentials for mounts marked `authenticated`.
+Other responses and ordinary mounts are left unchanged.
+
+This temporarily retains the fork's recoverable-password authentication-token
+format for compatibility with WOPI mount authentication: the lookup passphrase
+is `USER_ID@WOPI_TOKEN`, the stored token UID is the WOPI token, and the login
+name is the local user ID. Expiry follows the WOPI record. Provisioning failures
+return an error without exposing credentials or tokens in the response or log.
+It requires password credentials in the current Nextcloud login session.
+
+This covers only those three document-opening endpoints, not every richdocuments
+token producer. The mount-side authentication integration is required separately;
+this middleware does not log in WOPI requests. Removal of the fork's credential
+provisioning and cleanup of expired credential records are deferred.
+
 User database recryption
 ------------------------
 

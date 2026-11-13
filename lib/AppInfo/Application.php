@@ -199,6 +199,7 @@ class Application extends AbstractApplication
     $context->registerMiddleWare(Middleware\DebugModeMiddleware::class);
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
     $context->registerMiddleware(Middleware\ContentSecurityPolicyMiddleware::class);
+    $context->registerMiddleware(Middleware\WopiTokenMiddleware::class, global: true);
 
     AddressBookRegistration::register($context);
     CryptoRegistration::register($context);
