@@ -69,7 +69,18 @@ It requires password credentials in the current Nextcloud login session.
 This covers only those three document-opening endpoints, not every richdocuments
 token producer. The mount-side authentication integration is required separately;
 this middleware does not log in WOPI requests. Removal of the fork's credential
-provisioning and cleanup of expired credential records are deferred.
+provisioning is performed separately.
+
+`CleanupWopiCredentials` runs every ten minutes and invalidates up to 1,000
+expired temporary credentials per run, allowing a 60-second expiry grace period.
+It requires a positive expiry and the exact `wopi_token_` plus token-UID name,
+and rechecks each candidate before invalidating it through Nextcloud's token
+provider. Ordinary app passwords and credentials without an expiry are excluded.
+It also handles credentials created by the fork, even after their WOPI records
+have disappeared or richdocuments has been disabled. It does not modify
+richdocuments tables, access the orchestra database, or require a user session.
+Deploy CafeVDB with this job registered before removing the fork's custom cleanup;
+richdocuments' standard WOPI and template cleanup should remain enabled.
 
 User database recryption
 ------------------------

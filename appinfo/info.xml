@@ -71,6 +71,7 @@
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
   </commands>
   <background-jobs>
+    <job>OCA\CAFEVDB\BackgroundJob\CleanupWopiCredentials</job>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
     <job>OCA\CAFEVDB\BackgroundJob\UpdateAppMTimes</job>
     <!--
