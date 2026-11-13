@@ -49,6 +49,23 @@ likewise use an explicit MariaDB platform for serialization metadata. Their
 repositories and entities are in-memory fixtures; they do not start an orchestra
 database server and check that serialization leaves the connection unopened.
 
+User database recryption
+------------------------
+
+Run `occ cafevdb:users:recrypt --user=USER` or
+`occ cafevdb:users:recrypt --all` to force recryption, regardless of pending
+recryption requests. The command prompts for the credentials of an account
+that can decrypt the app database; `--user` selects the target, not that account.
+`--all` selects all Nextcloud users, including those without a musician record.
+For each linked musician this renews the row access token and recrypts their
+bank accounts and encrypted file data, including soft-deleted entries. Users
+with app permissions also receive the app encryption key.
+
+Add `--dry-run` to enumerate without changing tokens, keys or encrypted entries.
+Add `-v` or `--verbose` to list each encrypted entity's class and identifier as
+it is processed (or would be processed in a dry run); decrypted contents are
+not printed. Failures stop the command with a non-zero exit status.
+
 Testing problem reports
 -----------------------
 

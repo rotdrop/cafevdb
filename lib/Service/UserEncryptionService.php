@@ -67,6 +67,12 @@ class UserEncryptionService
   /**
    * @param string $userId
    *
+   * @param bool $dryRun Only enumerate the encrypted entities, without
+   * changing row access tokens, encryption keys or database entries.
+   *
+   * @param null|callable $onEntity Called with each encrypted entity before
+   * it is recrypted (or would be recrypted in a dry run).
+   *
    * @return bool \true if also the app encryption key is valid, that is,
    * \true is returned if $userId belongs to the orchester group and no error
    * was encountered, if an error is encounted then an exception is thrown. If
@@ -75,14 +81,51 @@ class UserEncryptionService
    *
    * @throws Exceptions\EncryptionFailedException
    * @throws Exceptions\RecryptionFailedException
-   * @throws Exception\EncryptionKeyException
+   * @throws Exceptions\EncryptionKeyException
    */
-  public function recrypt(string $userId): bool
+  public function recrypt(string $userId, bool $dryRun = false, ?callable $onEntity = null): bool
   {
-    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    try {
+      return $this->recryptUser($userId, $dryRun, $onEntity);
+    } finally {
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+    }
+  }
+
+  /**
+   * @param string $userId
+   *
+   * @param bool $dryRun
+   *
+   * @param null|callable $onEntity
+   *
+   * @return bool Whether the user has access to the app encryption key.
+   */
+  private function recryptUser(string $userId, bool $dryRun, ?callable $onEntity): bool
+  {
+    $hasAppAccess = $this->authorizationService->getUserPermissions($userId) != AuthorizationService::PERMISSION_NONE;
+    if ($hasAppAccess && !$this->encryptionService->encryptionKeyValid()) {
+      throw new Exceptions\EncryptionKeyException($this->l->t('Encryption key is invalid'));
+    }
+
     /** @var Entities\Musician $musician */
     $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUserId($userId);
     if (!empty($musician)) {
+      $encryptedEntities = $musician->getSepaBankAccounts()->toArray();
+      /** @var Entities\EncryptedFile $encryptedFile */
+      foreach ($musician->getEncryptedFiles() as $encryptedFile) {
+        $encryptedEntities[] = $encryptedFile->getFileData();
+      }
+      if ($dryRun) {
+        foreach ($encryptedEntities as $entity) {
+          if ($onEntity !== null) {
+            $onEntity($entity);
+          }
+        }
+        return $hasAppAccess;
+      }
+
       $accessToken = \random_bytes(Entities\MusicianRowAccessToken::HASH_LENGTH / 8);
       $this->entityManager->beginTransaction();
       try {
@@ -105,14 +148,8 @@ class UserEncryptionService
       }
 
       // next we should try to recrypt all encrypted entities of the user ...
-      $encryptedEntities = [];
-      $encryptedEntities = array_merge($encryptedEntities, $musician->getSepaBankAccounts()->toArray());
-      /** @var Entities\EncryptedFile $encryptedFile */
-      foreach ($musician->getEncryptedFiles() as $encryptedFile) {
-        $encryptedEntities[] = $encryptedFile->getFileData();
-      }
       try {
-        $this->entityManager->recryptEntityList($encryptedEntities);
+        $this->entityManager->recryptEntityList($encryptedEntities, onEntity: $onEntity);
       } catch (Throwable $t) {
         $this->logException($t, 'Unable to recrypt encrypted data for user ' . $userId);
         throw new Exceptions\RecryptionFailedException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), previous: $t);
@@ -123,20 +160,15 @@ class UserEncryptionService
 
     $appEncryptionKey = null;
 
-    if ($this->authorizationService->getUserPermissions($userId) != AuthorizationService::PERMISSION_NONE) {
-      // set encryption key for this user
-      /** @var EncryptionService $encryptionService */
-      if (!$this->encryptionService->encryptionKeyValid()) {
-        throw new Exceptions\EncryptionKeyException($this->l->t('Encryption key is invalid'));
-      }
+    if ($hasAppAccess && !$dryRun) {
       try {
         $appEncryptionKey = $this->encryptionService->getAppEncryptionKey();
         $this->encryptionService->setUserEncryptionKey($appEncryptionKey, $userId);
       } catch (Exceptions\EncryptionException $e) {
-        throw new Exception\EncryptionKeyException($this->l->t('Unable to set app-encryption-key for user "%s".', $userId), previous: $e);
+        throw new Exceptions\EncryptionKeyException($this->l->t('Unable to set app-encryption-key for user "%s".', $userId), previous: $e);
       }
     }
 
-    return $appEncryptionKey !== null;
+    return $dryRun ? $hasAppAccess : $appEncryptionKey !== null;
   }
 }

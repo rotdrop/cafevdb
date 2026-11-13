@@ -1446,17 +1446,25 @@ class EntityManager extends AbstractEntityManager
    * before flushed the entities again to the database. Can be used to tweak
    * the app encryption-key, e.g.
    *
+   * @param null|callable $onEntity Called with each entity immediately before
+   * reloading it and scheduling its forced update.
+   *
    * @return void
    *
    * @throws Exceptions\RecryptionFailedException
    */
-  public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush = null)
-  {
+  public function recryptEntityList(
+    iterable $entities,
+    ?callable $beforeLoad = null,
+    ?callable $beforeFlush = null,
+    ?callable $onEntity = null,
+  ) {
     /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
     $unitOfWork = $this->getUnitOfWork();
 
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
+    $wasCachable = $transformer->isCachable();
 
     $this->beginTransaction();
     try {
@@ -1469,6 +1477,9 @@ class EntityManager extends AbstractEntityManager
 
       // Read all entities into the cache
       foreach ($entities as $entity) {
+        if ($onEntity !== null) {
+          $onEntity($entity);
+        }
         $this->refresh($entity); // needed ?
         $unitOfWork->scheduleForUpdate($entity);
       }
@@ -1487,8 +1498,6 @@ class EntityManager extends AbstractEntityManager
         $this->refresh($entity);
       }
 
-      $transformer->setCachable(true);
-
       $this->commit();
 
     } catch (Throwable $t) {
@@ -1499,6 +1508,8 @@ class EntityManager extends AbstractEntityManager
       throw new Exceptions\RecryptionFailedException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
         $t->getCode(), $t);
+    } finally {
+      $transformer->setCachable($wasCachable);
     }
   }
 
