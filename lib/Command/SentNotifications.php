@@ -139,6 +139,7 @@ class SentNotifications extends Command
         null,
         InputOption::VALUE_REQUIRED,
         $this->l->t(
+          /* xgettext: no-email-check */
           'Override the configured imap-host. Simple URI-like hosts are support, e.g. "tls:://USER:PASSWORD@example.com:143".'
           . ' If a user is given but no password the command will prompt for the password.',
         ),

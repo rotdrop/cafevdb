@@ -120,7 +120,9 @@ trait MusicianEmailsTrait
             ],
             'display' => [
               'attributes' => [
+                /* xgettext: no-email-check */
                 'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
+                /* xgettext: no-email-check */
                 'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
                 'data-vue-select-options' => [
                   'create' => [
@@ -173,7 +175,9 @@ trait MusicianEmailsTrait
           'css|VD' => [ 'postfix' => [ 'email', ], ],
           'display' => [
             'attributes' => [
+              /* xgettext: no-email-check */
               'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
+              /* xgettext: no-email-check */
               'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
               'data-vue-select-options' => [
                 'create' => false,

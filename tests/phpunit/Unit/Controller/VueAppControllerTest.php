@@ -250,6 +250,16 @@ class VueAppControllerTest extends TestCase
   }
 
   /** @return void */
+  public function testTransactionsTooltipContainsAqBankingLink(): void
+  {
+    $tooltip = $this->toolTipsService->fetch('database-storage:finance:transactions', escape: false);
+
+    $this->assertNotNull($tooltip);
+    $this->assertStringContainsString('[AqBanking](https://www.aquamaniac.de/rdm/projects/aqbanking)', $tooltip);
+    $this->assertStringNotContainsString('%3$s', $tooltip);
+  }
+
+  /** @return void */
   public function testGetNavigation(): void
   {
     foreach (array_keys(PageRenderer\Registration::LEGACY_TEMPLATES) as $template) {
