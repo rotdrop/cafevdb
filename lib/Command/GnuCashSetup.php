@@ -83,6 +83,7 @@ class GnuCashSetup extends Command
         null,
         InputOption::VALUE_REQUIRED,
         $this->l->t(
+          /* xgettext: no-email-check */
           'The name of the GnuCash database to tweak. Simple URI-like hosts are support, e.g. "mysql:://USER:PASSWORD@example.com:143/database".'
           . ' If a user is given but no password the command will prompt for the password.',
         ),
