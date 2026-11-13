@@ -32,9 +32,11 @@ use OCP\Files\Config\ICachedMountInfo;
 use OCP\Files\StorageNotAvailableException;
 
 use OCA\CAFEVDB\Storage\Database\MountProvider;
+use OCA\CAFEVDB\Storage\Database\UnavailableCache;
 use OCA\CAFEVDB\Storage\Database\UnavailableMount;
 
 /** Test the unavailable database mount placeholder. */
+#[Attributes\CoversClass(UnavailableCache::class)]
 #[Attributes\CoversClass(UnavailableMount::class)]
 #[Attributes\UsesClass(MountProvider::class)]
 class UnavailableMountTest extends TestCase
@@ -77,8 +79,8 @@ class UnavailableMountTest extends TestCase
 
   private function createMount():UnavailableMount
   {
-    $cachedMount = $this->createMock(ICachedMountInfo::class);
-    $cachedMount->method('getUser')->willReturn($this->createMock(\OCP\IUser::class));
+    $cachedMount = $this->createStub(ICachedMountInfo::class);
+    $cachedMount->method('getUser')->willReturn($this->createStub(\OCP\IUser::class));
     $cachedMount->method('getStorageId')->willReturn(42);
     $cachedMount->method('getRootId')->willReturn(108);
     $cachedMount->method('getMountPoint')->willReturn('/alice/files/Finance/Invoices/');
