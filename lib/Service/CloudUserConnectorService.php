@@ -652,7 +652,8 @@ WHERE m.email IS NOT NULL AND m.email <> ""
 
   /**
    * Generate the (My-)SQL statements for defining the personalized single-row
-   * musician views.
+   * musician views. Storage views expose only authorized files, their ancestor
+   * directory entries, and the storages associated with those root entries.
    *
    * @param null|string $dataBaseName
    *
@@ -1012,11 +1013,33 @@ SELECT t.*
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
+WITH RECURSIVE authorized_entries AS (
+  SELECT t.id, t.parent_id
+  FROM " . $table . " t
+  INNER JOIN " . $this->personalizedViewName($dataBaseName, 'Files') . " fv
+    ON t.file_id = fv.id
+  UNION DISTINCT
+  SELECT t.id, t.parent_id
+  FROM " . $table . " t
+  INNER JOIN authorized_entries ae
+    ON t.id = ae.parent_id
+)
 SELECT t.*
   FROM " . $table . " t
-  WHERE t.file_id IS NULL OR t.file_id IN (
-    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
-)";
+  INNER JOIN authorized_entries ae
+    ON t.id = ae.id";
+
+    $table = 'DatabaseStorages';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $table . " t
+  INNER JOIN " . $this->personalizedViewName($dataBaseName, 'DatabaseStorageDirEntries') . " dsev
+    ON t.root_id = dsev.id
+  WHERE dsev.parent_id IS NULL";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
