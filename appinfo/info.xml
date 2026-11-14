@@ -7,7 +7,7 @@
   <name>CAFeV DB</name>
   <description>Orchestra Management Application</description>
   <codename>Keep Going</codename>
-  <version>10.2.0</version>
+  <version>10.2.1</version>
   <licence>AGPL-3.0-or-later</licence>
   <lifetime>2010-2026</lifetime>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/Camerata-Academica-Freibug-e-V/cafevdb.git">Claus-Justus Heine</author>
@@ -71,6 +71,7 @@
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
   </commands>
   <background-jobs>
+    <job>OCA\CAFEVDB\BackgroundJob\CleanupWopiCredentials</job>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
     <job>OCA\CAFEVDB\BackgroundJob\UpdateAppMTimes</job>
     <!--
