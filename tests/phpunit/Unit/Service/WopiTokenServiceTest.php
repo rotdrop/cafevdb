@@ -12,6 +12,7 @@ use OC\Authentication\Token\IProvider;
 use OC\Authentication\Token\PublicKeyToken;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\WopiTokenService;
+use OCA\CAFEVDB\Service\WopiCredentialRegistry;
 use OCA\Richdocuments\Db\WopiMapper;
 use OCP\Authentication\Exceptions\InvalidTokenException;
 use OCP\Authentication\LoginCredentials\ICredentials;
@@ -58,6 +59,7 @@ class WopiTokenServiceTest extends TestCase
   private IssuedWopiToken $wopi;
   private WopiTokenService $service;
   private ContainerInterface $container;
+  private WopiCredentialRegistry $registry;
 
   protected function setUp(): void
   {
@@ -83,8 +85,9 @@ class WopiTokenServiceTest extends TestCase
     $this->container->method('get')->willReturnCallback(fn(string $id) => match ($id) {
       WopiMapper::class => $mapper,
     });
+    $this->registry = $this->createMock(WopiCredentialRegistry::class);
     $this->service = new WopiTokenService(
-      $session, $this->authorization, $this->store, $this->tokens, $root, $this->container,
+      $session, $this->authorization, $this->store, $this->tokens, $root, $this->container, $this->registry,
     );
   }
 
@@ -94,6 +97,7 @@ class WopiTokenServiceTest extends TestCase
       ->with('alice', AuthorizationService::PERMISSION_FILESYSTEM)->willReturn(false);
     $this->container->expects($this->never())->method('get');
     $this->store->expects($this->never())->method('getLoginCredentials');
+    $this->registry->expects($this->never())->method('remember');
     $this->service->provideCredentials('issued-token');
   }
 
@@ -125,6 +129,7 @@ class WopiTokenServiceTest extends TestCase
     $this->eligible();
     $this->tokens->method('getToken')->willThrowException(new InvalidTokenException());
     $token = new PublicKeyToken();
+    $token->setId(17);
     $token->setUid('issued-token');
     $token->setLoginName('alice');
     $this->tokens->expects($this->once())->method('generateToken')
@@ -132,6 +137,7 @@ class WopiTokenServiceTest extends TestCase
     $this->tokens->expects($this->once())->method('getPassword')->with($token, 'alice@issued-token')->willReturn('password');
     $this->tokens->expects($this->never())->method('setPassword');
     $this->tokens->expects($this->once())->method('updateToken')->with($token);
+    $this->registry->expects($this->once())->method('remember')->with(17, 'issued-token', 2000000000);
     $this->service->provideCredentials('issued-token');
     self::assertSame(2000000000, $token->getExpires());
     self::assertSame(2000000000, $token->getLastActivity());
@@ -141,12 +147,14 @@ class WopiTokenServiceTest extends TestCase
   {
     $this->eligible();
     $token = new PublicKeyToken();
+    $token->setId(18);
     $token->setUid('issued-token');
     $token->setLoginName('alice');
     $this->tokens->method('getToken')->willReturn($token);
     $this->tokens->expects($this->once())->method('getPassword')->with($token, 'alice@issued-token')->willReturn('password');
     $this->tokens->expects($this->never())->method('setPassword');
     $this->tokens->expects($this->never())->method('generateToken');
+    $this->registry->expects($this->once())->method('remember')->with(18, 'issued-token', 2000000000);
     $this->service->provideCredentials('issued-token');
   }
 
@@ -196,6 +204,23 @@ class WopiTokenServiceTest extends TestCase
     $this->eligible(password: '');
     $this->tokens->expects($this->never())->method('generateToken');
     $this->expectException(RuntimeException::class);
+    $this->service->provideCredentials('issued-token');
+  }
+
+  public function testRegistryFailureRevokesNewCredential(): void
+  {
+    $this->eligible();
+    $this->tokens->method('getToken')->willThrowException(new InvalidTokenException());
+    $token = new PublicKeyToken();
+    $token->setId(17);
+    $token->setUid('issued-token');
+    $token->setLoginName('alice');
+    $this->tokens->method('generateToken')->willReturn($token);
+    $this->tokens->method('getPassword')->willReturn('password');
+    $this->registry->method('remember')->willThrowException(new RuntimeException('Registry unavailable.'));
+    $this->tokens->expects($this->once())->method('invalidateTokenById')->with('issued-token', 17);
+    $this->expectException(RuntimeException::class);
+    $this->expectExceptionMessage('Registry unavailable.');
     $this->service->provideCredentials('issued-token');
   }
 

@@ -19,6 +19,7 @@ use OCP\IUserSession;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use SensitiveParameter;
+use Throwable;
 
 /** Store credentials in the format consumed by WOPI mount authentication. */
 class WopiTokenService
@@ -31,6 +32,7 @@ class WopiTokenService
     private IProvider $tokenProvider,
     private IRootFolder $rootFolder,
     private ContainerInterface $appContainer,
+    private WopiCredentialRegistry $credentialRegistry,
   ) {
   }
   // phpcs:enable
@@ -74,7 +76,8 @@ class WopiTokenService
     } catch (InvalidTokenException) {
       $token = null;
     }
-    if ($token === null) {
+    $generated = $token === null;
+    if ($generated) {
       $token = $this->tokenProvider->generateToken(
         $passphrase,
         $accessToken,
@@ -96,5 +99,13 @@ class WopiTokenService
     // Keep temporary-token garbage collection from preceding the WOPI expiry.
     $token->setLastActivity($wopi->getExpiry());
     $this->tokenProvider->updateToken($token);
+    try {
+      $this->credentialRegistry->remember($token->getId(), $accessToken, $wopi->getExpiry());
+    } catch (Throwable $exception) {
+      if ($generated) {
+        $this->tokenProvider->invalidateTokenById($accessToken, $token->getId());
+      }
+      throw $exception;
+    }
   }
 }

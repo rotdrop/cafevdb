@@ -10,14 +10,11 @@
 namespace OCA\CAFEVDB\BackgroundJob;
 
 use OC\Authentication\Token\IProvider;
-use OC\Authentication\Token\PublicKeyToken;
-use OC\Authentication\Token\PublicKeyTokenMapper;
+use OCA\CAFEVDB\Service\WopiCredentialRegistry;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Authentication\Token\IToken;
 use OCP\BackgroundJob\TimedJob;
-use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
 use RuntimeException;
 use Throwable;
 
@@ -31,8 +28,7 @@ class CleanupWopiCredentials extends TimedJob
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ITimeFactory $time,
-    private IDBConnection $db,
-    private PublicKeyTokenMapper $tokenMapper,
+    private WopiCredentialRegistry $registry,
     private IProvider $tokenProvider,
   ) {
     parent::__construct($time);
@@ -55,41 +51,31 @@ class CleanupWopiCredentials extends TimedJob
   private function cleanupExpiredCredentials(): void
   {
     $cutoff = $this->time->getTime() - self::EXPIRY_GRACE_SECONDS;
-    $query = $this->db->getQueryBuilder();
-    $query->select('id')
-      ->from('authtoken')
-      ->where($query->expr()->gt('expires', $query->createNamedParameter(0, IQueryBuilder::PARAM_INT)))
-      ->andWhere($query->expr()->lt('expires', $query->createNamedParameter($cutoff, IQueryBuilder::PARAM_INT)))
-      ->andWhere($query->expr()->eq('name', $query->func()->concat(
-        $query->createNamedParameter(self::TOKEN_NAME_PREFIX),
-        'uid',
-      )))
-      ->andWhere($query->expr()->eq('type', $query->createNamedParameter(IToken::TEMPORARY_TOKEN, IQueryBuilder::PARAM_INT)))
-      ->andWhere($query->expr()->eq('version', $query->createNamedParameter(PublicKeyToken::VERSION, IQueryBuilder::PARAM_INT)))
-      ->orderBy('id')
-      ->setMaxResults(self::BATCH_SIZE);
-    $result = $query->executeQuery();
-    try {
-      $ids = $result->fetchFirstColumn();
-    } finally {
-      $result->closeCursor();
-    }
-
-    foreach ($ids as $id) {
-      try {
-        // The provider's lookup rejects expired tokens, so recheck through its mapper.
-        $token = $this->tokenMapper->getTokenById((int)$id);
-        $expiry = $token->getExpires();
-        if ($expiry === null || $expiry <= 0 || $expiry >= $cutoff
-            || $token->getType() !== IToken::TEMPORARY_TOKEN
-            || $token->getName() !== self::TOKEN_NAME_PREFIX . $token->getUID()) {
-          continue;
-        }
-        $this->tokenProvider->invalidateTokenById($token->getUID(), $token->getId());
-      } catch (DoesNotExistException) {
-        // Nextcloud's own cleanup or another worker already removed this record.
+    foreach ($this->registry->findExpired($cutoff, self::BATCH_SIZE) as $entry) {
+      $tokenId = (int)$entry['token_id'];
+      $tokenUid = $entry['token_uid'];
+      $expiry = (int)$entry['expires'];
+      if ($expiry <= 0 || $expiry >= $cutoff) {
         continue;
       }
+      // Unlike getTokenById(), this lookup also returns expired credentials.
+      foreach ($this->tokenProvider->getTokenByUser($tokenUid) as $token) {
+        if ($token->getId() !== $tokenId) {
+          continue;
+        }
+        if ($token->getUID() !== $tokenUid || $token->getType() !== IToken::TEMPORARY_TOKEN
+            || $token->getName() !== self::TOKEN_NAME_PREFIX . $tokenUid) {
+          throw new RuntimeException('Registered WOPI credential identity mismatch.');
+        }
+        try {
+          $this->tokenProvider->invalidateTokenById($tokenUid, $tokenId);
+        } catch (DoesNotExistException) {
+          // Another cleanup already removed the credential.
+          break;
+        }
+        break;
+      }
+      $this->registry->forget($tokenId, $tokenUid, $expiry);
     }
   }
 }

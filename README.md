@@ -71,16 +71,26 @@ token producer. The mount-side authentication integration is required separately
 this middleware does not log in WOPI requests. Removal of the fork's credential
 provisioning is performed separately.
 
+Provisioning records the authentication-token ID, synthetic UID and fixed WOPI
+expiry in CafeVDB's own `cafevdb_wopi_credentials` table in the Nextcloud database.
+The registry stores neither passwords nor derived login passphrases; the
+synthetic UID is the WOPI access token and must still be treated as sensitive.
+Run Nextcloud's app upgrade/migrations before enabling this code.
+
 `CleanupWopiCredentials` runs every ten minutes and invalidates up to 1,000
-expired temporary credentials per run, allowing a 60-second expiry grace period.
-It requires a positive expiry and the exact `wopi_token_` plus token-UID name,
-and rechecks each candidate before invalidating it through Nextcloud's token
-provider. Ordinary app passwords and credentials without an expiry are excluded.
-It also handles credentials created by the fork, even after their WOPI records
-have disappeared or richdocuments has been disabled. It does not modify
-richdocuments tables, access the orchestra database, or require a user session.
-Deploy CafeVDB with this job registered before removing the fork's custom cleanup;
-richdocuments' standard WOPI and template cleanup should remain enabled.
+registered expired temporary credentials per run, allowing a 60-second expiry
+grace period. It queries only the app-owned registry, then uses Nextcloud's
+`IProvider` to find and invalidate the exact credential, checking its UID, ID,
+type and name. Missing credentials are removed from the registry; operational
+failures retain the entry for retry. Ordinary app passwords are not enumerated.
+Cleanup works after WOPI-record deletion or richdocuments being disabled, without
+accessing Nextcloud's authentication tables, the orchestra database or a session.
+
+Credentials created by the fork are registered when successfully reused through
+the middleware. Legacy credentials never reused are not imported: there is no
+core-table scan. They remain subject to Nextcloud's normal token retention
+cleanup. Deploy CafeVDB and its migration before removing the fork's custom
+cleanup; leave richdocuments' standard WOPI and template cleanup enabled.
 
 User database recryption
 ------------------------
