@@ -30,6 +30,21 @@ Features include
 The orchestra data-base is held separate from the cloud database and
 is based on Doctrine/ORM.
 
+Database-backed files and Collabora
+----------------------------------
+
+Database mounts require the user's password to unlock the app's encrypted
+database configuration. For validated WOPI requests, the mount provider can
+recover credentials created by the `feature/authenticated-requests-35` branch
+of `rotdrop/nextcloud-richdocuments`; stock richdocuments does not create
+them. This currently supports local users whose editor and filesystem user
+are the same, not guest or remote-user tokens.
+
+This is a security tradeoff: the fork stores the login password in a Nextcloud
+token protected with a passphrase derived from the WOPI access token, which is
+also available to the browser. Restrict access to tokens and protect their
+storage and transport. Token creation and expiry cleanup remain in the fork.
+
 Frontend builds
 ---------------
 
